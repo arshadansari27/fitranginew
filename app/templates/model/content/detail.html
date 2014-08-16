@@ -1,0 +1,26 @@
+{% extends 'generic/main/model_base.html' %}
+{% block model_data %}
+    	<div class="container">
+        	<div class="">
+            	<div class="">        
+                	<div class="col-lg-12">
+                    	<hr/>
+						<h3 class="intro-text text-center">{{ model.title }} <br/><small>{{ model.created_by.name }}</small> &nbsp;</h3>
+                    	<hr/>
+                	</div>
+                	<div class="col-lg-12 ">
+						<center>
+							<img class="img-responsive img-border img-full" src="/img/{{ model.get_class_name()}}/{{model.id}}" alt="">
+                   		</center>
+						{% if model.text %}
+							<div class="container2">
+								{{ model.text|safe }}
+                    		</div>
+						{% endif %}
+        			</div>
+            	</div>
+				{% import 'generic/includes/comments.html' as comment_macro %}
+				{{ comment_macro.show_comments(model.comments, model.id)}}
+        	</div>
+    	</div>
+{% endblock %}

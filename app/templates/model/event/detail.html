@@ -1,0 +1,7 @@
+{% extends 'generic/main/model_base.html' %}
+{% block model_data %}
+{{ model.title }} 
+{{ model.description }}
+Start: {{ model.start_timestamp }}
+End: {{ model.end_timestamp }}
+{% endblock %}

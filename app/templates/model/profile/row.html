@@ -1,0 +1,12 @@
+<div class="panel panel-default">
+	<div class="panel-heading"><a href="/model/{{model.channel_factory(model)}}/{{model.id}}" class="pull-right">View</a>
+		<div class="panel-title">{{model.name}}</div>
+	</div>
+	<div class="panel-body">
+   		<img src="/img/{{model.get_class_name()}}/{{model.id}}" class="responsive">
+		<hr/>
+		<p>{% if model.description and model.description|length > 0 %}{{ model.description }}{% else %} Currently no description has been added for this article. Admin is working in it. {%endif%}</p>
+   </div>
+</div>
+<hr>
+

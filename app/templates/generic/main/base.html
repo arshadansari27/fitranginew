@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<title>Fitrangi - Adventure sports</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="fitrangi" >
+   <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+   <link rel="stylesheet" href="/assets/css/bootstrap-theme.min.css">
+   <link type="text/css" rel="stylesheet" href="/assets/css/example.css" />
+	<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+	{% block header_script %}{% endblock %}
+	{% block header_css %}{% endblock %}
+	<style>body { padding-top: 70px; }</style>
+  </head>
+  <body> 
+	<div class="navbar navbar-fixed-top header">
+		<div class="col-md-12">
+			<div class="navbar-header">
+			  
+			  <!--a href="#" class="navbar-brand">Fitrangi</a-->
+			  <a class="navbar-brand" href="/"><img src="/assets/img/logo.png" style="height: 30px;" alt="" ></a>
+			  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse1">
+			  <i class="glyphicon glyphicon-search"></i>
+			  </button>
+		  
+			</div>
+			<div class="collapse navbar-collapse" id="navbar-collapse1">
+			  <form class="navbar-form pull-left">
+				  <div class="input-group" style="max-width:470px;">
+					<input type="text" class="form-control" placeholder="Search" name="search-query" id="search-query">
+					<div class="input-group-btn">
+					  <button class="btn btn-default btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+					</div>
+				  </div>
+			  </form>
+			  <ul class="nav navbar-nav navbar-right">
+				{% if user and user.id %}
+				<li><a id="btn-login" href="#">{{ user.name }}+</a></li>
+				 <li>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-bell"></i></a>
+					<ul class="dropdown-menu">
+					  <li><a href="#"><span class="badge pull-right">40</span>Link</a></li>
+					  <li><a href="#"><span class="badge pull-right">2</span>Link</a></li>
+					  <li><a href="#"><span class="badge pull-right">0</span>Link</a></li>
+					  <li><a href="#"><span class="label label-info pull-right">1</span>Link</a></li>
+					  <li><a href="#"><span class="badge pull-right">13</span>Link</a></li>
+					</ul>
+				 </li>
+				{% else %}
+				<li><a id="btn-login" href="/login">Sign In+</a></li>
+				{% endif %}
+				 <li><a href="/"><i class="glyphicon glyphicon-home"></i></a></li>
+			   </ul>
+			</div>	
+		 </div>	
+		</div>
+		{{ menu.render()|safe }}
+
+	<div class="ajax-message alert hide" style=" display: inline-block;position: fixed;top: 0;bottom: 0;left: 0;right: 0;width: 80%;height: 100px;margin: auto;z-index:2;">
+    	<i class="{{ icon }}"></i>&nbsp;
+    	<a class="close" data-dismiss="alert">×</a>
+	</div>
+
+	{% block body %}{% endblock %}
+
+	<footer class="pull-right" style="position: relative; top:90%; left:0;">
+        <span class="">©Copyright 2013-2014 <a title="Fitrangi - Adventure Sports" href="/">Fitrangi </a> | <a href="/about#privacy">Privacy</a></span>
+    </footer>
+	<script src="/assets/js/bootstrap.min.js"></script>
+	<script src="/assets/appjs/app.js"></script>
+	<div id="script_name" class="hide">
+		{% block script_list %}{% endblock %}
+	</div>
+  </body>
+	<div id="footer-scripts"></div>
+</html>

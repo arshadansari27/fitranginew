@@ -1,0 +1,47 @@
+{% if facet|length > 0 %}	
+<div class="col-sm-2 panel panel-info">
+	<div class="panel-heading"><div class="panel-title">Filters</div></div>
+	<div class="panel-body">
+		<form class="form-horizontal" role="form">
+		<div class="form-group">
+    		<div class="">
+      			<div class="checkbox">
+        			<label>
+						<input type="checkbox" class="" name="all"/> ALL
+        			</label>
+      			</div>
+    		</div>
+		</div>
+		{% for k, v in facet.iteritems() %}
+		{% if v | length == 0 %}
+		<div class="form-group">
+    		<div class="">
+      			<div class="checkbox">
+        			<label>
+						<input type="checkbox" class="" name="facets_{{loop.index}}" value="{{f}}"/> {{f}}
+        			</label>
+      			</div>
+    		</div>
+		</div>
+		{% else %}
+			{% for _f in v %}
+			<div class="form-group">
+    			<div class="">
+      				<div class="checkbox">
+        				<label>
+							<input type="checkbox" class="" name="facets__{{loop.index}}" value="{{_f}}"/> {{_f}}
+        				</label>
+      				</div>
+    			</div>
+			</div>
+			{% endfor %}
+		{% endif %}
+		{% endfor %}
+		{% if facet|length > 0 %}
+		<div class="form-group"><button class="form-control">Apply</button></div>
+		{% endif %}
+		</form>
+	</div>
+</div>
+{% else %}
+{% endif %}

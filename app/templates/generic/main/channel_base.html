@@ -1,0 +1,22 @@
+{% extends 'generic/main/base.html' %}
+{% block body %}
+{{ facets.render() }}
+	<div class="container ">
+		<div class="row">
+			{% if models|length == 3 %}
+				{% for k, m in models.iteritems() %}
+					<div class="col-md-3 col-sm-4">
+						{% for v in m %}
+							{{ v.render() }}
+						{% endfor %}
+					</div>
+				{% endfor %}
+			{% else %}
+			<h3>diff sizes</h3>
+			{% endif %} 
+		</div>
+		{% if pageinfo %}
+			{{ pageinfo.render() }}
+		{% endif %}
+	</div>
+{% endblock %}
