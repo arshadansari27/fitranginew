@@ -134,6 +134,19 @@ class Node(object):
             if channel.model == model.__class__.__name__:
                 return channel.name
         raise Exception("Unset Channel for this model type %s %s" % (model.__class__.__name__, str(model)))
+    
+    def update_existing(self, **kwargs):
+        for k, v in kwargs.iteritems():
+            if hasattr(self, k):
+                setattr(self, k, v)
+        self.save()
+        return self
+
+    def upload_image(self, image):
+        self.main_image = Image(image=image)
+        self.save()
+        return self
+        
 
 class Image(db.EmbeddedDocument):
     image = db.ImageField(thumbnail_size=(100, 100, True))
@@ -211,6 +224,13 @@ class Profile(Content):
     
     def __unicode__(self): return self.name
 
+    def change_password(self, **kwargs):
+        if kwargs['confirm'] == kwargs['password']:
+            self.password = kwargs['password']
+            self.save()
+        else:
+            raise Exception('Invalid Password, do not match')
+
     @classmethod
     def authenticate(cls, email_or_username,  password):
         collection = Profile._get_collection()
@@ -228,6 +248,7 @@ class Profile(Content):
         profile = Profile(name=name, email=email, password=password, is_verified=is_verified, roles=roles)
         profile.save()
         return profile
+
 
 class Event(Content):
     __template__ = 'model/event/'

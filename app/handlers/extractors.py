@@ -1,5 +1,6 @@
 from app.models import *
 from Queue import Queue
+import re
 
 PAGE_SIZE = 25
 
@@ -11,6 +12,20 @@ def get_all_facets(channel_name):
         return channel, channel.subtypes, channel.facets
     else:
         return channel, [], []
+
+
+def search_models(search_query):
+    collection = Content._get_collection()
+    regx = re.compile(search_query, re.IGNORECASE)
+    print regx
+    query = {'$or': [{'name': {'$regex': regx}}, {'title': {'$regex': regx}}]}
+    criteria = {'_id': 1}
+    print query
+    models = list(collection.find(query, criteria))
+    print models
+    models = [Content.objects(pk=str(m['_id'])).first() for m in models]
+    print '\\' *10,  models
+    return models
 
 
 def get_all_models_all_channels(search_query=None):
@@ -37,7 +52,6 @@ def get_all_models_all_channels(search_query=None):
                 query['head'] = 'title'
                 if model_class == Content:
                     query['keywords'] = True
-            import re
             regx = re.compile("%s" % search_query, re.IGNORECASE)
             query['value'] = regx
 

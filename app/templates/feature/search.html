@@ -1,0 +1,11 @@
+{% extends 'generic/main/base.html' %}
+{% block body %}
+	<div class="container">
+	<div class="header-title"><h3>Search Results:</h3></div>
+		<div class="container-fluid">
+		{% for m in models %}
+			{{ m.render() }}
+		{% endfor %}
+		</div>
+	</div>
+{% endblock %}

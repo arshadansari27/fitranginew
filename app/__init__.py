@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, session
 from flask.ext.mongoengine import MongoEngine
 from flask.ext import admin as flask_admin
 import os
+from app import settings
 
 from flask import send_file
 import argparse
@@ -12,7 +13,7 @@ from PIL import Image
 
 app = Flask(__name__, template_folder='templates', static_folder='assets')
 app.config['SECRET_KEY'] = os.urandom(24)
-app.config['MONGODB_SETTINGS'] = {'DB': 'adventure'}
+app.config['MONGODB_SETTINGS'] = {'DB': settings.MONGODB_DB, 'HOST': settings.MONGODB_HOST, 'PORT': settings.MONGODB_PORT}
 app.debug = True
 
 db = MongoEngine()
@@ -45,6 +46,7 @@ def start_app():
 
     from app.handlers import *
     from app.handlers.pageviews import *
+    from app.handlers.editors import *
 
 
 
