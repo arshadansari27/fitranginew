@@ -1,36 +1,6 @@
 <div class="navbar navbar-default" id="subnav">
 			<div class="col-md-12">
-				{% if user and user.id %}
-				<div class="navbar-header">
-				  
-				  <a href="#" style="margin-left:15px;" class="navbar-btn btn btn-default btn-plus dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-home" style="color:#dd1111;"></i> Home <small><i class="glyphicon glyphicon-chevron-down"></i></small></a>
-				  <ul class="nav dropdown-menu">
-					  <li><a href="/model/Profile/{{user.id}}"><i class="glyphicon glyphicon-user" style="color:#1111dd;"></i> Profile</a></li>
-					  <li><a href="#"><i class="glyphicon glyphicon-inbox" style="color:#11dd11;"></i> My Posts</a></li>
-					  <li class="nav-divider"></li>
-					  {% if 'Admin' in user.roles %}
-					  <li><a href="/admin"><i class="glyphicon glyphicon-dashboard" style="color:#0000aa;"></i> Dashboard</a></li>
-					  {% endif %}
-					  {% if 'EventOrganiser' in user.roles %}
-					  <li><a href="/events"><i class="glyphicon glyphicon-cog" style="color:#dd1111;"></i> Events</a></li>
-					  {% endif %}
-					  {% if 'Retailer' in user.roles %}
-					  <li><a href="/products"><i class="glyphicon glyphicon-cog" style="color:#dd1111;"></i> Products</a></li>
-					  {% endif %}
-					  <li><a href="/logout"><i class="glyphicon glyphicon-plus"></i> Logout</a></li>
-				  </ul>
-				  
-				  
-				  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse2">
-				  <span class="sr-only">Toggle navigation</span>
-				  <span class="icon-bar"></span>
-				  <span class="icon-bar"></span>
-				  <span class="icon-bar"></span>
-				  </button>
-			  
-				</div>
-				{% endif %}
-				<div class="collapse navbar-collapse" id="navbar-collapse2">
+								<div class="collapse navbar-collapse" id="navbar-collapse2">
 					<ul class="nav navbar-nav navbar-right">
 					{% for main_menu in ordered_menu %}
 					{% if menu_dict[main_menu]['submenu'] |length > 0 %}

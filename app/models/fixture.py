@@ -8,6 +8,8 @@ import StringIO, time, datetime
 from app.scripts.db_load import load_all
 from app.models import *
 from PIL import Image as pImage
+from app import settings
+print 'Using setting', settings.MONGODB_HOST, settings.MONGODB_PORT
 
 def db_fixture():
     #aliases = generate_alias_wise_data()

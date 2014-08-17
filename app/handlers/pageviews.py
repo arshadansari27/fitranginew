@@ -1,13 +1,14 @@
 from app.models import *
 #from flask import render_template
-from flask import render_template, make_response, abort, request, g, flash, redirect, url_for, session, send_file
+from flask import render_template, make_response, abort, request, g, flash, redirect, url_for, session, send_file, jsonify
 from jinja2 import Environment, FileSystemLoader
 from app.settings import TEMPLATE_FOLDER
 from Queue import Queue
 from mongoengine import Q
-from app.handlers.extractors import get_all_facets, get_all_models, get_all_models_all_channels
+from app.handlers.extractors import get_all_facets, get_all_models, get_all_models_all_channels, search_models
 from app.models import Profile
 from app import app
+import simplejson as json
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
 
@@ -19,6 +20,9 @@ def model_handler(model, channel, subchannel=None):
 
 def home_handler(query=None):
     return HomeView(query=query).render()
+
+def search_handler(query=None):
+    return SearchView(query=query).render()
 
 class PageView(object):
 
@@ -38,8 +42,6 @@ class PaginationInfo(object):
         template = env.get_template(self.template)
         return template.render(link=self.link, args=self.args, total_pages=self.total_pages, current=self.current, user=g.user)
 
-
-
 class ModelView(object):
 
     def __init__(self, model, action, default='card', channel_name=None, subchannel_name=None):
@@ -55,9 +57,12 @@ class ModelView(object):
                 raise Exception("Unsupported")
         elif action == 'detail':
             ## Incase of Details page, the model object is id and channel name and sub channel name (if applicable must exists)
-            channel = Channel.getByName(channel_name)
-            model_name = channel.model 
-            model_class = Node.model_factory(model_name.lower())
+            if channel_name:
+                channel = Channel.getByName(channel_name)
+                model_name = channel.model 
+                model_class = Node.model_factory(model_name.lower())
+            else:
+                model_class = Content
             self.model = model_class.objects(pk=model).first()
             if not self.model.main_image or not self.model.main_image.image:
                 self.model.has_no_image = True
@@ -110,7 +115,20 @@ class HomeView(object):
         template = env.get_template(self.template)
         return template.render(menu=self.menu, model_dict=self.model_dict_view, user=g.user)
 
-        
+class SearchView(object):
+
+    def __init__(self, query):
+        self.query = query
+        self.models = search_models(search_query=query)
+        self.template =  'feature/search.html'
+        self.menu = MenuView(None, None)
+        self.models = [ModelView(model, 'list') for model in self.models]
+
+    def render(self):
+        template = env.get_template(self.template)
+        return template.render(menu=self.menu, models=self.models, user=g.user)
+
+       
 class ChannelView(object):
 
     def __init__(self, feature_name, sub_channel=None, selected_facets=[], query=None, page=1, paginated=True):
@@ -153,7 +171,7 @@ class ChannelView(object):
         models_arranged[0] = self.model_views[0: _len + 1]
         models_arranged[1] = self.model_views[_len + 1: _len + _len + 1]
         models_arranged[2] = self.model_views[_len + _len:]
-        print len(models_arranged[0]), len(models_arranged[1]), len(models_arranged[2])
+        #print len(models_arranged[0]), len(models_arranged[1]), len(models_arranged[2])
 
         if not self.paginated:
             return template.render(menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=None, user=g.user)
@@ -187,6 +205,12 @@ def home():
     print '>', query if query else 'no query'
     return home_handler(query=query)
 
+@app.route('/search')
+def search():
+    query = request.args.get('search-query', '')
+    return search_handler(query=query)
+
+
 @app.route('/img/<model_name>/<key>')
 def get_img(model_name, key):
     from app.models import Node
@@ -204,8 +228,6 @@ def channel(channel, subchannel=None):
     for k in request.args.keys():
         if k.startswith('facet'):
             facets.append(request.args.get(k))
-    print '-' * 100, '\n', facets, '-' * 100
-
     return channel_handler(channel, subchannel, page=page, query=query, facets=facets)
 
 
@@ -258,15 +280,18 @@ def logout():
 @app.before_request
 def before_request():
     userid = session.get('user', None)
-    print '*'* 10, userid
     if userid is None or len(userid) == 0:
         g.user = None
     else:
-        print '-' * 10,type(userid)
         user = Profile.objects(pk=userid).first()
         if user:
             g.user = user
         else:
             g.user = None
 
+@app.route('/flash', methods=['GET'])
+def flash_message():
+    flash_message = session.get('flash_message', None)
+    session['flash_message'] = ''
+    return jsonify(json.loads(flash_message)) if flash_message and len(flash_message) > 0 else ''
 
