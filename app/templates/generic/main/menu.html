@@ -1,24 +1,22 @@
 <div class="navbar navbar-default" id="subnav">
 			<div class="col-md-12">
-								<div class="collapse navbar-collapse" id="navbar-collapse2">
+				<div class="collapse navbar-collapse" id="navbar-collapse2">
 					<ul class="nav navbar-nav navbar-right">
-					{% for main_menu in ordered_menu %}
-					{% if menu_dict[main_menu]['submenu'] |length > 0 %}
-					<li class="{{menu_dict[main_menu]['class']}} dropdown">
-						<a href="#" class="{{ menu_dict[main_menu]['class']}} dropdown-toggle" data-toggle="dropdown">{{ menu_dict[main_menu]['name']}}<span class="caret"></span></a>
-						<ul class="dropdown-menu" role="menu">
-							<li class=""><a href="/channel/{{ menu_dict[main_menu]['name'] }}">All</a></li>
-							{% for submenu in menu_dict[main_menu]['submenu'] %}
-							<li class="{{ submenu['class'] }}"><a href="/channel/{{ menu_dict[main_menu]['name'] }}/{{ submenu['name'] }}">{{ submenu['name'] }}</a></li>
-							{% endfor %}
-              			</ul>
-            		</li>
-					{% else %}
-					<li class="{{ menu_dict[main_menu]['class'] }}"><a href="/channel/{{menu_dict[main_menu]['name']}}">{{ menu_dict[main_menu]['name'] }}</a></li>
-					{% endif %}
-					{% endfor %}
+						{% for _menu, multiple in ordered_menu %}
+							{% if multiple %}
+							<li class="{% if menu == _menu %}active{% endif %}dropdown">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ _menu }}<span class="caret"></span></a>
+									<ul class="dropdown-menu" role="menu">
+										{% for k, v in menus[_menu] %}
+										<li class="{% if submenu == k %}active{% endif %}"><a href="{{v}}">{{ k }}</a></li>
+										{% endfor %}
+              						</ul>
+            					</li>
+							{% else %}
+							<li class="{% if menu == _menu %}active{% endif %}"><a href="{{ menus[_menu] }}">{{ _menu }}</a></li>
+							{% endif %}
+						{% endfor %}
           			</ul>
-
 				</div>	
 			 </div>	
 		</div>

@@ -1,5 +1,5 @@
 {% extends 'generic/main/base.html' %}
-{{ menu.render() }}
+{{ menu.render()|safe }}
 {% block body%}
 {% block model_data %}{% endblock %}
 {% endblock %}

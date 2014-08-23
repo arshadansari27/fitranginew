@@ -19,7 +19,7 @@ def db_fixture():
     admin_role = Role.getByName('Admin')
     admin = Profile.objects(roles__in=[admin_role.name]).first()
     if not admin:
-        admin = Profile(name="Arshad Ansari", username="arshadansari27", password='testing', is_verified=True, email='arshadansari27@gmail.com')
+        admin = Profile(name="Arshad Ansari", username="arshadansari27", password='testing', is_verified=True, email='arshadansari27@gmail.com', channels=['Enthusiast'])
         admin.roles.append(admin_role.name)
         admin.save()
     print admin.name
@@ -37,7 +37,7 @@ def db_fixture():
             image = None
         _type = channel.getTypeByAlias(alias) 
         #print "Channel Associated: ", channel.name, _type
-        if _type in ['EventOrganiser', 'Enthusiast', 'Retailer']:
+        if _type in ['Organizer', 'Enthusiast', 'Gear Dealer']:
             tags =[channel.name, _type] 
             #print tags
             if not Profile.objects(name__iexact=title).first():
@@ -50,30 +50,28 @@ def db_fixture():
             if d.get('category', None) is not None:
                 category = d['category']
                 if len(category) > 0:
-                    _category = channel.has_sub_type(category) or _get_tag_in_related(category, channel)
-                    if _category:
-                        tags.append(_category)
+                    tags.append(capitalize(category))
 
             if d.get('activity', None) is not None:
                 activity = d['activity']
                 if len(activity) > 0:
-                    _activity = channel.has_facet(activity) or _get_tag_in_related(activity, channel)
-                    if _activity:
-                        tags.append(_activity)
+                    tags.append(capitalize(activity))
             print "****", tags
             content = Content(title=title, created_by=admin, text=d.get('data', ''), published_timestamp=datetime.datetime.now(),
                     is_published=True, channels=tags, main_image=image)
             content.save()
         
+def capitalize(text):
+    t = text.split(' ')
+    if len(t) is 0:
+        return ''
+    n_t = []
+    for _t in t:
+        x = _t[0]
+        y = _t[1:]
+        z = x.upper() + y.lower()
+        n_t.append(z)
+    return ' '.join(n_t)
 
-def _get_tag_in_related(tag, channel):
-    related = channel.related
-    if not related:
-        return
-    for r in related:
-        ch = Channel.getByName(r)
-        _tag = ch.has_sub_type(tag) or ch.has_facet(tag)
-        if not _tag:
-            continue
-        return _tag
-    return False
+
+

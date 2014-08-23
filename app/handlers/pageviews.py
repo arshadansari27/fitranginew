@@ -9,25 +9,9 @@ from app.handlers.extractors import get_all_facets, get_all_models, get_all_mode
 from app.models import Profile
 from app import app
 import simplejson as json
+from app.config import configuration
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
-
-def channel_handler(channel, subchannel=None, query=None, facets=None, page=1):
-    return ChannelView(channel, subchannel, paginated=False, selected_facets=facets, query=query,page=page).render()
-
-def model_handler(model, channel, subchannel=None):
-    return ModelView(model, 'detail', channel_name=channel, subchannel_name=subchannel).render()
-
-def home_handler(query=None):
-    return HomeView(query=query).render()
-
-def search_handler(query=None):
-    return SearchView(query=query).render()
-
-class PageView(object):
-
-    def __init__(self, channels, action, platform='web'):
-        self.platform = platform
 
 class PaginationInfo(object):
 
@@ -56,7 +40,6 @@ class ModelView(object):
             else:
                 raise Exception("Unsupported")
         elif action == 'detail':
-            ## Incase of Details page, the model object is id and channel name and sub channel name (if applicable must exists)
             if channel_name:
                 channel = Channel.getByName(channel_name)
                 model_name = channel.model 
@@ -72,11 +55,11 @@ class ModelView(object):
             self.menu_view = MenuView(channel_name, subchannel_name if subchannel_name else None)
    
     def render(self):
-        template = env.get_template(self.template)
         if self.action == 'list':
+            template = env.get_template(self.template)
             return template.render(model=self.model)
         else:
-            return template.render(model=self.model, menu=self.menu_view, user=g.user)
+            return render_template(self.template, model=self.model, menu=self.menu_view, user=g.user)
 
 class InfoBarView(object):
 
@@ -112,8 +95,7 @@ class HomeView(object):
             self.model_dict_view[k] = [ModelView(m, 'list') for m in models[0]]
 
     def render(self):
-        template = env.get_template(self.template)
-        return template.render(menu=self.menu, model_dict=self.model_dict_view, user=g.user)
+        return render_template(self.template, menu=self.menu, model_dict=self.model_dict_view, user=g.user)
 
 class SearchView(object):
 
@@ -125,18 +107,17 @@ class SearchView(object):
         self.models = [ModelView(model, 'list') for model in self.models]
 
     def render(self):
-        template = env.get_template(self.template)
-        return template.render(menu=self.menu, models=self.models, user=g.user)
+        return render_template(self.template, menu=self.menu, models=self.models, user=g.user)
 
        
 class ChannelView(object):
 
-    def __init__(self, feature_name, sub_channel=None, selected_facets=[], query=None, page=1, paginated=True):
+    def __init__(self, channel_name, sub_channel=None, selected_facets=[], query=None, page=1, paginated=True):
         self.query = query
-        self.channel, self.submenus, self.facets = get_all_facets(feature_name)
+        self.channel, self.facets = get_all_facets(channel_name)
+        print "*****", channel_name, self.channel
         
         if sub_channel:
-            assert sub_channel in self.submenus
             new_dict = {}
             for k in self.facets:
                 if k == sub_channel:
@@ -157,7 +138,7 @@ class ChannelView(object):
         self.facet_view = FacetView(self.facets)
         self.menu_view = MenuView(self.channel.name, sub_channel if sub_channel else None)
         self.model_views = [ModelView(model, 'list', default='row') for model in self.models]
-        link = "/" + feature_name
+        link = "/" + channel_name
         if sub_channel:
             link+= '/' + sub_channel
         args = request.args
@@ -165,7 +146,6 @@ class ChannelView(object):
             self.pageinfo = PaginationInfo(args, link, total, page)
         
     def render(self):
-        template = env.get_template(self.template)
         models_arranged = {}
         _len = len(self.model_views) / 3
         models_arranged[0] = self.model_views[0: _len + 1]
@@ -174,8 +154,8 @@ class ChannelView(object):
         #print len(models_arranged[0]), len(models_arranged[1]), len(models_arranged[2])
 
         if not self.paginated:
-            return template.render(menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=None, user=g.user)
-        return template.render(menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=self.pageinfo, user=g.user)
+            return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=None, user=g.user)
+        return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=self.pageinfo, user=g.user)
 
 
 class MenuView(object):
@@ -186,29 +166,19 @@ class MenuView(object):
         self.submenu = submenu
 
     def render(self):
-        menu_dict = {}
-        main_menu = Channel.all_data()
-        sub_menu = []
-        for m in main_menu:
-            if m.name == self.menu:
-                menu_dict[m.name] = {'name': m.name, 'class': 'active', 'submenu': []}
-            else:
-                menu_dict[m.name] = {'name': m.name, 'class': '','submenu': []}
-            menu_dict[m.name]['submenu'] = [{'name': s, 'class': 'active' if s == self.submenu else ''} for s in m.subtypes]
+        menus = configuration['MENUS']
         template = env.get_template(MenuView.__template__)
-        return template.render(ordered_menu=['Destination', 'Activity', 'General Articles', 'Profile', 'Forum'], menu_dict=menu_dict, user=g.user) 
+        return template.render(ordered_menu=[('Activities', True), ('Articles', True), ('Destinations', False), ('Finder (Profiles)', True), ('Adventure Trips', False), ('Forum', False)], menus=menus, menu=self.menu, submenu=self.submenu, user=g.user) 
 
 
 @app.route('/')
 def home():
-    query = request.args.get('query', '')
-    print '>', query if query else 'no query'
-    return home_handler(query=query)
+    return HomeView(query=query).render()
 
 @app.route('/search')
 def search():
     query = request.args.get('search-query', '')
-    return search_handler(query=query)
+    return SearchView(query=query).render()
 
 
 @app.route('/img/<model_name>/<key>')
@@ -219,16 +189,15 @@ def get_img(model_name, key):
     return send_file(img, mimetype='image/' + img.format)
 
 @app.route('/channel/<channel>')
-@app.route('/channel/<channel>/<subchannel>')
-def channel(channel, subchannel=None):
+def channel(channel):
     page = request.args.get('page', 1)
     query = request.args.get('query', '')
-    #facets = request.args.get('facets', '')
+    subchannel = request.args.get('subchannel', '')
     facets = []
     for k in request.args.keys():
         if k.startswith('facet'):
             facets.append(request.args.get(k))
-    return channel_handler(channel, subchannel, page=page, query=query, facets=facets)
+    return ChannelView(channel, subchannel, paginated=False, selected_facets=facets, query=query,page=page).render()
 
 
 def under_construction(e):
@@ -239,7 +208,7 @@ def page_not_found(e):
 
 @app.route('/model/<channel>/<key>')
 def model(channel, key):
-    return model_handler(key, channel)
+    return ModelView(model, 'detail', channel_name=channel, subchannel_name=subchannel).render()
 
 @app.route('/register', methods=['GET', 'POST'])
 def registeration():

@@ -1,73 +1,85 @@
 configuration = {
+    'MENUS': {
+        'Activities': [ 
+            ('All', '/channel/Activity'),
+            ('Sky Fly', '/channel/Activity?subchannel=Sky - Fly'),
+            ('Snow Flow', '/channel/Activity?subchannel=Snow - Flow'),
+            ('Travelling & SightSeeing', '/channel/Activity?subchannel=Travelling & SightSeeing'),
+            ('Water Wonders', '/channel/Activity?subchannel=Water - Wonders'),
+            ('Land Sports', '/channel/Activity?subchannel=Land Sports'),
+            ('Other Sports', '/channel/Activity?subchannel=Other Sports')
+        ],
+        'Articles': [ 
+            ('All', '/channel/Article'),
+            ('Top 5 Series', '/channel/Article?subchannel=Top 5 Series'),
+            ('Explore', '/channel/Article?subchannel=Explore'),
+            ('Informative', '/channel/Article?subchannel=Informative')
+        ],
+        'Destinations': '/channel/Destination',
+        'Finder (Profiles)': [ 
+            ('All', '/channel/Profile'),
+            ('Organizers', '/channel/Profile?subchannel=Organizer'),
+            ('Gear Dealers', '/channel/Profile?subchannel=Gear Dealer'),
+            ('NGO\'s', '/channel/Profile?subchannel=NGO'),
+            ('Rescuers', '/channel/Profile?subchannel=Rescuer'),
+            ('Trainers', '/channel/Profile?subchannel=Trainer'),
+            ('Guides', '/channel/Profile?subchannel=Guide'),
+            ('Institutes', '/channel/Profile?subchannel=Institute'),
+            ('Hotels', '/channel/Profile?subchannel=Hotel'),
+            ('Govt. Bodies', '/channel/Profile?subchannel=Govt'),
+        ],
+        'Adventure Trips':  '/channel/Event?subchannel=AdventureTrip',
+        'Forum': '/channel/Forum'
+    },
     'DEFAULT_CHANNELS': {
         'Destination': {
             'template': 'feature/common',
             'model' : 'Content',
-            'menu_view' : 'default',
-            'subtypes': [],
-            'facets': {},
-            'related': ['Activity']
+            'facets': []
         },
     
         'Activity': {
             'template': 'feature/common',
             'model' : 'Content',
             'menu_view' : 'default',
-            'subtypes': ["Sky - Fly", "Snow - Flow", "Travelling & Sightseeing", "Water - Wonders", "Land Sports", "Other Sports"],
-            'facets': {
-                    "Sky - Fly": ["Bungee jumping", "Hang Gliding", "Hot Air Ballooning", "Para Motoring", "Paragliding", "Parasailing", "Sky Diving","Zip Line"],
-                    "Snow - Flow": [],
-                    "Travelling & Sightseeing": ["Architecture Monuments", "Beaches", "Forts & Caves", "Hill stations", "Places to Visit", "Theme Parks", "Wildlife Sanctuaries & Safaris"],
-                    "Water - Wonders": ["Canyoning", "Kayaking", "Kite Surfing", "Scuba Diving", "Snorkelling", "Surfing", "Water Rafting"],
-                    "Land Sports": ["Camping", "Cycling-Biking", "Marathons", "Mountaineering", "Off-beat Activities", "Rappelling & Valley Crossing", "Rock Climbing", "Trekking & Hiking", "Horse Riding"],  
-                    "Other Sports": ["Stargazing", "Zorbing"],
-            },
-            'related': []
+            'facets': [ 
+                {"Sky - Fly": ["Bungee jumping", "Hang Gliding", "Hot Air Ballooning", "Para Motoring", "Paragliding", "Parasailing", "Sky Diving","Zip Line"]},
+                {"Snow - Flow": []},
+                {"Travelling & Sightseeing": ["Architecture Monuments", "Beaches", "Forts & Caves", "Hill stations", "Places to Visit", "Theme Parks", "Wildlife Sanctuaries & Safaris"]},
+                {"Water - Wonders": ["Canyoning", "Kayaking", "Kite Surfing", "Scuba Diving", "Snorkelling", "Surfing", "Water Rafting"]},
+                {"Land Sports": ["Camping", "Cycling-Biking", "Marathons", "Mountaineering", "Off-beat Activities", "Rappelling & Valley Crossing", "Rock Climbing", "Trekking & Hiking", "Horse Riding"]},  
+                {"Other Sports": ["Stargazing", "Zorbing"]}
+            ] 
         },
     
-        'General Articles': {
+        'Article': {
             'template': 'feature/common',
             'model' : 'Content',
-            'menu_view' : 'default',
-            'subtypes': ['Informative', 'Explore', 'Top 5 Series'],
-            'facets': {},
-            'related': []
+            'facets': []
         },
     
         'Event': {
             'template': 'feature/event',
             'model' : 'Event',
-            'menu_view' : 'default',
-            'subtypes': ['Adventure', 'Meetup', 'Conference', 'Sport'],
-            'facets': {},
-            'related': []
+            'facets': []
         }, 
     
         'Profile': {
             'template': 'feature/profile',
             'model' : 'Profile',
-            'menu_view' : 'default',
-            'subtypes': ['Retailer', 'EventOrganiser', 'Enthusiast', 'Rescuer', 'Guide', 'Trainer'],
-            'facets': {},
-            'related': []
+            'facets': []
         },
     
         'Product':{
             'template': 'feature/profile',
             'model' : 'Product',
-            'menu_view' : 'default',
-            'subtypes': ['Clothes', 'Accessores', 'Bags', 'Footwear', 'Gears', 'Tools'],
-            'facets': {},
-            'related': []
+            'facets': ['Clothes', 'Accessores', 'Bags', 'Footwear', 'Gears', 'Tools']
         },
 
         'Forum': {
             'template': 'feature/forum',
             'model' : 'ForumThread',
-            'menu_view' : 'forum_special',
-            'subtypes': [],
             'facets': {},
-            'related': []
         }
     },
     'DEFAULT_ROLES': {

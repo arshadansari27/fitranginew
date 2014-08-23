@@ -48,7 +48,7 @@ class Channel(Configuration):
         elif alias == 'DESTINATION':
             channel_name = 'Destination'
         elif alias == 'ARTICLE':
-            channel_name = 'General Articles'
+            channel_name = 'Article'
         elif alias == 'ORGANISER':
             channel_name = 'Profile'
         elif alias == 'DEALER':
@@ -79,11 +79,11 @@ class Channel(Configuration):
         elif alias == 'DESTINATION':
             channel_name = 'Destination'
         elif alias == 'ARTICLE':
-            channel_name = 'General Articles'
+            channel_name = 'Article'
         elif alias == 'ORGANISER':
-            channel_name = 'EventOrganiser'
+            channel_name = 'Organizer'
         elif alias == 'DEALER':
-            channel_name = 'Retailer'
+            channel_name = 'Gear Dealer'
         else:
             raise Exception("Invalid Alias")
         return channel_name

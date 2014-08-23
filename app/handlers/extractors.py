@@ -9,9 +9,9 @@ def get_all_facets(channel_name):
     channel = Channel.getByName(channel_name)
     if channel:
         print 'Got all facets', channel.name
-        return channel, channel.subtypes, channel.facets
+        return channel, channel.facets
     else:
-        return channel, [], []
+        return channel, []
 
 
 def search_models(search_query):

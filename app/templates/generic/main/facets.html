@@ -3,16 +3,9 @@
 	<div class="panel-heading"><div class="panel-title">Filters</div></div>
 	<div class="panel-body">
 		<form class="form-horizontal" role="form">
-		<div class="form-group">
-    		<div class="">
-      			<div class="checkbox">
-        			<label>
-						<input type="checkbox" class="" name="all"/> ALL
-        			</label>
-      			</div>
-    		</div>
-		</div>
-		{% for k, v in facet.iteritems() %}
+		{% for obj in facet %}
+		{% set k = obj.keys()[0] %}
+		{% set v = obj[k] %}
 		{% if v | length == 0 %}
 		<div class="form-group">
     		<div class="">
@@ -37,9 +30,6 @@
 			{% endfor %}
 		{% endif %}
 		{% endfor %}
-		{% if facet|length > 0 %}
-		<div class="form-group"><button class="form-control">Apply</button></div>
-		{% endif %}
 		</form>
 	</div>
 </div>
