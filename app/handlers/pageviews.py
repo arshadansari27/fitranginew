@@ -173,7 +173,7 @@ class MenuView(object):
 
 @app.route('/')
 def home():
-    return HomeView(query=query).render()
+    return HomeView(query=None).render()
 
 @app.route('/search')
 def search():
