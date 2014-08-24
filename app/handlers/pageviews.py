@@ -189,7 +189,7 @@ def channel(channel):
     query = request.args.get('query', '')
     subchannel = request.args.get('subchannel', '')
     _facets = request.args.get('facets','')
-    facets = _facets.split(',') if len(_facets) > 0 else None
+    facets = _facets.split(',') if len(_facets) > 0 else []
     return ChannelView(channel, subchannel, paginated=False, selected_facets=facets, query=query,page=page).render()
 
 
