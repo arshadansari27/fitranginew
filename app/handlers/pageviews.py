@@ -208,7 +208,8 @@ def page_not_found(e):
 
 @app.route('/model/<channel>/<key>')
 def model(channel, key):
-    return ModelView(model, 'detail', channel_name=channel, subchannel_name=subchannel).render()
+    subchannel = request.args.get('subchannel', '')
+    return ModelView(key, 'detail', channel_name=channel, subchannel_name=subchannel).render()
 
 @app.route('/register', methods=['GET', 'POST'])
 def registeration():
