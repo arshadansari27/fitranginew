@@ -29,6 +29,47 @@ class Configuration(object):
             return obj
         return None
 
+class Facet(object):
+    all_facets = []
+
+    @classmethod
+    def load_facets(cls):
+        for k, v in configuration['FACETS'].iteritems():
+            _type = k
+            facet_list = v
+            for _name, _facets in facet_list:
+                f = Facet()
+                f.name = _name
+                f.facets = _facets
+                f.type = _type
+                Facet.all_facets.append(f)
+
+    def __repr__(self):
+        return "%s, %s, %s" % (self.name, self.type, str(self.facets))
+
+    @classmethod
+    def get_facet_by_name(cls, _name):
+        for f in Facet.all_facets:
+            if f.name.lower() == _name.lower():
+                return f
+        return None
+
+    @classmethod
+    def find(cls, name):
+        name = name.strip().lower()
+        for f in Facet.all_facets:
+            if f.name.lower() == name or name in [_v.lower() for _v in f.facets]:
+                return f
+        return None
+
+    @classmethod
+    def get_facet_by_type(cls, _type):
+        facets = []
+        for f in Facet.all_facets:
+            if f.type.lower() == _type.lower():
+                facets.append(f)
+        return facets
+
 class Channel(Configuration):
     all_data_channel = []
    

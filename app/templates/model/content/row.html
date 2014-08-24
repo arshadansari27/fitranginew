@@ -13,4 +13,5 @@
 			{% if model.description and model.description|length > 0 %}{{ model.description }}{% else %} {{ model.text[0:100]|escape }} {%endif%}
 		</div>
 	</div>
+	<script>console.log('{% for c in model.channels %} {{c}}, {% endfor %}');</script>
 </div>

@@ -35,21 +35,14 @@ configuration = {
         'Destination': {
             'template': 'feature/common',
             'model' : 'Content',
-            'facets': []
+            'facets': ['Activity', 'Location']
         },
     
         'Activity': {
             'template': 'feature/common',
             'model' : 'Content',
             'menu_view' : 'default',
-            'facets': [ 
-                {"Sky - Fly": ["Bungee jumping", "Hang Gliding", "Hot Air Ballooning", "Para Motoring", "Paragliding", "Parasailing", "Sky Diving","Zip Line"]},
-                {"Snow - Flow": []},
-                {"Travelling & Sightseeing": ["Architecture Monuments", "Beaches", "Forts & Caves", "Hill stations", "Places to Visit", "Theme Parks", "Wildlife Sanctuaries & Safaris"]},
-                {"Water - Wonders": ["Canyoning", "Kayaking", "Kite Surfing", "Scuba Diving", "Snorkelling", "Surfing", "Water Rafting"]},
-                {"Land Sports": ["Camping", "Cycling-Biking", "Marathons", "Mountaineering", "Off-beat Activities", "Rappelling & Valley Crossing", "Rock Climbing", "Trekking & Hiking", "Horse Riding"]},  
-                {"Other Sports": ["Stargazing", "Zorbing"]}
-            ] 
+            'facets': ['Activity']
         },
     
         'Article': {
@@ -73,13 +66,13 @@ configuration = {
         'Product':{
             'template': 'feature/profile',
             'model' : 'Product',
-            'facets': ['Clothes', 'Accessores', 'Bags', 'Footwear', 'Gears', 'Tools']
+            'facets': ['Product']
         },
 
         'Forum': {
             'template': 'feature/forum',
             'model' : 'ForumThread',
-            'facets': {},
+            'facets': [],
         }
     },
     'DEFAULT_ROLES': {
@@ -89,6 +82,31 @@ configuration = {
             'EventOrganiser': {'role': 'EventOrganiser'}, 
             'Retailer': {'role': 'Retailer'}, 
     }, 
+    'FACETS': {
+        'Activity':[ 
+            ("Sky - Fly", ["Bungee jumping", "Hang Gliding", "Hot Air Ballooning", "Para Motoring", "Paragliding", "Parasailing", "Sky Diving","Zip Line"]),
+            ("Snow - Flow", []),
+            ("Travelling & Sightseeing", ["Architecture Monuments", "Beaches", "Forts & Caves", "Hill stations", "Places to Visit", "Theme Parks", "Wildlife Sanctuaries & Safaris"]),
+            ("Water - Wonders", ["Canyoning", "Kayaking", "Kite Surfing", "Scuba Diving", "Snorkelling", "Surfing", "Water Rafting"]),
+            ("Land Sports", ["Camping", "Cycling-Biking", "Marathons", "Mountaineering", "Off-beat Activities", "Rappelling & Valley Crossing", "Rock Climbing", "Trekking & Hiking", "Horse Riding"]),  
+            ("Other Sports", ["Stargazing", "Zorbing"])
+
+        ],
+        'Location': [
+            ('India', ['Maharashtra', 'Gujrat', 'Kerela', 'Himachal Pradesh']),
+            ('Nepal', []),
+            ('Sri Lanka', [])
+        ],
+        'Product': [
+            ('Clothes', []),
+            ('Accessores', []),
+            ('Bags', []),
+            ('Footwear', []),
+            ('Gears', []),
+            ('Tools',[])
+        ]
+
+    }
 
 
 

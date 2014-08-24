@@ -71,16 +71,18 @@ class InfoBarView(object):
 
 class FacetView(object):
 
-    def __init__(self, facets, template=None):
+    def __init__(self, facets, channel, subchannel, template=None):
         if template is None:
             self.template = 'generic/main/facets.html'
         else:
             self.template = template
         self.facets = facets
+        self.channel = channel
+        self.subchannel = subchannel
 
     def render(self):
         template = env.get_template(self.template)
-        return template.render(facet=self.facets, user=g.user)
+        return template.render(facet=self.facets, channel=self.channel, subchannel=self.subchannel, user=g.user)
 
 
 class HomeView(object):
@@ -115,18 +117,12 @@ class ChannelView(object):
     def __init__(self, channel_name, sub_channel=None, selected_facets=[], query=None, page=1, paginated=True):
         self.query = query
         self.channel, self.facets = get_all_facets(channel_name)
-        print "*****", channel_name, self.channel
+
         
-        if sub_channel:
-            new_dict = {}
-            for k in self.facets:
-                if k == sub_channel:
-                    new_dict[k] = self.facets[k]
-            self.facets = new_dict
         _facets = [] 
-        if len(selected_facets) > 0 and len(self.facets) > 0:
-            for k, v in self.facets.iteritems():
-                _facets = [_v for _v in v if _v in selected_facets]
+        if len(selected_facets) > 0:
+            _facets = [_v for _v in selected_facets if Facet.find(_v) is not None]
+            print self.channel.name, sub_channel, _facets
 
         self.models, total = get_all_models(self.channel, sub_channel,  _facets, query, page, paginated)
         self.paginated = paginated
@@ -135,7 +131,7 @@ class ChannelView(object):
         if not _template:
             raise Exception('The hell, where is the template')
         self.template = "%s/list_card.html" % _template
-        self.facet_view = FacetView(self.facets)
+        self.facet_view = FacetView(self.facets, self.channel, sub_channel)
         self.menu_view = MenuView(self.channel.name, sub_channel if sub_channel else None)
         self.model_views = [ModelView(model, 'list', default='row') for model in self.models]
         link = "/" + channel_name
@@ -151,7 +147,6 @@ class ChannelView(object):
         models_arranged[0] = self.model_views[0: _len + 1]
         models_arranged[1] = self.model_views[_len + 1: _len + _len + 1]
         models_arranged[2] = self.model_views[_len + _len:]
-        #print len(models_arranged[0]), len(models_arranged[1]), len(models_arranged[2])
 
         if not self.paginated:
             return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=None, user=g.user)
@@ -193,10 +188,8 @@ def channel(channel):
     page = request.args.get('page', 1)
     query = request.args.get('query', '')
     subchannel = request.args.get('subchannel', '')
-    facets = []
-    for k in request.args.keys():
-        if k.startswith('facet'):
-            facets.append(request.args.get(k))
+    _facets = request.args.get('facets','')
+    facets = _facets.split(',') if len(_facets) > 0 else None
     return ChannelView(channel, subchannel, paginated=False, selected_facets=facets, query=query,page=page).render()
 
 

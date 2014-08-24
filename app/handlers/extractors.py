@@ -5,11 +5,13 @@ import re
 PAGE_SIZE = 25
 
 def get_all_facets(channel_name):
-    print 'Get all facets', channel_name
     channel = Channel.getByName(channel_name)
     if channel:
-        print 'Got all facets', channel.name
-        return channel, channel.facets
+        facets = {}
+        for f in channel.facets:
+            _facets = Facet.get_facet_by_type(f)
+            facets[f] = _facets
+        return channel, facets
     else:
         return channel, []
 
@@ -17,23 +19,16 @@ def get_all_facets(channel_name):
 def search_models(search_query):
     collection = Content._get_collection()
     regx = re.compile(search_query, re.IGNORECASE)
-    print regx
     query = {'$or': [{'name': {'$regex': regx}}, {'title': {'$regex': regx}}]}
     criteria = {'_id': 1}
-    print query
     models = list(collection.find(query, criteria))
-    print models
     models = [Content.objects(pk=str(m['_id'])).first() for m in models]
-    print '\\' *10,  models
     return models
 
 
 def get_all_models_all_channels(search_query=None):
     for_channels = ['Destination', 'Activity', 'General Articles', 'Profile']
     channels = filter(lambda c: c.name in for_channels, Channel.all_data())
-    print '*' * 100, '\n', 'Channels for home page', [c.name for c in channels]
-    print search_query
-    print '*' * 100
     models = {}
     for channel in channels:
         model_name = channel.model
@@ -55,7 +50,6 @@ def get_all_models_all_channels(search_query=None):
             regx = re.compile("%s" % search_query, re.IGNORECASE)
             query['value'] = regx
 
-        print search_query 
         queries = []
         if len(query) > 0:
             queries.append({query['head']: query['value']})
@@ -67,7 +61,6 @@ def get_all_models_all_channels(search_query=None):
             search = {}
         channel_search = {'channels': channel.name} 
         _query = {'$and': [channel_search, search]}
-        print _query
         coll = model_class._get_collection()
         total = coll.find(_query).count()
         cursor = coll.find(_query).limit(8)
@@ -75,38 +68,34 @@ def get_all_models_all_channels(search_query=None):
         for c in cursor:
             model_ids.append(c['_id'])
         models[channel.name] = [model_class.objects(pk=str(v)).first() for v in model_ids], (total / 8) + 1
-        print '*' * 80, '\n', channel.name, model_class
-        print '\n'.join([str(m) for m in models[channel.name][0]])
     return models
 
 
-def get_all_models(channel, sub_channel=None, facets=[], search_query=None, page=1, paginated=True):
+def get_all_models(channel, subchannel=None, facets=[], search_query=None, page=1, paginated=True):
     model_name = channel.model
     model_class = Node.model_factory(model_name.lower().strip())
-    if len(facets) > 0:
-        query = {'channels': {'$in': [c for c in facets]}}
+        
+   
+    if search_query:
+        if model_class == Profile:
+            query = {'name': search_query} 
+        else:
+            query = {'title': search_query} 
+            if model_class == Content:
+                keywords = search_query.split(' ')
+                query['keywords'] = {'$in': keywords}
     else:
-        facets_check = {}
-        if channel:
-            facets_check = {'channels': channel.name}
-        if sub_channel:
-            facets_check = {'channels': sub_channel}
-        if search_query:
-            if model_class == Profile:
-                _query = {'name': search_query} 
-            else:
-                _query = {'title': search_query} 
-                if model_class == Content:
-                    keywords = search_query.split(' ')
-                    _query['keywords'] = {'$in': keywords}
+        if channel and subchannel and len(facets) > 0:
+            query = {'$and': [{'channels': channel.name}, {'channels': subchannel}, {'channels': {'$in': facets}}]}
+        if channel and len(facets) > 0:
+            query = {'$and': [{'channels': channel.name}, {'channels': {'$in': facets}}]}
+        elif channel and subchannel:
+            query = {'$and': [{'channels': channel.name}, {'channels': subchannel}]}
         else:
-            _query = {}
-        if len(facets_check) > 0 and len(_query) > 0:
-            query = {'$and': [facets_check, _query]}
-        elif len(facets_check) > 0:
-            query = facets_check
-        else:
-            query = _query
+            query = {'channels': channel.name}
+        print '*' * 100
+        print query
+        print '*' * 100
 
     coll = model_class._get_collection()
     total = coll.find(query).count()
@@ -131,7 +120,6 @@ def get_by(cls, **kwargs): #, _and=True, single=False):
         query = {'$and': query}
     else:
         query = {'$or': query}
-    print query
     coll = cls._get_collection()
     cursor = coll.find(query)
     objs = []

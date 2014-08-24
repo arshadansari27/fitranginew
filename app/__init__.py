@@ -12,6 +12,7 @@ import requests
 from PIL import Image
 
 app = Flask(__name__, template_folder='templates', static_folder='assets')
+app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['MONGODB_SETTINGS'] = {'DB': settings.MONGODB_DB, 'HOST': settings.MONGODB_HOST, 'PORT': settings.MONGODB_PORT}
 app.debug = True
@@ -37,6 +38,7 @@ def start_app():
     logging.getLogger().setLevel(logging.DEBUG)
     Channel.load_channels()
     Role.load_roles()
+    Facet.load_facets()
 
     admin = flask_admin.Admin(app, 'Fitrangi Admin Panel')
     admin.add_view(ProfileView(Profile))
