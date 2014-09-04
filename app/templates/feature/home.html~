@@ -3,8 +3,6 @@
 			
 		
 	<div class="container">
-
-<h1>armash aslam fankar</h1>
 		<div id="myCarousel" class="carousel slide" data-ride="carousel">
         	<ol class="carousel-indicators">
           		<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
@@ -34,6 +32,7 @@
 	{% for k, models in model_dict.iteritems() %}
 	{% if models|length > 0 %}
 	<br/>
+<h1>armash aslam fankar</h1>
 	<hr/>
 	<div class="header-title"><h3>{{k}}</h3></div>
 		<div class="container-fluid">
