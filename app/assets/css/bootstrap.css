@@ -1464,6 +1464,7 @@ pre code {
 table {
   max-width: 100%;
   background-color: transparent;
+  
 }
 th {
   text-align: left;
@@ -1508,7 +1509,7 @@ th {
 .table-condensed > tbody > tr > td,
 .table-condensed > tfoot > tr > td {
   padding: 5px;
-}
+  }
 .table-bordered {
   border: 1px solid #ddd;
 }
@@ -1542,6 +1543,7 @@ table th[class*="col-"] {
   position: static;
   display: table-cell;
   float: none;
+  padding-left: 2px;
 }
 .table > thead > tr > td.active,
 .table > tbody > tr > td.active,
