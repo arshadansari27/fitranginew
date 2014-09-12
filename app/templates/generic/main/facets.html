@@ -1,5 +1,5 @@
 {% if facet|length > 0 %}	
-<div class="col-md-3">
+<div class="col-md-2">
 
 	<form id="facetform" action="/channel/{{channel.name}}{% if subchannel %}?subchannel={{subchannel}}{% endif %}" class="form-horizontal" role="form" method="GET">
 		{% for k, _facet in facet.iteritems() %}

@@ -22,7 +22,23 @@ class ProfileView(ModelView):
     column_list = ('name', 'username', 'roles', 'email', 'channels', 'main_image.image')
     
     column_filters = (FilterProfile('channels', 'Profile Type'),)
-                      
+    create_template = 'admin_custom/create.html'
+    edit_template = 'admin_custom/edit.html'
+    form_widget_args = {
+        'text': {
+            'rows': 10,
+            'class': 'ckeditor'
+        },
+        'name': {
+            'class': 'span12'
+        },
+        'title': {
+            'class': 'hide'
+        },
+        'description': {
+            'class': 'span12'
+        }
+    }
 
     """
     form_ajax_refs = {
@@ -54,6 +70,12 @@ class ContentView(ModelView):
         'text': {
             'rows': 10,
             'class': 'ckeditor'
+        },
+        'title': {
+            'class': 'span12'
+        },
+        'description': {
+            'class': 'span12'
         }
     }
     create_template = 'admin_custom/create.html'
@@ -91,6 +113,20 @@ class EventView(ModelView):
             'fields': ['name']
         },
     }
+    create_template = 'admin_custom/create.html'
+    edit_template = 'admin_custom/edit.html'
+    form_widget_args = {
+        'text': {
+            'rows': 10,
+            'class': 'ckeditor'
+        },
+        'title': {
+            'class': 'span12'
+        },
+        'description': {
+            'class': 'span12'
+        }
+    }
 
 class ProductView(ModelView):
     column_filters = ['title']
@@ -100,5 +136,19 @@ class ProductView(ModelView):
         "created_by": {
             'fields': ['name']
         },
+    }
+    create_template = 'admin_custom/create.html'
+    edit_template = 'admin_custom/edit.html'
+    form_widget_args = {
+        'text': {
+            'rows': 10,
+            'class': 'ckeditor'
+        },
+        'title': {
+            'class': 'span12'
+        },
+        'description': {
+            'class': 'span12'
+        }
     }
 

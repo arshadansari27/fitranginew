@@ -1,10 +1,7 @@
 from app.models import *
-#from flask import render_template
-from flask import render_template, make_response, abort, request, g, flash, redirect, url_for, session, send_file, jsonify
+from flask import render_template, request, g, flash, redirect, url_for, session, send_file, jsonify
 from jinja2 import Environment, FileSystemLoader
 from app.settings import TEMPLATE_FOLDER
-from Queue import Queue
-from mongoengine import Q
 from app.handlers.extractors import get_all_facets, get_all_models, get_all_models_all_channels, search_models
 from app.models import Profile
 from app import app
@@ -251,10 +248,4 @@ def before_request():
             g.user = user
         else:
             g.user = None
-
-@app.route('/flash', methods=['GET'])
-def flash_message():
-    flash_message = session.get('flash_message', None)
-    session['flash_message'] = ''
-    return jsonify(json.loads(flash_message)) if flash_message and len(flash_message) > 0 else ''
 

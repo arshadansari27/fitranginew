@@ -214,7 +214,7 @@ class Content(Node, db.Document):
     text = db.StringField()
     main_image = db.EmbeddedDocumentField(Image)
     additional_images = db.ListField(db.EmbeddedDocumentField(Image))
-    attachements = db.ListField(db.EmbeddedDocumentField(File))
+    attachments = db.ListField(db.EmbeddedDocumentField(File))
     slug = db.StringField()
     published = db.BooleanField()
     published_timestamp = db.DateTimeField(required=False)
@@ -293,10 +293,17 @@ class Profile(Content):
 
 class Event(Content):
     __template__ = 'model/event/'
-    start_timestamp = db.DateTimeField()
-    end_timestamp = db.DateTimeField()
-    additional_info = db.DictField()
-    
+    date = db.StringField()
+    duration = db.StringField()
+    Experiences = db.ListField(db.StringField())
+    Organiser = db.ReferenceField('Profile')
+    Amount = db.StringField()
+    contact = db.StringField()
+    features = db.ListField(db.StringField())
+    important_notes = db.ListField(db.StringField())
+    links = db.DictField()
+
+
 class Product(Content):
     __template__ = 'model/product/'
     price = db.FloatField()

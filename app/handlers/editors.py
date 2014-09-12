@@ -1,31 +1,12 @@
 from app.models import *
-#from flask import render_template
-from flask import render_template, make_response, abort, request, g, redirect, url_for, session, send_file
+from flask import render_template, request, g, session, flash
 from jinja2 import Environment, FileSystemLoader
 from app.settings import TEMPLATE_FOLDER
-from Queue import Queue
-from mongoengine import Q
-from app.handlers.extractors import get_all_facets, get_all_models, get_all_models_all_channels
-from app.models import Profile
 from app import app
 from app.handlers.pageviews import MenuView
 import simplejson as json
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
-
-def model_editor(channel, model_key=None, subchannel=None, form=None):
-    if form is not None:
-        ModelEditor(model_key, channel_name=channel, subchannel_name=subchannel, form=form).update()
-        return None
-    else:
-        return ModelEditor(model_key, channel_name=channel, subchannel_name=subchannel).render()
-
-
-def setup_flash(category, message):
-    session['flash_message'] = json.dumps({'category': category, 'message': message})
-
-def clear_flash():
-    session['flash_message'] = None
 
 class ModelEditor(object):
 
@@ -49,8 +30,7 @@ class ModelEditor(object):
         self.category = None
 
     def render(self):
-        template = env.get_template(self.template)
-        return template.render(model=self.model, menu=self.menu_view, user=g.user)
+        return render_template(self.template, model=self.model, menu=self.menu_view, user=g.user)
 
     def update(self):
         data = dict((k, v) for k, v in self.form.iteritems())
@@ -73,13 +53,11 @@ class ModelEditor(object):
         except Exception, e:
             category = 'error'
             message = str(e)
-        setup_flash(category, message)
+        flash(message, category=category)
 
-        #return ModelEditor(str(self.model.id), self.channel.name, self.subchannel.name if self.subchannel else None).render()
 
 @app.route('/model/<channel>/<key>/edit', methods=['GET', 'POST'])
 def model_editor_view(channel, key):
     if request.method == 'POST':
-        model_editor(channel, model_key=key, form=request.form)
-        return redirect(url_for('model_editor_view', channel=channel, key=key))
-    return model_editor(channel, model_key=key)
+        ModelEditor(key, channel_name=channel, form=request.form).update()
+    return ModelEditor(key, channel_name=channel).render()

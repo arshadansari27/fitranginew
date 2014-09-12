@@ -32,8 +32,12 @@ def load_document(document_url):
 
 
 if __name__ == '__main__':
-    d = '/Users/arshad/Dropbox/ARSHAD @ FITRANGI/Fitrangi.com DATABASE/DESTINATIONS/SKY - FLY/Parasailing/Parasailing At Virar, Mumbai.docx'
-    print load_document(d)
-    #urls = []
-    #get_document_list('/Users/arshad/Dropbox/ARSHAD @ FITRANGI/Fitrangi.com DATABASE/', urls)
-    #print '\n'.join(urls)
+    d = '/Users/arshad/Dropbox/ARSHAD @ FITRANGI/Fitrangi.com DATABASE/ADVENTURE TRIPS/Amboli Wildlife tour By Iris Outdoors.docx'
+    data = load_document(d)[1]
+    soup = BeautifulSoup(data)
+    data = [d for d in soup.findAll()]
+    for i in xrange(0, len(data), 2):
+        print data[i]
+        print data[i + 1]
+        print '*' * 200
+

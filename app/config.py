@@ -48,19 +48,19 @@ configuration = {
         'Article': {
             'template': 'feature/common',
             'model' : 'Content',
-            'facets': []
+            'facets': ['Article']
         },
     
         'Event': {
             'template': 'feature/event',
             'model' : 'Event',
-            'facets': []
+            'facets': ['Activity', 'Location']
         }, 
     
         'Profile': {
             'template': 'feature/profile',
             'model' : 'Profile',
-            'facets': []
+            'facets': ['Profile']
         },
     
         'Product':{
@@ -91,6 +91,23 @@ configuration = {
             ("Land Sports", ["Camping", "Cycling-Biking", "Marathons", "Mountaineering", "Off-beat Activities", "Rappelling & Valley Crossing", "Rock Climbing", "Trekking & Hiking", "Horse Riding"]),  
             ("Other Sports", ["Stargazing", "Zorbing"])
 
+        ],
+        'Article': [
+            ('All', []),
+            ('Top 5 Series', []),
+            ('Explore', []),
+            ('Informative',[])
+        ],
+        'Profile': [
+            ('Organizers', []),
+            ('Gear Dealers', []),
+            ('NGO\'s', []),
+            ('Rescuers', []),
+            ('Trainers', []),
+            ('Guides', []),
+            ('Institutes', []),
+            ('Hotels', []),
+            ('Govt. Bodies', []),
         ],
         'Location': [
             ('India', ['Maharashtra', 'Gujrat', 'Kerela', 'Himachal Pradesh']),

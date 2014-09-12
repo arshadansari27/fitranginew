@@ -1,7 +1,7 @@
 {% extends 'generic/main/base.html' %}
 {% block body %}
-{{ facets.render()|safe }}
-	<div class="container ">
+	<div class="container-fluid">
+        {{ facets.render()|safe }}
 		<div class="row">
 			{% if models|length == 3 %}
 				{% for k, m in models.iteritems() %}

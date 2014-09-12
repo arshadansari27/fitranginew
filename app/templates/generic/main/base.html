@@ -87,10 +87,17 @@
 		 </div>	
 		</div>
 		<div class="container">
-			<div class="ajax-message alert hide" style="">
-    			<i class="{{ icon }}"></i>&nbsp;
-    			<a class="close" data-dismiss="alert">×</a>
-			</div>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="ajax-message alert alert-{{ category }}" style="">
+                <i class="{{ icon }}"></i>&nbsp;
+                <a class="close" data-dismiss="alert">×</a>
+                    {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
 		</div>
 		{{ menu.render()|safe }}
 
@@ -108,7 +115,7 @@
 	</div>
   </body>
 	<div id="footer-scripts"></div>
-	<script>
+	<!--script>
 		$(document).ready(function(){
 			$.ajax({
     		type: 'GET',
@@ -131,6 +138,6 @@
     		dataType: 'json'
 		});	
 		});
-	</script>
+	</script-->
 
 </html>
