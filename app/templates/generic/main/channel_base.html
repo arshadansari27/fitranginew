@@ -1,7 +1,18 @@
 {% extends 'generic/main/base.html' %}
 {% block body %}
 	<div class="container-fluid">
-        {{ facets.render()|safe }}
+
+        <div class="col-md-2">
+            <div class="panel panel-default">
+                <div class="panel-heading"><div class="panel-title">Admin Actions</div></div>
+                <div class="panel-body">
+                    <a href="/model/{{channel_name}}/add">Add New</a>
+                </div>
+
+
+            </div>
+            {{ facets.render()|safe }}
+        </div>
 		<div class="row">
 			{% if models|length == 3 %}
 				{% for k, m in models.iteritems() %}

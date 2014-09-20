@@ -1,5 +1,4 @@
 {% if facet|length > 0 %}	
-<div class="col-md-2">
 
 	<form id="facetform" action="/channel/{{channel.name}}{% if subchannel %}?subchannel={{subchannel}}{% endif %}" class="form-horizontal" role="form" method="GET">
 		{% for k, _facet in facet.iteritems() %}
@@ -51,7 +50,6 @@
 		</div>
 		{% endfor %}
 	</form>
-</div>
 <script>
 	function getParameterByName(name) {
     	var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);

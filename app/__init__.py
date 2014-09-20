@@ -22,12 +22,6 @@ db.init_app(app)
 
 #from flask.ext import login
 
-def register_blueprints(app):
-    from app.views import blueprints
-    from app.views import the_api
-    for blueprint in blueprints:
-        app.register_blueprint(blueprint)
-    app.register_blueprint(the_api)
 
 def start_app():
     from app.models.sessions import MongoSessionInterface
@@ -51,8 +45,5 @@ def start_app():
     from app.handlers.editors import *
 
 
-
-
-#register_blueprints(app)
 start_app()
 from app.handlers.examples import *

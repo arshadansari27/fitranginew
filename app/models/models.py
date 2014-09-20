@@ -181,6 +181,7 @@ class Node(object):
             if hasattr(self, k):
                 setattr(self, k, v)
         self.save()
+        print self.id
         return self
 
     def upload_image(self, image):
