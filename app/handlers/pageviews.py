@@ -131,6 +131,7 @@ class ChannelView(object):
         self.facet_view = FacetView(self.facets, self.channel, sub_channel)
         self.menu_view = MenuView(self.channel.name, sub_channel if sub_channel else None)
         self.model_views = [ModelView(model, 'list', default='row') for model in self.models]
+        print '******', len(self.model_views)
         link = "/" + channel_name
         if sub_channel:
             link+= '/' + sub_channel

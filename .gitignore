@@ -2,3 +2,4 @@
 .idea/
 *iml
 db_address.txt
+.DS_Store

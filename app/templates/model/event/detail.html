@@ -1,7 +1,92 @@
 {% extends 'generic/main/model_base.html' %}
 {% block model_data %}
-{{ model.title }} 
-{{ model.description }}
-Start: {{ model.start_timestamp }}
-End: {{ model.end_timestamp }}
+
+<div class="container">
+    <div class="">
+        <div class="">
+            <div class="col-lg-12">
+                <hr/>
+                <h3 class="intro-text text-center">{{ model.title }} <br/><small>{{ model.Organiser.name }}</small> &nbsp;</h3>
+                <hr/>
+            </div>
+            <div class="col-lg-12 ">
+                <center>
+                    <img class="img-responsive img-border img-full" src="/img/{{ model.get_class_name()}}/{{model.id}}" alt="">
+                </center>
+                <div class="row">
+                    <div class="col-md-6" >
+                        <p>{{ model.text|safe }}</p>
+                    </div>
+                    <div class="col-md-6" >
+                        <table class="table-condensed table-bordered" >
+
+                            <tr>
+                                <th>DATE & DAY :	</th>
+                                <td>{{ model.date }}</td>
+                            </tr>
+                            <tr>
+                                <th>Duration :	</th>
+                                <td>{{ model.duration }}</td>
+                            </tr>
+                            <tr>
+                                <th>Experience :	</th>
+                                <td>{% for exp in model.experience %}{{exp}}, {% endfor %}</td>
+                            </tr>
+                            <tr>
+                                <th>Location :	</th>
+                                <td>{{ model.location }}</td>
+                            </tr>
+                            <tr>
+                                <th>Organiser :	</th>
+                                <td>{{ model.Organiser.name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Amount :	</th>
+                                <td>{{ model.amount }}</td>
+                            </tr>
+                            <tr>
+                                <th>For Registration Contact :</th>
+                                <td>{{ model.contact }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <table class="table-condensed table-bordered" >
+                <tr>
+                    <th> Features	</th>
+                    <th> Important Notes	</th>
+                    <th> Useful Links	</th>
+                </tr>
+                <tr>
+                    <td>
+                        <ul>
+                            {% for feature in model.features %}
+                            <li>{{ feature }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            {% for notes in model.important_notes %}
+                            <li>{{ feature }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            {% for k, v in model.links.iteritems() %}
+                                <li>{{k}} : {{ v }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                </table>
+            </div>
+        </div>
+        {% import 'generic/includes/comments.html' as comment_macro %}
+        {{ comment_macro.show_comments(model.comments, model.id)}}
+    </div>
+</div>
 {% endblock %}
