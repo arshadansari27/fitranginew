@@ -1,12 +1,9 @@
-from app.models import *
-from flask import render_template, request, g, session, flash, redirect, url_for
-from jinja2 import Environment, FileSystemLoader
-from app.settings import TEMPLATE_FOLDER
-from app import app
-from app.handlers.pageviews import MenuView
-import simplejson as json
+__author__ = 'arshad'
 
-env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
+from app.models import *
+from flask import render_template, request, g, flash
+from app.handlers.views.menu_view import MenuView
+
 
 class ModelEditor(object):
 
@@ -41,14 +38,26 @@ class ModelEditor(object):
             subchannel = None
         return render_template(self.template, model=self.model, menu=self.menu_view, user=g.user, channel=self.channel.name, subchannel=subchannel)
 
+    def get_data_from_form(self):
+        data = dict((k, v) for k, v in self.form.iteritems() if k != 'action')
+        if data.has_key('published') and data['published'] == 'on':
+            data['published'] = True
+        else:
+            data['published'] = False
+        return data
+
     def add_new(self):
-        data = dict((k, v) for k, v in self.form.iteritems())
+        data = self.get_data_from_form()
         try:
             category = 'success'
             model_class = Node.model_factory(self.channel.model.lower())
             self.model = model_class()
-            self.model = self.model.update_existing(**data)
-            message = 'Added profile for ' + self.__class__.__name__.lower() +'.'
+            if g.user and g.user.id:
+                user = g.user
+            else:
+                user = None
+            self.model = self.model.add_new(user, **data)
+            message = 'Added '+ self.channel.name + '.'
         except Exception, e:
             category = 'error'
             message = str(e)
@@ -56,7 +65,7 @@ class ModelEditor(object):
 
 
     def update(self):
-        data = dict((k, v) for k, v in self.form.iteritems())
+        data = self.get_data_from_form()
         try:
             category = 'success'
             if self.form['action'] == 'update_existing':
@@ -79,28 +88,4 @@ class ModelEditor(object):
         flash(message, category=category)
 
 
-@app.route('/model/<channel>/<key>/edit', methods=['GET', 'POST'])
-@app.route('/model/<channel>/add', methods=['GET', 'POST'])
-def model_editor_view(channel, key=None):
-    if request.method == 'POST':
-        if key:
-            ModelEditor(key, channel_name=channel, form=request.form).update()
-        else:
-            form = {}
-            for k, v in request.form.iteritems():
-                if k == 'channels':
-                    form[k] = request.form.getlist(k)
-                else:
-                    form[k] = v
-            if not form.has_key('channels'):
-                form['channels'] = [channel]
-                if channel == 'Profile':
-                    form['channels'].append('Enthusiast')
-            me = ModelEditor(key, channel_name=channel, form=form)
-            me.add_new()
-            key = str(me.model.id)
-            return redirect('/model/%s/%s/edit' % (channel, key))
-    if key:
-        return ModelEditor(key, channel_name=channel).render()
-    else:
-        return ModelEditor(key, channel_name=channel).render()
+

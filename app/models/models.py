@@ -1,6 +1,7 @@
 from flask.ext.mongoengine import MongoEngine
+from bson import ObjectId
 from app.config import configuration
-import datetime
+import datetime, random
 from app import db
 
 class Configuration(object):
@@ -175,14 +176,35 @@ class Node(object):
             if channel.model == model.__class__.__name__:
                 return channel.name
         raise Exception("Unset Channel for this model type %s %s" % (model.__class__.__name__, str(model)))
-    
+
+
+    def add_new(self, owner, **kwargs):
+        self.set_values(True, **kwargs)
+        self.created_timestamp = datetime.datetime.now()
+        self.created_by = owner
+        self.published = True
+        self.published_timestamp = datetime.datetime.now()
+        self.save()
+        return self
+
     def update_existing(self, **kwargs):
-        for k, v in kwargs.iteritems():
-            if hasattr(self, k):
-                setattr(self, k, v)
+        self.set_values(False, **kwargs)
         self.save()
         print self.id
         return self
+
+    def set_values(self, is_new, **kwargs):
+        for k, v in kwargs.iteritems():
+            if k.endswith('_ref'):
+                continue
+            if k.endswith('_display'):
+                _k = k.replace('_display', '_ref')
+                if _k and kwargs.has_key(_k) and kwargs.get(_k, False):
+                    v = Content.get_by_id(kwargs[_k])
+                else:
+                    continue
+            setattr(self, k, v)
+
 
     def upload_image(self, image):
         self.main_image = Image(image=image)
@@ -199,7 +221,9 @@ class File(db. EmbeddedDocument):
     copyright = db.StringField()
 
 class Comment(db.EmbeddedDocument):
+    key = db.StringField()
     created_by = db.ReferenceField('Profile', required=True)
+    created_on = db.DateTimeField(default=datetime.datetime.now, required=True)
     text = db.StringField()
     keywords = db.ListField(db.StringField())
     
@@ -226,6 +250,10 @@ class Content(Node, db.Document):
     keywords = db.ListField(db.StringField())
     facebook = db.StringField()
     linkedin = db.StringField()
+
+    @classmethod
+    def get_by_id(cls, id):
+        return Content.objects(pk=id).first()
     
     def get_image(self):
         return self.main_image.image
@@ -243,7 +271,8 @@ class Content(Node, db.Document):
     def addComment(cls, content_key, comment_text, author_key):
         author = Profile.objects(pk=author_key).first()
         content = Content.objects(pk=content_key).first()
-        comment = Comment(created_by=author, text=comment_text)
+        r = random.randint(1111111, 9999998999)
+        comment = Comment(created_by=author, text=comment_text, key="%s-%d" % (str(content.id), r))
         content.comments.append(comment)
         content.save()
 
@@ -296,13 +325,14 @@ class Event(Content):
     __template__ = 'model/event/'
     date = db.StringField()
     duration = db.StringField()
-    Experiences = db.ListField(db.StringField())
-    Organiser = db.ReferenceField('Profile')
-    Amount = db.StringField()
+    experiences = db.StringField()
+    organiser = db.ReferenceField('Profile')
+    amount = db.StringField()
     contact = db.StringField()
-    features = db.ListField(db.StringField())
-    important_notes = db.ListField(db.StringField())
-    links = db.DictField()
+    location = db.StringField()
+    features = db.StringField()
+    important_notes = db.StringField()
+    links = db.StringField()
 
 
 class Product(Content):

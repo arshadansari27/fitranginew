@@ -23,6 +23,7 @@
 							{% if subchannel  %}
 								{% if _f.name == subchannel %}
 									<strong>{{_f.name }}</strong>
+                                    <input type="checkbox" class="pull-right" name="facets-{{_f.name}}" value="{{_f.name}}"/>
 									<hr/>
 									{% for _fl in _f.facets %}
 										<div class="row-fluid">
@@ -34,6 +35,7 @@
 								{% endif %}
 							{% else %}
 								<strong>{{_f.name }}</strong>
+                                <input type="checkbox" class="pull-right" name="facets-{{_f.name}}" value="{{_f.name}}"/>
 								<hr/>
 								{% for _fl in _f.facets %}
 									<div class="row-fluid">

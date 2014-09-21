@@ -6,7 +6,12 @@
         <div class="">
             <div class="col-lg-12">
                 <hr/>
-                <h3 class="intro-text text-center">{{ model.title }} <br/><small>{{ model.Organiser.name }}</small> &nbsp;</h3>
+                <h3 class="intro-text text-center">{{ model.title }} <br/>
+                    <small>{{ model.organiser.name }}</small> &nbsp;
+                    {% if user and 'Admin' in user.roles or model.created_by.id == user.id %}
+                    <small><a href="/model/{{ channel }}/{{ model.id}}/edit">Edit</a></small>
+                    {% endif %}
+                </h3>
                 <hr/>
             </div>
             <div class="col-lg-12 ">
@@ -22,31 +27,31 @@
 
                             <tr>
                                 <th>DATE & DAY :	</th>
-                                <td>{{ model.date }}</td>
+                                <td>{% if model.date %}{{ model.date }}{% endif %}</td>
                             </tr>
                             <tr>
                                 <th>Duration :	</th>
-                                <td>{{ model.duration }}</td>
+                                <td>{% if model.duration %}{{ model.duration }}{% endif %}</td>
                             </tr>
                             <tr>
                                 <th>Experience :	</th>
-                                <td>{% for exp in model.experience %}{{exp}}, {% endfor %}</td>
+                                <td>{% if model.experiences %}{{ model.experiences }}{% endif %}</td>
                             </tr>
                             <tr>
                                 <th>Location :	</th>
-                                <td>{{ model.location }}</td>
+                                <td>{% if model.location %}{{ model.location }}{% endif %}</td>
                             </tr>
                             <tr>
                                 <th>Organiser :	</th>
-                                <td>{{ model.Organiser.name }}</td>
+                                <td>{% if model.organiser and model.organiser.id %}{{ model.organiser.name }}{% endif %}</td>
                             </tr>
                             <tr>
                                 <th>Amount :	</th>
-                                <td>{{ model.amount }}</td>
+                                <td>{% if model.amount %}{{ model.amount }}{% else %} Amount will be updated soon.{% endif %}</td>
                             </tr>
                             <tr>
                                 <th>For Registration Contact :</th>
-                                <td>{{ model.contact }}</td>
+                                <td>{% if model.contact %}{{ model.contact }}{% else %} Contact will be updated soon.{% endif %}</td>
                             </tr>
                         </table>
                     </div>
@@ -62,23 +67,17 @@
                 <tr>
                     <td>
                         <ul>
-                            {% for feature in model.features %}
-                            <li>{{ feature }}</li>
-                            {% endfor %}
+                            {{ model.features| safe}}
                         </ul>
                     </td>
                     <td>
                         <ul>
-                            {% for notes in model.important_notes %}
-                            <li>{{ feature }}</li>
-                            {% endfor %}
+                            {{ model.important_notes| safe}}
                         </ul>
                     </td>
                     <td>
                         <ul>
-                            {% for k, v in model.links.iteritems() %}
-                                <li>{{k}} : {{ v }}</li>
-                            {% endfor %}
+                            {{ model.links|safe }}
                         </ul>
                     </td>
                 </tr>
