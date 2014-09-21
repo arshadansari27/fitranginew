@@ -5,7 +5,14 @@
             	<div class="">        
                 	<div class="col-lg-12">
                     	<hr/>
-						<h3 class="intro-text text-center">{{ model.title }} <br/><small>{{ model.created_by.name }}</small> &nbsp;</h3>
+						<h3 class="intro-text text-center">{{ model.title }}
+                            <br/>
+                            <small>{{ model.created_by.name }}</small> &nbsp;
+                            {% if user and 'Admin' in user.roles or model.created_by.id == user.id %}
+                            <small><a href="/model/{{ channel }}/{{ model.id}}/edit">Edit</a></small>
+                            {% endif %}
+
+                        </h3>
                     	<hr/>
                 	</div>
                 	<div class="col-lg-12 ">

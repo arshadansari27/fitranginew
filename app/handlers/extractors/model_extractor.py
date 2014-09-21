@@ -1,19 +1,9 @@
+__author__ = 'arshad'
+
 from app.models import *
-from Queue import Queue
 import re
 
 PAGE_SIZE = 25
-
-def get_all_facets(channel_name):
-    channel = Channel.getByName(channel_name)
-    if channel:
-        facets = {}
-        for f in channel.facets:
-            _facets = Facet.get_facet_by_type(f)
-            facets[f] = _facets
-        return channel, facets
-    else:
-        return channel, []
 
 
 def search_models(search_query):
@@ -59,7 +49,7 @@ def get_all_models_all_channels(search_query=None):
             search = {'$or': queries}
         else:
             search = {}
-        channel_search = {'channels': channel.name} 
+        channel_search = {'channels': channel.name}
         _query = {'$and': [channel_search, search]}
         coll = model_class._get_collection()
         total = coll.find(_query).count()
@@ -74,13 +64,13 @@ def get_all_models_all_channels(search_query=None):
 def get_all_models(channel, subchannel=None, facets=[], search_query=None, page=1, paginated=True):
     model_name = channel.model
     model_class = Node.model_factory(model_name.lower().strip())
-        
-   
+
+
     if search_query:
         if model_class == Profile:
-            query = {'name': search_query} 
+            query = {'name': search_query}
         else:
-            query = {'title': search_query} 
+            query = {'title': search_query}
             if model_class == Content:
                 keywords = search_query.split(' ')
                 query['keywords'] = {'$in': keywords}

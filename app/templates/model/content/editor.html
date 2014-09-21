@@ -7,11 +7,32 @@
     <h3 class="">Add new {% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %}</h3>
     {% endif %}
     <hr/>
+    {% if model.id %}
+    <h4 class="">Image Uploader</h4>
+    <hr/>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="text-center">
+                <img height="300px" width="350px" src="{% if model.has_no_image %}http://placehold.it/300x350{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}" class="avatar" alt="avatar">
+                <h6 class="">Upload a different photo...</h6>
+                <form action="/model/{{ channel }}/{{model.id}}/edit" enctype="multipart/form-data" method="post">
+                    <input class="form-control" name="action" type="hidden" value="image_upload"/>
+                    <input class="col-md-6 form-control" name="image" type="file"/>
+                    <button type="submit" class="btn btn-info">Upload</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    <hr/>
+    {% endif %}
     <div class="col-md-12 content-info">
         <!--div class="alert alert-info alert-dismissable" style="display: none;"> <a class="panel-close close" data-dismiss="alert">×</a>  <i class="fa fa-coffee"></i>
             This is an <strong class="">.alert</strong>. Use this to show important messages to the user.
         </div-->
         <h4 class="">{% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %} details</h4>
+        <hr/>
 
         <form action="{% if model.id %}/model/{{ channel }}/{{model.id}}/edit{% else %}/model/{{ channel }}/add{% endif %}" method="post" class="form-horizontal" role="form">
             <div class="form-group">
@@ -32,9 +53,15 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-lg-3 control-label">Published :</label>
+                <div class="col-lg-8">
+                    <input type="checkbox" class="form-control" name="published" {%if model.published %}checked{% endif %}/>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-lg-3 control-label">Content:</label>
                 <div class="col-lg-8">
-                    <textarea class="ckeditor" row="10" name="text">{%if model.description%}{{ model.description }}{% endif %}</textarea>
+                    <textarea class="ckeditor" row="10" name="text">{%if model.text %}{{ model.text}}{% endif %}</textarea>
                 </div>
             </div>
 
@@ -49,20 +76,7 @@
         </form>
     </div>
     <hr/>
-    {% if model.id %}
-    <div class="col-md-12">
-        <div class="text-center">
-            <img src="{% if model.has_no_image %}http://placehold.it/600x300{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}" class="avatar" alt="avatar">
-            <h6 class="">Upload a different photo...</h6>
-            <form action="/model/{{ channel }}/{{model.id}}/edit" enctype="multipart/form-data" method="post">
-                <input class="form-control" name="action" type="hidden" value="image_upload"/>
-                <input class="form-control" name="image" type="file"/>
-                <button type="submit" class="btn btn-info">Upload</button>
-            </form>
-        </div>
-    </div>
-    <hr/>
-    {% endif %}
+
 </div>
 {% endblock %}
 {% block footer_scripts %}

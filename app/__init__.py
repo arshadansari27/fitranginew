@@ -34,14 +34,13 @@ def start_app():
     Role.load_roles()
     Facet.load_facets()
 
-    admin = flask_admin.Admin(app, 'Fitrangi Admin Panel')
-    admin.add_view(ProfileView(Profile))
-    admin.add_view(ContentView(Content))
-    admin.add_view(EventView(Event))
-    admin.add_view(ProductView(Product))
+    #admin = flask_admin.Admin(app, 'Fitrangi Admin Panel')
+    #admin.add_view(ProfileView(Profile))
+    #admin.add_view(ContentView(Content))
+    #admin.add_view(EventView(Event))
+    #admin.add_view(ProductView(Product))
 
-    from app.handlers import *
-    from app.handlers.pageviews import *
+    from app.handlers.views import *
     from app.handlers.editors import *
 
 
