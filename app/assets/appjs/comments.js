@@ -4,7 +4,7 @@ $(document).ready(function(){
 
 	var postComment = function(options) {
 		App.post({
-			url: '/comment',
+			url: '/comment/' + options.key,
 			parameters: {comment: options.comment, key: options.key},
     		success: function(message, node) { 
     			console.log('in success callback' + message);

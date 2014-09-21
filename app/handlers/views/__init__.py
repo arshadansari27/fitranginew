@@ -53,6 +53,44 @@ def model(channel, key):
     subchannel = request.args.get('subchannel', '')
     return ModelView(key, 'detail', channel_name=channel, subchannel_name=subchannel).render()
 
+@app.route("/comments/<content_key>/delete/<key>", methods=["POST"])
+def comment_delete(content_key, key):
+    try:
+        content = Content.get_by_id(content_key)
+        location = request.form['location']
+        comment_to_deleta = None
+        for comment in content.comments:
+            if comment.key == key:
+                comment_delete = comment
+                break
+        if comment_delete:
+            content.comments.remove(comment)
+            content.save()
+            flash("Successfully added the comment", category='success')
+        else:
+            flash("Comment could not be deleted", category='error')
+        return redirect(location)
+    except Exception, e:
+        flash("Failed to add the comment", category='error')
+        return jsonify(status='error', node=None, message="Failed to add the comment")
+
+@app.route("/comment", methods=["POST"])
+@app.route("/comment/<key>", methods=["POST"])
+def comment(key=None):
+    try:
+        user = g.user
+        comment = request.json['comment']
+        if not key:
+            key = request.json['key']
+        content = Content.get_by_id(key)
+        comment = content.addComment(content.id, comment, user.id)
+        flash("Successfully added the comment", category='success')
+        return jsonify(status='success', node=None, message="Successfully added the comment")
+    except Exception, e:
+        flash("Failed to add the comment", category='error')
+        return jsonify(status='error', node=None, message="Failed to add the comment")
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def registeration():
     if request.method == 'POST':

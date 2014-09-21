@@ -1,7 +1,7 @@
 from flask.ext.mongoengine import MongoEngine
 from bson import ObjectId
 from app.config import configuration
-import datetime
+import datetime, random
 from app import db
 
 class Configuration(object):
@@ -221,7 +221,9 @@ class File(db. EmbeddedDocument):
     copyright = db.StringField()
 
 class Comment(db.EmbeddedDocument):
+    key = db.StringField()
     created_by = db.ReferenceField('Profile', required=True)
+    created_on = db.DateTimeField(default=datetime.datetime.now, required=True)
     text = db.StringField()
     keywords = db.ListField(db.StringField())
     
@@ -269,7 +271,8 @@ class Content(Node, db.Document):
     def addComment(cls, content_key, comment_text, author_key):
         author = Profile.objects(pk=author_key).first()
         content = Content.objects(pk=content_key).first()
-        comment = Comment(created_by=author, text=comment_text)
+        r = random.randint(1111111, 9999998999)
+        comment = Comment(created_by=author, text=comment_text, key="%s-%d" % (str(content.id), r))
         content.comments.append(comment)
         content.save()
 
