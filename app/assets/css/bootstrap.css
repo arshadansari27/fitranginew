@@ -94,7 +94,7 @@ figure {
 }
 
 hr {
-    border-color: #999999;
+    border-color: #484848;
     max-width: 400px;
 }
 hr {
@@ -102,11 +102,11 @@ hr {
     -moz-border-left-colors: none;
     -moz-border-right-colors: none;
     -moz-border-top-colors: none;
-    border-color: #eee -moz-use-text-color -moz-use-text-color;
+    border-color:  	  	#C8C8C8;
     border-image: none;
     border-right: 0 none;
     border-style: solid none none;
-    border-width: 1px 0 0;
+    border-width: 2px 0 0;
     margin-bottom: 20px;
     margin-top: 20px;
 }
