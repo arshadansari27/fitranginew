@@ -104,64 +104,31 @@
         <div class="row">
             <div class="col-lg-8">
 
-                <!-- POSTED QUESTION ON FORUM-->
-                <h1>ASKED QUESTION TITLE</h1>
-                <p class="lead">by <a href="index.php">USERNAME</a>
-                </p>
-                <p>
-                    <span class="glyphicon glyphicon-time"></span> Posted on September 11, 2014 at 9:00 PM</p>
-                <hr>
-                
-                
-                <p class="lead">Science cuts two ways, of course; its products can be used for both good and evil. But there's no turning back from science. The early warnings about technological dangers also come from science.</p>
-                
-                <!-- POTED QUESTION ENDS HERE-->
-                
-                <!--RELATED TAGS -->
-                <p><strong>Keywords:</strong>
-                </p>
-                <ul>
-                    <li><a href="#">Space Ipsum</a>
-                    </li>
-                    <li><a href="#">Cupcake Ipsum</a>
-                    </li>
-                    <li><a href="#">Tuna Ipsum</a>
-                    </li>
-                </ul>
-                
-                <!--RELATED TAGS ENDS -->
-
-               
-                    <!-- GIVEN ANSWERS -->
-                 <div class="well">
-               
-                <h3>Username
-                    <small>9:41 PM on September 11, 2014</small>
-                </h3>
-                <p>This has to be the worst blog post I have ever read. It simply makes no sense. You start off by talking about space or something, then you randomly start babbling about cupcakes, and you end off with random fish names.</p>
-                        </div>
-                
+                   <!-- POST YOUR TITLE HERE -->
                 <div class="well">
-                <h3>Username
-                    <small>10:00 PM on September 11, 2014</small>
-                </h3>
-                <p>Don't listen to this guy, any blog with the categories 'dinosaurs, spaceships, fried foods, wild animals, alien abductions, business casual, robots, and fireworks' has true potential.</p>
-                        </div>
-                <!--GIVEN ANSWERS ENDS HERE-->
-                                        
-                
-                    <!-- POST YOUR ANSWER HERE -->
-                <div class="well">
-                    <h4>Post Answer:</h4>
                     <form role="form">
+							<h4>Title:</h4>
+                        <div class="form-group">
+                            <input type="text" class="form-control" rows="3">
+                        </div>
+                        <h4>Description:</h4>
                         <div class="form-group">
                             <textarea class="form-control" rows="3"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Post</button>
+                         <div class="form-group">
+                         	<h4>Keywords:</h4>
+                            <input type="text" class="form-control" rows="3" placeholder="Add Keywords For Your Post">
+                            </div>
+                        <button type="submit" class="btn btn-primary">Post My Question</button>
+                        
+                        
                     </form>
                 </div>
                     <!-- POST YOUR ANSWER HERE ENDS-->
-                        
+                 
+               
+                                        
+                
 
             
                 
@@ -171,7 +138,7 @@
                 <div class="well">
                     <div class="input-group">
                         <form role="form">
-                        <button type="submit" class="btn btn-primary">Post Your Question Here</button>
+                        <button type="submit" class="btn btn-primary">View Posted Questions</button>
                     </form>
                     </div>
                     <!-- /input-group -->
