@@ -136,7 +136,7 @@ border-bottom: 1px dotted #e1e1e1;
 }
 
 .price {
-    font-size:45px!important;
+    font-size:36px!important;
 }
 
 small {

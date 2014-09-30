@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="description" content="" />
 
-    <meta name="author" content="armash" />
+    <meta name="author" content="musab" />
     <!--[if IE]>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <![endif]-->
@@ -23,7 +23,7 @@
     <link href="../css/font-awesome.min.css" rel="stylesheet" />
     <link href="../css/style.css" rel="stylesheet" />    
     <link href="../css/modern-business.css" rel="stylesheet">
-    <link href="../css/main.css" rel="stylesheet">
+
     <!--link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' /-->
 
 
