@@ -3,6 +3,7 @@ __author__ = 'arshad'
 from app.models import *
 from flask import render_template, request, g, flash
 from app.handlers.views.menu_view import MenuView
+from app.config import configuration
 
 
 class ModelEditor(object):
@@ -36,7 +37,10 @@ class ModelEditor(object):
             subchannel = self.subchannel
         else:
             subchannel = None
-        return render_template(self.template, model=self.model, menu=self.menu_view, user=g.user, channel=self.channel.name, subchannel=subchannel)
+
+        facets=configuration.get('FACETS')
+        print facets
+        return render_template(self.template, model=self.model, menu=self.menu_view, user=g.user, channel=self.channel.name, subchannel=subchannel, facets=facets)
 
     def get_data_from_form(self):
         data = dict((k, v) for k, v in self.form.iteritems() if k != 'action')

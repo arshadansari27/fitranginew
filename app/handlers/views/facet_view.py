@@ -5,7 +5,7 @@ from app.handlers.views import env
 
 class FacetView(object):
 
-    def __init__(self, facets, channel, subchannel, template=None):
+    def __init__(self, facets, channel, subchannel, models, template=None):
         if template is None:
             self.template = 'generic/main/facets.html'
         else:

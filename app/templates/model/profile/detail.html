@@ -59,7 +59,7 @@
 		<div class="col-sm-9" contenteditable="false">
             <div class="panel panel-default">
                 <div class="panel-heading">Summary / Bio</div>
-				<div class="panel-body"> {% if model.description %}{{ model.description }}{% else %}A long description about me.{% endif %}</div>
+				<div class="panel-body"> {% if model.text %}{{ model.text }}{% else %}A long description about me.{% endif %}</div>
             </div>
             <div class="panel panel-default target">
                 <div class="panel-heading" contenteditable="false">
@@ -72,37 +72,25 @@
 					{% endif %}
 					</div>
                 <div class="panel-body">
-					<div class="row">
+					<div class="row-fluid">
+                        {% for c in contents %}
 						<div class="col-md-4">
 							<div class="thumbnail">
-								<img alt="300x200" src="http://lorempixel.com/600/200/people"/>
+								<img alt="300x200" src="/img/{{ c.get_class_name()}}/{{c.id}}"/>
 								<div class="caption">
-									<h3>Example Post</h3>
-									<p>Cocker Spaniel who loves treats.</p>
-									<p></p>
+									<h3>{{ c.title }}</h3>
+                                    {% if c.description and c.description|length > 0 %}
+									<p>{{ c.description }}</p>
+                                    {% else %}
+                                    <p>{{ c.text[0:100] }}</p>
+                                    {% endif %}
 								</div>
 							</div>
 						</div>
-						<div class="col-md-4">
-							<div class="thumbnail">
-								<img alt="300x200" src="http://lorempixel.com/600/200/people"/>
-								<div class="caption">
-									<h3>Example Post</h3>
-									<p>Cocker Spaniel who loves treats.</p>
-									<p></p>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="thumbnail">
-								<img alt="300x200" src="http://lorempixel.com/600/200/people"/>
-								<div class="caption">
-									<h3>Example Post</h3>
-									<p>Cocker Spaniel who loves treats.</p>
-									<p></p>
-								</div>
-							</div>
-						</div>
+                        {% else %}
+                            <p><strong>No posts by you.</strong></p>
+                        {% endfor %}
+
                 	</div>
             	</div>
             </div>

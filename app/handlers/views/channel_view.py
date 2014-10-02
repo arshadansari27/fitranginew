@@ -12,6 +12,7 @@ from app.handlers.extractors import get_all_facets, get_all_models, get_all_mode
 class ChannelView(object):
 
     def __init__(self, channel_name, sub_channel=None, selected_facets=[], query=None, page=1, paginated=True):
+        self.channel_name = channel_name
         self.query = query
         self.channel, self.facets = get_all_facets(channel_name)
 
@@ -28,7 +29,7 @@ class ChannelView(object):
         if not _template:
             raise Exception('The hell, where is the template')
         self.template = "%s/list_card.html" % _template
-        self.facet_view = FacetView(self.facets, self.channel, sub_channel)
+        self.facet_view = FacetView(self.facets, self.channel, sub_channel, self.models)
         self.menu_view = MenuView(self.channel.name, sub_channel if sub_channel else None)
         self.model_views = [ModelView(model, 'list', default='row') for model in self.models]
         print '******', len(self.model_views)
@@ -40,12 +41,16 @@ class ChannelView(object):
             self.pageinfo = PaginationInfo(args, link, total, page)
 
     def render(self):
-        models_arranged = {}
-        _len = len(self.model_views) / 3
-        for idx, model_view in enumerate(self.model_views):
-            models_arranged.setdefault(idx % 3, [])
-            models_arranged[idx % 3].append(model_view)
-
+        if self.channel_name == 'Forum':
+            models_arranged = []
+            for idx, model_view in enumerate(self.model_views):
+                models_arranged.append(model_view)
+        else:
+            _len = len(self.model_views) / 3
+            models_arranged = {}
+            for idx, model_view in enumerate(self.model_views):
+                models_arranged.setdefault(idx % 3, [])
+                models_arranged[idx % 3].append(model_view)
         if not self.paginated:
             return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=None, user=g.user, channel_name=self.channel.name)
         return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=self.pageinfo, user=g.user, channel_name=self.channel.name)

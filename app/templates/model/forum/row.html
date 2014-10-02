@@ -1,0 +1,18 @@
+<tr>
+    <td class="">
+        <h4><a href="/model/{{model.channel_factory(model)}}/{{model.id}}">{{ model.title }}</a></h4>
+        {% if model.created_by %}
+        <p>{{ model.created_by.name }}</p>
+        {% else %}
+        <p>Anonymous</p>
+        {% endif %}
+    </td>
+    <td class="">
+        <ul>
+            {% for k in model.keywords %}
+            <li>{{ k }}</li>
+            {% endfor %}
+        </ul>
+    </td>
+</tr>
+

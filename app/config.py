@@ -47,7 +47,7 @@ configuration = {
 
         'Forum': {
             'template': 'feature/forum',
-            'model' : 'ForumThread',
+            'model' : 'Question',
             'facets': [],
         }
     },
@@ -74,7 +74,7 @@ configuration = {
             ('Informative',[])
         ],
         'Profile': [
-            ('Organizers', []),
+            ('Organisers', []),
             ('Gear Dealers', []),
             ('NGO\'s', []),
             ('Rescuers', []),

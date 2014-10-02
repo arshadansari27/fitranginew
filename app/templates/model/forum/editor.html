@@ -1,0 +1,43 @@
+{% extends 'generic/main/model_base.html' %}
+{% block model_data %}
+<div class="container">
+    {% if model and model.id %}
+	<h1 class="">Edit Question<br class=""><small><a href="/model/Forum/{{model.id}}" class="pull-right">Go Back</a></small></h1>
+    {% else %}
+    <h1 class="">Add new Question</h1>
+    {% endif %}
+
+    <br class="">
+    <hr class="">
+    <div class="row">
+
+        <div class="col-md-12 question">
+            <!--div class="alert alert-info alert-dismissable" style="display: none;"> <a class="panel-close close" data-dismiss="alert">×</a>  <i class="fa fa-coffee"></i>
+				This is an <strong class="">.alert</strong>. Use this to show important messages to the user.
+			</div-->
+            <div class="well">
+                <form action="{% if model.id %}/model/Forum/{{model.id}}/edit{% else %}/model/Forum/add{% endif %}" method="post" class="form-horizontal" role="form">
+                    <h4>Title:</h4>
+                    <div class="form-group">
+                        <input type="text" class="form-control" rows="3" value="{%if model.title %}{{ model.title }}{% endif %}" placeholder="Enter Your Title " name="title">
+                        <input type="hidden" name="action" value="update_existing"/>
+                    </div>
+                    <h4>Description:</h4>
+                    <div class="form-group">
+                        <textarea class="form-control" rows="10" placeholder="Description Of Your Question" type="text" name="text">{% if model.text %}{{model.text}}{% endif %}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <h4>Keywords:</h4>
+                        <input type="text" class="form-control" rows="3" placeholder="Add Keywords For Your Post" name="description" value="{%if model.description %}{{ model.description }}{% endif %}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Post My Question</button>
+
+
+                </form>
+            </div>
+
+      </div>
+        
+    </div>
+</div>
+{% endblock %}

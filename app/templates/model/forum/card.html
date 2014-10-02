@@ -1,0 +1,19 @@
+<tr>
+    <td class="">
+        <h4><a href="/model/{{model.channel_factory(model)}}/{{model.id}}">Multiline comments in Python</a></h4>
+        <p>{{ model.author.name }}</p>
+    </td>
+    <td class="">
+        <ul>
+            {% for k in model.keywords %}
+            <li>{{ k }}</li>
+            {% endfor %}
+        </ul>
+    </td>
+    <td class="">
+        <div class="">
+            <input class="disabled" type="text" name="" value="{{ model.answers|length }}" autocomplete="off" size="2">
+        </div>
+    </td>
+</tr>
+

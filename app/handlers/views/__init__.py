@@ -80,15 +80,16 @@ def comment(key=None):
     try:
         user = g.user
         comment = request.json['comment']
+        _type = request.json['type'] if request.json['type'] is not None else "comment"
         if not key:
             key = request.json['key']
         content = Content.get_by_id(key)
         comment = content.addComment(content.id, comment, user.id)
         flash("Successfully added the comment", category='success')
-        return jsonify(status='success', node=None, message="Successfully added the comment")
+        return jsonify(status='success', node=None, message="Successfully added the %s." % _type)
     except Exception, e:
         flash("Failed to add the comment", category='error')
-        return jsonify(status='error', node=None, message="Failed to add the comment")
+        return jsonify(status='error', node=None, message="Failed to add the %s." % _type)
 
 
 @app.route('/register', methods=['GET', 'POST'])

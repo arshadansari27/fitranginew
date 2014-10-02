@@ -42,5 +42,9 @@ class ModelView(object):
             template = env.get_template(self.template)
             return template.render(model=self.model)
         else:
-            return render_template(self.template, channel=self.channel_name, subchannel=self.subchannel_name, model=self.model, menu=self.menu_view, user=g.user)
+            if 'Profile' in self.model.channels or 'Enthusiast' in self.model.channels:
+                contents = Content.objects(created_by__exact=self.model).all()[0: 3]
+            else:
+                contents = []
+            return render_template(self.template, channel=self.channel_name, subchannel=self.subchannel_name, model=self.model, menu=self.menu_view, user=g.user, contents=contents)
 

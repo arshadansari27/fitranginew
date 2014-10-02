@@ -125,6 +125,8 @@
                 </div>
             </div>
 
+            {% import 'generic/includes/facets_add.html' as comment_macro %}
+            {{ comment_macro.show_facets(facets)}}
 
             <div class="form-group">
                 <label class="col-md-3 control-label"></label>

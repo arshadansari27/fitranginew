@@ -161,6 +161,8 @@ class Node(object):
             return Event 
         elif name == 'product': 
             return Product
+        elif name == 'question':
+            return Question
         else:
             raise Exception("Unknown type")
 
@@ -173,7 +175,7 @@ class Node(object):
     @classmethod
     def channel_factory(cls, model):
         for channel in Channel.all_data():
-            if channel.model == model.__class__.__name__:
+            if channel.name in model.channels:
                 return channel.name
         raise Exception("Unset Channel for this model type %s %s" % (model.__class__.__name__, str(model)))
 
@@ -275,6 +277,19 @@ class Content(Node, db.Document):
         comment = Comment(created_by=author, text=comment_text, key="%s-%d" % (str(content.id), r))
         content.comments.append(comment)
         content.save()
+
+class Answer(db.EmbeddedDocument):
+
+    up_votes = db.IntField()
+    down_votes = db.IntField()
+    author = db.ReferenceField('Profile')
+    answer = db.StringField()
+
+class Question(Content):
+    __template__ = 'model/forum/'
+    answers = db.ListField(db.EmbeddedDocumentField(Answer))
+
+    def __unicode__(self): return self.title
 
 
 class Profile(Content):

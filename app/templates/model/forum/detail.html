@@ -1,0 +1,118 @@
+{% extends 'generic/main/model_base.html' %}
+{% block model_data %}
+<div class="container">
+<div class="row">
+    <div class="col-md-8">
+
+        <!-- POSTED QUESTION ON FORUM-->
+        <h1>{{ model.title }}</h1>
+        <p class="lead">by <a href="#">{% if model.created_by %}{{ model.created_by.name }}{% else %}Anonymous{% endif %}</a>
+        </p>
+        <p>
+            <span class="glyphicon glyphicon-time"></span> Posted on {{ model.created_on }} </p>
+        <hr>
+
+
+        <p class="lead">{{ model.text }}</p>
+        <hr/>
+
+        <!-- POTED QUESTION ENDS HERE-->
+
+        <!--RELATED TAGS -->
+        <p><strong>Keywords:</strong>
+        </p>
+        <ul>
+            {% for k in model.keywords %}
+            <li>
+                <a href="#">{{ k }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        <hr/>
+
+        <!--RELATED TAGS ENDS -->
+
+
+        <!-- POST YOUR ANSWER HERE -->
+
+        <!-- POST YOUR ANSWER HERE ENDS-->
+        {% if model.comments|length > 0 %}
+        {% for comment in model.comments %}
+        <div class="well well-small blue">
+            <form action="/comments/{{model.id}}/delete/{{ comment.key }}" method="post">
+                <input id="{{ comment.key }}" type="hidden" name="location" value=""/>
+                <p class="pull-right"><button class="btn btn-link" type="submit">X</button></p>
+                <script>
+                    (function() {
+                        $('#{{comment.key}}').attr('value', window.location.href);
+                    })();
+                </script>
+            </form>
+            <h4>{{ comment.created_by.name }} <small> {{ comment.created_on.strftime('%d-%m-%Y %H:%M') }}</small></h4>
+            <!--p><strong>{{ comment.title }}</strong></p-->
+            <p>{{ comment.text }}</p>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p><strong>Be the first to Answer</strong></p>
+        {% endif %}
+
+
+        <div class="well">
+            <h4>Post Answer:</h4>
+            <form id="comment_form" role="form well" data-key="{{ model.id }}">
+                <div class="form-group">
+                    <textarea id="comment_text" class="form-control" rows="3"></textarea>
+                </div>
+                <input type="hidden" name="type" value="answer"/>
+                <button id="comment_submit" type="button" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="well">
+            <div class="input-group">
+                <form role="form">
+                    <button type="submit" class="btn btn-primary">Post Your Question Here</button>
+                </form>
+            </div>
+            <!-- /input-group -->
+        </div>
+        <!-- /well -->
+        <div class="well">
+            <h4>Popular Categories</h4>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <ul class="list-unstyled">
+                        <li><a href="#">Destinations</a>
+                        </li>
+                        <li><a href="#">Mountains</a>
+                        </li>
+                        <li><a href="#">Diving</a>
+                        </li>
+                        <li><a href="#">Adventure</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <ul class="list-unstyled">
+                        <li><a href="#">Trekking</a>
+                        </li>
+                        <li><a href="#">Scuba Diving</a>
+                        </li>
+                        <li><a href="#">Water Rafting</a>
+                        </li>
+                        <li><a href="#">Events</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+
+{% endblock %}
