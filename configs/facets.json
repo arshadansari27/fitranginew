@@ -1,0 +1,260 @@
+{
+ "facets": [
+  {
+   "name": "Organisers",
+   "parent": "Profile"
+  },
+  {
+   "name": "Gear Dealers",
+   "parent": "Profile"
+  },
+  {
+   "name": "NGO's",
+   "parent": "Profile"
+  },
+  {
+   "name": "Rescuers",
+   "parent": "Profile"
+  },
+  {
+   "name": "Trainers",
+   "parent": "Profile"
+  },
+  {
+   "name": "Guides",
+   "parent": "Profile"
+  },
+  {
+   "name": "Institutes",
+   "parent": "Profile"
+  },
+  {
+   "name": "Hotels",
+   "parent": "Profile"
+  },
+  {
+   "name": "Govt. Bodies",
+   "parent": "Profile"
+  },
+  {
+   "name": "Top 5 Series",
+   "parent": "Article"
+  },
+  {
+   "name": "Explore",
+   "parent": "Article"
+  },
+  {
+   "name": "Informative",
+   "parent": "Article"
+  },
+  {
+   "name": "Clothes",
+   "parent": "Product"
+  },
+  {
+   "name": "Accessores",
+   "parent": "Product"
+  },
+  {
+   "name": "Bags",
+   "parent": "Product"
+  },
+  {
+   "name": "Footwear",
+   "parent": "Product"
+  },
+  {
+   "name": "Gears",
+   "parent": "Product"
+  },
+  {
+   "name": "Tools",
+   "parent": "Product"
+  },
+  {
+   "name": "Maharashtra",
+   "parent": "India"
+  },
+  {
+   "name": "Gujrat",
+   "parent": "India"
+  },
+  {
+   "name": "Kerela",
+   "parent": "India"
+  },
+  {
+   "name": "Himachal Pradesh",
+   "parent": "India"
+  },
+  {
+   "name": "India",
+   "parent": "Location"
+  },
+  {
+   "name": "Nepal",
+   "parent": "Location"
+  },
+  {
+   "name": "Sri Lanka",
+   "parent": "Location"
+  },
+  {
+   "name": "Bungee jumping",
+   "parent": "Sky - Fly"
+  },
+  {
+   "name": "Hang Gliding",
+   "parent": "Sky - Fly"
+  },
+  {
+   "name": "Hot Air Ballooning",
+   "parent": "Sky - Fly"
+  },
+  {
+   "name": "Para Motoring",
+   "parent": "Sky - Fly"
+  },
+  {
+   "name": "Paragliding",
+   "parent": "Sky - Fly"
+  },
+  {
+   "name": "Parasailing",
+   "parent": "Sky - Fly"
+  },
+  {
+   "name": "Sky Diving",
+   "parent": "Sky - Fly"
+  },
+  {
+   "name": "Zip Line",
+   "parent": "Sky - Fly"
+  },
+  {
+   "name": "Sky - Fly",
+   "parent": "Activity"
+  },
+  {
+   "name": "Snow - Flow",
+   "parent": "Activity"
+  },
+  {
+   "name": "Architecture Monuments",
+   "parent": "Travelling & Sightseeing"
+  },
+  {
+   "name": "Beaches",
+   "parent": "Travelling & Sightseeing"
+  },
+  {
+   "name": "Forts & Caves",
+   "parent": "Travelling & Sightseeing"
+  },
+  {
+   "name": "Hill stations",
+   "parent": "Travelling & Sightseeing"
+  },
+  {
+   "name": "Places to Visit",
+   "parent": "Travelling & Sightseeing"
+  },
+  {
+   "name": "Theme Parks",
+   "parent": "Travelling & Sightseeing"
+  },
+  {
+   "name": "Wildlife Sanctuaries & Safaris",
+   "parent": "Travelling & Sightseeing"
+  },
+  {
+   "name": "Travelling & Sightseeing",
+   "parent": "Activity"
+  },
+  {
+   "name": "Canyoning",
+   "parent": "Water - Wonders"
+  },
+  {
+   "name": "Kayaking",
+   "parent": "Water - Wonders"
+  },
+  {
+   "name": "Kite Surfing",
+   "parent": "Water - Wonders"
+  },
+  {
+   "name": "Scuba Diving",
+   "parent": "Water - Wonders"
+  },
+  {
+   "name": "Snorkelling",
+   "parent": "Water - Wonders"
+  },
+  {
+   "name": "Surfing",
+   "parent": "Water - Wonders"
+  },
+  {
+   "name": "Water Rafting",
+   "parent": "Water - Wonders"
+  },
+  {
+   "name": "Water - Wonders",
+   "parent": "Activity"
+  },
+  {
+   "name": "Camping",
+   "parent": "Land Sports"
+  },
+  {
+   "name": "Cycling-Biking",
+   "parent": "Land Sports"
+  },
+  {
+   "name": "Marathons",
+   "parent": "Land Sports"
+  },
+  {
+   "name": "Mountaineering",
+   "parent": "Land Sports"
+  },
+  {
+   "name": "Off-beat Activities",
+   "parent": "Land Sports"
+  },
+  {
+   "name": "Rappelling & Valley Crossing",
+   "parent": "Land Sports"
+  },
+  {
+   "name": "Rock Climbing",
+   "parent": "Land Sports"
+  },
+  {
+   "name": "Trekking & Hiking",
+   "parent": "Land Sports"
+  },
+  {
+   "name": "Horse Riding",
+   "parent": "Land Sports"
+  },
+  {
+   "name": "Land Sports",
+   "parent": "Activity"
+  },
+  {
+   "name": "Stargazing",
+   "parent": "Other Sports"
+  },
+  {
+   "name": "Zorbing",
+   "parent": "Other Sports"
+  },
+  {
+   "name": "Other Sports",
+   "parent": "Activity"
+  }
+ ]
+}

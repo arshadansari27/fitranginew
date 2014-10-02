@@ -1,0 +1,253 @@
+{
+    "nodetypes": [
+        {
+            "name": "Node",
+            "parent": "",
+            "attributes": [
+                {
+                    "name": "URI",
+                    "type": "String"
+                },
+                {
+                    "name": "channels",
+                    "type": "String",
+                    "collection": "list"
+                },
+                {
+                    "name": "facets",
+                    "type": "String",
+                    "collection": "list"
+                }
+            ]
+        },
+        {
+            "name": "Content",
+            "parent": "Node",
+            "attributes": [
+                {
+                    "name": "title",
+                    "type": "String"
+                },
+                {
+                    "name": "description",
+                    "type": "String"
+                },
+                {
+                    "name": "content",
+                    "type": "String"
+                },
+                {
+                    "name": "owner",
+                    "type": "Profile"
+                },
+                {
+                    "name": "created",
+                    "type": "DateTime"
+                },
+                {
+                    "name": "modified",
+                    "type": "DateTime"
+                },
+                {
+                    "name": "medias",
+                    "type": "Media",
+                    "collection": "list"
+                },
+                {
+                    "name": "comments",
+                    "type": "Content",
+                    "collection": "list"
+                }
+            ]
+        },
+        {
+            "name": "Post",
+            "parent": "Content",
+            "attributes": [
+                {
+                    "name": "published",
+                    "type": "Boolean"
+                },
+            ]
+        },
+        {
+            "name": "Profile",
+            "parent": "Node",
+            "attributes": [
+                {
+                    "name": "name",
+                    "type": "String"
+                },
+                {
+                    "name": "email",
+                    "type": "String"
+                },
+                {
+                    "name": "username",
+                    "type": "String"
+                },
+                {
+                    "name": "password",
+                    "type": "String/Encrypted",
+                },
+                {
+                    "name": "description",
+                    "type": "String"
+                },
+                {
+                    "name": "role",
+                    "type": "String",
+                    "collection": "list"
+                },
+                {
+                    "name": "types",
+                    "type": "String",
+                    "collection": "list"
+                },
+                {
+                    "name": "profile_pic",
+                    "type": "Media"
+                },
+                {
+                    "name": "shared",
+                    "type": "Post"
+                }
+            ]
+        }
+        {
+            "name": "Event",
+            "parent": "Content",
+            "attributes":  [
+                {
+                    "name": "location",
+                    "type": "String"
+                },
+                {
+                    "name": "schedule",
+                    "type": "DateTime"
+                },
+                {
+                    "name": "durationInHours",
+                    "type": "Int"
+                },
+                {
+                    "name": "duration",
+                    "type": "String"
+                },
+                {
+                    "name": "experiences",
+                    "type": "String",
+                    "collection": "list"
+                },
+                {
+                    "name": "organiser",
+                    "type": "Profile"
+                },
+                {
+                    "name": "amount",
+                    "type": "String"
+                },
+                {
+                    "name": "amountInRs",
+                    "type": "Int"
+                },
+                {
+                    "name": "features",
+                    "type": "String",
+                    "collection": "list"
+                },
+                {
+                    "name": "contact",
+                    "type": "String"
+                },
+                {
+                    "name": "notes",
+                    "type": "String"
+                },
+                {
+                    "name": "links",
+                    "type": "String",
+                    "collection": "list"
+                }
+            ]
+        },
+        {
+            "name": "Product",
+            "parent": "Content",
+            "attributes":  [
+                {
+                    "name": "amount",
+                    "type": "String"
+                },
+                {
+                    "name": "amountInRs",
+                    "type": "Int"
+                },
+                {
+                    "name": "discount",
+                    "type": "String"
+                },
+                {
+                    "name": "discountInRs",
+                    "type": "Int"
+                },
+                {
+                    "name": "type",
+                    "type": "String"
+                },
+                {
+                    "name": "skus",
+                    "type": "Sku",
+                    "collection": "list"
+                },
+                {
+                    "name": "ava
+                }
+            ]
+        },
+        {
+            "name": "Sku",
+            "parent": "Node",
+            "attributes": [
+                {
+                    "name": "color",
+                    "type": "string"
+                },
+                {
+                    "name": "size",
+                    "type": "string"
+                },
+                {
+                    "name": "swatch",
+                    "type": "Media"
+                },
+                {
+                    "name": "medias",
+                    "type": "Media",
+                    "collection": "list"
+                }
+            ]
+
+        },
+        {
+            "name": "Media",
+            "parent": "",
+            "attributes":  [
+                {
+                    "name": "URI",
+                    "type": "String"
+                },
+                {
+                    "name": "type",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "type": "Binary"
+                }
+            ]
+
+
+        }
+    ]
+}

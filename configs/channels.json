@@ -1,0 +1,60 @@
+{
+    "channels: [
+        {
+            "name": "Activity",
+            "value": "Activities",
+            "type": "Post",
+            "menu": 1
+        },
+        {
+            "name": "Destination",
+            "value": "Destinations",
+            "type": "Post",
+            "menu": 2
+        },
+        "Article": {
+            "name": "Article",
+            "value": "Articles",
+            "type": "Post",
+            "menu": 3
+        },
+        {
+            "name": "Blog"
+            "value": "Blogs",
+            "type": "Post",
+            "menu": 0
+
+        },
+        {
+            "name": "Product",
+            "value": "Products",
+            "type": "Product",
+            "parent": "",
+            "menu": 0
+        },
+        {
+            "name": "Adventure Trip",
+            "value": "Adventure Trips",
+            "type": "Event",
+            "menu": 4
+        },
+        {
+            "name": "Conference",
+            "value": "Conferences",
+            "type": "Event",
+            "menu": 0
+
+        },
+        {
+            "name": "Meetup",
+            "value": "Meetups",
+            "type": "Event",
+            "menu": 0
+        },
+        {
+            "name": "Forum",
+            "value": "Forums",
+            "type": "Post",
+            "menu": 5
+        }
+}
