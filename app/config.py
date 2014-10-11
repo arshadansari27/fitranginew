@@ -85,7 +85,7 @@ configuration = {
             ('Govt. Bodies', []),
         ],
         'Location': [
-            ('India', ['Maharashtra', 'Gujrat', 'Kerela', 'Himachal Pradesh']),
+            ('India', ['Andra Pardesh','Asam','Bihar','Delhi','Goa', 'Gujrat', 'Himachal Pradesh','Jharkhand','Kerela','Kashmir','Maharashtra','Rajhisthan','Tamil Nadu','Utar Pardesh']),
             ('Nepal', []),
             ('Sri Lanka', [])
         ],
