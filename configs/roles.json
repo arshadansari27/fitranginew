@@ -1,0 +1,20 @@
+{
+    "roles": [
+        {
+            "name": "Admin",
+            "value": "Administrator"
+        },
+        {
+            "name": "anon",
+            "value": "Anonymous"
+        },
+        {
+            "name": "basic",
+            "value": "Basic User"
+        },
+        {
+            "name": "premium",
+            "value": "Premium User"
+        }
+    ]
+}

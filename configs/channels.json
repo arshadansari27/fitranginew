@@ -1,25 +1,31 @@
 {
-    "channels: [
+    "channels": [
         {
             "name": "Activity",
             "value": "Activities",
             "type": "Post",
+            "menu_link": "/channel/Activity",
+            "template": "feature/common",
             "menu": 1
         },
         {
             "name": "Destination",
             "value": "Destinations",
             "type": "Post",
+            "menu_link": "/channel/Destination",
+            "template": "feature/common",
             "menu": 2
         },
-        "Article": {
+        {
             "name": "Article",
             "value": "Articles",
             "type": "Post",
+            "menu_link": "/channel/Article",
+            "template": "feature/common",
             "menu": 3
         },
         {
-            "name": "Blog"
+            "name": "Blog",
             "value": "Blogs",
             "type": "Post",
             "menu": 0
@@ -36,7 +42,9 @@
             "name": "Adventure Trip",
             "value": "Adventure Trips",
             "type": "Event",
-            "menu": 4
+            "menu_link": "/channel/Adventure Trip",
+            "menu": 4,
+            "template": "feature/event"
         },
         {
             "name": "Conference",
@@ -55,6 +63,9 @@
             "name": "Forum",
             "value": "Forums",
             "type": "Post",
-            "menu": 5
+            "menu_link": "/channel/Forum",
+            "menu": 5,
+            "template": "feature/forum"
         }
+    ]
 }

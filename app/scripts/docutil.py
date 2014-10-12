@@ -12,7 +12,8 @@ def get_document_list(start_url, docs):
 
 
 def load_document(document_url):
-    import mammoth, os
+    import mammoth
+
     with open(document_url, 'rb') as docx_file:
         data = []
         result = mammoth.convert_to_html(docx_file)

@@ -1,15 +1,10 @@
-from flask import Flask, request, render_template, session
-from flask.ext.mongoengine import MongoEngine
-from flask.ext import admin as flask_admin
 import os
+
+from flask import Flask
+
+from flask.ext.mongoengine import MongoEngine
 from app import settings
 
-from flask import send_file
-import argparse
-import cStringIO
-import mimetypes
-import requests
-from PIL import Image
 
 app = Flask(__name__, template_folder='templates', static_folder='assets')
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
@@ -30,9 +25,6 @@ def start_app():
     app.session_interface = MongoSessionInterface()
     logging.basicConfig()
     logging.getLogger().setLevel(logging.DEBUG)
-    Channel.load_channels()
-    Role.load_roles()
-    Facet.load_facets()
 
     #admin = flask_admin.Admin(app, 'Fitrangi Admin Panel')
     #admin.add_view(ProfileView(Profile))

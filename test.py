@@ -1,4 +1,3 @@
-from app.models import *
 from app.services.pageviews import *
 
 

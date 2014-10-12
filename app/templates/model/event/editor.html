@@ -31,7 +31,7 @@
         <!--div class="alert alert-info alert-dismissable" style="display: none;"> <a class="panel-close close" data-dismiss="alert">×</a>  <i class="fa fa-coffee"></i>
             This is an <strong class="">.alert</strong>. Use this to show important messages to the user.
         </div-->
-        <h4 class="">{% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %} details</h4>
+        <h4 class="">{{ channel }} details</h4>
         <hr/>
 
         <form action="{% if model.id %}/model/{{ channel }}/{{model.id}}/edit{% else %}/model/{{ channel }}/add{% endif %}" method="post" class="form-horizontal" role="form">
@@ -47,7 +47,7 @@
                 <label class="col-lg-3 control-label">Event Type:</label>
                 <div class="col-lg-8">
                     <select class="form-control" name="channels">
-                        <option value="AdventureTrip">Adventure Trip</option>
+                        <option value="Adventure Trip" selected>Adventure Trip</option>
                     </select>
                 </div>
             </div>

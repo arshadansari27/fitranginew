@@ -3,6 +3,10 @@ __author__ = 'arshad'
 from app.models import *
 
 
+def get_channel(name):
+    return Channel.getByName(name)
+
+
 def get_all_facets(channel_name):
     channel = Channel.getByName(channel_name)
     if channel:

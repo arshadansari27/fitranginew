@@ -1,52 +1,43 @@
-from flask.ext.mongoengine import MongoEngine
-from bson import ObjectId
-from app.config import configuration
-import datetime, random
-from app import db
+import datetime
+import random
+
+
 
 class Configuration(object):
-
-    def __init__(self, **kwargs):
-        for k, v in kwargs.iteritems():
-            setattr(self, k,  v)
 
     @property
     def id(self):
         return self.name
 
     @classmethod
-    def load_from_configuration(cls, name):
-        for k, v in configuration[name].iteritems():
-            _dict = v
-            _dict['name'] = k
-            obj = cls(**_dict)
-            cls.all_data().append(obj)
+    def load_from_configuration(cls):
+        from app.utils.general import get_channels, get_facets, get_roles
+        data1 = get_facets()
+        for d in data1:
+            f = Facet(d['name'], d['parent'])
+            Facet.all_facets.append(f)
 
-    @classmethod
-    def getByName(cls, _name):
-        for obj in cls.all_data():
-            if obj.name != _name:
-                continue
-            return obj
-        return None
+        data2 = get_channels()
+        for d in data2:
+            c = Channel(d['name'], d['type'], d['menu'], d['value'], d.get('template', None), d.get('menu_link', None))
+            Channel.all_data.append(c)
+
+        data3 = get_roles()
+        for d in data3:
+            r = Role(d['name'], d['value'])
+            Role.all_data_role.append(r)
+
+
 
 class Facet(object):
     all_facets = []
 
-    @classmethod
-    def load_facets(cls):
-        for k, v in configuration['FACETS'].iteritems():
-            _type = k
-            facet_list = v
-            for _name, _facets in facet_list:
-                f = Facet()
-                f.name = _name
-                f.facets = _facets
-                f.type = _type
-                Facet.all_facets.append(f)
+    def __init__(self, name, parent):
+        self.name = name
+        self.parent = parent
 
     def __repr__(self):
-        return "%s, %s, %s" % (self.name, self.type, str(self.facets))
+        return "%s [%s] " % (self.name, self.parent)
 
     @classmethod
     def get_facet_by_name(cls, _name):
@@ -57,11 +48,7 @@ class Facet(object):
 
     @classmethod
     def find(cls, name):
-        name = name.strip().lower()
-        for f in Facet.all_facets:
-            if f.name.lower() == name or name in [_v.lower() for _v in f.facets]:
-                return f
-        return None
+        return cls.get_facet_by_name(name)
 
     @classmethod
     def get_facet_by_type(cls, _type):
@@ -71,16 +58,27 @@ class Facet(object):
                 facets.append(f)
         return facets
 
-class Channel(Configuration):
-    all_data_channel = []
-   
-    @classmethod
-    def all_data(cls):
-        return cls.all_data_channel
+class Channel(object):
+    all_data= []
+
+    def __init__(self, name, parent, menu, display, template, menu_link):
+        self.name = name
+        self.parent = parent
+        self.menu = menu
+        self.display = display
+        self.template = template
+        self.menu_link = menu_link
+
+    def __repr__(self):
+        return self.name
 
     @classmethod
-    def load_channels(cls):
-        cls.load_from_configuration('DEFAULT_CHANNELS')
+    def getByName(cls, _name):
+        for obj in cls.all_data:
+            if obj.name != _name:
+                continue
+            return obj
+        return None
 
     @classmethod
     def getByAlias(cls, alias):
@@ -100,22 +98,12 @@ class Channel(Configuration):
         return cls.getByName(channel_name)
 
     def has_sub_type(self, subtype):
-        for u in self.subtypes:
-            if subtype.lower().strip() == u.lower():
-                return u
-        return False
-
-    def has_facet(self, facet):
-        for f in self.facets.values():
-            if len(f) is 0:
-                continue
-            for u in f:
-                if facet.lower().strip() == u.lower():
-                    return u
+        for u in Channel.all_data:
+            if self.name.lower().strip() == u.type.lower().strip():
+                return True
         return False
 
     def getTypeByAlias(self, alias):
-        channel_name = None
         if alias == 'ACTIVITY':
             channel_name = 'Activity'
         elif alias == 'DESTINATION':
@@ -134,13 +122,11 @@ class Role(Configuration):
 
     all_data_role = []
 
-    @classmethod
-    def all_data(cls):
-        return cls.all_data_role
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
 
-    @classmethod
-    def load_roles(cls):
-        cls.load_from_configuration('DEFAULT_ROLES')
+    def __repr__(self): return self.value
 
 class Node(object):
 
@@ -149,19 +135,19 @@ class Node(object):
 
     @classmethod
     def model_factory(cls, name):
-        if name == 'role':
+        if name == 'Role':
             return Role
-        elif name == 'profile':
+        elif name == 'Profile':
             return Profile
-        elif name == 'channel': 
+        elif name == 'Channel':
             return Channel
-        elif name == 'content': 
+        elif name in ['Activity', 'Destination', 'Article', 'Content']:
             return Content 
-        elif  name == 'event': 
+        elif  name in ['Event', 'Adventure Trip']:
             return Event 
-        elif name == 'product': 
+        elif name == 'Product':
             return Product
-        elif name == 'question':
+        elif name in ['Question', 'Forum']:
             return Question
         else:
             raise Exception("Unknown type")
@@ -174,7 +160,7 @@ class Node(object):
 
     @classmethod
     def channel_factory(cls, model):
-        for channel in Channel.all_data():
+        for channel in Channel.all_data:
             if channel.name in model.channels:
                 return channel.name
         raise Exception("Unset Channel for this model type %s %s" % (model.__class__.__name__, str(model)))
@@ -212,7 +198,9 @@ class Node(object):
         self.main_image = Image(image=image)
         self.save()
         return self
-        
+
+
+from app import db
 
 class Image(db.EmbeddedDocument):
     image = db.ImageField(thumbnail_size=(100, 100, True))
@@ -245,13 +233,11 @@ class Content(Node, db.Document):
     slug = db.StringField()
     published = db.BooleanField()
     published_timestamp = db.DateTimeField(required=False)
-    website = db.StringField()
     channels = db.ListField(db.StringField())
+    facets = db.ListField(db.StringField())
     comments = db.ListField(db.EmbeddedDocumentField(Comment))
     parent = db.ReferenceField('Content', required=False)
     keywords = db.ListField(db.StringField())
-    facebook = db.StringField()
-    linkedin = db.StringField()
 
     @classmethod
     def get_by_id(cls, id):
@@ -307,7 +293,10 @@ class Profile(Content):
     answers = db.ListField(db.ReferenceField('Content'))
     is_verified = db.BooleanField('Verified')
     roles = db.ListField(db.StringField())
-    
+    facebook = db.StringField()
+    linkedin = db.StringField()
+    website = db.StringField()
+
     def __unicode__(self): return self.name
 
     def change_password(self, **kwargs):
@@ -354,3 +343,9 @@ class Product(Content):
     __template__ = 'model/product/'
     price = db.FloatField()
     discount = db.FloatField(required=False)
+
+
+Configuration.load_from_configuration()
+
+if __name__ == '__main__':
+    print 'Test Models'

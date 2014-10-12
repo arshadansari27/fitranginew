@@ -1,21 +1,17 @@
 __author__ = 'arshad'
 
-from app.models import *
 from flask import render_template, request, g, flash
+
+from app.models import *
 from app.handlers.views.menu_view import MenuView
-from app.config import configuration
+from app.utils import arrange_facets
 
 
 class ModelEditor(object):
 
-    def __init__(self, model, channel_name=None, subchannel_name=None, form=None):
+    def __init__(self, model, channel_name=None, form=None):
         self.channel = Channel.getByName(channel_name)
-        if subchannel_name:
-            self.subchannel = Channel.getByName(subchannel_name)
-        else:
-            self.subchannel = None
-        model_name = self.channel.model
-        model_class = Node.model_factory(model_name.lower())
+        model_class = Node.model_factory(self.channel.name)
         if model:
             self.model = model_class.objects(pk=model).first()
             if not self.model.main_image or not self.model.main_image.image:
@@ -27,20 +23,13 @@ class ModelEditor(object):
             self.model.has_no_image = True
 
         self.template = '%s%s' % (model_class.__template__, 'editor.html')
-        self.menu_view = MenuView(channel_name, subchannel_name if subchannel_name else None)
+        self.menu_view = MenuView(channel_name)
         self.form = form
         self.message = None
         self.category = None
 
     def render(self):
-        if hasattr(self, 'subchannel') and self.subchannel is not None:
-            subchannel = self.subchannel
-        else:
-            subchannel = None
-
-        facets=configuration.get('FACETS')
-        print facets
-        return render_template(self.template, model=self.model, menu=self.menu_view, user=g.user, channel=self.channel.name, subchannel=subchannel, facets=facets)
+        return render_template(self.template, model=self.model, menu=self.menu_view, user=g.user, channel=self.channel.name, facets=arrange_facets(Facet.all_facets))
 
     def get_data_from_form(self):
         data = dict((k, v) for k, v in self.form.iteritems() if k != 'action')

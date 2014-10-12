@@ -1,4 +1,7 @@
-import os, pymongo
+import os
+
+import pymongo
+
 client = pymongo.MongoClient('localhost', 27017)
 db = client['new_fitrangi']
 """

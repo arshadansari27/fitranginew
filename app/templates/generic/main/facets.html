@@ -1,6 +1,6 @@
 {% if facet|length > 0 %}	
 
-	<form id="facetform" action="/channel/{{channel.name}}{% if subchannel %}?subchannel={{subchannel}}{% endif %}" class="form-horizontal" role="form" method="GET">
+	<form id="facetform" action="/channel/{{channel.name}}" class="form-horizontal" role="form" method="GET">
 		{% for k in facet %}
 		<div class="panel panel-default">
 			<div class="panel-heading"><div class="panel-title">{{ k }}</div></div>

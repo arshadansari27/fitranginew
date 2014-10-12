@@ -5,16 +5,16 @@
                 <div class="col-md-8">
                     {% for title in facets %}
                     <h4><u>{{title}}</u></h4>
-                    {% for f, v in facets.get(title) %}
+                    {% for f in facets.get(title) %}
                         <hr/>
                         <div class="col-md-offset-1 col-md-12">
-                            {% if v|length == 0 %}
-                            <input class="" type="checkbox" name="channels" value="{{ f }}"/>
+                            {% if f.facets|length == 0 %}
+                            <input class="" type="checkbox" name="channels" value="{{ f.name }}"/>
                             {% endif %}
-                            <strong>{{ f }}</strong>
+                            <strong>{{ f.name }}</strong>
                         </div>
                         <div class="col-md-12">
-                            {% for _v in v %}
+                            {% for _v in f.facets %}
                             <div class="col-md-offset-2 col-md-4">
                                 <input type="checkbox" name="channels" value="{{_v}}"/>
                                 <strong>{{_v}}</strong>

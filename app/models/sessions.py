@@ -4,7 +4,9 @@ from datetime import datetime, timedelta
 from flask.sessions import SessionInterface, SessionMixin
 from werkzeug.datastructures import CallbackDict
 from pymongo import MongoClient
+
 from app.settings import MONGODB_HOST as HOST, MONGODB_PORT as PORT, MONGODB_DB as DB
+
 
 class MongoSession(CallbackDict, SessionMixin):
 

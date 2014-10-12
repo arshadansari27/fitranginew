@@ -1,5 +1,9 @@
+import os
+
+import simplejson as json
+
 from docutil import *
-import os, simplejson as json
+
 
 _file = '/Users/arshad/Dropbox/ARSHAD @ FITRANGI/Fitrangi.com DATABASE/'
 

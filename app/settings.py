@@ -1,4 +1,4 @@
-import sys, os
+import os
 
 
 db_address = open('db_address.txt', 'r').read()
@@ -8,6 +8,6 @@ print 'Using database', db_address
 MONGODB_HOST = db_address
 
 MONGODB_PORT = 27017
-MONGODB_DB   = 'adventure'
+MONGODB_DB   = 'adventure2'
 TEMPLATE_FOLDER = 'app/templates'
 folder = os.getcwd() + '/' + TEMPLATE_FOLDER

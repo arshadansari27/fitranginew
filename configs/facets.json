@@ -1,6 +1,10 @@
 {
  "facets": [
   {
+   "name": "Enthusiasts",
+   "parent": "Profile"
+  },
+  {
    "name": "Organisers",
    "parent": "Profile"
   },

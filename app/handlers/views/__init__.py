@@ -1,10 +1,12 @@
 __author__ = 'arshad'
 
 from jinja2 import Environment, FileSystemLoader
+from flask import render_template, request, g, flash, redirect, url_for, session, send_file, jsonify
+
 from app import app
 from app.models import *
 from app.settings import TEMPLATE_FOLDER
-from flask import render_template, request, g, flash, redirect, url_for, session, send_file, jsonify
+
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
 
@@ -28,7 +30,7 @@ def search():
 @app.route('/img/<model_name>/<key>')
 def get_img(model_name, key):
     from app.models import Node
-    model_class = Node.model_factory(model_name.lower())
+    model_class = Node.model_factory(model_name)
     img = model_class.objects(pk=key).first().get_image()
     return send_file(img, mimetype='image/' + img.format)
 
@@ -36,10 +38,9 @@ def get_img(model_name, key):
 def channel(channel):
     page = request.args.get('page', 1)
     query = request.args.get('query', '')
-    subchannel = request.args.get('subchannel', '')
     _facets = request.args.get('facets','')
     facets = [v for v in (_facets.split(',') if len(_facets) > 0 else []) if v and len(v)  > 0]
-    return ChannelView(channel, subchannel, paginated=False, selected_facets=facets, query=query,page=page).render()
+    return ChannelView(channel, paginated=False, selected_facets=facets, query=query,page=page).render()
 
 
 def under_construction(e):
@@ -50,15 +51,14 @@ def page_not_found(e):
 
 @app.route('/model/<channel>/<key>')
 def model(channel, key):
-    subchannel = request.args.get('subchannel', '')
-    return ModelView(key, 'detail', channel_name=channel, subchannel_name=subchannel).render()
+    return ModelView(key, 'detail', channel_name=channel).render()
 
 @app.route("/comments/<content_key>/delete/<key>", methods=["POST"])
 def comment_delete(content_key, key):
     try:
         content = Content.get_by_id(content_key)
         location = request.form['location']
-        comment_to_deleta = None
+        comment_delete = None
         for comment in content.comments:
             if comment.key == key:
                 comment_delete = comment
@@ -77,14 +77,14 @@ def comment_delete(content_key, key):
 @app.route("/comment", methods=["POST"])
 @app.route("/comment/<key>", methods=["POST"])
 def comment(key=None):
+    _type = request.json['type'] if request.json.get('type') is not None else "comment"
     try:
         user = g.user
         comment = request.json['comment']
-        _type = request.json['type'] if request.json['type'] is not None else "comment"
         if not key:
             key = request.json['key']
         content = Content.get_by_id(key)
-        comment = content.addComment(content.id, comment, user.id)
+        content.addComment(content.id, comment, user.id)
         flash("Successfully added the comment", category='success')
         return jsonify(status='success', node=None, message="Successfully added the %s." % _type)
     except Exception, e:
@@ -93,7 +93,7 @@ def comment(key=None):
 
 
 @app.route('/register', methods=['GET', 'POST'])
-def registeration():
+def registration():
     if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']

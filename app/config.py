@@ -1,6 +1,6 @@
 configuration = {
     'MENUS': {
-        'Activities': '/channel/Activity',
+
         'Articles': '/channel/Article',
         'Destinations': '/channel/Destination',
         'Finder (Profiles)': '/channel/Profile',

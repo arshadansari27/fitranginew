@@ -1,41 +1,42 @@
 __author__ = 'arshad'
 
+from flask import render_template, request, g
 
 from app.models import *
-from flask import render_template, request, g, flash, redirect, url_for, session, send_file, jsonify
-from app.handlers.views import env
 from app.handlers.views.facet_view import FacetView
 from app.handlers.views.menu_view import MenuView
 from app.handlers.views.model_view import ModelView
-from app.handlers.extractors import get_all_facets, get_all_models, get_all_models_all_channels, search_models
+from app.handlers.extractors import get_all_facets, get_all_models, get_channel
+
 
 class ChannelView(object):
 
-    def __init__(self, channel_name, sub_channel=None, selected_facets=[], query=None, page=1, paginated=True):
+    def __init__(self, channel_name, selected_facets=[], query=None, page=1, paginated=True):
         self.channel_name = channel_name
         self.query = query
-        self.channel, self.facets = get_all_facets(channel_name)
+        self.channel = get_channel(channel_name)
 
 
         _facets = []
         if len(selected_facets) > 0:
             _facets = [_v for _v in selected_facets if Facet.find(_v) is not None]
-            print self.channel.name, sub_channel, _facets
+            self.facets = [f for f in Facet.all_facets if f.name in _facets]
+            print self.channel.name, _facets, self.facets
+        else:
+            self.facets = []
 
-        self.models, total = get_all_models(self.channel, sub_channel,  _facets, query, page, paginated)
+        self.models, total = get_all_models(self.channel, _facets, query, page, paginated)
         self.paginated = paginated
 
         _template = self.channel.template
         if not _template:
             raise Exception('The hell, where is the template')
         self.template = "%s/list_card.html" % _template
-        self.facet_view = FacetView(self.facets, self.channel, sub_channel, self.models)
-        self.menu_view = MenuView(self.channel.name, sub_channel if sub_channel else None)
+        self.facet_view = FacetView(self.facets, self.channel, self.models)
+        self.menu_view = MenuView(self.channel.name)
         self.model_views = [ModelView(model, 'list', default='row') for model in self.models]
         print '******', len(self.model_views)
         link = "/" + channel_name
-        if sub_channel:
-            link+= '/' + sub_channel
         args = request.args
         if self.paginated:
             self.pageinfo = PaginationInfo(args, link, total, page)

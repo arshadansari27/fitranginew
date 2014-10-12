@@ -1,7 +1,8 @@
 __author__ = 'arshad'
 
-from app.handlers.editors.model_editor import ModelEditor
 from flask import request, redirect
+
+from app.handlers.editors.model_editor import ModelEditor
 from app import app
 
 

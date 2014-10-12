@@ -1,7 +1,9 @@
 __author__ = 'arshad'
 
-from app.models import *
 import re
+
+from app.models import *
+
 
 PAGE_SIZE = 25
 
@@ -17,35 +19,27 @@ def search_models(search_query):
 
 
 def get_all_models_all_channels(search_query=None):
-    for_channels = ['Destination', 'Activity', 'General Articles', 'Profile']
-    channels = filter(lambda c: c.name in for_channels, Channel.all_data())
+    for_channels = ['Destination', 'Activity', 'Article', 'Profile']
+    print [c.name for c in Channel.all_data]
+    channels = filter(lambda c: c.name in for_channels, Channel.all_data)
     models = {}
     for channel in channels:
-        model_name = channel.model
-        if not model_name:
-            continue
-
-        model_class = Node.model_factory(model_name.lower().strip())
+        print channel
         query = {}
+        model_class = Node.model_factory(channel.name)
         if search_query:
-            query = {'head': None, 'keywords': False, 'value': []}
-            if model_class in [Profile, Channel]:
+            query = {'head': None, 'value': None}
+            if channel.name in ['Profile']:
                 query['head'] = 'name'
-                if model_class == Profile:
-                    query['keywords'] = True
             else:
                 query['head'] = 'title'
-                if model_class == Content:
-                    query['keywords'] = True
             regx = re.compile("%s" % search_query, re.IGNORECASE)
             query['value'] = regx
 
         queries = []
         if len(query) > 0:
             queries.append({query['head']: query['value']})
-            if query['keywords']:
-                queries.append({'keywords': {'$in': query['value'].split(' ')}})
-        if len(queries) > 0:
+        if len(queries) > 1:
             search = {'$or': queries}
         else:
             search = {}
@@ -61,26 +55,17 @@ def get_all_models_all_channels(search_query=None):
     return models
 
 
-def get_all_models(channel, subchannel=None, facets=[], search_query=None, page=1, paginated=True):
-    model_name = channel.model
-    model_class = Node.model_factory(model_name.lower().strip())
-
+def get_all_models(channel, facets=[], search_query=None, page=1, paginated=True):
+    model_class = Node.model_factory(channel.name)
 
     if search_query:
         if model_class == Profile:
             query = {'name': search_query}
         else:
             query = {'title': search_query}
-            if model_class == Content:
-                keywords = search_query.split(' ')
-                query['keywords'] = {'$in': keywords}
     else:
-        if channel and subchannel and len(facets) > 0:
-            query = {'$and': [{'channels': channel.name}, {'channels': subchannel}, {'channels': {'$in': facets}}]}
         if channel and len(facets) > 0:
-            query = {'$and': [{'channels': channel.name}, {'channels': {'$in': facets}}]}
-        elif channel and subchannel:
-            query = {'$and': [{'channels': channel.name}, {'channels': subchannel}]}
+            query = {'$and': [{'channels': channel.name}, {'facets': {'$in': facets}}]}
         else:
             query = {'channels': channel.name}
         print '*' * 100
@@ -98,7 +83,6 @@ def get_all_models(channel, subchannel=None, facets=[], search_query=None, page=
     for c in cursor:
         model_ids.append(c['_id'])
     return [model_class.objects(pk=str(v)).first() for v in model_ids], (total / PAGE_SIZE) + 1
-
 
 
 def get_by(cls, **kwargs): #, _and=True, single=False):

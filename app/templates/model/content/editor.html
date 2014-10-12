@@ -2,9 +2,9 @@
 {% block model_data %}
 <div class="container">
     {% if model and model.id %}
-	<h3 class="">Edit {% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %}<br class=""><small><a href="/model/{{ channel }}/{{model.id}}" class="pull-right">Go Back</a></small></h3>
+	<h3 class="">Edit {{ channel }}<br class=""><small><a href="/model/{{ channel }}/{{model.id}}" class="pull-right">Go Back</a></small></h3>
     {% else %}
-    <h3 class="">Add new {% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %}</h3>
+    <h3 class="">Add new {{ channel }}</h3>
     {% endif %}
     <hr/>
     {% if model.id %}
@@ -31,7 +31,7 @@
         <!--div class="alert alert-info alert-dismissable" style="display: none;"> <a class="panel-close close" data-dismiss="alert">×</a>  <i class="fa fa-coffee"></i>
             This is an <strong class="">.alert</strong>. Use this to show important messages to the user.
         </div-->
-        <h4 class="">{% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %} details</h4>
+        <h4 class="">{{ channel }} details</h4>
         <hr/>
 
         <form action="{% if model.id %}/model/{{ channel }}/{{model.id}}/edit{% else %}/model/{{ channel }}/add{% endif %}" method="post" class="form-horizontal" role="form">
@@ -41,9 +41,6 @@
                     <input class="form-control" value="{%if model.title %}{{ model.title }}{% endif %}" type="text" name="title"/>
                     <input type="hidden" name="action" value="update_existing"/>
                     <input type="hidden" name="channels" value="{{ channel }}"/>
-                    {% if subchannel %}
-                    <input type="hidden" name="channels" value="{{ subchannel }}"/>
-                    {% endif %}
                 </div>
             </div>
             <div class="form-group">

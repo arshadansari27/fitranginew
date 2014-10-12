@@ -1,7 +1,9 @@
 __author__ = 'arshad'
 
-from app.config import configuration
 import simplejson as json
+
+from app.config import configuration
+
 
 facets = configuration.get("FACETS")
 data = []
