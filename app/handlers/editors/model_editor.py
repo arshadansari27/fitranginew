@@ -43,7 +43,7 @@ class ModelEditor(object):
         data = self.get_data_from_form()
         try:
             category = 'success'
-            model_class = Node.model_factory(self.channel.model.lower())
+            model_class = Node.model_factory(self.channel.name)
             self.model = model_class()
             if g.user and g.user.id:
                 user = g.user

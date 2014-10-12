@@ -39,11 +39,20 @@
             "menu": 0
         },
         {
+            "name": "Profile",
+            "value": "Finder (Profile)",
+            "type": "Profile",
+            "menu_link": "/channel/Profile",
+            "template": "feature/profile",
+            "menu": 4
+
+        },
+        {
             "name": "Adventure Trip",
             "value": "Adventure Trips",
             "type": "Event",
             "menu_link": "/channel/Adventure Trip",
-            "menu": 4,
+            "menu": 5,
             "template": "feature/event"
         },
         {
@@ -64,7 +73,7 @@
             "value": "Forums",
             "type": "Post",
             "menu_link": "/channel/Forum",
-            "menu": 5,
+            "menu": 6,
             "template": "feature/forum"
         }
     ]

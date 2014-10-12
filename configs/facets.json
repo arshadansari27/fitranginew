@@ -259,6 +259,38 @@
   {
    "name": "Other Sports",
    "parent": "Activity"
+  },
+  {
+   "name": "In a Week",
+   "parent": "When"
+  },
+  {
+   "name": "In a Month",
+   "parent": "When"
+  },
+  {
+   "name": "In 3 Months",
+   "parent": "When"
+  },
+  {
+   "name": "In 6 Months",
+   "parent": "When"
+  },
+  {
+   "name": "0 - 1000",
+   "parent": "Amount"
+  },
+  {
+   "name": "1000 - 5000",
+   "parent": "Amount"
+  },
+  {
+   "name": "5000 - 10000",
+   "parent": "Amount"
+  },
+  {
+   "name": "10000+",
+   "parent": "Amount"
   }
  ]
 }

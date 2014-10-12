@@ -27,7 +27,7 @@ class SearchView(object):
         self.query = query
         self.models = search_models(search_query=query)
         self.template =  'feature/search.html'
-        self.menu = MenuView(None, None)
+        self.menu = MenuView(None)
         self.models = [ModelView(model, 'list') for model in self.models]
 
     def render(self):

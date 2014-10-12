@@ -1,90 +1,37 @@
-{% extends 'generic/main/model_base.html' %}
-{% block model_data %}
-<div class="container">
-    {% if model and model.id %}
-	<div class="panel panel-primary">
-<div class="panel-heading">Edit {% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %}</div></div><small><a href="/model/{{ channel }}/{{model.id}}" class="pull-right">Go Back</a></small></h3>
-	<h3 class="">Edit {{ channel }}<br class=""><small><a href="/model/{{ channel }}/{{model.id}}" class="pull-right">Go Back</a></small></h3>
-    {% else %}
-    <h3 class="">Add new {{ channel }}</h3>
-    {% endif %}
-    
-    {% if model.id %}
-    <h4 class="">Image Uploader</h4>
-    <hr/>
-    <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-6">
-            <div class="text-center">
-                <img height="300px" width="350px" src="{% if model.has_no_image %}http://placehold.it/300x350{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}" class="avatar" alt="avatar">
-                <h6 class="">Upload a different photo...</h6>
-                <form action="/model/{{ channel }}/{{model.id}}/edit" enctype="multipart/form-data" method="post">
-                    <input class="form-control" name="action" type="hidden" value="image_upload"/>
-                    <input class="col-md-6 form-control" name="image" type="file"/>
-                    <button type="submit" class="btn btn-info">Upload</button>
-                </form>
-            </div>
-        </div>
-        <div class="col-md-3"></div>
+{% extends 'generic/main/model_editor_base.html' %}
+{% block form_block %}
+<div class="form-group">
+    <label class="col-lg-3 control-label">Title:</label>
+
+    <div class="col-lg-8">
+        <input class="form-control" value="{%if model.title %}{{ model.title }}{% endif %}"
+               type="text"
+               name="title"/>
+        <input type="hidden" name="action" value="update_existing"/>
+        <input type="hidden" name="channels" value="{{ channel }}"/>
     </div>
-    <br>
-    {% endif %}
-    <div class="col-md-12 content-info">
-        <!--div class="alert alert-info alert-dismissable" style="display: none;"> <a class="panel-close close" data-dismiss="alert">×</a>  <i class="fa fa-coffee"></i>
-            This is an <strong class="">.alert</strong>. Use this to show important messages to the user.
-        </div-->
-        
-       <!-- <h4 class="">{% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %} details</h4>
-        <hr/>-->
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Description:</label>
 
-        <form action="{% if model.id %}/model/{{ channel }}/{{model.id}}/edit{% else %}/model/{{ channel }}/add{% endif %}" method="post" class="form-horizontal" role="form">
-            <div class="form-group">
-                <label class="col-lg-3 control-label">Title:</label>
-                <div class="col-lg-8">
-                    <input class="form-control" value="{%if model.title %}{{ model.title }}{% endif %}" type="text" name="title"/>
-                    <input type="hidden" name="action" value="update_existing"/>
-                    <input type="hidden" name="channels" value="{{ channel }}"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-lg-3 control-label">Description:</label>
-                <div class="col-lg-8">
-                    <textarea class="form-control" name="description">{%if model.description%}{{ model.description }}{% endif %}</textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-lg-3 control-label">Published :</label>
-                <div class="col-lg-1">
-                    <input type="checkbox" class="form-control" name="published" {%if model.published %}checked{% endif %}/>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-lg-3 control-label">Content:</label>
-                <div class="col-lg-8">
-                    <textarea class="ckeditor" row="10" name="text">{%if model.text %}{{ model.text}}{% endif %}</textarea>
-                </div>
-            </div>
-
-            {% import 'generic/includes/facets_add.html' as comment_macro %}
-            {{ comment_macro.show_facets(facets)}}
-
-            <div class="form-group">
-                    <label class="col-md-3 control-label"></label>
-                    <div class="col-md-8">
-                        <input class="btn btn-primary" value="Save Changes" type="submit"> <span class=""></span>
-
-                        <input class="btn btn-default" value="Cancel" type="reset">
-                    </div>
-                </div>
-
-        </form>
+    <div class="col-lg-8">
+        <textarea class="form-control" name="description">{%if model.description%}{{ model.description }}{% endif %}</textarea>
     </div>
-<br>    
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Published :</label>
 
+    <div class="col-lg-1">
+        <input type="checkbox" class="form-control" name="published" {%if model.published %}checked{% endif %}/>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Content:</label>
 
-{% endblock %}
-    
-{% block footer_scripts %}
-<script src="http://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.1/ckeditor.js"></script>
+    <div class="col-lg-8">
+        <textarea class="ckeditor" row="10" name="text">{%if model.text %}{{ model.text}}{% endif %}</textarea>
+    </div>
+</div>
+
 
 {% endblock %}

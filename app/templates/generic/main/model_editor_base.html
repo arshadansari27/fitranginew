@@ -1,0 +1,62 @@
+{% extends 'generic/main/model_base.html' %}
+{% block model_data %}
+<div class="container">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            {% if model and model.id %}
+            <h3 class="">Edit {{ channel }}<br class="">
+                <small><a href="/model/{{ channel }}/{{model.id}}" class="pull-right">Go Back</a></small>
+            </h3>
+            {% else %}
+            <h3 class="">Add new{{ channel }}<br class="">
+                <small><a href="/channel/{{ channel }}" class="pull-right">Go Back</a></small>
+            </h3>
+            {% endif %}
+        </div>
+        <div class="panel-body">
+
+            <div class="col-md-12 content-info">
+
+                <div class="">
+                    {% import 'generic/includes/file_uploader.html' as uploader_macro %}
+                    {{ uploader_macro.show_uploader(model, channel)}}
+                </div>
+
+                <br/>
+                <hr/>
+                <br/>
+
+                <div class="row-fluid">
+
+                    <form action="{% if model.id %}/model/{{ channel }}/{{model.id}}/edit{% else %}/model/{{ channel }}/add{% endif %}" method="post" class="form-horizontal" role="form">
+                        {% block form_block %}
+                        {% endblock %}
+
+                        {% import 'generic/includes/facets_add.html' as facet_macro %}
+                        {{ facet_macro.show_facets(model, facets)}}
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"></label>
+
+                            <div class="col-md-8">
+                                <input class="btn btn-primary" value="Save Changes" type="submit"/> <span class=""></span>
+                                <input class="btn btn-default" value="Cancel" type="reset"/>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                {% block additional_forms %}
+                {% endblock %}
+
+            </div>
+
+        </div>
+    </div>
+    <br>
+</div>
+{% endblock %}
+
+{% block footer_scripts %}
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.1/ckeditor.js"></script>
+{% endblock %}

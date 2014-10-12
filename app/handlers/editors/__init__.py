@@ -12,17 +12,19 @@ def model_editor_view(channel, key=None):
     if request.method == 'POST':
         form = {}
         for k, v in request.form.iteritems():
-            if k == 'channels':
+            if k == 'facets':
                 try:
                     form[k] = request.form.getlist(k)
                 except:
                     form[k] = request.form[k]
             else:
                 form[k] = v
-        if not form.has_key('channels'):
+        if form.get('action', None) and form['action'] == 'update_existing':
             form['channels'] = [channel]
             if channel == 'Profile':
-                form['channels'].append('Enthusiast')
+                form['facets'].append('Enthusiast')
+
+        print 'Form data: ', str(form)
         if key:
             ModelEditor(key, channel_name=channel, form=form).update()
         else:

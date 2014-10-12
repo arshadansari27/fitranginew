@@ -221,6 +221,8 @@ class Comment(db.EmbeddedDocument):
 
 class Content(Node, db.Document):
     __template__ = 'model/content/'
+    __facets__ = ['Activity', 'Location']
+
     created_timestamp = db.DateTimeField(default=datetime.datetime.now, required=True)
     modified_timestamp = db.DateTimeField(default=datetime.datetime.now, required=True)
     created_by = db.ReferenceField('Profile')
@@ -280,6 +282,7 @@ class Question(Content):
 
 class Profile(Content):
     __template__ = 'model/profile/'
+    __facets__ = ['Profile']
     name = db.StringField()
     username = db.StringField()
     password = db.StringField()
@@ -327,6 +330,7 @@ class Profile(Content):
 
 class Event(Content):
     __template__ = 'model/event/'
+    __facets__ = ['Activity', 'Location', 'When', 'Amount']
     date = db.StringField()
     duration = db.StringField()
     experiences = db.StringField()
