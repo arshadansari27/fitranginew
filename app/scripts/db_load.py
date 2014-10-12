@@ -5,7 +5,7 @@ import simplejson as json
 from docutil import *
 
 
-_file = '/Users/arshad/Dropbox/ARSHAD @ FITRANGI/Fitrangi.com DATABASE/'
+_file = '/home/armash/Fitrangi.com DATABASE/'
 
 def load_one(_type):
     data = None
@@ -210,5 +210,5 @@ def load_all(local):
 
 if __name__ == '__main__':
     print "%20s%80s%50s%50s" % ('Type', 'Title', 'Activity', 'Category')
-    for d in load_all():
+    for d in load_all(False):
         print "%20s%80s%50s%50s" % (d['type'], d['title'], d['activity'] if d.get('activity', None) else 'No activity', d['category'] if d.get('category', None) else 'No category')

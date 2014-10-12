@@ -61,7 +61,7 @@ configuration = {
     'FACETS': {
         'Activity':[ 
             ("Sky - Fly", ["Bungee jumping", "Hang Gliding", "Hot Air Ballooning", "Para Motoring", "Paragliding", "Parasailing", "Sky Diving","Zip Line"]),
-            ("Snow - Flow", []),
+            #("Snow - Flow", []),
             ("Travelling & Sightseeing", ["Architecture Monuments", "Beaches", "Forts & Caves", "Hill stations", "Places to Visit", "Theme Parks", "Wildlife Sanctuaries & Safaris"]),
             ("Water - Wonders", ["Canyoning", "Kayaking", "Kite Surfing", "Scuba Diving", "Snorkelling", "Surfing", "Water Rafting"]),
             ("Land Sports", ["Camping", "Cycling-Biking", "Marathons", "Mountaineering", "Off-beat Activities", "Rappelling & Valley Crossing", "Rock Climbing", "Trekking & Hiking", "Horse Riding"]),  
@@ -85,8 +85,13 @@ configuration = {
             ('Govt. Bodies', []),
         ],
         'Location': [
-            ('India', ['Maharashtra', 'Gujrat', 'Kerela', 'Himachal Pradesh']),
+            ('India', ['Andaman and Nicobar','Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Delhi','Goa','Gujarat','Haryana','Himachal Pradesh','Jammu and Kashmir','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur',
+                       'Punjab','Rajasthan','Sikkim','Tamil Nadu','Tripura','Uttar Pradesh',
+                       'Uttarakhand	','West Bengal']),
             ('Nepal', []),
+            ('Thailand', []),
+            ('Macao', []),
+            ('Hong Kong', []),
             ('Sri Lanka', [])
         ],
         'Product': [

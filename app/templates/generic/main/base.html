@@ -10,6 +10,8 @@
    <link rel="stylesheet" href="/assets/css/bootstrap-theme.min.css">
    <link type="text/css" rel="stylesheet" href="/assets/css/example.css" />
 	<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/assets/js/jquery-1.9.1.min.js"></script>
+
 	{% block header_script %}{% endblock %}
 	{% block header_css %}{% endblock %}
 	<style>body { padding-top: 70px; }</style>
@@ -46,7 +48,7 @@
 					  <li><a href="#"><i class="glyphicon glyphicon-inbox" style="color:#11dd11;"></i> My Posts</a></li>
 					  <li class="nav-divider"></li>
 					  {% if 'Admin' in user.roles %}
-					  <li><a href="/admin"><i class="glyphicon glyphicon-dashboard" style="color:#0000aa;"></i> Dashboard</a></li>
+					  <!--<li><a href="/admin"><i class="glyphicon glyphicon-dashboard" style="color:#0000aa;"></i> Dashboard</a></li>-->
 					  {% endif %}
 					  {% if 'EventOrganiser' in user.roles %}
 					  <li><a href="/events"><i class="glyphicon glyphicon-cog" style="color:#dd1111;"></i> Events</a></li>
@@ -68,7 +70,7 @@
 				</div>
 
 				</li>
-				 <li>
+				 <!--<li>
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-bell"></i></a>
 					<ul class="dropdown-menu">
 					  <li><a href="#"><span class="badge pull-right">40</span>Link</a></li>
@@ -77,7 +79,7 @@
 					  <li><a href="#"><span class="label label-info pull-right">1</span>Link</a></li>
 					  <li><a href="#"><span class="badge pull-right">13</span>Link</a></li>
 					</ul>
-				 </li>
+				 </li>-->
 				{% else %}
 				<li><a id="btn-login" href="/login">Sign In+</a></li>
 				{% endif %}

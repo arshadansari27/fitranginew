@@ -2,29 +2,18 @@
 {% block model_data %}
 <div class="container">
     {% if model and model.id %}
-	<h1 class="">Edit Profile <br class=""><small><a href="/model/Profile/{{model.id}}" class="pull-right">Go Back</a></small></h1>
+	 <div class="panel panel-primary">
+<div class="panel-heading">Edit Profile</div></div> <br class=""><small><a href="/model/Profile/{{model.id}}" class="pull-right">Go Back</a></small></h1>
     {% else %}
-    <h1 class="">Add new Profile </h1>
+    <div class="panel panel-primary">
+<div class="panel-heading">Add New Profile</div>
+    </div>
+
     {% endif %}
 
     <br class="">
-    <hr class="">
     <div class="row">
-        <!-- left column -->
-        <div class="col-md-3">
-            <div class="text-center">
-                <img src="{% if model.has_no_image %}http://placehold.it/300x300{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}" class="avatar" alt="avatar">
-                {% if model.id %}
-                 <h6 class="">Upload a different photo...</h6>
-				 <form action="/model/Profile/{{model.id}}/edit" enctype="multipart/form-data" method="post">
-                	<input class="form-control" name="action" type="hidden" value="image_upload"/>
-                	<input class="form-control" name="image" type="file"/>
-					<button type="submit" class="btn btn-info">Upload</button>
-				</form>
-                {% endif %}
-            </div>
-        </div>
-        <!-- edit form column -->
+                <!-- edit form column -->
         <div class="col-md-9 personal-info">
             <!--div class="alert alert-info alert-dismissable" style="display: none;"> <a class="panel-close close" data-dismiss="alert">×</a>  <i class="fa fa-coffee"></i>
 				This is an <strong class="">.alert</strong>. Use this to show important messages to the user.
@@ -35,7 +24,7 @@
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Name:</label>
                     <div class="col-lg-8">
-						<input class="form-control" value="{%if model.name %}{{ model.name }}{% endif %}" type="text" name="name"/>
+						<input class="form-control" value="{%if model.name %}{{ model.name }}{% endif %}" type="text" name="name" Placeholder="Full Name"/>
 						<input type="hidden" name="action" value="update_existing"/>
                     </div>
                 </div>
@@ -125,6 +114,21 @@
             </form>
        {% endif %}
       </div>
+        <!-- left column -->
+        <div class="col-md-3">
+            <div class="text-center">
+                <img src="{% if model.has_no_image %}http://placehold.it/300x300{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}" class="avatar" alt="avatar">
+                {% if model.id %}
+                 <h6 class="">Upload a different photo...</h6>
+				 <form action="/model/Profile/{{model.id}}/edit" enctype="multipart/form-data" method="post">
+                	<input class="form-control" name="action" type="hidden" value="image_upload"/>
+                	<input class="form-control" name="image" type="file"/>
+					<button type="submit" class="btn btn-info">Upload</button>
+				</form>
+                {% endif %}
+            </div>
+        </div>
+
         
         <div class="row"></div>
     </div>
