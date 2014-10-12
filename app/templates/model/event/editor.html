@@ -4,9 +4,10 @@
     {% if model and model.id %}
     <h3 class="">Edit {% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %}<br class=""><small><a href="/model/{{ channel }}/{{model.id}}" class="pull-right">Go Back</a></small></h3>
     {% else %}
-    <h3 class="">Add new {% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %}</h3>
+    <div class="panel panel-primary">
+<div class="panel-heading">Add New {% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %}</div>
+    </div>
     {% endif %}
-    <hr/>
     {% if model.id %}
     <h4 class="">Image Uploader</h4>
     <hr/>
@@ -31,8 +32,8 @@
         <!--div class="alert alert-info alert-dismissable" style="display: none;"> <a class="panel-close close" data-dismiss="alert">×</a>  <i class="fa fa-coffee"></i>
             This is an <strong class="">.alert</strong>. Use this to show important messages to the user.
         </div-->
-        <h4 class="">{% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %} details</h4>
-        <hr/>
+        <!--<h4 class="">{% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %} details</h4>
+        <hr/>-->
 
         <form action="{% if model.id %}/model/{{ channel }}/{{model.id}}/edit{% else %}/model/{{ channel }}/add{% endif %}" method="post" class="form-horizontal" role="form">
             <div class="form-group">
@@ -59,7 +60,7 @@
             </div>
             <div class="form-group">
                 <label class="col-lg-3 control-label">Published :</label>
-                <div class="col-lg-8">
+                <div class="col-lg-1">
                     <input type="checkbox" class="form-control" name="published" {%if model.published %}checked{% endif %}/>
                 </div>
             </div>
@@ -72,19 +73,19 @@
             <div class="form-group">
                 <label class="col-lg-3 control-label">Date:</label>
                 <div class="col-lg-8">
-                    <input class="form-control" value="{{ model.date }}" type="text" name="date"/>
+                    <input class="form-control" value="{%if model.date %}{{ model.date }}{% endif %}" type="text" name="date"/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-lg-3 control-label">Duration:</label>
                 <div class="col-lg-8">
-                    <input class="form-control" value="{{ model.duration }}" type="text" name="duration"/>
+                    <input class="form-control" value="{%if model.duration %}{{ model.duration }}{% endif %}" type="text" name="duration"/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-lg-3 control-label">Location:</label>
                 <div class="col-lg-8">
-                    <input class="form-control" value="{{ model.location }}" type="text" name="location"/>
+                    <input class="form-control" value="{%if model.location %}{{ model.location }}{% endif %}" type="text" name="location"/>
                 </div>
             </div>
             <div class="form-group">
@@ -97,13 +98,13 @@
             <div class="form-group">
                 <label class="col-lg-3 control-label">Contact :</label>
                 <div class="col-lg-8">
-                    <input class="form-control" value="{{ model.contact }}" type="text" name="contact"/>
+                    <input class="form-control" value="{%if model.contact %}{{ model.contact }}{% endif %}" type="text" name="contact"/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-lg-3 control-label">Amount:</label>
                 <div class="col-lg-8">
-                    <input class="form-control" value="{{ model.amount }}" type="text" name="amount"/>
+                    <input class="form-control" value="{%if model.amount %}{{ model.amount }}{% endif %}" type="text" name="amount"/>
                 </div>
             </div>
             <div class="form-group">

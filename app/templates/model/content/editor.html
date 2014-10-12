@@ -2,11 +2,14 @@
 {% block model_data %}
 <div class="container">
     {% if model and model.id %}
-	<h3 class="">Edit {% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %}<br class=""><small><a href="/model/{{ channel }}/{{model.id}}" class="pull-right">Go Back</a></small></h3>
+	<div class="panel panel-primary">
+<div class="panel-heading">Edit {% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %}</div></div><small><a href="/model/{{ channel }}/{{model.id}}" class="pull-right">Go Back</a></small></h3>
     {% else %}
-    <h3 class="">Add new {% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %}</h3>
+<div class="panel panel-primary">
+<div class="panel-heading">Add New {% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %}</div>
+    </div>
     {% endif %}
-    <hr/>
+    
     {% if model.id %}
     <h4 class="">Image Uploader</h4>
     <hr/>
@@ -25,14 +28,14 @@
         </div>
         <div class="col-md-3"></div>
     </div>
-    <hr/>
+    <br>
     {% endif %}
     <div class="col-md-12 content-info">
         <!--div class="alert alert-info alert-dismissable" style="display: none;"> <a class="panel-close close" data-dismiss="alert">×</a>  <i class="fa fa-coffee"></i>
             This is an <strong class="">.alert</strong>. Use this to show important messages to the user.
         </div-->
-        <h4 class="">{% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %} details</h4>
-        <hr/>
+       <!-- <h4 class="">{% if subchannel%}{{subchannel}} {% else %}{{ channel }}{%endif %} details</h4>
+        <hr/>-->
 
         <form action="{% if model.id %}/model/{{ channel }}/{{model.id}}/edit{% else %}/model/{{ channel }}/add{% endif %}" method="post" class="form-horizontal" role="form">
             <div class="form-group">
@@ -54,7 +57,7 @@
             </div>
             <div class="form-group">
                 <label class="col-lg-3 control-label">Published :</label>
-                <div class="col-lg-8">
+                <div class="col-lg-1">
                     <input type="checkbox" class="form-control" name="published" {%if model.published %}checked{% endif %}/>
                 </div>
             </div>
@@ -76,12 +79,15 @@
                         <input class="btn btn-default" value="Cancel" type="reset">
                     </div>
                 </div>
+
         </form>
     </div>
-    <hr/>
+<br>    
 
-</div>
+
 {% endblock %}
+    
 {% block footer_scripts %}
 <script src="http://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.1/ckeditor.js"></script>
-{% endblock %}
+
+    {% endblock %}

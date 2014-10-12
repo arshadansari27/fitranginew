@@ -2,8 +2,14 @@
 
 	<form id="facetform" action="/channel/{{channel.name}}{% if subchannel %}?subchannel={{subchannel}}{% endif %}" class="form-horizontal" role="form" method="GET">
 		{% for k in facet %}
+        <!-- ACCORDIAN START-->
+        <div class="panel-group" id="accordion">
 		<div class="panel panel-default">
-			<div class="panel-heading"><div class="panel-title">{{ k }}</div></div>
+			
+            <div class="panel-heading">
+                <div class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">{{ k }}</a>
+                </div></div>
 				<div class="panel-body">
 				{% if facet.get(k) |length > 0 %}
 					{% for _f in facet.get(k) %}
@@ -12,23 +18,33 @@
 							<input type="checkbox" class="pull-right" name="facets-{{_f.name}}" value="{{_f.name}}"/>
 							<hr/>
 						{% else %}
-
+                    <!--ACCORDIAN COLLAPSE CLASS-->
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body">
 						    <strong>{{_f.name }}</strong>
                             <input type="checkbox" class="pull-right" name="facets-{{_f.name}}" value="{{_f.name}}"/>
-							<hr/>
+				            
+ 
 							{% for _fl in _f.facets %}
 							    <div class="row-fluid">
 								    <input type="checkbox" class="pull-right" name="facets-{{_fl}}" value="{{_fl}}"/>
 								    {{ _fl }}
+                                    
 							    </div>
-						    {% endfor %}
-							<hr/>
+						    {% endfor %}	</div></div>		
+              </div>
+		  </div>
+                           
 						{% endif %}
+                    
+                    </div>
+           
 					{% endfor %}
-				{% endif %}
-			</div>
-		</div>
+                 
+           		{% endif %}
+			 
 		{% endfor %}
+            
 	</form>
 <script>
 	function getParameterByName(name) {
