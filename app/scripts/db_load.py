@@ -5,7 +5,7 @@ import simplejson as json
 from docutil import *
 
 
-_file = '/home/armash/Fitrangi.com DATABASE/'
+_file = '/Users/arshad/Dropbox/ARSHAD @ FITRANGI/Fitrangi.com DATABASE/'
 
 def load_one(_type):
     data = None
@@ -186,7 +186,13 @@ def __load_dealers():
         data[key]['image'] = u
         data[key]['type'] = 'DEALER'
     return data
-   
+
+def write_all():
+    get_types = ['articles', 'destinations', 'activities', 'dealers', 'organisers']
+    for k in get_types:
+        print "Getting", k
+        load_one(k)
+
 def load_all(local):
     _data = None
     if local:

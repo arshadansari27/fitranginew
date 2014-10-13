@@ -1,21 +1,39 @@
 import re
 
 from rake import extract_keywords
+from app.utils.general import get_facets
 
 
-TAG_RE = re.compile(r'<[^>]+>') 
+TAG_RE = re.compile(r'<[^>]+>')
+
+FACETS = get_facets()
+MEMOIZED_FACETS = {}
 
 def tag_remove(text):
     return TAG_RE.sub('', text)
 
 def arrange_facets(facets):
+
+    names = tuple(sorted(f.name for f in facets))
+    if MEMOIZED_FACETS.has_key(names):
+        return MEMOIZED_FACETS[names]
+
     facets_dict = {}
     new_dict = {}
+    for f in FACETS:
+        facets_dict[f['name']] = f['parent']
+
+    roots = set([])
+    root_map = {}
     for f in facets:
-        facets_dict[f.name] = f.parent
+        p = f.parent
+        while p is not None and facets_dict.has_key(p):
+            p = facets_dict[p]
+            root_map[f.name] = p
+        roots.add(p)
 
     for k, v in facets_dict.iteritems():
-        if not facets_dict.has_key(v):
+        if v in roots:
             new_dict.setdefault(v, [])
             new_dict[v].append(FacetOption(k, []))
 
@@ -24,13 +42,17 @@ def arrange_facets(facets):
             for k, v in facets_dict.iteritems():
                 if v == first.name:
                     first.facets.append(k)
-    print "Facets View", new_dict
+
+    MEMOIZED_FACETS[names] = new_dict
     return new_dict
 
 class FacetOption(object):
     def __init__(self, name, facets):
         self.name = name
         self.facets = facets
+
+    def __repr__(self):
+        return "%s [%s]" % (self.name, ', '.join(self.facets))
 
 if __name__ == '__main__':
     from app.models import Facet
