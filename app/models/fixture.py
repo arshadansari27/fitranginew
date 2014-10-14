@@ -1,8 +1,11 @@
-from app.scripts.db_load import load_all
+from app.scripts.db_load import load_all, write_all
 from app.models import *
 from app import settings
 print 'Using setting', settings.MONGODB_HOST, settings.MONGODB_PORT, settings.MONGODB_DB
 import os
+
+def html_setup():
+    write_all()
 
 def db_fixture():
     #aliases = generate_alias_wise_data()

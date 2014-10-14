@@ -12,13 +12,12 @@
                        href="#collapseOne_{{k.replace(' ', '-')}}">{{ k }}</a>
                 </div>
             </div>
-            <div id="collapseOne_{{k.replace(' ', '-')}}" class="panel-body panel-collapse collapse">
+            <div id="collapseOne_{{k.replace(' ', '-')}}" class="panel-body panel-collapse collapse in">
                 {% if facet.get(k) |length > 0 %}
                     {% for _f in facet.get(k) %}
                         {% if _f.facets|length == 0 %}
-                            <strong>{{ _f.name }}</strong>
+                            <a href="#"><strong>{{ _f.name }}</strong></a>
                             <input type="checkbox" class="pull-right" name="facets-{{_f.name}}" value="{{_f.name}}"/>
-                            <hr/>
                         {% else %}
                             <div id="accordion_{{_f.name.replace(' ', '-')}}">
                                 <a data-toggle="collapse" data-parent="#accordion_{{_f.name.replace(' ', '')}}" href="#collapseTwo_{{_f.name.replace(' ', '-')}}"><strong>{{_f.name }}</strong></a>

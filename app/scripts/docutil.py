@@ -1,4 +1,5 @@
 from BeautifulSoup import BeautifulSoup
+import os
 
 def get_document_list(start_url, docs):
     docs.append(start_url)
@@ -28,7 +29,8 @@ def load_document(document_url):
                     data.append("<h3>%s</h3>" % p.text.replace(':', ' '))
             else:
                 data.append("<p>%s</p>" % p.text)
-    
+        with open(document_url.replace(".docx", ".html"), 'w') as html_file:
+            html_file.write(unicode(''.join(data)).encode('utf-8'))
         return title, ''.join(data)
 
 
