@@ -93,6 +93,8 @@ class Channel(object):
             channel_name = 'Profile'
         elif alias == 'DEALER':
             channel_name = 'Profile'
+        elif alias == 'Adventure Trip':
+            channel_name = 'Adventure Trip'
         else:
             raise Exception("Invalid Alias")
         return cls.getByName(channel_name)
@@ -114,6 +116,8 @@ class Channel(object):
             channel_name = 'Organizer'
         elif alias == 'DEALER':
             channel_name = 'Gear Dealer'
+        elif alias == 'Adventure Trip':
+            channel_name = 'Adventure Trip'
         else:
             raise Exception("Invalid Alias")
         return channel_name

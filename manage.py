@@ -28,11 +28,5 @@ def setupdb(local=False):
     print "Run Database Fixtures\n", "*" * 80
     fixture.db_fixture()
 
-@manager.command
-def write_html():
-    from app.models import fixture
-    print "Run HTML Writer\n", "*" * 80
-    fixture.write_all()
-
 if __name__ == '__main__':
     manager.run()

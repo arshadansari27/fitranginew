@@ -1,43 +1,43 @@
 {
  "facets": [
   {
-   "name": "Enthusiasts",
+   "name": "Enthusiast",
    "parent": "Profile"
   },
   {
-   "name": "Organisers",
+   "name": "Organizer",
    "parent": "Profile"
   },
   {
-   "name": "Gear Dealers",
+   "name": "Gear Dealer",
    "parent": "Profile"
   },
   {
-   "name": "NGO's",
+   "name": "NGO",
    "parent": "Profile"
   },
   {
-   "name": "Rescuers",
+   "name": "Rescuer",
    "parent": "Profile"
   },
   {
-   "name": "Trainers",
+   "name": "Trainer",
    "parent": "Profile"
   },
   {
-   "name": "Guides",
+   "name": "Guide",
    "parent": "Profile"
   },
   {
-   "name": "Institutes",
+   "name": "Institute",
    "parent": "Profile"
   },
   {
-   "name": "Hotels",
+   "name": "Hotel",
    "parent": "Profile"
   },
   {
-   "name": "Govt. Bodies",
+   "name": "Govt. Body",
    "parent": "Profile"
   },
   {
@@ -146,34 +146,34 @@
   },
   {
    "name": "Architecture Monuments",
-   "parent": "Travelling & Sightseeing"
+   "parent": "Travelling and Sightseeing"
   },
   {
    "name": "Beaches",
-   "parent": "Travelling & Sightseeing"
+   "parent": "Travelling and Sightseeing"
   },
   {
-   "name": "Forts & Caves",
-   "parent": "Travelling & Sightseeing"
+   "name": "Forts and Caves",
+   "parent": "Travelling and Sightseeing"
   },
   {
    "name": "Hill stations",
-   "parent": "Travelling & Sightseeing"
+   "parent": "Travelling and Sightseeing"
   },
   {
    "name": "Places to Visit",
-   "parent": "Travelling & Sightseeing"
+   "parent": "Travelling and Sightseeing"
   },
   {
    "name": "Theme Parks",
-   "parent": "Travelling & Sightseeing"
+   "parent": "Travelling and Sightseeing"
   },
   {
-   "name": "Wildlife Sanctuaries & Safaris",
-   "parent": "Travelling & Sightseeing"
+   "name": "Wildlife Sanctuaries and Safaris",
+   "parent": "Travelling and Sightseeing"
   },
   {
-   "name": "Travelling & Sightseeing",
+   "name": "Travelling and Sightseeing",
    "parent": "Activity"
   },
   {
@@ -229,7 +229,7 @@
    "parent": "Land Sports"
   },
   {
-   "name": "Rappelling & Valley Crossing",
+   "name": "Rappelling and Valley Crossing",
    "parent": "Land Sports"
   },
   {
@@ -237,7 +237,7 @@
    "parent": "Land Sports"
   },
   {
-   "name": "Trekking & Hiking",
+   "name": "Trekking and Hiking",
    "parent": "Land Sports"
   },
   {

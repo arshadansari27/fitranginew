@@ -16,6 +16,8 @@ class FacetView(object):
             self.template = template
         facets = []
         for m in models:
+            if not m.facets:
+                continue
             facets.extend([Facet.get_facet_by_name(v) for v in m.facets if Facet.get_facet_by_name(v)])
         self.facets = {} if len(facets) is 0 else arrange_facets(facets)
         self.channel = channel

@@ -61,10 +61,10 @@ configuration = {
     'FACETS': {
         'Activity':[ 
             ("Sky - Fly", ["Bungee jumping", "Hang Gliding", "Hot Air Ballooning", "Para Motoring", "Paragliding", "Parasailing", "Sky Diving","Zip Line"]),
-            #("Snow - Flow", []),
-            ("Travelling & Sightseeing", ["Architecture Monuments", "Beaches", "Forts & Caves", "Hill stations", "Places to Visit", "Theme Parks", "Wildlife Sanctuaries & Safaris"]),
+            ("Snow - Flow", []),
+            ("Travelling and Sightseeing", ["Architecture Monuments", "Beaches", "Forts and Caves", "Hill stations", "Places to Visit", "Theme Parks", "Wildlife Sanctuaries and Safaris"]),
             ("Water - Wonders", ["Canyoning", "Kayaking", "Kite Surfing", "Scuba Diving", "Snorkelling", "Surfing", "Water Rafting"]),
-            ("Land Sports", ["Camping", "Cycling-Biking", "Marathons", "Mountaineering", "Off-beat Activities", "Rappelling & Valley Crossing", "Rock Climbing", "Trekking & Hiking", "Horse Riding"]),  
+            ("Land Sports", ["Camping", "Cycling-Biking", "Marathons", "Mountaineering", "Off-beat Activities", "Rappelling and Valley Crossing", "Rock Climbing", "Trekking and Hiking", "Horse Riding"]),
             ("Other Sports", ["Stargazing", "Zorbing"])
 
         ],

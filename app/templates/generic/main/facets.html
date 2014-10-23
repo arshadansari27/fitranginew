@@ -8,20 +8,22 @@
 
             <div class="panel-heading">
                 <div class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion_{{k.replace(' ', '-')}}"
-                       href="#collapseOne_{{k.replace(' ', '-')}}">{{ k }}</a>
+                    <a data-toggle="collapse" data-parent="#accordion_{{k.replace(' ', '-').replace('&', '-')}}"
+                       href="#collapseOne_{{k.replace(' ', '-').replace('&', '-')}}">{{ k }}</a>
                 </div>
             </div>
-            <div id="collapseOne_{{k.replace(' ', '-')}}" class="panel-body panel-collapse collapse in">
+            <div id="collapseOne_{{k.replace(' ', '-').replace('&', '-')}}" class="panel-body panel-collapse collapse in">
                 {% if facet.get(k) |length > 0 %}
                     {% for _f in facet.get(k) %}
                         {% if _f.facets|length == 0 %}
-                            <a href="#"><strong>{{ _f.name }}</strong></a>
-                            <input type="checkbox" class="pull-right" name="facets-{{_f.name}}" value="{{_f.name}}"/>
+                            <div>
+                                <a href="#"><strong>{{ _f.name }}</strong></a>
+                                <input type="checkbox" class="pull-right" name="facets-{{_f.name}}" value="{{_f.name}}"/>
+                            </div>
                         {% else %}
                             <div id="accordion_{{_f.name.replace(' ', '-')}}">
-                                <a data-toggle="collapse" data-parent="#accordion_{{_f.name.replace(' ', '')}}" href="#collapseTwo_{{_f.name.replace(' ', '-')}}"><strong>{{_f.name }}</strong></a>
-                                <div id="collapseTwo_{{_f.name.replace(' ','-')}}" class="collapse">
+                                <a data-toggle="collapse" data-parent="#accordion_{{_f.name.replace(' ', '-').replace('&', '-')}}" href="#collapseTwo_{{_f.name.replace(' ', '-').replace('&', '-')}}"><strong>{{_f.name }}</strong></a>
+                                <div id="collapseTwo_{{_f.name.replace(' ','-').replace('&', '-')}}" class="collapse">
                                     {% for _fl in _f.facets %}
                                         <div class="row-fluid">
                                             <input type="checkbox" class="pull-right" name="facets-{{_fl}}" value="{{_fl}}"/>
@@ -33,7 +35,6 @@
                         {% endif %}
                     {% endfor %}
                 {% endif %}
-
             </div>
         </div>
     </div>

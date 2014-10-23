@@ -1,16 +1,13 @@
-from app.scripts.db_load import load_all, write_all
 from app.models import *
 from app import settings
 print 'Using setting', settings.MONGODB_HOST, settings.MONGODB_PORT, settings.MONGODB_DB
-import os
-
-def html_setup():
-    write_all()
+import os, simplejson as json, base64
+import tempfile
 
 def db_fixture():
     #aliases = generate_alias_wise_data()
     Configuration.load_from_configuration()
-    data = load_all(False)
+    data = json.loads(open('app/scripts/alldata.json', 'r').read())
     admin = Profile.objects(roles__in=['Admin']).first()
     if not admin:
         admin = Profile(name="Arshad Ansari", username="arshadansari27", password='testing', is_verified=True, email='arshadansari27@gmail.com', channels=['Profile'], facets=['Profile', 'Enthusiasts'])
@@ -18,8 +15,11 @@ def db_fixture():
         admin.save()
     print admin.name
 
-    for d in data:
+    for x, d in data:
         print '*' * 100
+        print x
+        if x.strip() == 'default':
+            continue
         title = d['title']
 
         if Content.objects(title=title).first() is not None:
@@ -29,12 +29,18 @@ def db_fixture():
         channel = Channel.getByAlias(alias)
         image = None
         if d.get('image', None):
-            image_path = d['image']
-            if not os.path.exists(image_path):
+            file_like = base64.standard_b64decode(d['image'])
+            if not file_like:
                 continue
-            image = Image(image=open(image_path, 'rb'))
+            print len(file_like)
+            bytes_image = bytearray(file_like)
+            with tempfile.TemporaryFile() as f:
+                f.write(bytes_image)
+                f.flush()
+                f.seek(0)
+                image = Image(image=f)
         _type = channel.getTypeByAlias(alias)
-        #print "Channel Associated: ", channel.name, _type
+        print "Channel Associated: ", channel.name, _type
         if _type in ['Organizer', 'Enthusiast', 'Gear Dealer']:
             tags =[channel.name, _type] 
             #print tags
@@ -42,6 +48,13 @@ def db_fixture():
                 profile = Profile(name=title, username=title.lower().replace(' ', '_'), password='testing', is_verified=True, 
                     main_image=image if image else None, channels=[channel.name], facets=tags)
                 profile.save()
+
+        elif _type in ['Adventure Trip']:
+            tags = []
+            if not Event.objects(title__iexact=title).first():
+                event = Event(title=title, text=d.get('data', ''), is_published=True, published_timestamp=datetime.datetime.now(), channels=[channel.name], facets=[], main_image=image)
+                event.save()
+
         else:
             tags = [channel.name]
             
