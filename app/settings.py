@@ -1,8 +1,8 @@
 import os
 
 
-db_address = open('db_address.txt', 'r').read()
-print 'Using database', db_address
+#db_address = open('db_address.txt', 'r').read()
+#print 'Using database', db_address
 
 #MONGODB_HOST = '54.201.21.20'
 MONGODB_HOST = 'localhost'

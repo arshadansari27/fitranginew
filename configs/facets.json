@@ -77,21 +77,116 @@
    "parent": "Product"
   },
   {
-   "name": "Maharashtra",
+   "name": "Andaman and Nicobar",
    "parent": "India"
   },
   {
-   "name": "Gujrat",
+   "name": "Andhra Pradesh",
+   "parent": "India"
+  },
+  
+{
+   "name": "Arunachal Pradesh",
+   "parent": "India"
+  },
+  
+{
+   "name": "Assam",
+   "parent": "India"
+  },
+  
+{
+   "name": "Bihar",
+   "parent": "India"
+  },
+  
+  {
+   "name": "Chhattisgarh",
    "parent": "India"
   },
   {
-   "name": "Kerela",
+   "name": "Delhi",
+   "parent": "India"
+  },
+  {
+   "name": "Goa",
+   "parent": "India"
+  },
+  {
+   "name": "Gujarat",
+   "parent": "India"
+  },
+  {
+   "name": "Haryana",
    "parent": "India"
   },
   {
    "name": "Himachal Pradesh",
    "parent": "India"
   },
+   {
+   "name": "Jammu and Kashmir",
+   "parent": "India"
+  },
+  {
+   "name": "Jharkhand",
+   "parent": "India"
+  },
+  {
+   "name": "Karnataka",
+   "parent": "India"
+  },
+  {
+   "name": "Kerala",
+   "parent": "India"
+  },
+  {
+   "name": "Madhya Pradesh",
+   "parent": "India"
+  },
+  {
+   "name": "Maharashtra",
+   "parent": "India"
+  },
+  {
+   "name": "Manipur",
+   "parent": "India"
+  },
+  {
+   "name": "Punjab",
+   "parent": "India"
+  },
+  {
+   "name": "Rajasthan",
+   "parent": "India"
+  },
+  {
+   "name": "Sikkim",
+   "parent": "India"
+  },
+  {
+   "name": "Tamil Nadu",
+   "parent": "India"
+  },
+  {
+   "name": "Tripura",
+   "parent": "India"
+  },
+  {
+   "name": "Uttar Pradesh",
+   "parent": "India"
+  },
+  {
+   "name": "Uttarakhand",
+   "parent": "India"
+  },
+  {
+   "name": "West Bengal",
+   "parent": "India"
+  },
+
+
+
   {
    "name": "India",
    "parent": "Location"
@@ -104,6 +199,21 @@
    "name": "Sri Lanka",
    "parent": "Location"
   },
+  {
+   "name": "Thailand",
+   "parent": "Location"
+  },
+  
+  {
+   "name": "Macao",
+   "parent": "Location"
+  },
+  {
+   "name": "Hong Kong",
+   "parent": "Location"
+  },
+  
+  
   {
    "name": "Bungee jumping",
    "parent": "Sky - Fly"
