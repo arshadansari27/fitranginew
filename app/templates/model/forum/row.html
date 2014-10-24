@@ -1,18 +1,27 @@
-<tr>
-    <td class="">
-        <h4><a href="/model/{{model.channel_factory(model)}}/{{model.id}}">{{ model.title }}</a></h4>
-        {% if model.created_by %}
-        <p>{{ model.created_by.name }}</p>
-        {% else %}
-        <p>Anonymous</p>
-        {% endif %}
-    </td>
-    <td class="">
-        <ul>
-            {% for k in model.keywords %}
-            <li>{{ k }}</li>
-            {% endfor %}
-        </ul>
-    </td>
-</tr>
+<div class="row" style="background-color: aliceblue">
+    <br/>
 
+    <div class="col-md-2 col-sm-3 text-center">
+        <a class="story-title" href="#">
+            <img title="profile image" style="width:100px;height:100px" class="img-circle img-responsive" src="{% if model.created_by and model.created_by.main_image %}/img/{{ model.created_by.get_class_name()}}/{{model.created_by.id}}{% else %}http://placehold.it/300x300{% endif %}"/>
+        </a>
+    </div>
+    <div class="col-md-10 col-sm-9">
+        <h3>
+            {{ model.title }}
+            <small style="font-family:courier,'new courier';" class="text-muted pull-right">Posted on {{ model.created_timestamp.strftime('%d-%m-%Y') }}</small>
+            <br/>
+            <h4><span class="label label-default pull-right">{% if model.created_by %}{{ model.created_by.name }}{% else %}Anonymous{% endif %}</span></h4>
+            <br/>
+            <br/>
+            <h4><a href="/model/{{model.channel_factory(model)}}/{{model.id}}" class="text-danger pull-right">Read More</a></h4>
+        </h3>
+
+        <div class="row">
+            {{ model.text }}
+        </div>
+        <br/>
+        <br/>
+    </div>
+</div>
+<hr/>
