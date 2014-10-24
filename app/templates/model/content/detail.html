@@ -26,6 +26,9 @@
 						{% endif %}
         			</div>
             	</div>
+
+                {% import 'generic/includes/related.html' as related_macro %}
+                {{ related_macro.show_related(related)}}
 				{% import 'generic/includes/comments.html' as comment_macro %}
 				{{ comment_macro.show_comments(model.comments, model.id)}}
         	</div>

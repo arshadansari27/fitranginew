@@ -1,4 +1,10 @@
 {% extends 'generic/main/model_base.html' %}
+{% block header_script %}
+    <script src="/assets/js/standalone/selectize.js"></script>
+    <link rel="stylesheet" href="/assets/css/selectize.default.css">
+    <style>
+    </style>
+{% endblock %}
 {% block model_data %}
 <div class="container">
     <div class="panel panel-primary">
@@ -59,4 +65,10 @@
 
 {% block footer_scripts %}
     <script src="http://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.1/ckeditor.js"></script>
+    <script>
+    $(document).ready(function() {
+        window.App = window.App || {};
+        window.App.current_channel = "{{ channel }}";
+    });
+    </script>
 {% endblock %}

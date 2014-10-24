@@ -1,4 +1,6 @@
 {% extends 'generic/main/model_editor_base.html' %}
+
+
 {% block form_block %}
 <div class="form-group">
     <label class="col-lg-3 control-label">Title:</label>
@@ -67,12 +69,15 @@
     <label class="col-lg-3 control-label">Organiser:</label>
 
     <div class="col-lg-8">
-        <input class="form-control"
-               value="{%if model.organiser and model.organiserid %}{{ model.organiser.name }}{% endif %}" type="text"
-               name="organiser_display"/>
-        <input class="hidden" type="hidden"
-               value="{%if model.organiser and model.organiserid %}{{ model.organiser.id }}{% endif %}" type="text"
-               name="organiser_ref"/>
+            	<div class="control-group">
+					<select id="select-repo" class="repositories" placeholder="Pick Organiser...">
+                        {% if model.organiser and model.organiser.id %}
+                        <option value="{{ model.organiser.id }}" selected>{{ model.organiser.name }}</option>
+                        {% endif %}
+					</select>
+				</div>
+
+        <input class="hidden" type="hidden" value="{%if model.organiser and model.organiser.id %}{{ model.organiser.id }}{% endif %}" type="text" name="organiser_ref" id="organiser_ref"/>
     </div>
 </div>
 <div class="form-group">
@@ -113,4 +118,41 @@
     </div>
 </div>
 
+<script>
+    $(document).ready(function(){
+        var $select = $('#select-repo').selectize({
+            valueField: 'option_value',
+            labelField: 'option_display',
+            searchField: 'option_display',
+            create: false,
+            render: {
+                option: function(item, escape) {
+                    console.log(Object.keys(item));
+                    return '<div>' + '<span class="title">' + '<span class="name"><i class="icon"></i>' + escape(item.option_display) + '</span>' +'</span>' + '</div>';
+                }
+            },
+            score: function(search) {
+                return function(item) {return 1};
+            },
+            load: function(query, callback) {
+                if (!query.length) return callback();
+                $.ajax({
+                    url: '/api/models/Profile?query=' + encodeURIComponent(query) + '&facets=Organizer',
+                    type: 'GET',
+                    error: function() {
+                        callback();
+                    },
+                    success: function(res) {
+                        console.log(res);
+                        callback(res.result);
+                    }
+                });
+            },
+            onChange: function(value) {
+                if (!value.length) return;
+                $('#organiser_ref').val(value);
+            }
+        });
+    });
+</script>
 {% endblock %}

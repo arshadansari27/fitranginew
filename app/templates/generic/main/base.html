@@ -41,7 +41,8 @@
 				  </div>
 			  </form>
 			  <ul class="nav navbar-nav navbar-right">
-				<li><a href="/channel/Profile?subchannel=Enthusiast"> + Members </a><li>
+
+				<li><a href="/channel/Profile?subchannel=Enthusiast"> <strong>Members</strong> </a><li>
 				{% if user and user.id %}
 				<li>
 				<div class="navbar-header">
@@ -84,9 +85,9 @@
 					</ul>
 				 </li>-->
 				{% else %}
-				<li><a id="btn-login" href="/login">Sign In+</a></li>
+				<li><a id="btn-login" href="/login"><strong>Sign In+</strong></a></li>
 				{% endif %}
-				 <li><a href="/"><i class="glyphicon glyphicon-home"></i></a></li>
+                  <li><a href="/"><i class="fa fa-home fa-2x"></i></a></li>
 			   </ul>
 			</div>	
 		 </div>	
@@ -124,29 +125,4 @@
     {% block footer_scripts %}{% endblock %}
   </body>
 	<div id="footer-scripts"></div>
-	<!--script>
-		$(document).ready(function(){
-			$.ajax({
-    		type: 'GET',
-    		url: '/flash',
-    		success: function(data) { 
-    			console.log('Generic: ' + JSON.stringify(data));
-				if (!$.isEmptyObject(data)) {
-    				var message = data.message;
-    				var category = data.category;
-    			
-					$('.ajax-message').addClass('alert-' + category);
-					$('.ajax-message').removeClass('hide');
-					$('.ajax-message').append('<div id="alert-message">' + message + "</div>");
-				
-					setTimeout("$('.ajax-message').addClass('hide');$('.ajax-message').removeClass('alert-"+ category +"');$('.alert-message').remove()", 5000);
-				}
-
-    		},
-    		contentType: "application/json",
-    		dataType: 'json'
-		});	
-		});
-	</script-->
-
-</html>
+/html>

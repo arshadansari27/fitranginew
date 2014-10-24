@@ -1,6 +1,6 @@
 __author__ = 'arshad'
 
-from flask import render_template, request, g, flash
+from flask import render_template, request, g, flash, redirect
 
 from app.models import *
 from app.handlers.views.menu_view import MenuView
@@ -29,6 +29,8 @@ class ModelEditor(object):
         self.category = None
 
     def render(self):
+        if not g.user or not 'Admin' in g.user.roles or not self.model.create_by.id ==g.user.id:
+            return redirect('/model/%s/%s' % (self.channel.name, str(self.model.id)))
         return render_template(self.template, model=self.model, menu=self.menu_view, user=g.user, channel=self.channel.name, facets=arrange_facets(Facet.all_facets))
 
     def get_data_from_form(self):

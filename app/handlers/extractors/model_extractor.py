@@ -1,21 +1,18 @@
 __author__ = 'arshad'
 
 import re
-
+from bson import ObjectId
 from app.models import *
+from mongoengine import Q
 
 
 PAGE_SIZE = 25
 
 
 def search_models(search_query):
-    collection = Content._get_collection()
     regx = re.compile(search_query, re.IGNORECASE)
     query = {'$or': [{'name': {'$regex': regx}}, {'title': {'$regex': regx}}]}
-    criteria = {'_id': 1}
-    models = list(collection.find(query, criteria))
-    models = [Content.objects(pk=str(m['_id'])).first() for m in models]
-    return models
+    return Content.objects(__raw__=query).all()
 
 
 def get_all_models_all_channels(search_query=None):
@@ -45,13 +42,9 @@ def get_all_models_all_channels(search_query=None):
             search = {}
         channel_search = {'channels': channel.name}
         _query = {'$and': [channel_search, search]}
-        coll = model_class._get_collection()
-        total = coll.find(_query).count()
-        cursor = coll.find(_query).limit(8)
-        model_ids = []
-        for c in cursor:
-            model_ids.append(c['_id'])
-        models[channel.name] = [model_class.objects(pk=str(v)).first() for v in model_ids], (total / 8) + 1
+        _models = model_class.objects(__raw__=_query).all()[0:8]
+        _total = model_class.objects(__raw__=_query).count()
+        models[channel.name] = _models, (_total / 8) + 1
     return models
 
 
@@ -72,38 +65,38 @@ def get_all_models(channel, facets=[], search_query=None, page=1, paginated=True
         print query
         print '*' * 100
 
-    coll = model_class._get_collection()
-    total = coll.find(query).count()
+    total = model_class.objects(__raw__=query).count()
     if paginated:
-        cursor = coll.find(query).skip((page - 1) * PAGE_SIZE).limit(PAGE_SIZE)
+        start =  (page - 1) * PAGE_SIZE
+        end = start + PAGE_SIZE
+        models = model_class.objects(__raw__=query).all()[start:end]
     else:
-        cursor = coll.find(query)
+        models = model_class.objects(__raw__=query).all()
 
-    model_ids = []
-    for c in cursor:
-        model_ids.append(c['_id'])
-    return [model_class.objects(pk=str(v)).first() for v in model_ids], (total / PAGE_SIZE) + 1
+    return models, (total / PAGE_SIZE) + 1
 
 
-def get_by(cls, **kwargs): #, _and=True, single=False):
+def get_by(cls, **kwargs):
     query = []
+
+    if kwargs.get('single', False) and kwargs['single']:
+        is_single = True
+    else:
+        is_single = False
     for k, v in kwargs.iteritems():
+        if k != '_and': continue
         query.append({k: v})
 
     if kwargs.get('_and', False) and kwargs['_and']:
         query = {'$and': query}
     else:
         query = {'$or': query}
-    coll = cls._get_collection()
-    cursor = coll.find(query)
-    objs = []
-    for c in cursor:
-        o = cls()
-        for _k, _v in c.iteritems():
-            setattr(o, _k, _v)
-        if kwargs.get('single', False) and kwargs['single']:
-            return o
-        else:
-            objs.append(o)
+    q = cls.__class__.objects(__raw__=query)
+    if is_single:
+        return q.first()
+    else:
+        return q.all()
 
-    return objs
+def get_related(model):
+    query = {'$and': [{'facets':{'$in': model.facets}}, {'_id': {'$ne': ObjectId(model.id)}}]}
+    return model.__class__.objects(__raw__= query ).all()[0:3]

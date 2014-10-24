@@ -5,6 +5,7 @@ from flask import render_template, g
 from app.models import Channel, Content, Node
 from app.handlers.views.menu_view import MenuView
 from app.handlers.views import env
+from app.handlers.extractors import model_extractor
 
 
 class ModelView(object):
@@ -27,6 +28,8 @@ class ModelView(object):
             else:
                 model_class = Content
             self.model = model_class.objects(pk=model).first()
+            self.related_models = model_extractor.get_related(self.model)
+            self.related = [ModelView(m, 'list')  for m in self.related_models]
             if not self.model.main_image or not self.model.main_image.image:
                 self.model.has_no_image = True
             else:
@@ -44,5 +47,5 @@ class ModelView(object):
                 contents = Content.objects(created_by__exact=self.model).all()[0: 3]
             else:
                 contents = []
-            return render_template(self.template, channel=self.channel_name, model=self.model, menu=self.menu_view, user=g.user, contents=contents)
+            return render_template(self.template, channel=self.channel_name, model=self.model, menu=self.menu_view, user=g.user, contents=contents, related=self.related)
 

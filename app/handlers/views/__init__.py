@@ -6,6 +6,7 @@ from flask import render_template, request, g, flash, redirect, url_for, session
 from app import app
 from app.models import *
 from app.settings import TEMPLATE_FOLDER
+from app.handlers.views import api
 
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
@@ -32,7 +33,10 @@ def get_img(model_name, key):
     from app.models import Node
     model_class = Node.model_factory(model_name)
     img = model_class.objects(pk=key).first().get_image()
-    return send_file(img, mimetype='image/' + img.format)
+    if img:
+        return send_file(img, mimetype='image/' + img.format)
+    else:
+        return ''
 
 @app.route('/channel/<channel>')
 def channel(channel):
@@ -52,6 +56,11 @@ def page_not_found(e):
 @app.route('/model/<channel>/<key>')
 def model(channel, key):
     return ModelView(key, 'detail', channel_name=channel).render()
+
+@app.route('/api/models/<channel>', methods=['GET'])
+def search_models(channel):
+    d = api.ModelApi(channel_name=channel, facets=request.args.get('facets', None), query=request.args.get('query', None), paged=True)
+    return jsonify(dict(result=d.dictify()))
 
 @app.route("/comments/<content_key>/delete/<key>", methods=["POST"])
 def comment_delete(content_key, key):

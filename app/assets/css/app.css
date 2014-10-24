@@ -488,6 +488,9 @@ width: 690px;
 	font-weight:normal;
 	font-size:14px;
 }
+.well-with_bg {
+    background-image: url('../img/bg_suburb.jpg');
+}
 
 
 

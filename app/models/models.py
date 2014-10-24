@@ -182,20 +182,19 @@ class Node(object):
     def update_existing(self, **kwargs):
         self.set_values(False, **kwargs)
         self.save()
-        print self.id
         return self
 
     def set_values(self, is_new, **kwargs):
         for k, v in kwargs.iteritems():
             if k.endswith('_ref'):
-                continue
-            if k.endswith('_display'):
-                _k = k.replace('_display', '_ref')
-                if _k and kwargs.has_key(_k) and kwargs.get(_k, False):
-                    v = Content.get_by_id(kwargs[_k])
-                else:
-                    continue
+                if k and kwargs.has_key(k) and kwargs.get(k, False):
+                    v = Content.get_by_id(v)
+                    k = k.replace('_ref', '')
+                    print k, v.id
+            if type(v) == str:
+                v = v.strip()
             setattr(self, k, v)
+            print "Current", k, getattr(self, k)
 
 
     def upload_image(self, image):
@@ -250,7 +249,10 @@ class Content(Node, db.Document):
         return Content.objects(pk=id).first()
     
     def get_image(self):
-        return self.main_image.image
+        if self and self.main_image:
+            return self.main_image.image
+        else:
+            return None
     
     meta = {
         'allow_inheritance': True,
