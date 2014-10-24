@@ -29,7 +29,7 @@ class ModelEditor(object):
         self.category = None
 
     def render(self):
-        if not g.user or not 'Admin' in g.user.roles or not self.model.create_by.id ==g.user.id:
+        if not g.user and not 'Admin' in g.user.roles and not self.model.created_by.id ==g.user.id:
             return redirect('/model/%s/%s' % (self.channel.name, str(self.model.id)))
         return render_template(self.template, model=self.model, menu=self.menu_view, user=g.user, channel=self.channel.name, facets=arrange_facets(Facet.all_facets))
 
