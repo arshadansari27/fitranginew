@@ -1,11 +1,9 @@
 <div class="col-md-{{ size }}">
-	<a href="/model/{{model.channel_factory(model)}}/{{model.id}}">
-		<div class="view view-tenth">
-			<img src="/img/{{model.get_class_name()}}/{{model.id}}" />
-        	<div class="mask"><h2>{{ model.title }}</h2></div>
-			<p>{{ model.title }}</p>
+		<div class="view1">
+			<img src="/img/{{model.get_class_name()}}/{{model.id}}" /><br/>
+            <a href="/model/{{model.channel_factory(model)}}/{{model.id}}">
+        	<h5 class="text-muted">{{ model.title }}</h5>
+            </a>
 		</div>
-	</a>
 </div>
-
 

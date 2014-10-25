@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask
-
+from flask.ext.cache import Cache
 from flask.ext.mongoengine import MongoEngine
 from app import settings
 
@@ -16,7 +16,7 @@ db = MongoEngine()
 db.init_app(app)
 
 #from flask.ext import login
-
+cache = Cache(app,config={'CACHE_TYPE': 'simple'})
 
 def start_app():
     from app.models.sessions import MongoSessionInterface

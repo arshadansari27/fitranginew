@@ -10,7 +10,7 @@ def db_fixture():
     data = json.loads(open('app/scripts/alldata.json', 'r').read())
     admin = Profile.objects(roles__in=['Admin']).first()
     if not admin:
-        admin = Profile(name="Arshad Ansari", username="arshadansari27", password='testing', is_verified=True, email='arshadansari27@gmail.com', channels=['Profile'], facets=['Profile', 'Enthusiasts'])
+        admin = Profile(name="Arshad Ansari", username="arshadansari27", password='testing', is_verified=True, email='arshadansari27@gmail.com', channels=['Profile'], facets=['Profile', 'Enthusiast'])
         admin.roles.append('Admin')
         admin.save()
     print admin.name

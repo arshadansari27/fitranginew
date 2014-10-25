@@ -19,6 +19,10 @@ class ModelView(object):
                 self.template = _template % (model.__class__.__template__, 'card.html')
             elif default == 'row':
                 self.template = _template % (model.__class__.__template__, 'row.html')
+            elif default == 'banner':
+                self.template = _template % (model.__class__.__template__, 'banner.html')
+            elif default == 'list':
+                self.template = _template % (model.__class__.__template__, 'list.html')
             else:
                 raise Exception("Unsupported")
         elif action == 'detail':

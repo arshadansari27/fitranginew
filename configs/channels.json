@@ -40,11 +40,15 @@
         },
         {
             "name": "Profile",
-            "value": "Finder (Profile)",
+            "value": "Finder",
             "type": "Profile",
             "menu_link": "/channel/Profile",
             "template": "feature/profile",
-            "menu": 4
+            "menu": 4,
+            "sub_menu": [
+                ["Gear Dealer", "/channel/Profile?facets=Gear Dealer"],
+                ["Organizer", "/channel/Profile?facets=Organizer"]
+            ]
 
         },
         {

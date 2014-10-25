@@ -2,7 +2,6 @@ import datetime
 import random
 
 
-
 class Configuration(object):
 
     @property
@@ -19,7 +18,7 @@ class Configuration(object):
 
         data2 = get_channels()
         for d in data2:
-            c = Channel(d['name'], d['type'], d['menu'], d['value'], d.get('template', None), d.get('menu_link', None))
+            c = Channel(d['name'], d['type'], d['menu'], d['value'], d.get('template', None), d.get('menu_link', None), d.get('sub_menu', None))
             Channel.all_data.append(c)
 
         data3 = get_roles()
@@ -61,13 +60,14 @@ class Facet(object):
 class Channel(object):
     all_data= []
 
-    def __init__(self, name, parent, menu, display, template, menu_link):
+    def __init__(self, name, parent, menu, display, template, menu_link, sub_menu=None):
         self.name = name
         self.parent = parent
         self.menu = menu
         self.display = display
         self.template = template
         self.menu_link = menu_link
+        self.sub_menu = sub_menu
 
     def __repr__(self):
         return self.name
@@ -247,7 +247,7 @@ class Content(Node, db.Document):
     @classmethod
     def get_by_id(cls, id):
         return Content.objects(pk=id).first()
-    
+
     def get_image(self):
         if self and self.main_image:
             return self.main_image.image

@@ -47,6 +47,39 @@ def get_all_models_all_channels(search_query=None):
         models[channel.name] = _models, (_total / 8) + 1
     return models
 
+def get_models_by_only_single(channel_name, facet, limit=None):
+    model_class = Node.model_factory(channel_name)
+
+    if channel_name and facet:
+        query = {'$and': [{'channels': channel_name}, {'facets': {'$all': [facet]}}]}
+    else:
+        raise Exception('Invalid facet')
+    total = model_class.objects(__raw__=query).order_by('-created_timestamp').count()
+    if limit:
+        models = model_class.objects(__raw__=query).order_by('-created_timestamp').all()[:limit]
+    else:
+        models = model_class.objects(__raw__=query).order_by('-created_timestamp').all()
+    return models, total
+
+def get_models_by(channel_name, facets=[], facets_to_avoid=[], limit=None):
+    model_class = Node.model_factory(channel_name)
+
+    if channel_name and len(facets) > 0:
+        if facets_to_avoid and len(facets_to_avoid) > 0:
+            query = {'$and': [{'channels': channel_name}, {'facets': {'$in': facets}}, {'facets': {'$nin': facets_to_avoid}}]}
+        else:
+            query = {'$and': [{'channels': channel_name}, {'facets': {'$in': facets}}]}
+    else:
+        if facets_to_avoid and len(facets_to_avoid) > 0:
+            query = {'$and': [{'channels': channel_name}, {'facets': {'$nin': facets_to_avoid}}]}
+        else:
+            query = {'channels': channel_name}
+
+    if limit:
+        models = model_class.objects(__raw__=query).order_by('-created_timestamp').all()[:limit]
+    else:
+        models = model_class.objects(__raw__=query).order_by('-created_timestamp').all()
+    return models
 
 def get_all_models(channel, facets=[], search_query=None, page=1, paginated=True):
     model_class = Node.model_factory(channel.name)
