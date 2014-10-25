@@ -38,10 +38,10 @@ class ModelView(object):
             self.menu_view = MenuView(channel_name)
             self.channel_name = channel_name
 
-    def render(self):
+    def render(self, size=3):
         if self.action == 'list':
             template = env.get_template(self.template)
-            return template.render(model=self.model)
+            return template.render(model=self.model, size=size)
         else:
             if 'Profile' in self.model.channels or 'Enthusiast' in self.model.facets:
                 contents = Content.objects(created_by__exact=self.model).all()[0: 3]

@@ -16,7 +16,7 @@ def search_models(search_query):
 
 
 def get_all_models_all_channels(search_query=None):
-    for_channels = ['Destination', 'Activity', 'Article', 'Profile']
+    for_channels = ['Destination', 'Activity', 'Article', 'Profile', 'Adventure Trip']
     print [c.name for c in Channel.all_data]
     channels = filter(lambda c: c.name in for_channels, Channel.all_data)
     models = {}
