@@ -7,7 +7,7 @@ from app import app
 from app.models import *
 from app.settings import TEMPLATE_FOLDER
 from app.handlers.views import api
-
+from email.utils import parseaddr
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
 
@@ -27,6 +27,17 @@ def search():
     query = request.args.get('search-query', '')
     return SearchView(query=query).render()
 
+@app.route('/user/subscribe', methods=['POST'])
+def subscribe():
+    try:
+        user_email = request.form['email']
+        message = SubscriptionMessage(message=parseaddr(user_email)[1])
+        message.save()
+        flash('Successfully subscribed.', category='success')
+    except Exception, e:
+        print e
+        flash('Something went wrong with subscription, please try again later', category='error')
+    return redirect('/')
 
 @app.route('/img/<model_name>/<key>')
 def get_img(model_name, key):
@@ -124,8 +135,10 @@ def login():
         email = request.form.get('username', None)
         password = request.form.get('password', None)
         profile = Profile.authenticate(email, password)
-        if profile:
+        if profile and (profile._id or profile.id):
             session['user'] = str(profile._id)
+            event = LoginEvent(user=session['user'], url=request.url, ip_address=request.remote_addr)
+            event.save()
             flash('Successfully logged in.', category='success')
             return redirect(url_for('home'))
     return render_template('/generic/main/login.html', menu=MenuView(None))
@@ -148,3 +161,16 @@ def before_request():
             g.user = user
         else:
             g.user = None
+
+
+@app.after_request
+def after_request(response):
+    if hasattr(g, 'user') and hasattr(g.user, 'id'):
+        user = g.user
+    else:
+        user = None
+    if '/assets' in request.url or '/img' in request.url or '/login' in request.url:
+        return response
+    event = VisitEvent(user=str(user.id) if user else None, url=request.url, ip_address=request.remote_addr)
+    event.save()
+    return response

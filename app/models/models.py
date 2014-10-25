@@ -354,6 +354,60 @@ class Product(Content):
     price = db.FloatField()
     discount = db.FloatField(required=False)
 
+class Message(db.Document):
+    __template__ = 'model/message/'
+
+    created_timestamp = db.DateTimeField(default=datetime.datetime.now, required=True)
+    created_by = db.ReferenceField('Profile')
+    created_for = db.ReferenceField('Profile')
+    message = db.StringField()
+
+    @classmethod
+    def get_by_id(cls, id):
+        return Message.objects(pk=id).first()
+
+    meta = {
+        'allow_inheritance': True,
+    }
+
+    def __unicode__(self): return "%s..." % self.message
+
+class UserMessage(Message): pass # Can be anonymous
+class SubscriptionMessage(Message): pass # Can be anonymous
+class Notification(Message): pass # Can be system generated
+
+
+class AnalyticsEvent(db.Document):
+    __template__ = 'model/message/'
+
+    created_timestamp = db.DateTimeField(default=datetime.datetime.now, required=True)
+    user = db.StringField()
+    event_details = db.StringField()
+    ip_address = db.StringField()
+    url = db.StringField()
+
+    @classmethod
+    def get_by_id(cls, id):
+        return Event.objects(pk=id).first()
+
+    def get_image(self):
+        if self and self.main_image:
+            return self.main_image.image
+        else:
+            return None
+
+    meta = {
+        'allow_inheritance': True,
+    }
+
+    def __unicode__(self): return "%s..." % self.message
+
+class LoginEvent(AnalyticsEvent):
+    pass
+
+class VisitEvent(AnalyticsEvent):
+    pass
+
 
 Configuration.load_from_configuration()
 
