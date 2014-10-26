@@ -30,13 +30,14 @@
 			  </button>
 		  
 			</div>
-			<div class="collapse navbar-collapse" id="navbar-collapse1">
+			<div class="collapse navbar-collapse pull-right" id="navbar-collapse1">
 			  <form method="GET" action="/search" class="navbar-form pull-left">
-				  <div class="input-group" style="max-width:470px;">
-						<input type="text" class="form-control" placeholder="Search" name="search-query" id="search-query">
-					<div class="input-group-btn">
-					  <button class="btn btn-default btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-					</div>
+				  <div class="input-group" >
+						<input type="text" class="form-control" style="max-width:800px;" placeholder="Search" name="search-query" id="search-query">
+                        <input type="hidden" class="form-control hide" name="channel" value="{{ channel_name }}"/>
+					    <div class="input-group-btn">
+					        <button class="btn btn-default btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+					    </div>
 				  </div>
 			  </form>
 			  <ul class="nav navbar-nav navbar-right">
@@ -129,9 +130,9 @@
                     <br/>
                     <br/>
                     <ul>
-                        <li><a href="#" class="col-sm-10 btn btn-danger disabled">Advertise With Us</a><br/><br/></li>
-                        <li><a href="#" class="col-sm-10 btn btn-danger disabled">Be A Contributor</a><br/><br/></li>
-                        <li><a href="#" class="col-sm-10 btn btn-danger disabled">Submit Your Listing</a><br/><br/></li>
+                        <li><a href="#" class="col-sm-10 btn btn-info disabled">Advertise With Us</a><br/><br/></li>
+                        <li><a href="#" class="col-sm-10 btn btn-info disabled">Be A Contributor</a><br/><br/></li>
+                        <li><a href="#" class="col-sm-10 btn btn-info disabled">Submit Your Listing</a><br/><br/></li>
                     </ul>
                     <p><strong>Mail us at <a href="mailto:go@fitrangi.com">go@fitrangi.com</a> for any queries and we will be right by you.</strong></p>
                 </div>
