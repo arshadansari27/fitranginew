@@ -322,12 +322,14 @@ a.screen-roll {
     border-bottom: 1px solid #E8E8E8;
 	border-radius: 5px 5px 5px 5px;
 	color: #333;
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: normal;
-	height: 30px;
+	height: 35px;
 	line-height: 33px;
+    
 	margin-top: 20px;
 	padding-left: 10px;
+    background-color: #007bb6;
 	text-transform: uppercase;
 }
 .border-b {
