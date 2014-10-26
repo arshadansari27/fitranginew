@@ -11,6 +11,8 @@
     <meta name="author" content="fitrangi" >
    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
    <link rel="stylesheet" href="/assets/css/bootstrap-theme.min.css">
+
+   <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
    <link type="text/css" rel="stylesheet" href="/assets/css/example.css" />
 	<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
 		<script type="text/javascript" src="/assets/js/jquery-1.9.1.min.js"></script>
@@ -20,12 +22,12 @@
 	<style>body { padding-top: 70px; }</style>
   </head>
   <body> 
-	<div class="navbar navbar-fixed-top header">
+	<div class="navbar navbar-fixed-top header" style="background-color: #ffffff">
 		<div class="col-md-12">
 			<div class="navbar-header">
 			  
 			  <!--a href="#" class="navbar-brand">Fitrangi</a-->
-			  <a class="navbar-brand" href="/"><img src="/assets/img/logo.png" style="height: 30px;" alt="" ></a>
+			  <a class="navbar-brand" href="/"><img src="/assets/img/logo.png" style="height: 45px;" alt="" ></a>
 			  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse1">
 			  <i class="glyphicon glyphicon-search"></i>
 			  </button>
@@ -42,7 +44,7 @@
 			  </form>
 			  <ul class="nav navbar-nav navbar-right">
 
-				<li><a href="/channel/Profile?subchannel=Enthusiast"> <strong>Members</strong> </a><li>
+				<li><a href="/channel/Profile?facets=Enthusiast&only=1"> <strong>Members</strong> </a><li>
 				{% if user and user.id %}
 				<li>
 				<div class="navbar-header">
@@ -52,7 +54,7 @@
 					  <li><a href="#"><i class="glyphicon glyphicon-inbox" style="color:#11dd11;"></i> My Posts</a></li>
 					  <li class="nav-divider"></li>
 					  {% if 'Admin' in user.roles %}
-					  <!--<li><a href="/admin"><i class="glyphicon glyphicon-dashboard" style="color:#0000aa;"></i> Dashboard</a></li>-->
+					  <li><a href="/admin"><i class="glyphicon glyphicon-dashboard" style="color:#0000aa;"></i> Dashboard</a></li>
 					  {% endif %}
 					  {% if 'EventOrganiser' in user.roles %}
 					  <li><a href="/events"><i class="glyphicon glyphicon-cog" style="color:#dd1111;"></i> Events</a></li>
@@ -107,24 +109,99 @@
 		</div>
 		{{ menu.render()|safe }}
 
-	
-	
-	{% block body %}{% endblock %}
 
-    <hr/>
-    <div class="container-fluid">
-	    <footer class="pull-right" style="position: relative; top:90%; left:0;">
-            <span class="">©Copyright 2013-2014 <a title="Fitrangi - Adventure Sports" href="/">Fitrangi </a> | <a href="/about#privacy">Privacy</a></span>
-            <br/>
-            <br/>
-        </footer>
-    </div>
-	<script src="/assets/js/bootstrap.min.js"></script>
-	<script src="/assets/appjs/app.js"></script>
-	<div id="script_name" class="hide">
-		{% block script_list %}{% endblock %}
-	</div>
-    {% block footer_scripts %}{% endblock %}
-    <div id="footer-scripts"></div>
+	    {% block body %}{% endblock %}
+
+        <div id="footer" style="background-color: lightgray">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 text-muted">
+                    <br/>
+                    <p>Know everything about adventure sports in India.</p>
+                    <p>Fitrangi.com aims towards providing a unique platform to bring together adventure sports lovers, organisers and everyone related or interested in this community. The purpose to which is to bring everyone
+                    together through social media and promote the adventure sports in india.
+                    </p>
+                    <p>
+                    It is a gateway for "Adventure Sports In India", where information about destinations, organisers, dealers, events inspirations, media can be accessed easily and intuitively.
+                    </p>
+                    <p>
+                    Note: Currently the beta version mostly covers the Maharashtra region, however, which will not be the case very soon, as more and more content keeps getting added daily.
+                    </p>
+                </div>
+                <div class="col-sm-4">
+                    <br/>
+                    <br/>
+                    <ul>
+                        <li><a href="#" class="col-sm-10 btn btn-danger disabled">Advertise With Us</a><br/><br/></li>
+                        <li><a href="#" class="col-sm-10 btn btn-danger disabled">Be A Contributor</a><br/><br/></li>
+                        <li><a href="#" class="col-sm-10 btn btn-danger disabled">Submit Your Listing</a><br/><br/></li>
+                    </ul>
+                    <p><strong>Mail us at <a href="mailto:go@fitrangi.com">go@fitrangi.com</a> for any queries and we will be right by you.</strong></p>
+                </div>
+            </div>
+        </div>
+        </div>
+         <div class="modal" id="about_us" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+	                <div class="modal-header">
+		                <button class="close" type="button" data-dismiss="modal">×</button>
+		                <h3 class="modal-title">ABOUT US</h3>
+	                </div>
+	                <div class="modal-body">
+                        <p>Fitrangi.com is a gateway for "Adventure Sports in India" where you can find all the Information , Destinations, Organizers, Gear / Equipment Dealers, Upcoming Events, Inspirations, Videos, Images & Much More.</p>
+                        <p><strong>Vision & Mission</strong></p>
+                        <p>"Fitrangi" means adventurous attitude. Fitrangi.com aim's towards providing a unique platform to bring together Adventure Sport Lovers, Organizers & everyone related to Adventure sports under one roof to connect and promote Adventure Sports in India.</p>
+                        <p>We are working on creating an Online Space for Adventure Sports in India, where you will find everything related to the same. This platform has been created with the sole aim of providing you information & to inspire you when you are planning your next adventure activity.</p>
+                        <p><strong>WHAT WILL YOU FIND ON THE WEBSITE?</strong></p>
+                        <p>Apart from information about the different adventures activities available in India & their organizers, you will also find information on various destinations for the respective adventure sports, Gears/equipment dealers, informative articles, inspirational blogs, videos and much more.</p>
+                        <p>We also have a unique section called Upcoming Events under which you will find the different adventure activities planned by different organizers on day-to-day basis, which are open to all, so without wasting more of your precious time you can join these activities & enjoy the Thrill.</p>
+                        <p><strong>*NOTE:</strong></p>
+                        <p>This is a beta version of Fitrangi.com, which mostly covers the information & data related to Maharashtra region situated in India. We are working hard to update data related to other regions of India as well. We will do it as early as possible. Still if you have any query about any destination, activity, organizers, events etc. that is not covered on Fitrangi.com, you can mail us your query & find it solved at the earliest.</p>
+                        <p><strong>WHY WE ARE DIFFERENT</strong></p>
+                        <p>“We don’t sell anything” we don't sell any packages. We don’t have any pay/book button on our website. Our aim is to offer our visitors with unbiased information about the resources related to adventure activities, information, destination, organizers, gear dealers and upcoming extreme events in India. Users also get more options to choose from.</p>
+                        <p>We keep on doing ground breaking research work to add new areas to our website. So that it would help us in generating value for our visitors, organizers and entire adventure sports community as a whole.</p>
+                        <p>Visitor’s active participation in our growth is what we are looking for.</p>
+                        <p><strong>JOIN US</strong></p>
+                        <p>We are working hard to make Fitrangi.com a one stop solution related to Adventure Sports in India, So we are continuously Looking for Volunteers, Partners, associations, clubs, writers, photographers etc. who can join us in this adventurous initiative which help us in getting better than we are at this moment. We don't plan to stop there. We want to be 'The Best'. For that we need continuous support from our visitors and users. We value your opinion & knowledge, so if you have any Suggestions, queries, complaints, etc. or you simply want to say "Hi" to our team then you can connect with us on: go@fitrangi.com</p>
+                        <p><strong>YOU CAN ALSO FOLLOW US ON</strong></p>
+                        <p><a href="#">Facebook</a>&nbsp;|&nbsp;<a href="#">Twitter</a>&nbsp;|&nbsp;<a href="#">Google+</a>&nbsp;|&nbsp;<a href="#">YouTube</a></p>
+	                </div>
+	                <div class="modal-footer">
+		                <button class="btn btn-default" data-dismiss="modal">Close</button>
+	                </div>
+                </div>
+            </div>
+         </div>
+        <ul class="nav pull-right" style="position:fixed;bottom:0;right:6%;z-index:100;background: lightgray;font-size:24px;border-top-left-radius:3px;border-top-right-radius:3px;">
+            <li><a href="#" title="Scroll to top"><i class="fa fa-arrow-up fa-2x"></i></a></li>
+        </ul>
+
+        <div style="position:relative;bottom:0;background: #000000;height:60px;padding-top: 20px;">
+            <div class="container">
+                <a href="#" data-toggle="modal" data-target="#about_us" >ABOUT US</a>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <a href=""> PRIVACY POLICY &amp; TERMS</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <span class="pull-right">Copyright ©2013 <a title="Fitrangi - Adventure Sports" href="/">Fitrangi </a> </span>
+            </div>
+        </div>
+
+        <!--div class="container-fluid">
+	        <footer class="pull-right" style="position: relative; top:90%; left:0;">
+                <span class="">©Copyright 2013-2014 <a title="Fitrangi - Adventure Sports" href="/">Fitrangi </a> | <a href="/about#privacy">Privacy</a></span>
+                <br/>
+                <br/>
+            </footer>
+        </div-->
+	    <script src="/assets/js/bootstrap.min.js"></script>
+	    <script src="/assets/appjs/app.js"></script>
+	    <div id="script_name" class="hide">
+		    {% block script_list %}{% endblock %}
+	    </div>
+        {% block footer_scripts %}{% endblock %}
+        <div id="footer-scripts" class="hide"></div>
+
+
   </body>
 </html>

@@ -6,12 +6,12 @@ from app.models import *
 from app.handlers.views.facet_view import FacetView
 from app.handlers.views.menu_view import MenuView
 from app.handlers.views.model_view import ModelView
-from app.handlers.extractors import get_all_facets, get_all_models, get_channel
+from app.handlers.extractors import get_all_models, get_channel, get_models_by_only_single
 
 
 class ChannelView(object):
 
-    def __init__(self, channel_name, selected_facets=[], query=None, page=1, paginated=True):
+    def __init__(self, channel_name, selected_facets=[], query=None, only_facet=False, page=1, paginated=True):
         self.channel_name = channel_name
         self.query = query
         self.channel = get_channel(channel_name)
@@ -21,11 +21,13 @@ class ChannelView(object):
         if len(selected_facets) > 0:
             _facets = [_v for _v in selected_facets if Facet.find(_v) is not None]
             self.facets = [f for f in Facet.all_facets if f.name in _facets]
-            print self.channel.name, _facets, self.facets
         else:
             self.facets = []
 
-        self.models, total = get_all_models(self.channel, _facets, query, page, paginated)
+        if only_facet:
+            self.models, total = get_models_by_only_single(self.channel.name, self.facets[0].name)
+        else:
+            self.models, total = get_all_models(self.channel, _facets, query, page, paginated)
         self.paginated = paginated
 
         _template = self.channel.template
@@ -35,7 +37,6 @@ class ChannelView(object):
         self.facet_view = FacetView(self.facets, self.channel, self.models)
         self.menu_view = MenuView(self.channel.name)
         self.model_views = [ModelView(model, 'list', default='row') for model in self.models]
-        print '******', len(self.model_views)
         link = "/" + channel_name
         args = request.args
         if self.paginated:

@@ -231,7 +231,6 @@ a.screen-roll {
 	font-size:14px;
 	text-transform:uppercase;
 	text-align:center;
-	{% block header %}
 	padding:1%;
 	color:#2D3032;
 }
@@ -502,6 +501,28 @@ hr {
     float: left;
     margin-left: 30px;
     min-height: 1px;
+}
+
+.view1 {
+    width: 300px;
+    height: 230px;
+    margin: 10px;
+    float: left;
+    border: 10px solid #fff;
+
+    position: relative;
+    text-align: center;
+    -webkit-box-shadow: 1px 1px 2px #e6e6e6;
+    -moz-box-shadow: 1px 1px 2px #e6e6e6;
+    box-shadow: 1px 1px 2px #e6e6e6;
+    cursor: default;
+    color: #000;
+    background: #fff no-repeat center center;
+}
+
+.view1 h3{
+    color: #000;
+
 }
 
 .view {

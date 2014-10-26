@@ -1,7 +1,6 @@
-import datetime
-import random
-
-
+import datetime, tempfile
+import random, cStringIO
+from PIL import Image as PImage
 
 class Configuration(object):
 
@@ -19,7 +18,7 @@ class Configuration(object):
 
         data2 = get_channels()
         for d in data2:
-            c = Channel(d['name'], d['type'], d['menu'], d['value'], d.get('template', None), d.get('menu_link', None))
+            c = Channel(d['name'], d['type'], d['menu'], d['value'], d.get('template', None), d.get('menu_link', None), d.get('sub_menu', None))
             Channel.all_data.append(c)
 
         data3 = get_roles()
@@ -61,13 +60,14 @@ class Facet(object):
 class Channel(object):
     all_data= []
 
-    def __init__(self, name, parent, menu, display, template, menu_link):
+    def __init__(self, name, parent, menu, display, template, menu_link, sub_menu=None):
         self.name = name
         self.parent = parent
         self.menu = menu
         self.display = display
         self.template = template
         self.menu_link = menu_link
+        self.sub_menu = sub_menu
 
     def __repr__(self):
         return self.name
@@ -247,7 +247,7 @@ class Content(Node, db.Document):
     @classmethod
     def get_by_id(cls, id):
         return Content.objects(pk=id).first()
-    
+
     def get_image(self):
         if self and self.main_image:
             return self.main_image.image
@@ -388,13 +388,7 @@ class AnalyticsEvent(db.Document):
 
     @classmethod
     def get_by_id(cls, id):
-        return Event.objects(pk=id).first()
-
-    def get_image(self):
-        if self and self.main_image:
-            return self.main_image.image
-        else:
-            return None
+        return AnalyticsEvent.objects(pk=id).first()
 
     meta = {
         'allow_inheritance': True,
@@ -407,6 +401,31 @@ class LoginEvent(AnalyticsEvent):
 
 class VisitEvent(AnalyticsEvent):
     pass
+
+
+class Advertisement(db.Document):
+    __template__ = 'model/advertisement/'
+
+    created_timestamp = db.DateTimeField(default=datetime.datetime.now, required=True)
+    modified_timestamp = db.DateTimeField(default=datetime.datetime.now, required=True)
+    created_by = db.ReferenceField('Profile')
+    title = db.StringField()
+    description = db.StringField()
+    url = db.StringField()
+    main_image = db.EmbeddedDocumentField(Image)
+    published = db.BooleanField()
+    published_timestamp = db.DateTimeField(required=False)
+
+    def get_image(self):
+        if self and self.main_image:
+            img_io = cStringIO.StringIO()
+            img = PImage.open(self.main_image.image)
+            format = self.main_image.image.format
+            img.save(img_io, "JPEG", quality=70)
+            img_io.seek(0)
+            return img_io, format
+        else:
+            return None, None
 
 
 Configuration.load_from_configuration()

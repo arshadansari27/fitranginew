@@ -9,12 +9,13 @@ from app.handlers.views import env
 class MenuView(object):
     __template__ = 'generic/main/menu.html'
 
-    def __init__(self, menu):
+    def __init__(self, menu, submenu=None):
         self.menu = menu
+        self.submenu =submenu
 
     def render(self):
         __channels  = sorted([(c.menu, c) for c in Channel.all_data if c.menu > 0])
-        menus = dict((m.display, m.menu_link) for loc, m in __channels)
-        ordered_menu = [(c[1].display, False) for c in __channels]
+        menus = dict((m.display, m.menu_link if m.sub_menu is None else m.sub_menu) for loc, m in __channels)
+        ordered_menu = [(c[1].display, c[1].sub_menu is not None) for c in __channels]
         template = env.get_template(MenuView.__template__)
-        return template.render(ordered_menu=ordered_menu, menus=menus, menu=self.menu, submenu=None, user=g.user)
+        return template.render(ordered_menu=ordered_menu, menus=menus, menu=self.menu, submenu=self.submenu, user=g.user)

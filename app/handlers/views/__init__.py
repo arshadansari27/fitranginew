@@ -3,7 +3,7 @@ __author__ = 'arshad'
 from jinja2 import Environment, FileSystemLoader
 from flask import render_template, request, g, flash, redirect, url_for, session, send_file, jsonify
 
-from app import app
+from app import app, cache
 from app.models import *
 from app.settings import TEMPLATE_FOLDER
 from app.handlers.views import api
@@ -49,13 +49,30 @@ def get_img(model_name, key):
     else:
         return ''
 
+@app.route('/img/advertisement/<key>')
+def get_img_advert(key):
+    print 'GETTING ADVERT IMG'
+    from app.models import Advertisement
+    a = Advertisement.objects(pk=key).first()
+    if not a:
+        return '', 404
+    img, format = a.get_image()
+    if not img:
+        return 404
+    return send_file(img, mimetype='image/'+format)
+
 @app.route('/channel/<channel>')
 def channel(channel):
     page = request.args.get('page', 1)
     query = request.args.get('query', '')
     _facets = request.args.get('facets','')
+    if request.args.get('only', False):
+        only = True
+    else:
+        only = False
     facets = [v for v in (_facets.split(',') if len(_facets) > 0 else []) if v and len(v)  > 0]
-    return ChannelView(channel, paginated=False, selected_facets=facets, query=query,page=page).render()
+    print facets
+    return ChannelView(channel, paginated=False, selected_facets=facets, query=query,page=page, only_facet=only).render()
 
 
 def under_construction(e):
