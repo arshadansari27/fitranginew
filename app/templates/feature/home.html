@@ -1,12 +1,6 @@
 {% extends 'generic/main/base.html' %}
 {% block header_script%}
-        <style>
-            iframe {
-                max-width: 100% !important;
-            }
-            #preview-frame {width: 100%;background-color: #fff;}
-      </style>
-      <script>
+        <script>
          var calcHeight = function() {
             new_height = $("#fitrangi-initiatives").height();
             $('#preview-frame').height(new_height);
@@ -58,7 +52,7 @@
                     <div class="content text-center">
                         <a href="http://adventuretourismconclave.com/" class="thumbnail"><img src="/assets/img/Website-Logoetc.png"/></a>
                         <hr/>
-                        <div class="well">
+                        <div class="">
                             <br/>
                             <h3>Subscribe for latest updates!</h3>
 
@@ -74,20 +68,33 @@
                             <br/>
                             <br/>
                             <p>
-                            <a href="https://plus.google.com/115019600318035585202/posts" target="_blank"> <i class="fa fa-google-plus fa-5x"></i> </a>
+                                
+                                
+                           <!-- <a href="https://plus.google.com/115019600318035585202/posts" target="_blank"> <i class="fa fa-google-plus fa-4x"></i> </a>-->
+                                <a class="btn btn-default btn-lg" target="_blank" title="On Google Plus" href="https://plus.google.com/115019600318035585202/posts">
+            <i class="fa fa-google-plus fa-lg google"></i>
+        </a>
                             &nbsp;
                             &nbsp;
                             &nbsp;
-                            <a href="https://twitter.com/FitRangi" target="_blank"> <i class="fa fa-twitter fa-5x"></i> </a>
+                          <!--  <a href="https://twitter.com/FitRangi" target="_blank"> <i class="fa fa-twitter fa-4x"></i> </a>-->
+                                <a class="btn btn-default btn-lg" target="_blank" title="On Twitter" href="https://twitter.com/FitRangi">
+            <i class="fa fa-twitter fa-lg tw"></i>
+        </a>
+                                
                             &nbsp;
                             &nbsp;
                             &nbsp;
-                            <a href="https://www.facebook.com/Fitrangi" target="_blank"> <i class="fa fa-facebook fa-5x"></i> </a>
+                           <!-- <a href="https://www.facebook.com/Fitrangi" target="_blank"> <i class="fa fa-facebook fa-4x"></i> </a> -->
+                                <a class="btn btn-default btn-lg" target="_blank" title="On Facebook" href="https://www.facebook.com/Fitrangi">
+            <i class="fa fa-facebook fa-lg fb"></i>
+        </a>
                             &nbsp;
                             &nbsp;
                             &nbsp;
-                            <a href="https://www.youtube.com/user/Fitrangi" target="_blank"> <i class="fa fa-youtube fa-5x"></i> </a>
+                        <a class="btn btn-default btn-lg" href="https://www.youtube.com/user/Fitrangi" target="_blank"> <i class="fa fa-youtube fa-lg youtube   "></i> </a>
                             </p>
+
                         </div>
 
                     </div>
@@ -102,13 +109,23 @@
 
     <div class="container-fluid">
 	<br/>
-	<div class="header-title text-center" style="background-color: lightgray"><h3>Top Trending Destinations<small><span class="pull-right"><a href="/channel/Destination" class="btn btn-link">View All</a></span></small></h3></div>
-        <br/>
-<<<<<<< HEAD
+	<header>
+      <div class="container clearfix">
+    <div class="row">
+          <div class="span12">
+        <div class="navbar navbar_">
+              <div class="container">
+            <CENTER><h4 ><a href=""><FONT COLOR="white">Top Trending Destinations</FONT> </a>
+                <small><span class="pull-right"><a href="/channel/Destination" class="btn btn-link"><font color="white">View All</font></a></span></small></h4>
+            </div>
+            </div>
+      </div>
+        </div>
+  </div>
+    </header>
+    <br/>
             <div class="container-fluid">
-=======
 		<div class="container-fluid">
->>>>>>> 1594d410484d120486e7c9d36cb77aabf381161b
 		{% for m in destinations %}
 			{{ m.render()|safe }}
 		{% endfor %}
@@ -149,13 +166,44 @@
         <br/>
         <div class="row">
             <div class="col-sm-8">
-                <div class="header-title text-center" style="background-color: lightgray"><h3>Favorite Organizers<small><span class="pull-right"><a href="/channel/Profile?facets=Organizer" class="btn btn-link">View All</a></span></small></h3></div>
+                    <header>
+          <div class="container clearfix">
+        <div class="row">
+              <div class="span12">
+            <div class="navbar navbar_">
+                  <div class="container">
+                <h4 ><a href=""><span class="pull-left"><FONT COLOR="white">Favorite Organizers</FONT> </span></a>
+                    <small><span class=""><a href="/channel/Profile?facets=Organizer" class="btn btn-link"><font color="white">View All</font></a></span></small></h4>
+                </div>
+                </div>
+          </div>
+            </div>
+      </div>
+        </header>
+
+    
                 {% for m in organizers %}
 			        {{ m.render(4)|safe }}
 		        {% endfor %}
             </div>
             <div class="col-sm-4">
-                <div class="header-title text-center" style="background-color: lightgray"><h3>Popular Articles<small><span class="pull-right"><a href="/channel/Article" class="btn btn-link">View All</a></span></small></h3></div>
+               <!-- <div class="header-title text-center" style="background-color: lightgray"><h3>Popular Articles<small><span class="pull-right"><a href="/channel/Article" class="btn btn-link">View All</a></span></small></h3></div>-->
+                
+                <header>
+      <div class="container clearfix">
+    <div class="row">
+          <div class="span12">
+        <div class="navbar navbar_">
+              <div class="container">
+            <h4 ><a href=""><span class="pull-left"><FONT COLOR="white">Popular Articles</FONT> </span></a>
+                <small><span class="pull-left"><a href="/channel/Article" class="btn btn-link"><font color="white">View All</font></a></span></small></h4>
+            </div>
+            </div>
+      </div>
+        </div>
+  </div>
+    </header>
+                
                 {% for m in articles %}
                 {{ m.render()|safe }}
                 {% endfor %}
@@ -165,7 +213,21 @@
 
     <div class="container-fluid">
 	<br/>
-	<div class="header-title text-center" style="background-color: lightgray"><h3>Upcoming Trips<small><span class="pull-right"><a href="/channel/Adventure Trip" class="btn btn-link">View All</a></span></small></h3></div>
+        <header>
+      <div class="container clearfix">
+    <div class="row">
+          <div class="span12">
+        <div class="navbar navbar_">
+              <div class="container">
+            <CENTER><h4 ><a href=""><FONT COLOR="white">Upcoming Trips</FONT> </a>
+                <small><span class="pull-right"><a href="/channel/Adventure Trip" class="btn btn-link"><font color="white">View All</font></a></span></small></h4>
+            </div>
+            </div>
+      </div>
+        </div>
+  </div>
+    </header>
+    
         <br/>
 		<div class="container-fluid">
             {% for m in adventure_trips %}
@@ -178,9 +240,25 @@
 
     <div class="container-fluid">
         <div class="row">
+            <header>
+          <div class="container clearfix">
+        <div class="row">
+              <div class="span12">
+            <div class="navbar navbar_">
+                  <div class="container">
+                <h4 ><a href=""><span class="pull-left"><FONT COLOR="white">Intiatives</FONT> </span></a>
+                    <a href=""><span class="pull-right"><FONT COLOR="white">Fitrangi on youtube</FONT> </span></a>
+                    </h4>
+               
+                </div>
+                </div>
+          </div>
+            </div>
+      </div>
+        </header>
+<!--------TEES SLIDER--->
             <div class="col-sm-7">
-                <div class="header-title text-center" style="background-color: lightgray"><h3>Intiatives</h3></div>
-                <br/>
+                
                 <div id="myCarousel2" class="carousel slide">
                     <div class="carousel-inner" id="fitrangi-initiatives">
                         <div class="item active">
@@ -196,13 +274,14 @@
                     </div>
                 </div>
              </div>
+            <!----------YOUTUBE----------->
             <div class="col-sm-5">
-                <div class="header-title text-center" style="background-color: lightgray"><h3>Fitrangi on youtube</h3></div>
-                <br/>
+                
                 {% import 'generic/includes/youtube.html' as yt_macro %}
                 {{ yt_macro.show_video(yt_links[0])}}
 
             </div>
+        </div>
        </div>
     </div>
 {% endblock %}
