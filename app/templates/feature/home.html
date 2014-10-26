@@ -124,8 +124,7 @@
 
 	<!--<div class="header-title text-center" style="background-color: lightgray"><h3>Top Trending Destinations<small><span class="pull-right"><a href="/channel/Destination" class="btn btn-link">View All</a></span></small></h3></div>-->
         <br/>
-            
-		<div class="container-fluid">
+            <div class="container-fluid">
 		{% for m in destinations %}
 			{{ m.render()|safe }}
 		{% endfor %}
@@ -206,6 +205,8 @@
                         <div class="item">
                             <div class=""><a href="http://tees.fitrangi.com"><img src="/assets/img/tees2.jpg" alt="Image" class="img-responsive" width="100%"></a></div>
                         </div>
+                        
+                        
                         <a class="left carousel-control" href="#myCarousel2" data-slide="prev">‹</a>
                         <a class="right carousel-control" href="#myCarousel2" data-slide="next">›</a>
                     </div>
