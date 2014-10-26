@@ -1,11 +1,20 @@
 {% extends 'generic/main/base.html' %}
 {% block body %}
 	<div class="container">
-	<div class="header-title"><h3>Search Results:</h3></div>
-		<div class="container-fluid">
-		{% for m in models %}
-			{{ m.render()|safe }}
-		{% endfor %}
-		</div>
+	    <div class="header-title">
+            <h3>Search Results:</h3>
+        </div>
+        <div class="container-fluid">
+		    {% for k, models in model_groups.iteritems() %}
+                <div class="row-fluid">
+                    <h3>{{ k }}</h3><hr/>
+                </div>
+                <div class="row-fluid">
+                    {% for m in models %}
+                        {{ m.render()|safe }}
+                    {% endfor %}
+                </div>
+		    {% endfor %}
+        </div>
 	</div>
 {% endblock %}
