@@ -1,6 +1,6 @@
-import datetime
-import random
-
+import datetime, tempfile
+import random, cStringIO
+from PIL import Image as PImage
 
 class Configuration(object):
 
@@ -388,13 +388,7 @@ class AnalyticsEvent(db.Document):
 
     @classmethod
     def get_by_id(cls, id):
-        return Event.objects(pk=id).first()
-
-    def get_image(self):
-        if self and self.main_image:
-            return self.main_image.image
-        else:
-            return None
+        return AnalyticsEvent.objects(pk=id).first()
 
     meta = {
         'allow_inheritance': True,
@@ -407,6 +401,31 @@ class LoginEvent(AnalyticsEvent):
 
 class VisitEvent(AnalyticsEvent):
     pass
+
+
+class Advertisement(db.Document):
+    __template__ = 'model/advertisement/'
+
+    created_timestamp = db.DateTimeField(default=datetime.datetime.now, required=True)
+    modified_timestamp = db.DateTimeField(default=datetime.datetime.now, required=True)
+    created_by = db.ReferenceField('Profile')
+    title = db.StringField()
+    description = db.StringField()
+    url = db.StringField()
+    main_image = db.EmbeddedDocumentField(Image)
+    published = db.BooleanField()
+    published_timestamp = db.DateTimeField(required=False)
+
+    def get_image(self):
+        if self and self.main_image:
+            img_io = cStringIO.StringIO()
+            img = PImage.open(self.main_image.image)
+            format = self.main_image.image.format
+            img.save(img_io, "JPEG", quality=70)
+            img_io.seek(0)
+            return img_io, format
+        else:
+            return None, None
 
 
 Configuration.load_from_configuration()

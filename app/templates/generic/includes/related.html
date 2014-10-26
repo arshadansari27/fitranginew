@@ -1,10 +1,10 @@
 {% macro show_related(related) -%}
     {% if related|length > 0 %}
-    <div class="col-lg-12 container row-fluid">
         <hr/>
         <div class=""><h4>Related</h4></div>
-        {% for r in related %}{{ r.render()|safe }}{% endfor %}
+        {% for r in related %}
+        {{ r.render(4)|safe }}<br/>
+        {% endfor %}
         <br/>
-    </div>
     {% endif %}
 {% endmacro %}

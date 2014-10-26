@@ -49,6 +49,18 @@ def get_img(model_name, key):
     else:
         return ''
 
+@app.route('/img/advertisement/<key>')
+def get_img_advert(key):
+    print 'GETTING ADVERT IMG'
+    from app.models import Advertisement
+    a = Advertisement.objects(pk=key).first()
+    if not a:
+        return '', 404
+    img, format = a.get_image()
+    if not img:
+        return 404
+    return send_file(img, mimetype='image/'+format)
+
 @app.route('/channel/<channel>')
 def channel(channel):
     page = request.args.get('page', 1)

@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+import flask_admin
 from flask.ext.cache import Cache
 from flask.ext.mongoengine import MongoEngine
 from app import settings
@@ -21,16 +22,21 @@ cache = Cache(app,config={'CACHE_TYPE': 'simple'})
 def start_app():
     from app.models.sessions import MongoSessionInterface
     from app.models import *
-    import logging 
+    import logging
     app.session_interface = MongoSessionInterface()
     logging.basicConfig()
     logging.getLogger().setLevel(logging.DEBUG)
 
-    #admin = flask_admin.Admin(app, 'Fitrangi Admin Panel')
-    #admin.add_view(ProfileView(Profile))
-    #admin.add_view(ContentView(Content))
-    #admin.add_view(EventView(Event))
-    #admin.add_view(ProductView(Product))
+    from app.models.admin import ProfileView, ContentView, EventView, ProductView, AnalyticsView, MessageView, AdvertisementView
+    admin = flask_admin.Admin(app, 'Fitrangi Admin Panel')
+    admin.add_view(ProfileView(Profile))
+    admin.add_view(ContentView(Content))
+    admin.add_view(EventView(Event))
+    admin.add_view(ProductView(Product))
+    #admin.add_view(AnalyticsView(AnalyticsEvent)) # Use aggregate values
+    admin.add_view(MessageView(Message))
+    admin.add_view(AdvertisementView(Advertisement))
+
 
     from app.handlers.views import *
     from app.handlers.editors import *

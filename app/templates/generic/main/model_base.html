@@ -1,7 +1,9 @@
 {% extends 'generic/main/base.html' %}
 {{ menu.render()|safe }}
 {% block body%}
-{% block model_data %}{% endblock %}
+        <div class="container">
+        {% block model_data %}{% endblock %}
+        </div>
 {% endblock %}
 {% block script_list %}comments.js{% endblock %}
 {% block footer_scripts %}
