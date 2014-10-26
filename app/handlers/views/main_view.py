@@ -34,10 +34,14 @@ class SearchView(object):
         self.models = search_models(search_query=query)
         self.template =  'feature/search.html'
         self.menu = MenuView(None)
-        self.models = [ModelView(model, 'list') for model in self.models]
+        self.model_group = {}
+        for m in self.models:
+            if len(m.channels) > 0:
+                self.model_group.setdefault(m.channels[0], [])
+                self.model_group[m.channels[0]].append(ModelView(m, 'list'))
 
     def render(self):
-        return render_template(self.template, menu=self.menu, models=self.models, user=g.user)
+        return render_template(self.template, menu=self.menu, model_groups=self.model_group, user=g.user)
 
 
 @cache.cached(timeout=3600)
