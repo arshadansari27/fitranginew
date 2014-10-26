@@ -267,6 +267,8 @@ a.screen-roll {
     padding: 0;
     margin: 0;
 }
+
+/*noinspection ALL*/
 .screen-roll span.hover_bg {
     position: absolute;
     z-index: 10;
@@ -280,6 +282,7 @@ a.screen-roll {
     top: 0;
     left: 0;
 }
+/*noinspection ALL*/
 .screen-roll span.hover_bg_video {
     position: absolute;
     z-index: 10;
@@ -425,6 +428,7 @@ img {
 				border: 0;
 			}
 
+            /*noinspection ALL*/
 			#ui-carousel-next, #ui-carousel-prev {
 				width: 60px;
 				height: 200px;
@@ -436,6 +440,7 @@ img {
 				z-index: 100;
 			}
 
+            /*noinspection ALL*/
 			#ui-carousel-next {
 				right: 0;
 				background-image:url(/assets/img/artical-img/arrow-right.png);
@@ -595,6 +600,7 @@ hr {
 
 }
 
+/*noinspection ALL*/
 .view {
    width: 300px;
    height: 200px;
@@ -690,7 +696,9 @@ hr {
    -moz-box-shadow: 0 0 1px #000;
    box-shadow: 0 0 1px #000;
 }
-.view a.info: hover {
+
+/*noinspection ALL*/
+.view a.info:hover {
    -webkit-box-shadow: 0 0 5px #000;
    -moz-box-shadow: 0 0 5px #000;
    box-shadow: 0 0 5px #000;
