@@ -6,6 +6,7 @@ from flask.ext.admin.contrib.mongoengine.filters import BaseMongoEngineFilter
 
 
 from .models import (Role, Profile, Channel, Content, Event, Product)
+from flask import g
 
 class FilterProfile(BaseMongoEngineFilter):
     def apply(self, query, value):
@@ -14,7 +15,14 @@ class FilterProfile(BaseMongoEngineFilter):
     def operation(self):
         return 'contains' #self.gettext('contains')
 
-class ProfileView(ModelView):
+class MyModelView(ModelView):
+
+    def is_accessible(self):
+        if hasattr(g, 'user') and hasattr(g.user, 'id') and 'Admin' in g.user.roles:
+            return True
+        return False
+
+class ProfileView(MyModelView):
     column_filters = ['name']
     column_searchable_list = ('name', 'email')
     column_exclude_list = ['password']
@@ -31,7 +39,7 @@ class ProfileView(ModelView):
     }
     """
 
-class ContentView(ModelView):
+class ContentView(MyModelView):
     global Channel
     column_filters = ['title']
     column_searchable_list = ('title',)
@@ -69,7 +77,7 @@ class ContentView(ModelView):
 
 
 
-class EventView(ModelView):
+class EventView(MyModelView):
     column_filters = ['title']
     column_searchable_list = ('title',)
     column_list = ('title', 'description', 'start_timestamp', 'end_timestamp', 'main_image.image')
@@ -79,7 +87,7 @@ class EventView(ModelView):
         },
     }
 
-class ProductView(ModelView):
+class ProductView(MyModelView):
     column_filters = ['title']
     column_searchable_list = ('title',)
     column_list = ('title', 'description', 'price', 'discount', 'main_image.image')
@@ -89,12 +97,12 @@ class ProductView(ModelView):
         },
     }
 
-class AnalyticsView(ModelView):
+class AnalyticsView(MyModelView):
     column_list = ('ip_address', 'user', 'url', 'event_details')
 
-class MessageView(ModelView):
+class MessageView(MyModelView):
     column_list = ('created_by','created_for', 'message')
 
-class AdvertisementView(ModelView):
+class AdvertisementView(MyModelView):
     column_list = ('created_by', 'title', 'main_image.image', 'url', 'published')
 
