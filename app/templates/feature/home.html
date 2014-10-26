@@ -52,7 +52,7 @@
                     <div class="content text-center">
                         <a href="http://adventuretourismconclave.com/" class="thumbnail"><img src="/assets/img/Website-Logoetc.png"/></a>
                         <hr/>
-                        <div class="">
+                        <div class="well">
                             <br/>
                             <h3>Subscribe for latest updates!</h3>
 
@@ -70,30 +70,24 @@
                             <p>
                                 
                                 
-                           <!-- <a href="https://plus.google.com/115019600318035585202/posts" target="_blank"> <i class="fa fa-google-plus fa-4x"></i> </a>-->
-                                <a class="btn btn-default btn-lg" target="_blank" title="On Google Plus" href="https://plus.google.com/115019600318035585202/posts">
-            <i class="fa fa-google-plus fa-lg google"></i>
-        </a>
-                            &nbsp;
-                            &nbsp;
-                            &nbsp;
-                          <!--  <a href="https://twitter.com/FitRangi" target="_blank"> <i class="fa fa-twitter fa-4x"></i> </a>-->
-                                <a class="btn btn-default btn-lg" target="_blank" title="On Twitter" href="https://twitter.com/FitRangi">
-            <i class="fa fa-twitter fa-lg tw"></i>
-        </a>
+                            <a href="https://plus.google.com/115019600318035585202/posts" target="_blank"> <i class="fa fa-google-plus fa-4x"></i> </a>
                                 
                             &nbsp;
                             &nbsp;
                             &nbsp;
-                           <!-- <a href="https://www.facebook.com/Fitrangi" target="_blank"> <i class="fa fa-facebook fa-4x"></i> </a> -->
-                                <a class="btn btn-default btn-lg" target="_blank" title="On Facebook" href="https://www.facebook.com/Fitrangi">
-            <i class="fa fa-facebook fa-lg fb"></i>
-        </a>
+                           <a href="https://twitter.com/FitRangi" target="_blank"> <i class="fa fa-twitter fa-4x"></i> </a>
+                                
+                                
                             &nbsp;
                             &nbsp;
                             &nbsp;
-                        <a class="btn btn-default btn-lg" href="https://www.youtube.com/user/Fitrangi" target="_blank"> <i class="fa fa-youtube fa-lg youtube   "></i> </a>
-                            </p>
+                           <a href="https://www.facebook.com/Fitrangi" target="_blank"> <i class="fa fa-facebook fa-4x"></i> </a> 
+                                
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+                                 <a href="https://www.youtube.com/user/Fitrangi" target="_blank"> <i class="fa fa-youtube fa-4x"></i> </a> 
+                           </p>
 
                         </div>
 
@@ -109,7 +103,7 @@
 
     <div class="container-fluid">
 	<br/>
-	<div class="header-title text-center"><h3><font color="white">Top Trending Destinations</font><small><span class="pull-right"><a href="/channel/Destination" class="btn btn-link"><font color="white">View All</font></a></span></small></h3></div>
+	<div class="header-title text-center"><h3>Top Trending Destinations<small><span class="pull-right"><a href="/channel/Destination" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></h3></div>
         <br/>
             <div class="container-fluid">
 		<div class="container-fluid">
@@ -153,13 +147,13 @@
         <br/>
         <div class="row">
             <div class="col-sm-8">
-                <div class="header-title text-center" ><h3><font color="white">Favorite Organizers</font><small><span class="pull-right"><a href="/channel/Profile?facets=Organizer" class="btn btn-link"><font color="white">View All</font></a></span></small></h3></div>
+                <div class="header-title text-center" ><h3>Favorite Organizers<small><span class="pull-right"><a href="/channel/Profile?facets=Organizer" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></h3></div>
                 {% for m in organizers %}
 			        {{ m.render(4)|safe }}
 		        {% endfor %}
             </div>
             <div class="col-sm-4">
-                <div class="header-title text-center" ><h3><font color="white">Popular Articles</font><small><span class="pull-right"><a href="/channel/Article" class="btn btn-link"><font color="white">View All</font></a></span></small></h3></div>
+                <div class="header-title text-center" ><h3>Popular Articles<small><span class="pull-right"><a href="/channel/Article" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></h3></div>
                 {% for m in articles %}
                 {{ m.render()|safe }}
                 {% endfor %}
@@ -169,7 +163,7 @@
 
     <div class="container-fluid">
 	<br/>
-	<div class="header-title text-center" ><h3><font color="white">Upcoming Trips</font><small><span class="pull-right"><a href="/channel/Adventure Trip" class="btn btn-link"><font color="white">View All</font></a></span></small></h3></div>
+	<div class="header-title text-center" ><h3>Upcoming Trips<small><span class="pull-right"><a href="/channel/Adventure Trip" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></h3></div>
         <br/>
 		<div class="container-fluid">
             {% for m in adventure_trips %}
@@ -183,7 +177,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-7">
-                <div class="header-title text-center" ><h3><font color="white">Intiatives</font></h3></div>
+                <div class="header-title text-center" ><h3>Intiatives</h3></div>
                 <br/>
                 <div id="myCarousel2" class="carousel slide">
                     <div class="carousel-inner" id="fitrangi-initiatives">
@@ -201,12 +195,12 @@
                 </div>
              </div>
             <div class="col-sm-5">
-                <div class="header-title text-center" ><h3><font color="white">Fitrangi on youtube</font></h3></div>
+                <div class="header-title text-center" ><h3>Fitrangi on youtube</h3></div>
                 <br/>
                 {% import 'generic/includes/youtube.html' as yt_macro %}
                 {{ yt_macro.show_video(yt_links[0])}}
 
             </div>
-       </div>
+       </div></div>
     </div>
 {% endblock %}
