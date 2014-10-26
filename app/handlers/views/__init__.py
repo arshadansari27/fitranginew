@@ -25,7 +25,12 @@ def home():
 @app.route('/search')
 def search():
     query = request.args.get('search-query', '')
-    return SearchView(query=query).render()
+    channel = request.args.get('channel', None)
+    if not channel:
+        return SearchView(query=query).render()
+    else:
+        return ChannelView(channel, paginated=False, selected_facets=[], query=query,page=1, only_facet=False).render()
+
 
 @app.route('/user/subscribe', methods=['POST'])
 def subscribe():
@@ -51,7 +56,6 @@ def get_img(model_name, key):
 
 @app.route('/img/advertisement/<key>')
 def get_img_advert(key):
-    print 'GETTING ADVERT IMG'
     from app.models import Advertisement
     a = Advertisement.objects(pk=key).first()
     if not a:
