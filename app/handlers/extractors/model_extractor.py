@@ -84,17 +84,17 @@ def get_models_by(channel_name, facets=[], facets_to_avoid=[], limit=None):
 def get_all_models(channel, facets=[], search_query=None, page=1, paginated=True):
     model_class = Node.model_factory(channel.name)
 
-    if search_query:
-        if model_class == Profile:
-            query = {'name': search_query}
-        else:
-            query = {'title': search_query}
+    if channel and len(facets) > 0:
+        query = {'$and': [{'channels': channel.name}, {'facets': {'$in': facets}}]}
     else:
-        if channel and len(facets) > 0:
-            query = {'$and': [{'channels': channel.name}, {'facets': {'$in': facets}}]}
+        query = {'channels': channel.name}
+    if search_query:
+        regx = re.compile(search_query, re.IGNORECASE)
+        if model_class == Profile:
+            query['name']= {'$regex': regx}
         else:
-            query = {'channels': channel.name}
-        print '*' * 100
+            query['title']= {'$regex': regx}
+        print '*' * 10
         print query
         print '*' * 100
 
