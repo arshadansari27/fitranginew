@@ -1,12 +1,16 @@
 {% extends "/generic/main/base.html" %}
 {% block body %}
 <div class="container">    
+    <div class="row" style="height:800px;">
 	<div class="col-md-8">
 		<div class="jumbotron">
-			<h1>Sign in to fitrangi.com.</h1>
+			<h1><small>Register with Us</small></h1>
+            <br/>
+            <br/>
 			<p>Be in the know. Adventure news on your finger tips.</p>
-			<p>Be in the know. Adventure news on your finger tips.</p>
-			<a href="/login" class="btn btn-lg btn-info">Login</a>
+            <br/>
+            <br/>
+            <br/>
 		</div>
 	</div>
 	<div id="signupbox" class="col-md-4 col-md-4">
@@ -39,11 +43,13 @@
                     <div class="form-group">
                         <div class="col-md-12">
                             <button id="btn-signup" type="submit" class="btn btn-info"><i class="icon-hand-right"></i> Sign Up</button>
+                            <a href="/login" class="btn btn-lg btn-link"><u>Login</u></a>
                         </div>
                     </div>
             	</form>
             </div>
-         </div> 
+         </div>
+    </div>
     </div>
 </div>
 {% endblock %}
