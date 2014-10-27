@@ -8,6 +8,7 @@ from app.models import *
 from app.settings import TEMPLATE_FOLDER
 from app.handlers.views import api
 from email.utils import parseaddr
+import re
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
 
@@ -65,9 +66,22 @@ def get_img_advert(key):
         return 404
     return send_file(img, mimetype='image/'+format)
 
+@app.route('/channel/Activity')
+def getActivity():
+    name = request.args.get('title', None)
+    if name:
+        from app.models import Content
+        regx = re.compile(name, re.IGNORECASE)
+        activity =  Content.objects(__raw__={'title': {'$regex': regx}}).first()
+        print "Activy: ", activity
+        return redirect('/model/Activity/%s' % str(activity.id))
+    else:
+        return redirect("/")
+
 @app.route('/channel/<channel>')
 def channel(channel):
     page = request.args.get('page', 1)
+
     query = request.args.get('query', '')
     _facets = request.args.get('facets','')
     if request.args.get('only', False):
