@@ -243,6 +243,7 @@ class Content(Node, db.Document):
     comments = db.ListField(db.EmbeddedDocumentField(Comment))
     parent = db.ReferenceField('Content', required=False)
     keywords = db.ListField(db.StringField())
+    location = db.StringField()
 
     @classmethod
     def get_by_id(cls, id):

@@ -46,7 +46,7 @@ def db_fixture():
             #print tags
             if not Profile.objects(name__iexact=title).first():
                 profile = Profile(name=title, username=title.lower().replace(' ', '_'), password='testing', is_verified=True, 
-                    main_image=image if image else None, channels=[channel.name], facets=tags)
+                    main_image=image if image else None, channels=tags, facets=tags)
                 profile.save()
 
         elif _type in ['Adventure Trip']:
@@ -69,7 +69,7 @@ def db_fixture():
                     tags.append(capitalize(activity))
             print "****", tags
             content = Content(title=title, created_by=admin, text=d.get('data', ''), published_timestamp=datetime.datetime.now(),
-                    is_published=True, channels=[channel.name], facets=tags, main_image=image)
+                    is_published=True, channels=tags, facets=tags, main_image=image)
             content.save()
         
 def capitalize(text):

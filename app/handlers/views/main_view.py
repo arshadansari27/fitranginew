@@ -46,11 +46,13 @@ class SearchView(object):
 
 @cache.cached(timeout=3600)
 def get_youtube_links():
-    j_video = json.loads(requests.get("http://gdata.youtube.com/feeds/api/videos?max-results=4&alt=json&orderby=published&author=FitRangi").content)
-    youtube_links = []
-    for e in j_video['feed']['entry']:
-        link = e['id']['$t'].split('/')[-1]
-        if link and len(link) > 0:
-            youtube_links.append(link)
-
-    return youtube_links
+    try:
+        j_video = json.loads(requests.get("http://gdata.youtube.com/feeds/api/videos?max-results=4&alt=json&orderby=published&author=FitRangi").content)
+        youtube_links = []
+        for e in j_video['feed']['entry']:
+            link = e['id']['$t'].split('/')[-1]
+            if link and len(link) > 0:
+                youtube_links.append(link)
+        return youtube_links
+    except:
+        return ''
