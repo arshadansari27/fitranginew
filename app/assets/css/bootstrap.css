@@ -6272,3 +6272,12 @@ width: 50%;
 .shipping-cost {
   border-bottom: 1px solid #F7F7F0;
 }
+
+.ms {
+    float: left;
+    min-height: 1px;
+    width: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: relative;
+}
