@@ -6,12 +6,13 @@
 		</div>
 		<div class="panel-body">
 			<p>
-			<img class="img-responsive" src="{% if model.main_image and model.main_image.image %}/img/{{model.get_class_name()}}/{{model.id}}{% else %}http://placehold.it/250x300{% endif %}"></a>
+			<img class="img-responsive" src="{% if model.main_image and model.main_image.image %}/img/{{model.get_class_name()}}/{{model.id}}{% else %}http://placehold.it/250x300{% endif %}">
 			</p>
 			<div class="clearfix"></div>
 			<hr>
 			{% if model.description and model.description|length > 0 %}{{ model.description }}{% else %} {{ model.text[0:100]|escape }} {%endif%}
-		</div>
+		
+        </div>
 	</div>
 	<script>console.log('{% for c in model.channels %} {{c}}, {% endfor %}');</script>
 </div>
