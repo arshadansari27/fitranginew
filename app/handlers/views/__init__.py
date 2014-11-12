@@ -66,7 +66,7 @@ def get_img_advert(key):
         return 404
     return send_file(img, mimetype='image/'+format)
 
-@app.route('/channel/Activity')
+@app.route('/model/Activity')
 def getActivity():
     name = request.args.get('title', None)
     if name:
