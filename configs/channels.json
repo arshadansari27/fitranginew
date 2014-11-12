@@ -56,7 +56,7 @@
             "value": "Adventure Trips",
             "type": "Event",
             "menu_link": "/channel/Adventure Trip",
-            "menu": 5,
+            "menu": 0,
             "template": "feature/event"
         },
         {

@@ -17,17 +17,17 @@
 				    {{ model.text|safe }}
                 </div>
 				{% endif %}
-        	</div>
+            </div>
+            <div class="col-lg-12">
+                {% import 'generic/includes/related.html' as related_macro %}
+                {{ related_macro.show_related(related)}}
+                {% import 'generic/includes/comments.html' as comment_macro %}
+                {{ comment_macro.show_comments(model.comments, model.id, user)}}
+            </div>
         </div>
 
-        {% import 'generic/includes/related.html' as related_macro %}
-        {{ related_macro.show_related(related)}}
-		{% import 'generic/includes/comments.html' as comment_macro %}
-		{{ comment_macro.show_comments(model.comments, model.id)}}
     </div>
     <div class="col-sm-3">
-        <h3>More</h3>
-        <hr/>
         {% for a in adverts %}
         {{ a.render()|safe }}
         {% endfor %}
