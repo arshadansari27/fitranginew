@@ -330,7 +330,7 @@ class Profile(Content):
 
     @classmethod
     def create_new(cls, name, email, password, is_verified=False, roles=['Enthusiast']):
-        profile = Profile(name=name, email=email, password=password, is_verified=is_verified, roles=roles)
+        profile = Profile(name=name, email=email, password=password, is_verified=is_verified, roles=roles, facets=['Profile', 'Enthusiast'], channels=['Profile'])
         profile.save()
         return profile
 
