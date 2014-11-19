@@ -29,8 +29,10 @@
 				{% endif %}
 				<li class="list-group-item text-right"><span class="pull-left"><strong>On fitrangi since</strong></span> {{ model.created_timestamp.strftime('%d-%m-%Y') }}</li>
                 <li class="list-group-item text-right"><span class="pull-left"><strong>Last updated</strong></span> {{ model.modified_timestamp.strftime('%d-%m-%Y') }}</li>
-				{% if 'Retailer' in model.roles or 'EventOrganiser' in model.roles %}
-                <li class="list-group-item text-right"><span class="pull-left"><strong>Contact Person</strong></span> Joseph Doe</li>
+				{% if 'Organizer' in model.facets or 'Dealer' in model.facets %}
+                <li class="list-group-item text-right"><span class="pull-left"><strong>Phone</strong></span> {% if model.phone %}{{ model.phone }} {% else %} Not provided {% endif %} </li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong>Email</strong></span>  {% if model.email %}{{ model.email }} {% else %} Not provided {% endif %}</li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong>Website</strong></span>{% if model.website %}{{ model.website }} {% else %} Not provided {% endif %} </li>
 				{% endif %}
 				{% if 'Professional' in model.roles %}
               	<li class="list-group-item text-right"><span class="pull-left"><strong>Specialty: </strong></span> Pet Sitter</li>
