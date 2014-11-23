@@ -5,7 +5,15 @@
 	<div class="panel-body">
    		<img src="{% if model.main_image and model.main_image.image %}/img/{{model.get_class_name()}}/{{model.id}}{% else %}http://placehold.it/250x275{% endif %}" class="responsive">
 		<hr/>
-		<p>{% if model.description and model.description|length > 0 %}{{ model.description }}{% else %} Currently no description has been added for this article. Admin is working in it. {%endif%}</p>
+		<p>
+            {% if model.description and model.description|length > 0 %}
+                {{ model.description }}
+            {% elif model.text and model.text |length > 0 %}
+                {{ model.text[0: 100]|safe }}
+            {% else %}
+                Currently no description has been added for this article. Admin is working in it.
+            {%endif%}
+        </p>
    </div>
 </div>
 <hr>

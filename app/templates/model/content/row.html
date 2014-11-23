@@ -10,7 +10,7 @@
 			</p>
 			<div class="clearfix"></div>
 			<hr>
-			{% if model.description and model.description|length > 0 %}{{ model.description }}{% else %} {{ model.text[0:100]|escape }} {%endif%}
+			{% if model.description and model.description|length > 0 %}{{ model.description|safe }}{% else %} {{ model.text[0:100]|safe }} {%endif%}
 		
         </div>
 	</div>

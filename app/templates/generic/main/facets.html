@@ -22,7 +22,7 @@
                             </div>
                         {% else %}
                             <div id="accordion_{{_f.name.replace(' ', '-')}}">
-                                <a data-toggle="collapse" data-parent="#accordion_{{_f.name.replace(' ', '-').replace('&', '-')}}" href="#collapseTwo_{{_f.name.replace(' ', '-').replace('&', '-')}}"><strong>{{_f.name }}</strong></a>
+                                <a data-toggle="collapse" data-parent="#accordion_{{_f.name.replace(' ', '-').replace('&', '-')}}" href="#collapseTwo_{{_f.name.replace(' ', '-').replace('&', '-')}}"><strong>{{_f.name }}</strong><span class="pull-right"><i class="glyphicon glyphicon-plus-sign"></i></span> </a>
                                 <div id="collapseTwo_{{_f.name.replace(' ','-').replace('&', '-')}}" class="collapse">
                                     {% for _fl in _f.facets %}
                                         <div class="row-fluid">
