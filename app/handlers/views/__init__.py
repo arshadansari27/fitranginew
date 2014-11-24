@@ -51,7 +51,7 @@ def get_img(model_name, key):
     model_class = Node.model_factory(model_name)
     img = model_class.objects(pk=key).first().get_image()
     if img:
-        return send_file(img, mimetype='image/' + img.format, conditional=True)
+        return send_file(img, mimetype='image/' + img.format, add_etags=False, conditional=True)
     else:
         return ''
 
@@ -64,7 +64,7 @@ def get_img_advert(key):
     img, format = a.get_image()
     if not img:
         return 404
-    return send_file(img, mimetype='image/'+format, conditional=True)
+    return send_file(img, mimetype='image/'+format, add_etags=False, conditional=True)
 
 @app.route('/model/Activity')
 def getActivity():
