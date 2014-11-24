@@ -579,7 +579,7 @@ hr {
 }
 
 .view1 {
-    width: 300px;
+    width: 250px;
     height: 230px;
     margin: 10px;
     float: left;
@@ -602,7 +602,7 @@ hr {
 
 /*noinspection ALL*/
 .view {
-   width: 300px;
+   width: 250px;
    height: 200px;
    margin: 10px;
    float: left;
@@ -617,7 +617,7 @@ hr {
    background: #fff url(/assets/img/bgimg.jpg) no-repeat center center;
 }
 .view .mask, .view .content {
-   width: 300px;
+   width: 230px;
    height: 200px;
    position: absolute;
    overflow: hidden;
