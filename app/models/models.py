@@ -190,11 +190,9 @@ class Node(object):
                 if k and kwargs.has_key(k) and kwargs.get(k, False):
                     v = Content.get_by_id(v)
                     k = k.replace('_ref', '')
-                    print k, v.id
             if type(v) == str:
                 v = v.strip()
             setattr(self, k, v)
-            print "Current", k, getattr(self, k)
 
 
     def upload_image(self, image):
