@@ -26,14 +26,12 @@
                     <div class="col-lg-8">
 						<input class="form-control" value="{%if model.name %}{{ model.name }}{% endif %}" type="text" name="name" Placeholder="Full Name"/>
                         {% for _c in model.channels %}
-                        <input type="hidden" name="channels" value="{{ _c }}"/>
+                            <input type="hidden" name="channels" value="{{ _c }}"/>
                         {% else %}
-                        <input type="hidden" name="channels" value="Profile"/>
+                            <input type="hidden" name="channels" value="Profile"/>
                         {% endfor %}
                         {% for _f in model.facets %}
-                        <input type="hidden" name="facets" value="{{ _f }}"/>
-                        {% else %}
-                        <input type="hidden" name="facets" value="Enthusiast"/>
+                            <input type="hidden" name="facets" value="{{ _f }}"/>
                         {% endfor %}
 						<input type="hidden" name="action" value="update_existing"/>
                     </div>
