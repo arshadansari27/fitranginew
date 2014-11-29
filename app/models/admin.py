@@ -28,7 +28,7 @@ class ProfileView(MyModelView):
     column_exclude_list = ['password']
     column_list = ('name', 'username', 'roles', 'email', 'channels', 'main_image.image')
 
-    column_filters = (FilterProfile('channels', 'Profile Type'),)
+    column_filters = (FilterProfile('Profile', 'Profile Type'),)
 
 
     """
@@ -45,12 +45,15 @@ class ContentView(MyModelView):
     column_searchable_list = ('title',)
     column_list = ('title', 'published', 'channels',  'main_image.image')
     column_filters = (FilterProfile('channels', 'Category - Channel'),)
+
     form_widget_args = {
         'text': {
             'rows': 10,
             'class': 'ckeditor'
         }
     }
+
+    """
     create_template = 'admin_custom/create.html'
     edit_template = 'admin_custom/edit.html'
 
@@ -75,6 +78,7 @@ class ContentView(MyModelView):
         form = super(ContentView, self).edit_form(obj)
         return self._feed_channel_choices(form)
 
+    """
 
 
 class EventView(MyModelView):
