@@ -23,7 +23,17 @@
     <div class="row">
         <div class="col-sm-3">
             <ul class="list-group">
-				<li class="list-group-item text-muted" contenteditable="false"><h4>Profile</h4></li>
+				<li class="list-group-item text-muted" contenteditable="false">
+                
+                <div class="col-xs-6">
+                <h4>Profile</h4>
+                </div>
+                    <!-------FOLLOW AND ADD TO FAVORITE BUTTONS----->
+                <button class="btn btn-primary glyphicon glyphicon-user"> Follow </button>
+                <button class="btn btn-primary glyphicon glyphicon-plus"> Favorite</button>
+                
+                
+                </li>
 				{% if model.website %}
 				<li class="list-group-item text-right"><span class="pull-left"><strong>Website</strong></span>{% if model.website and model.website|length > 0 %}{{ model.website|escape }}{% endif %}</li>
 				{% endif %}
