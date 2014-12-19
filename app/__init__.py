@@ -40,6 +40,10 @@ def start_app():
     from app.handlers.views import *
     from app.handlers.editors import *
 
+    import logging
+    if not app.debug:
+        logging.basicConfig(filename='fitrangi-flask-error.log',level=logging.DEBUG)
+
 
 start_app()
 from app.handlers.examples import *
