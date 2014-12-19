@@ -55,11 +55,21 @@
                 <li class="list-group-item text-right"><span class="pull-left"><strong>Events/Products</strong></span> 125</li>
 				{% endif %}
                 
-				<li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal2">Following</a></strong></span> {{ model.following|length }}</li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal">Following</a></strong></span> {{ model.following|length }}</li>
                 
+                   
 				<li class="list-group-item text-right"><span class="pull-left"><strong> 
-<a href="#" class="" data-toggle="modal" data-target="#largeModal">Followers</a></strong></span>
+<a href="#" class="" data-toggle="modal" data-target="#largeModal2">Followers</a></strong></span>
                     {{ model.follower|length }}</li>
+                
+                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal3">Favourite organisers</a></strong></span> {{ model.following|length }}</li>
+                
+                
+				<li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal4">Favorited me</a></strong></span> {{ model.following|length }}</li>
+             
+                
+                
+                
                 
 				<li class="list-group-item text-right"><span class="pull-left"><strong>Blogs</strong></span> {{ model.blogs|length }}</li>
 				<li class="list-group-item text-right">
@@ -67,38 +77,10 @@
 					<span class="pull-left"><strong>Answers</strong></span> {{ model.answers|length }}
 				</li>
 				
-                
-                
-                
-                <!---------modal View Followers-->
+                    <!---------------------MODAL FUNCTIONS----------------->
+                  <!---------modal View Following starts-->
             
 <div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Followers</h4>
-      </div>
-      <div class="modal-body">
-        <h3>Follower Name</h3>
-          <img style="height: 300px" src="/assets/img/team2.jpg" />
-      
-        </div>
-      <div class="modal-footer">
-          
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-                <!------------Modal View followers ends----->
-           
-                     
-                <!---------modal View Following starts-->
-            
-<div class="modal fade" id="largeModal2" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -106,8 +88,8 @@
         <h4 class="modal-title" id="myModalLabel">Following</h4>
       </div>
       <div class="modal-body">
-        <h3>Following Organisers/Dealer</h3>
-          <img style="height: 300px" src="/assets/img/team1.png" />
+        <h5>Following Organisers/Dealer</h5>
+          <img style="height: 150px; width : 150px" src="/assets/img/team1.png" />
       
         </div>
       <div class="modal-footer">
@@ -121,6 +103,86 @@
 
                 <!------------Modal View following ends----->
            
+                
+                <!---------modal View Followers----------->
+            
+<div class="modal fade" id="largeModal2" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Followers</h4>
+      </div>
+      <div class="modal-body">
+        <h5>Follower Name</h5>
+          <img style="height: 150px; width:150px" src="/assets/img/team2.jpg" />
+      
+        </div>
+      <div class="modal-footer">
+          
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+                <!------------Modal View followers ends----->
+           
+                
+                  <!---------modal View Favourite organiser-->
+            
+<div class="modal fade" id="largeModal3" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Favourite Organiser</h4>
+      </div>
+      <div class="modal-body">
+        <h5>Organiser Name</h5>
+          <img style="height: 150px; width:150px" src="/assets/img/team2.jpg" />
+      
+        </div>
+      <div class="modal-footer">
+          
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+                <!------------Modal View Favourite organisersr ends----->
+           
+             <!---------modal View  Favorited me-->
+            
+<div class="modal fade" id="largeModal4" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Favourited Me</h4>
+      </div>
+      <div class="modal-body">
+        <h5>Enthusiast Name</h5>
+          <img style="height: 150px; width:150px" src="/assets/img/team2.jpg" />
+      
+        </div>
+      <div class="modal-footer">
+          
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+                <!------------Modal View Favorited me ends----->
+           
+                
+                     
+              <!-----------MODAL FUNCTIONS ENDS------------->
                 
                 
                 <!--li class="list-group-item text-right"><span class="pull-left"><strong>Social Media</strong></span>
