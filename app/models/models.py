@@ -256,7 +256,7 @@ class Content(Node, db.Document):
     meta = {
         'allow_inheritance': True,
         'indexes': [
-            {'fields': ['title'], 'unique': False, 'sparse': True, 'types': False },
+            {'fields': ['title'], 'unique': False, 'sparse': False, 'types': False },
         ],
     }
 
