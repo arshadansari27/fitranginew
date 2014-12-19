@@ -11,7 +11,6 @@ app = Flask(__name__, template_folder='templates', static_folder='assets')
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['MONGODB_SETTINGS'] = {'DB': settings.MONGODB_DB, 'HOST': settings.MONGODB_HOST, 'PORT': settings.MONGODB_PORT}
-app.debug = True
 
 db = MongoEngine()
 db.init_app(app)
@@ -39,6 +38,10 @@ def start_app():
 
     from app.handlers.views import *
     from app.handlers.editors import *
+
+    import logging
+    if not app.debug:
+        logging.basicConfig(filename='fitrangi-flask-error.log',level=logging.DEBUG)
 
 
 start_app()
