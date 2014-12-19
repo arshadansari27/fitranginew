@@ -16,7 +16,6 @@ class ChannelView(object):
         self.query = query
         self.channel = get_channel(channel_name)
 
-
         _facets = []
         if len(selected_facets) > 0:
             _facets = [_v for _v in selected_facets if Facet.find(_v) is not None]

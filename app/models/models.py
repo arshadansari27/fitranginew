@@ -174,7 +174,10 @@ class Node(object):
         self.set_values(True, **kwargs)
         self.created_timestamp = datetime.datetime.now()
         self.created_by = owner
-        self.published = True
+        if self.__class__.__name__ == 'Question':
+            self.published = False
+        else:
+            self.published = True
         self.published_timestamp = datetime.datetime.now()
         self.save()
         return self
@@ -234,7 +237,7 @@ class Content(Node, db.Document):
     additional_images = db.ListField(db.EmbeddedDocumentField(Image))
     attachments = db.ListField(db.EmbeddedDocumentField(File))
     slug = db.StringField()
-    published = db.BooleanField()
+    published = db.BooleanField(default=False)
     published_timestamp = db.DateTimeField(required=False)
     channels = db.ListField(db.StringField())
     facets = db.ListField(db.StringField())

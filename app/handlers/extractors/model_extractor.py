@@ -17,7 +17,6 @@ def search_models(search_query):
 
 def get_all_models_all_channels(search_query=None):
     for_channels = ['Destination', 'Activity', 'Article', 'Profile', 'Adventure Trip']
-    print [c.name for c in Channel.all_data]
     channels = filter(lambda c: c.name in for_channels, Channel.all_data)
     models = {}
     for channel in channels:
@@ -94,10 +93,9 @@ def get_all_models(channel, facets=[], search_query=None, page=1, paginated=True
             query['name']= {'$regex': regx}
         else:
             query['title']= {'$regex': regx}
-        print '*' * 10
-        print query
-        print '*' * 100
 
+    if channel.name == 'Forum':
+        query['published'] = True
     total = model_class.objects(__raw__=query).count()
     if paginated:
         start =  (page - 1) * PAGE_SIZE
