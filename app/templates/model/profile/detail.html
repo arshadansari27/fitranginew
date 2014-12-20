@@ -6,25 +6,21 @@
         <div class="col-sm-10">
 			<h1>{{ model.name }}</h1>
 
-			{% if model.id == user.id%}
-			    <a href="/model/Profile/{{model.id}}/edit" class="btn btn-link">Edit</a>
-            <br>
-              
-			{% else %}
-                <!--button class="btn btn-success" type="button">Message</button-->
-                {% if 'Admin' in user.roles %}
-                    <a href="/model/Profile/{{model.id}}/edit" class="btn btn-link">Edit</a>
-              
-                {% endif %}
-              <!-------FOLLOW AND ADD TO FAVORITE BUTTONS----->
-                <button type="button" class="btn btn-primary btn-sm">
-                <span class="glyphicon glyphicon-user"></span> Follow
-                </button>
-                <button type="button" class="btn btn-primary btn-sm">
-                <span class="glyphicon glyphicon-star"></span> Favourite
-                </button>
-           
-			{% endif %}
+            {% if user %}
+			    {% if model.id == user.id%}
+			        <a href="/model/Profile/{{model.id}}/edit" class="btn btn-link">Edit</a><br>
+			    {% else %}
+                    {% if 'Admin' in user.roles %}
+                        <a href="/model/Profile/{{model.id}}/edit" class="btn btn-link">Edit</a>
+                    {% endif %}
+                    {% if 'Enthusiast' in model.facets %}
+                    <button type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-user"></span> Follow</button>
+                    {% endif %}
+                    {% if 'Organizer' in model.facets or 'Gear Dealer' in model.facets %}
+                    <button type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-star"></span> Favourite</button>
+                    {% endif %}
+			    {% endif %}
+            {% endif %}
 			<br/>
         </div>
       	<div class="col-sm-2"><a class="pull-right" href="/users">
