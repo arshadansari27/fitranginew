@@ -16,8 +16,12 @@
               
                 {% endif %}
               <!-------FOLLOW AND ADD TO FAVORITE BUTTONS----->
-                <button class="btn btn-primary glyphicon glyphicon-user">Follow </button>
-                <button class="btn btn-primary glyphicon glyphicon-plus"> Favorite</button>
+                <button type="button" class="btn btn-primary btn-sm">
+                <span class="glyphicon glyphicon-user"></span> Follow
+                </button>
+                <button type="button" class="btn btn-primary btn-sm">
+                <span class="glyphicon glyphicon-star"></span> Favourite
+                </button>
            
 			{% endif %}
 			<br/>
@@ -92,10 +96,19 @@
         <h4 class="modal-title" id="myModalLabel">Following</h4>
       </div>
       <div class="modal-body">
-        <h5>Following Organisers/Dealer</h5>
-          <img style="height: 150px; width : 150px" src="/assets/img/team1.png" />
-      
+          <div class="panel-body">
+        
+          <div class="row-fluid">
+              <div class="col-sm-2">
+          <img style="height: 120px; width : 150px" src="/assets/img/team1.png" />
+           <h6>Following Organisers/Dealer</h6>
         </div>
+              <div class="col-sm-2">
+          <img style="height: 120px; width : 150px" src="/assets/img/team1.png" />
+          <h6>Following Organisers/Dealer</h6>
+        </div>
+              
+              </div>
       <div class="modal-footer">
           
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
