@@ -26,7 +26,7 @@ def start_app():
     logging.basicConfig()
     logging.getLogger().setLevel(logging.DEBUG)
 
-    from app.models.admin import ProfileView, ContentView, EventView, ProductView, AnalyticsView, MessageView, AdvertisementView
+    from app.models.admin import ProfileView, ContentView, EventView, ProductView, AnalyticsView, MessageView, AdvertisementView, TagView
     admin = flask_admin.Admin(app, 'Fitrangi Admin Panel')
     admin.add_view(ProfileView(Profile))
     admin.add_view(ContentView(Content))
@@ -35,6 +35,7 @@ def start_app():
     admin.add_view(AnalyticsView(AnalyticsEvent)) # Use aggregate values
     admin.add_view(MessageView(Message))
     admin.add_view(AdvertisementView(Advertisement))
+    admin.add_view(TagView(Tag))
 
     from app.handlers.views import *
     from app.handlers.editors import *

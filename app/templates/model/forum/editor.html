@@ -1,4 +1,4 @@
-{% extends 'generic/main/model_base.html' %}
+{% extends 'generic/main/model_editor_base.html' %}
 {% block model_data %}
 <div class="container">
     {% if model and model.id %}
@@ -27,8 +27,34 @@
                         <textarea class="form-control" rows="10" placeholder="Description Of Your Question" type="text" name="text">{% if model.text %}{{model.text}}{% endif %}</textarea>
                     </div>
                     <div class="form-group">
-                        <h4>Keywords:</h4>
-                        <input type="text" class="form-control" rows="3" placeholder="Add Keywords For Your Post" name="description" value="{%if model.description %}{{ model.description }}{% endif %}">
+                        <h4>Tags:</h4>
+                        <div class="control-group">
+                            <input value="{% for f in model.facets%}{{f}},{%endfor%}" type="text" placeholder="Enter tags..." name="tags" class="col-sm-6 selectized" id="input-tags" tabindex="-1" style="display: block;">
+				        </div>
+                        <script>
+                            $.ajax({
+                                url: '/api/tags',
+                                type: 'GET',
+                                error: function() {
+                                },
+                                success: function(res) {
+                                    $selectize(res.result);
+                                }
+                            });
+                            $selectize = function(data) {
+                                var items = data.map(function (x) {
+                                    return { item: x };
+                                });
+                                $('#input-tags').selectize({
+                                    delimiter: ',',
+                                    persist: false,
+                                    options: items,
+                                    labelField: "item",
+                                    valueField: "item",
+                                    sortField: 'item'
+                                });
+                            };
+				        </script>
                     </div>
                     <button type="submit" class="btn btn-primary">Post My Question</button>
 

@@ -17,6 +17,8 @@ def model_editor_view(channel, key=None):
                     form[k] = request.form.getlist(k)
                 except:
                     form[k] = request.form[k]
+            elif k == 'tags':
+                form['facets'] = [u.strip() for u in v.split(',')]
             else:
                 form[k] = v
         if form.get('action', None) and form['action'] == 'update_existing':

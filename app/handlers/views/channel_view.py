@@ -40,6 +40,7 @@ class ChannelView(object):
         args = request.args
         if self.paginated:
             self.pageinfo = PaginationInfo(args, link, total, page)
+        self.tags = [t.name for t in Tag.objects.all()]
 
     def render(self):
         if self.channel_name == 'Forum':
@@ -52,9 +53,10 @@ class ChannelView(object):
             for idx, model_view in enumerate(self.model_views):
                 models_arranged.setdefault(idx % 3, [])
                 models_arranged[idx % 3].append(model_view)
+
         if not self.paginated:
-            return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=None, user=g.user, channel_name=self.channel.name)
-        return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=self.pageinfo, user=g.user, channel_name=self.channel.name)
+            return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=None, user=g.user, channel_name=self.channel.name, tags=self.tags)
+        return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=self.pageinfo, user=g.user, channel_name=self.channel.name, tags=self.tags)
 
 
 class PaginationInfo(object):

@@ -1,6 +1,6 @@
 __author__ = 'arshad'
 
-from app.models import Channel, Node, Content, Profile
+from app.models import Channel, Node, Content, Profile, Tag
 
 class ModelApi(object):
 
@@ -33,3 +33,17 @@ class ModelApi(object):
     def dictify(self):
         models = [dict(option_value=str(u['id']), option_display=u[self.option_display], score=1) for u in self.models]
         return models
+
+
+class TagApi(object):
+
+    def __init__(self, query=None):
+        self.query = query
+
+    def dictify(self):
+        if self.query:
+            tags = Tag.objects(name__iexact=self.query).all()[0:7]
+        else:
+            tags = Tag.objects().all()[0:7]
+        _tags = [d.name for d in tags]
+        return _tags

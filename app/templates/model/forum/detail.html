@@ -20,6 +20,12 @@
 
         <p class="lead">{{ model.text }}</p>
         <hr/>
+        {% if model.facets|length > 0 %}
+        {% for f in model.facets %}
+            <span class="label label-info">{{ f }}</span>
+        {% endfor %}
+        <hr/>
+        {% endif %}
 
         <!--p><strong>Keywords:</strong>
         </p-->

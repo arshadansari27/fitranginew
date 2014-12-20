@@ -356,6 +356,11 @@ class Product(Content):
     price = db.FloatField()
     discount = db.FloatField(required=False)
 
+
+class Tag(db.Document):
+
+    name = db.StringField()
+
 class Message(db.Document):
     __template__ = 'model/message/'
 

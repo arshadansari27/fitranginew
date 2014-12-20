@@ -103,6 +103,11 @@ def page_not_found(e):
 def model(channel, key):
     return ModelView(key, 'detail', channel_name=channel).render()
 
+@app.route('/api/tags', methods=['GET'])
+def search_tags():
+    d = api.TagApi(query=request.args.get('query', None))
+    return jsonify(dict(result=d.dictify()))
+
 @app.route('/api/models/<channel>', methods=['GET'])
 def search_models(channel):
     d = api.ModelApi(channel_name=channel, facets=request.args.get('facets', None), query=request.args.get('query', None), paged=True)

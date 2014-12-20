@@ -110,3 +110,5 @@ class MessageView(MyModelView):
 class AdvertisementView(MyModelView):
     column_list = ('created_by', 'title', 'main_image.image', 'url', 'published')
 
+class TagView(MyModelView):
+    column_list = ('name',)
