@@ -14,10 +14,26 @@
                         <a href="/model/Profile/{{model.id}}/edit" class="btn btn-link">Edit</a>
                     {% endif %}
                     {% if 'Enthusiast' in model.facets %}
-                    <button type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-user"></span> Follow</button>
+                        {% if model not in user.following %}
+                            <form action="/profile/follow?profile={{model.id}}" method="POST">
+                                <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-user"></span> Follow</button>
+                            </form>
+                        {% else %}
+                            <form action="/profile/unfollow?profile={{model.id}}" method="POST">
+                                <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-user"></span> Unfollow</button>
+                            </form>
+                        {% endif %}
                     {% endif %}
                     {% if 'Organizer' in model.facets or 'Gear Dealer' in model.facets %}
-                    <button type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-star"></span> Favourite</button>
+                        {% if model not in user.favorites %}
+                            <form action="/profile/add-favorites?profile={{model.id}}" method="POST">
+                                <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-star"></span> Favourite</button>
+                            </form>
+                        {% else %}
+                            <form action="/profile/remove-favorites?profile={{model.id}}" method="POST">
+                                <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-star"></span> Unfavourite</button>
+                            </form>
+                        {% endif %}
                     {% endif %}
 			    {% endif %}
             {% endif %}
@@ -57,179 +73,20 @@
             <ul class="list-group">
 				<li class="list-group-item text-muted"><strong>Activity</strong> <i class="fa fa-dashboard fa-1x"></i></li>
 				{% if 'Retailer' in model.roles or 'EventOrganiser' in model.roles %}
-                <li class="list-group-item text-right"><span class="pull-left"><strong>Events/Products</strong></span> 125</li>
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>Events/Products</strong></span> 125</li>
 				{% endif %}
-                
-                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal">Following</a></strong></span> {{ model.following|length }}</li>
-                
-                   
-				<li class="list-group-item text-right"><span class="pull-left"><strong> 
-<a href="#" class="" data-toggle="modal" data-target="#largeModal2">Followers</a></strong></span>
-                    {{ model.follower|length }}</li>
-                
-                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal3">Favourite organisers</a></strong></span> {{ model.following|length }}</li>
-                
-                
-				<li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal4">Favorited me</a></strong></span> {{ model.following|length }}</li>
-             
-                
-                
-                
-                
+                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal1">Following</a></strong></span> {{ model.following|length }}</li>
+				<li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal2">Followers</a></strong></span> {{ model.follower|length }}</li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal3">Favourite organisers</a></strong></span> {{ model.favorites|length }}</li>
+				<!--li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal4">Favorited me</a></strong></span> {{ model.following|length }}</li-->
 				<li class="list-group-item text-right"><span class="pull-left"><strong>Blogs</strong></span> {{ model.blogs|length }}</li>
 				<li class="list-group-item text-right">
 				<span class="pull-left"><strong>Questions</strong></span> {{ model.questions|length }}<br/>
 					<span class="pull-left"><strong>Answers</strong></span> {{ model.answers|length }}
 				</li>
 				
-                    <!---------------------MODAL FUNCTIONS----------------->
-                  <!---------modal View Following starts-->
-            
-<div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Following</h4>
-      </div>
-      <div class="modal-body">
-          
-          <div class="container-fluid">
-          <div class="col-sm-2">
-          <img style="height: 120px; width : 150px" src="/assets/img/team1.png" />
-           <h6>Following Organisers/Dealer</h6>
-        		</div>
-        		<div class="col-sm-2">
-          <img style="height: 120px; width : 150px" src="/assets/img/team1.png" />
-           <h6>Following Organisers/Dealer</h6>
-        		</div>
-        		</div>
-              
-              </div>
-      <div class="modal-footer">
-          
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-                <!------------Modal View following ends----->
-           
-                
-                         <!---------modal View Followers----------->
-            
-<div class="modal fade" id="largeModal2" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Followers</h4>
-      </div>
-      <div class="modal-body">
-          
-          <div class="container-fluid">
-          <div class="col-sm-2">
-          <img style="height: 120px; width : 150px" src="/assets/img/team1.png" />
-           <h6>Follower Name</h6>
-        		</div>
-        		<div class="col-sm-2">
-          <img style="height: 120px; width : 150px" src="/assets/img/team1.png" />
-           <h6>Follower Name</h6>
-        		</div>
-        		</div>
-              
-              </div>
-      <div class="modal-footer">
-          
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-                <!------------Modal View Followers ends----->
-           
-       
-                
-                  <!---------modal View Favourite organiser-->
-            
-<div class="modal fade" id="largeModal3" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Favourite Organiser</h4>
-      </div>
-      <div class="modal-body">
-          
-          <div class="container-fluid">
-          <div class="col-sm-2">
-          <img style="height: 120px; width : 150px" src="/assets/img/team2.jpg" />
-           <h6>Organiser Name</h6>
-        		</div>
-        		<div class="col-sm-2">
-          <img style="height: 120px; width : 150px" src="/assets/img/team2.jpg" />
-           <h6>Organiser Name</h6>
-        		</div>
-        		</div>
-              
-              </div>
-      <div class="modal-footer">
-          
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        
-      </div>
-    </div>
-  </div>
-</div>
 
 
-                <!------------Modal View Favourite organiser ends----->
-           
-             <!---------modal View  Favorited me-->
-            
-            
-<div class="modal fade" id="largeModal4" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Favourited Me</h4>
-      </div>
-      <div class="modal-body">
-          
-          <div class="container-fluid">
-          <div class="col-sm-2">
-          <img style="height: 120px; width : 150px" src="/assets/img/team2.jpg" />
-           <h6>Enthusiast Name</h6>
-        		</div>
-        		<div class="col-sm-2">
-          <img style="height: 120px; width : 150px" src="/assets/img/team2.jpg" />
-           <h6>Enthusiast Name</h6>
-        		</div>
-        		</div>
-              
-              </div>
-      <div class="modal-footer">
-          
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-
-                <!------------Modal View Favorited me ends----->
-           
-                
-                     
-              <!-----------MODAL FUNCTIONS ENDS------------->
-                
-                
                 <!--li class="list-group-item text-right"><span class="pull-left"><strong>Social Media</strong></span>
 				<a href="{% if model.facebook %}{{model.facebook}}{% else %}#{% endif %}">Facebook,</a>
 				<a href="{% if model.linkedin%}{{model.linkedin}}{% else %}#{% endif %}">LinkedIn</a>
@@ -282,4 +139,43 @@
 
 	<div id="push"></div>
 </div>
+
+{% for i in [1, 2, 3] %}
+<div class="modal fade" id="largeModal{{i}}" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">
+                    {% if i == 1 %}
+                    {% set _col_ = model.following %}
+                    Following
+                    {% elif i == 2 %}
+                    {% set _col_ = model.follower %}
+                    Followers
+                    {% elif i == 3 %}
+                    {% set _col_ = model.favorites %}
+                    Favorites
+                    {% else %}
+                    Other people I care about
+                    {% endif %}
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    {% for m in _col_ %}
+                    <div class="col-sm-2">
+                        <img style="height: 120px; width : 150px" src="/img/{{ m.get_class_name()}}/{{m.id}}" />
+                        <h6>{{ m.name }}</h6>
+        		    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
 {% endblock %}

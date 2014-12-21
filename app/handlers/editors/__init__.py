@@ -1,13 +1,15 @@
 __author__ = 'arshad'
 
-from flask import request, redirect
+from flask import request, redirect, flash, g
 
 from app.handlers.editors.model_editor import ModelEditor
 from app import app
-
+from app.handlers import login_required, redirect_url
+from app.models.models import Profile
 
 @app.route('/model/<channel>/<key>/edit', methods=['GET', 'POST'])
 @app.route('/model/<channel>/add', methods=['GET', 'POST'])
+@login_required
 def model_editor_view(channel, key=None):
     if request.method == 'POST':
         form = {}
@@ -40,3 +42,37 @@ def model_editor_view(channel, key=None):
     else:
         return ModelEditor(key, channel_name=channel).render()
 
+
+@app.route('/profile/remove-favorites', methods=['POST'])
+@login_required
+def remove_from_favorites():
+    return profile_toggle(lambda me, other: me.remove_from_favorites(other), 'Successfully removed', 'Failed to remove')
+
+@app.route('/profile/add-favorites', methods=['POST'])
+@login_required
+def add_to_favorites():
+    return profile_toggle(lambda me, other: me.add_to_favorites(other), 'Successfully removed', 'Failed to remove')
+
+
+@app.route('/profile/follow', methods=['POST'])
+@login_required
+def follow():
+    return profile_toggle(lambda me, other: me.follow(other), 'Successfully removed', 'Failed to remove')
+
+@app.route('/profile/unfollow', methods=['POST'])
+@login_required
+def unfollow():
+    return profile_toggle(lambda me, other: me.unfollow(other), 'Successfully removed', 'Failed to remove')
+
+
+def profile_toggle(func, success_message, failed_message):
+    model_id = request.args.get('profile', None)
+    if not model_id or not g.user:
+        flash(failed_message, category='error')
+        return redirect(redirect_url())
+    else:
+        me = g.user
+        other = Profile.objects(pk=model_id).first()
+        func(me, other)
+        flash(success_message, category='success')
+        return redirect(redirect_url())

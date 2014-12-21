@@ -299,6 +299,7 @@ class Profile(Content):
     address = db.StringField()
     following = db.ListField(db.ReferenceField('Profile'))
     follower = db.ListField(db.ReferenceField('Profile'))
+    favorites = db.ListField(db.ReferenceField('Profile'))
     blogs = db.ListField(db.ReferenceField('Content'))
     questions = db.ListField(db.ReferenceField('Content'))
     answers = db.ListField(db.ReferenceField('Content'))
@@ -309,6 +310,30 @@ class Profile(Content):
     website = db.StringField()
 
     def __unicode__(self): return self.name
+
+    def remove_from_favorites(self, another_profile):
+        assert isinstance(another_profile, self.__class__)
+        self.favorites.remove(another_profile)
+        self.save()
+
+    def add_to_favorites(self, another_profile):
+        assert isinstance(another_profile, self.__class__)
+        self.favorites.append(another_profile)
+        self.save()
+
+    def unfollow(self, another_profile):
+        assert isinstance(another_profile, self.__class__)
+        self.following.remove(another_profile)
+        another_profile.follower.remove(self)
+        self.save()
+        another_profile.save()
+
+    def follow(self, another_profile):
+        assert isinstance(another_profile, self.__class__)
+        self.following.append(another_profile)
+        another_profile.follower.append(self)
+        self.save()
+        another_profile.save()
 
     def change_password(self, **kwargs):
         if kwargs['confirm'] == kwargs['password']:

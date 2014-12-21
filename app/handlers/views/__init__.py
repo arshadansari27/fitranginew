@@ -12,6 +12,7 @@ import re
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
 
+from app.handlers import login_required
 from app.handlers.views.facet_view import FacetView
 from app.handlers.views.menu_view import MenuView
 from app.handlers.views.model_view import ModelView
@@ -114,6 +115,7 @@ def search_models(channel):
     return jsonify(dict(result=d.dictify()))
 
 @app.route("/comments/<content_key>/delete/<key>", methods=["POST"])
+@login_required
 def comment_delete(content_key, key):
     try:
         content = Content.get_by_id(content_key)
@@ -136,6 +138,7 @@ def comment_delete(content_key, key):
 
 @app.route("/comment", methods=["POST"])
 @app.route("/comment/<key>", methods=["POST"])
+@login_required
 def comment(key=None):
     _type = request.json['type'] if request.json.get('type') is not None else "comment"
     try:
@@ -184,6 +187,7 @@ def login():
     return render_template('/generic/main/login.html', menu=MenuView(None))
 
 @app.route('/logout', methods=['GET', 'POST'])
+@login_required
 def logout():
     if hasattr(g, 'user'):
         g.user = None
