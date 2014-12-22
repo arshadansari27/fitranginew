@@ -51,18 +51,18 @@ def remove_from_favorites():
 @app.route('/profile/add-favorites', methods=['POST'])
 @login_required
 def add_to_favorites():
-    return profile_toggle(lambda me, other: me.add_to_favorites(other), 'Successfully removed', 'Failed to remove')
+    return profile_toggle(lambda me, other: me.add_to_favorites(other), 'Successfully added to favorites ', 'Failed to Add')
 
 
 @app.route('/profile/follow', methods=['POST'])
 @login_required
 def follow():
-    return profile_toggle(lambda me, other: me.follow(other), 'Successfully removed', 'Failed to remove')
+    return profile_toggle(lambda me, other: me.follow(other), 'Successfully Followed', 'Failed to Follow')
 
 @app.route('/profile/unfollow', methods=['POST'])
 @login_required
 def unfollow():
-    return profile_toggle(lambda me, other: me.unfollow(other), 'Successfully removed', 'Failed to remove')
+    return profile_toggle(lambda me, other: me.unfollow(other), 'Successfully Unfollowed', 'Failed to Unfollow')
 
 
 def profile_toggle(func, success_message, failed_message):

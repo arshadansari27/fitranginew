@@ -27,7 +27,7 @@
                     {% if 'Organizer' in model.facets or 'Gear Dealer' in model.facets %}
                         {% if model not in user.favorites %}
                             <form action="/profile/add-favorites?profile={{model.id}}" method="POST">
-                                <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-star"></span> Favourite</button>
+                                <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-star"></span> Add to Favourite</button>
                             </form>
                         {% else %}
                             <form action="/profile/remove-favorites?profile={{model.id}}" method="POST">
@@ -75,10 +75,15 @@
 				{% if 'Retailer' in model.roles or 'EventOrganiser' in model.roles %}
                     <li class="list-group-item text-right"><span class="pull-left"><strong>Events/Products</strong></span> 125</li>
 				{% endif %}
+                
+                {% if 'Enthusiast' in model.facets %}
                 <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal1">Following</a></strong></span> {{ model.following|length }}</li>
 				<li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal2">Followers</a></strong></span> {{ model.follower|length }}</li>
                 <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal3">Favourite organisers</a></strong></span> {{ model.favorites|length }}</li>
-				<!--li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal4">Favorited me</a></strong></span> {{ model.following|length }}</li-->
+                
+                {% else %}
+                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal4">Favorited By</a></strong></span> {{ model.following|length }}</li>
+{% endif %}
 				<li class="list-group-item text-right"><span class="pull-left"><strong>Blogs</strong></span> {{ model.blogs|length }}</li>
 				<li class="list-group-item text-right">
 				<span class="pull-left"><strong>Questions</strong></span> {{ model.questions|length }}<br/>
@@ -138,27 +143,56 @@
 	<div id="push"></div>
 </div>
 
-{% for i in [1, 2, 3] %}
-<div class="modal fade" id="largeModal{{i}}" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+{% if 'Organizer' in model.facets or 'Gear Dealer' in model.facets %}
+           
+<div class="modal fade" id="largeModal4" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel">
-                    {% if i == 1 %}
-                    {% set _col_ = model.following %}
-                    Following
-                    {% elif i == 2 %}
-                    {% set _col_ = model.follower %}
-                    Followers
-                    {% elif i == 3 %}
-                    {% set _col_ = model.favorites %}
-                    Favorites
-                    {% else %}
-                    Other people I care about
-                    {% endif %}
-                </h4>
+                    {% set _col_ = model.favoritedBy %}
+                    Favorited By
+                    </h4>  
             </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    {% for m in _col_ %}
+                    <div class="col-sm-2">
+                            <img style="height: 120px; width : 150px"                         src="/img/{{m.get_class_name()}}/{{m.id}}" />
+                        <h6>{{ m.name }}</h6>
+        		    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+            {% for i in [1, 2, 3 ] %}
+                <div class="modal fade" id="largeModal{{i}}" tabindex="-1" role="dialog" aria-          labelledby="largeModal" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="myModalLabel">
+                                    {% if i == 1 %}
+                                    {% set _col_ = model.following %}
+                                    Following
+                                    {% elif i == 2 %}
+                                    {% set _col_ = model.follower %}
+                                    Followers
+                                    {% elif i == 3 %}
+                                    {% set _col_ = model.favorites %}
+                                    Favorites
+                                    {% else %}
+                                    Other people I care about
+                                    {% endif %}
+                                </h4>  
+                            </div>
             <div class="modal-body">
                 <div class="container-fluid">
                     {% for m in _col_ %}
@@ -176,4 +210,5 @@
     </div>
 </div>
 {% endfor %}
+{% endif %}
 {% endblock %}
