@@ -82,7 +82,7 @@
                 <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal3">Favourite organisers</a></strong></span> {{ model.favorites|length }}</li>
                 
                 {% else %}
-                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal4">Favorited By</a></strong></span> {{ model.following|length }}</li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal4">Favourited By</a></strong></span> {{ model.favorites|length }}</li>
 {% endif %}
 				<li class="list-group-item text-right"><span class="pull-left"><strong>Blogs</strong></span> {{ model.blogs|length }}</li>
 				<li class="list-group-item text-right">
@@ -142,16 +142,14 @@
 
 	<div id="push"></div>
 </div>
-
 {% if 'Organizer' in model.facets or 'Gear Dealer' in model.facets %}
-           
 <div class="modal fade" id="largeModal4" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel">
-                    {% set _col_ = model.favoritedBy %}
+                    {% set _col_ = model.favorites %}
                     Favorited By
                     </h4>  
             </div>
