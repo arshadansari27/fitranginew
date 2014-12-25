@@ -164,17 +164,14 @@ def registration():
         confirm = request.form['confirm']
         if password != confirm:
             flash('Passwords do not match', category='error')
-            return redirect(url_for('registeration'))
+            return redirect(url_for('registration'))
         profile = Profile.create_new(name, email, password)
-	profile = Profile.authenticate(email, password)
         if profile and (profile._id or profile.id):
             session['user'] = str(profile._id)
             event = LoginEvent(user=session['user'], url=request.url, ip_address=request.remote_addr)
             event.save()
             flash('Successfully Created Your Account.', category='success')
             return redirect(url_for('home'))
-        
-
     return render_template('/generic/main/registration.html', menu=MenuView(None))
 
 
