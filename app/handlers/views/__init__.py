@@ -166,6 +166,7 @@ def registration():
             flash('Passwords do not match', category='error')
             return redirect(url_for('registration'))
         profile = Profile.create_new(name, email, password)
+	profile = Profile.authenticate(email, password)
         if profile and (profile._id or profile.id):
             session['user'] = str(profile._id)
             event = LoginEvent(user=session['user'], url=request.url, ip_address=request.remote_addr)
