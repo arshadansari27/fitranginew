@@ -343,9 +343,9 @@ class Profile(Content):
             raise Exception('Invalid Password, do not match')
 
     @classmethod
-    def authenticate(cls, email_or_username,  password):
+    def authenticate(cls, email, password):
         collection = Profile._get_collection()
-        query = {'$and': [{'$or': [{'email': email_or_username}, {'username': email_or_username}]}, {'password': password}]}
+        query = {'$and': [{'$or': [{'email': email}, {'email': email}]}, {'password': password}]}
         values = list(collection.find(query))
         if len(values) > 0:
             p = Profile()
