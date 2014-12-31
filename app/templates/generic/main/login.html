@@ -72,12 +72,43 @@
         	</div>
                     
 
-		</div>
+        </div>--><br><Br>
                     <div class="control">
-                        <div style="border-top: 1px solid#888; padding-top:15px; font-size:100%" >Don't have an account! <a id="signupshow" href="/register">Sign Up Here</a></div>
-                    </div -->
+                        <div style="border-top: 1px solid#888; padding-top:15px; font-size:100%" ><a id="forgotpassword" data-toggle="modal" data-target="#largeModal1"  href="">Forgot Password?</a></div>
+                    </div>
                 </form>    
                 
+                    
+       <div class="modal fade" id="largeModal1" tabindex="-1" role="dialog" aria-          labelledby="largeModal" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="myModalLabel">
+                                   Forgot Password</h4>  
+                            </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="col-sm-5">
+                    <div class="panel-body" >
+            
+                        <form id="loginform" action="#" method="post" class="form-horizontal" role="form">
+                            <div style="margin-bottom: 50px" class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="username" type="text" required data-validation-required-message="Please Enter Your Email." class="form-control" name="email" value="" placeholder="Please Enter Your Email"/>       
+                            </div>
+                    </div>
+        		  </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-login" type="submit" class="btn btn-default">Submit  </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
             </div>                     
         </div>  
     </div>
@@ -86,3 +117,5 @@
 {% endblock %}
 {% block footer %} 
 {% endblock %}
+
+    
