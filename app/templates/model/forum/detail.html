@@ -5,7 +5,7 @@
     <div class="col-md-12">
 
         <div class="col-md-2 col-sm-3 text-center">
-            <a class="story-title" href="#"><img title="profile image" style="width:100px;height:100px" class="img-circle img-responsive" src="/img/{{model.created_by.get_class_name()}}/{{model.created_by.id}}" "></a>
+            <a class="story-title" href="#"><img title="profile image" style="width:100px;height:100px" class="img-circle img-responsive" src="{% if model.created_by and model.created_by.main_image and model.created_by.main_image.image %}/img/{{ model.created_by.get_class_name()}}/{{model.created_by.id}}{% else %}/assets/img/Profile-Picture.jpg{% endif %}"></a>
         </div>
 
 
@@ -58,7 +58,7 @@
                 <span><strong>{{ comment.text }}</strong></span>
                 <br/>
                 <h5 class="row pull-right">
-                    <img style="width:30px;height:30px" class="" src="/img/{{model.created_by.get_class_name()}}/{{model.created_by.id}}">
+                    <img style="width:30px;height:30px" class="" src="{% if comment.created_by and comment.created_by.main_image and comment.created_by.main_image.image %}/img/{{ comment.created_by.get_class_name()}}/{{comment.created_by.id}}{% else %}/assets/img/Profile-Picture.jpg{% endif %}">
                     {{ comment.created_by.name }} <small> posted on <strong>{{ comment.created_on.strftime('%d-%m-%Y %H:%M') }}</strong></small>
                 </h5>
             </div>
