@@ -1,6 +1,9 @@
 import datetime, tempfile
 import random, cStringIO
 from PIL import Image as PImage
+from flask import render_template
+from mongoengine import Q
+from app.handlers.messaging import send_single_email
 
 class Configuration(object):
 
@@ -176,6 +179,9 @@ class Node(object):
         self.created_by = owner
         if self.__class__.__name__ == 'Question':
             self.published = False
+
+            mail_data = render_template('notifications/content_posted.html', user=owner, content=self)
+            send_single_email("[Fitrangi] You have posted a question", to_list=[owner.email, 'admin@fitrangi.com'], data=mail_data)
         else:
             self.published = True
         self.published_timestamp = datetime.datetime.now()
@@ -318,6 +324,8 @@ class Profile(Content):
 
     def add_to_favorites(self, another_profile):
         assert isinstance(another_profile, self.__class__)
+        mail_data = render_template('notifications/favorited.html', user=another_profile, adder=self)
+        send_single_email("[Fitrangi] Someone just favorited you", to_list=[another_profile.email], data=mail_data)
         self.favorites.append(another_profile)
         self.save()
 
@@ -331,6 +339,8 @@ class Profile(Content):
     def follow(self, another_profile):
         assert isinstance(another_profile, self.__class__)
         self.following.append(another_profile)
+        mail_data = render_template('notifications/followed.html', user=another_profile, follower=self)
+        send_single_email("[Fitrangi] Someone just followed you", to_list=[another_profile.email], data=mail_data)
         another_profile.follower.append(self)
         self.save()
         another_profile.save()
@@ -344,15 +354,11 @@ class Profile(Content):
 
     @classmethod
     def authenticate(cls, email, password):
-        collection = Profile._get_collection()
-        query = {'$and': [{'$or': [{'email': email}, {'email': email}]}, {'password': password}]}
-        values = list(collection.find(query))
-        if len(values) > 0:
-            p = Profile()
-            for k, v in values[0].iteritems():
-                p.__dict__[k] = values[0][k]
-            return p
-        return False
+        profile = Profile.objects(Q(email__iexact=email) & Q(password__exact=password)).first()
+        if profile and profile.email == email:
+            return profile
+        else:
+            return False
 
     @classmethod
     def create_new(cls, name, email, password, is_verified=False, roles=['Enthusiast']):

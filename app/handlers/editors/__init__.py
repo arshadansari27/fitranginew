@@ -1,8 +1,9 @@
 __author__ = 'arshad'
 
-from flask import request, redirect, flash, g
+from flask import request, redirect, flash, g, render_template
 
 from app.handlers.editors.model_editor import ModelEditor
+from app.handlers.messaging import send_single_email
 from app import app
 from app.handlers import login_required, redirect_url
 from app.models.models import Profile
@@ -25,8 +26,6 @@ def model_editor_view(channel, key=None):
                 form[k] = v
         if form.get('action', None) and form['action'] == 'update_existing':
             form['channels'] = [channel]
-            if channel == 'Profile':
-                form['facets'].append('Enthusiast')
 
         print 'Form data: ', str(form)
         if key:

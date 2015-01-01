@@ -8,6 +8,7 @@ from app.models import *
 from app.settings import TEMPLATE_FOLDER
 from app.handlers.views import api
 from email.utils import parseaddr
+from app.handlers.messaging import send_single_email
 import re
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
@@ -39,11 +40,13 @@ def subscribe():
     try:
         user_email = request.form['email']
         message = SubscriptionMessage(message=parseaddr(user_email)[1])
+        mail_data = render_template('notifications/subscribed.html')
+        send_single_email("[Fitrangi] Successfully subscribed for fitrangi updates", to_list=[user_email], data=mail_data)
         message.save()
         flash('Successfully subscribed.', category='success')
     except Exception, e:
         print e
-        flash('Something went wrong with subscription, please try again later', category='error')
+        flash('Something went wrong with subscription, please try again later', category='danger')
     return redirect('/')
 
 @app.route('/img/<model_name>/<key>')
@@ -130,10 +133,10 @@ def comment_delete(content_key, key):
             content.save()
             flash("Successfully added the comment", category='success')
         else:
-            flash("Comment could not be deleted", category='error')
+            flash("Comment could not be deleted", category='danger')
         return redirect(location)
     except Exception, e:
-        flash("Failed to add the comment", category='error')
+        flash("Failed to add the comment", category='danger')
         return jsonify(status='error', node=None, message="Failed to add the comment")
 
 @app.route("/comment", methods=["POST"])
@@ -149,9 +152,11 @@ def comment(key=None):
         content = Content.get_by_id(key)
         content.addComment(content.id, comment, user.id)
         flash("Successfully added the comment", category='success')
+        mail_data = render_template('notifications/comment_posted.html', model=content)
+        send_single_email("[Fitrangi] Response to your content posted", to_list=[user.email], data=mail_data)
         return jsonify(status='success', node=None, message="Successfully added the %s." % _type)
     except Exception, e:
-        flash("Failed to add the comment", category='error')
+        flash("Failed to add the comment", category='danger')
         return jsonify(status='error', node=None, message="Failed to add the %s." % _type)
 
 
@@ -163,16 +168,22 @@ def registration():
         password = request.form['password']
         confirm = request.form['confirm']
         if password != confirm:
-            flash('Passwords do not match', category='error')
+            flash('Passwords do not match', category='danger')
+            return redirect(url_for('registration'))
+        if Profile.objects(email__iexact=email).first():
+            flash('Email already exists, have you forgotten your password?', category='danger')
             return redirect(url_for('registration'))
         profile = Profile.create_new(name, email, password)
-	profile = Profile.authenticate(email, password)
-        if profile and (profile._id or profile.id):
-            session['user'] = str(profile._id)
-            event = LoginEvent(user=session['user'], url=request.url, ip_address=request.remote_addr)
-            event.save()
+        print profile.name, profile.email
+        profile = Profile.authenticate(email, password)
+        print profile.name, profile.email
+        if profile and profile.id:
+            set_session_and_login(profile)
             flash('Successfully Created Your Account.', category='success')
+            mail_data = render_template('notifications/successfully_registered.html', user=profile)
+            send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=mail_data)
             return redirect(url_for('home'))
+
     return render_template('/generic/main/registration.html', menu=MenuView(None))
 
 
@@ -182,13 +193,17 @@ def login():
         email = request.form.get('username', None)
         password = request.form.get('password', None)
         profile = Profile.authenticate(email, password)
-        if profile and (profile._id or profile.id):
-            session['user'] = str(profile._id)
-            event = LoginEvent(user=session['user'], url=request.url, ip_address=request.remote_addr)
-            event.save()
+        if profile and profile.id:
+            set_session_and_login(profile)
             flash('Successfully logged in.', category='success')
             return redirect(url_for('home'))
     return render_template('/generic/main/login.html', menu=MenuView(None))
+
+
+def set_session_and_login(profile):
+    session['user'] = str(profile.id)
+    event = LoginEvent(user=session['user'], url=request.url, ip_address=request.remote_addr)
+    event.save()
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required

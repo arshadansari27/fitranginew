@@ -4,6 +4,7 @@ from flask import Flask
 import flask_admin
 from flask.ext.cache import Cache
 from flask.ext.mongoengine import MongoEngine
+from flask.ext.mandrill import Mandrill
 from app import settings
 
 
@@ -11,7 +12,9 @@ app = Flask(__name__, template_folder='templates', static_folder='assets')
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['MONGODB_SETTINGS'] = {'DB': settings.MONGODB_DB, 'HOST': settings.MONGODB_HOST, 'PORT': settings.MONGODB_PORT}
-
+app.config['MANDRILL_API_KEY'] = 'AW8kuRPFtDyZpOrgSf-0BQ'
+app.config['MANDRILL_DEFAULT_FROM'] = 'noreply@fitrangi.com'
+mandrill = Mandrill(app)
 db = MongoEngine()
 db.init_app(app)
 
