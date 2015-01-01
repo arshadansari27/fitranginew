@@ -16,9 +16,6 @@
         </h3>
 
         <div class="row">
-            {{ model.text }}
-        </div>
-        <div class="row">
             {% for f in model.facets %}
                 <span class="label label-info">{{f}}</span>
             {% endfor %}
