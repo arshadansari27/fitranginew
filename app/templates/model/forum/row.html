@@ -8,13 +8,11 @@
     </div>
     <div class="col-md-10 col-sm-9">
         <h3>
-            {{ model.title }}
+            <a href="/model/{{model.channel_factory(model)}}/{{model.id}}" class="text-muted">{{ model.title }}</a>
+            <br/>
             <small style="font-family:courier,'new courier';" class="text-muted pull-right">Posted on {{ model.created_timestamp.strftime('%d-%m-%Y') }}</small>
             <br/>
             <h4><span class="label label-default pull-right">{% if model.created_by %}{{ model.created_by.name }}{% else %}Anonymous{% endif %}</span></h4>
-            <br/>
-            <br/>
-            <h4><a href="/model/{{model.channel_factory(model)}}/{{model.id}}" class="text-danger pull-right">Read More</a></h4>
         </h3>
 
         <div class="row">

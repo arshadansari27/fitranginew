@@ -11,8 +11,9 @@
 
         <!-- POSTED QUESTION ON FORUM-->
         <h1>{{ model.title }}</h1><br/>
-        <p class="lead">by {% if model.created_by %}<a href="/model/{{ model.created_by.get_class_name()}}/{{model.created_by.id}}">{{ model.created_by.name }}</a>{% else %}Anonymous{% endif %}</p>
-        <p class="pull-right">
+        <p class="lead">by <a href="/model/{{model.created_by.get_class_name()}}/{{model.created_by.id}}">{% if model.created_by %}{{ model.created_by.name }}{% else %}Anonymous{% endif %}</a>
+        </p>
+        <p>
             <span class="glyphicon glyphicon-time"></span> Posted on {{ model.created_timestamp.strftime('%d-%m-%Y %H:%M') }} </p>
         <hr>
 
