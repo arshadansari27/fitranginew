@@ -3,23 +3,21 @@
 <div class="container">
 <div class="row">
     <div class="col-md-12">
-
-        <div class="col-md-2 col-sm-3 text-center">
-            <a class="story-title" href="#"><img title="profile image" style="width:100px;height:100px" class="img-circle img-responsive" src="{% if model.created_by and model.created_by.main_image and model.created_by.main_image.image %}/img/{{ model.created_by.get_class_name()}}/{{model.created_by.id}}{% else %}/assets/img/Profile-Picture.jpg{% endif %}"></a>
-        </div>
-
-
         <!-- POSTED QUESTION ON FORUM-->
         <h1>{{ model.title }}</h1><br/>
-        <p class="lead">by <a href="/model/{{model.created_by.get_class_name()}}/{{model.created_by.id}}">{% if model.created_by %}{{ model.created_by.name }}{% else %}Anonymous{% endif %}</a>
-        </p>
+        <div class="row-fluid">
+            <a class="story-title" href="#"></a>       
+           <p class="lead" style="">by <a href="/model/{{model.created_by.get_class_name()}}/{{model.created_by.id}}">{% if model.created_by %}{{ model.created_by.name }}{% else %}Anonymous{% endif %} <img title="profile image" style="width:30px;height:30px" class="" src="{% if model.created_by and model.created_by.main_image and model.created_by.main_image.image %}/img/{{ model.created_by.get_class_name()}}/{{model.created_by.id}}{% else %}/assets/img/Profile-Picture.jpg{% endif %}"></a>
+        </p>  
+            
+        </div>
+        <br />
         <p>
             <span class="glyphicon glyphicon-time"></span> Posted on {{ model.created_timestamp.strftime('%d-%m-%Y %H:%M') }} </p>
         <hr>
 
 
         <p class="lead">{{ model.text }}</p>
-        <hr/>
         {% if model.facets|length > 0 %}
         {% for f in model.facets %}
             <span class="label label-info">{{ f }}</span>

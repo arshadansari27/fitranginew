@@ -35,32 +35,26 @@
 	  </div><!-- /cont -->
 </div>
 <hr/>
-<div class="row">
-    <div class="col-lg-9">
-        <div>
+<div class="row-fluid">
+    
+        <div class="col-md-9">
             {% if models | length  == 0 %}
             <div class="well well-large">
                 <span class="text-info text-warning text-center">No discussions as of yet!</span>
             </div>
             {% else %}
-            <div class="col-md-12">
+            <div class="">
 
-                <div class="panel">
-			        <div class="panel-body">
                         {% for v in models %}
                         {{ v.render()|safe }}
                         {% endfor %}
 
-			        </div>
-			        <hr/>
-
-			    </div>
 		    </div>
             {% endif %}
         </div>
-    </div>
+    
     <div class="col-lg-3">
-        <div class="well well-small row">
+        <div class="panel-body" style="background-color: LAVENDER">
             {% for t in tags %}
             <div class=""><span class="label label-info">{{ t }}</span></div>
             {% endfor %}
