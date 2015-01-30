@@ -19,7 +19,14 @@ from app.handlers.views.menu_view import MenuView
 from app.handlers.views.model_view import ModelView
 from app.handlers.views.channel_view import ChannelView
 from app.handlers.views.main_view import HomeView, SearchView
+from app.utils.flask_googleauth import GoogleAuth
 
+auth = GoogleAuth(app)
+
+
+@app.route('/testgoogle')
+def googletest():
+    return render_template('/generic/test/card.html')
 
 @app.route('/')
 def home():
@@ -186,6 +193,46 @@ def registration():
 
     return render_template('/generic/main/registration.html', menu=MenuView(None))
 
+
+@app.route('/fbsociallogin', methods=['POST'])
+def fb_social_login():
+    if request.method != 'POST':
+        return render_template('/generic/main/login.html', menu=MenuView(None))
+    name = request.form['name']
+    email = request.form['email']
+    profile = Profile.objects(email__iexact=email).first()
+    if profile is None or profile.id is None:
+        profile = Profile.create_new(name, email, "", is_verified=True, roles=['Enthusiast'])
+        profile.is_social_login = True
+        profile.save()
+    if profile.is_social_login and profile.id:
+        set_session_and_login(profile)
+        return jsonify(dict(location=url_for('home'), status='success'))
+    return jsonify(dict(location=url_for('login'), status='error'))
+
+@app.route('/glogin', methods=['GET', "POST"])
+@auth.required
+def google_login():
+    pass
+
+
+@app.route('/gsocial_login_user_set', methods=['GET', "POST"])
+def g_social_login():
+    user = session['openid']
+    name = user['name']
+    email = user['email']
+    profile = Profile.objects(email__iexact=email).first()
+    if profile is None or profile.id is None:
+        profile = Profile.create_new(name, email, "", is_verified=True, roles=['Enthusiast'])
+        profile.is_social_login = True
+        profile.save()
+    if not profile.is_social_login:
+        profile.is_social_login = True
+        profile.save()
+    if profile.id:
+        set_session_and_login(profile)
+        return redirect(url_for('home'))
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

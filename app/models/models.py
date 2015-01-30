@@ -303,6 +303,7 @@ class Profile(Content):
     email = db.StringField()
     phone = db.StringField()
     address = db.StringField()
+    is_social_login = db.BooleanField(default=False)
     following = db.ListField(db.ReferenceField('Profile'))
     follower = db.ListField(db.ReferenceField('Profile'))
     favorites = db.ListField(db.ReferenceField('Profile'))
