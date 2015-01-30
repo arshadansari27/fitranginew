@@ -55,6 +55,6 @@ class ModelView(object):
                 contents = []
                 _adverts = list(Advertisement.objects(published__exact=True).all())
                 random.shuffle(_adverts)
-                adverts = [AdView('list', a) for a in _adverts[0:3]]
+                adverts = [AdView('list', a) for a in _adverts[0:6]]
             return render_template(self.template, channel=self.channel_name, model=self.model, menu=self.menu_view, user=g.user, contents=contents, related=self.related, adverts=adverts)
 
