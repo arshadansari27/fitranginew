@@ -1,7 +1,6 @@
 {% extends 'generic/main/model_base.html' %}
 {% block model_data %}
-<hr>
-<div class="container target">
+<div class="container-fluid target">
     <div class="row">
         <div class="col-sm-10">
 			<h1>{{ model.name }}</h1>
@@ -42,11 +41,14 @@
       	<div class="col-sm-2">
             <!--a id="" data-toggle="modal" data-target="#largeModal10" class="pull-right" href="">
 				<img title="profile image" class="img-circle img-responsive" src="{% if model.has_no_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}"/-->
-        <div class="thumbnail">
-                <div class="caption">
-                    <a href="" class="label label-danger"  data-toggle="modal" data-target="#largeModal10">Upload Photo</a>     
+                <div class="thumbnail">
+                    {% if user.id == model.id %}
+                    <div class="caption">
+                        <a href="" class="label label-danger"  data-toggle="modal" data-target="#largeModal10">Upload Photo</a>
+                    </div>
+                    {% endif %}
+                    <img class="img-circle img-responsive" src="{% if model.has_no_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}" class="avatar" alt="avatar"/>
                 </div>
-              <img class="img-circle img-responsive" src="{% if model.has_no_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}" class="avatar" alt="avatar">
 			</div>
         </div>
     
@@ -90,7 +92,7 @@
                 
                 {% else %}
                 <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal4">Favourited By</a></strong></span> {{ model.favorites|length }}</li>
-{% endif %}
+                {% endif %}
 				<li class="list-group-item text-right"><span class="pull-left"><strong>Blogs</strong></span> {{ model.blogs|length }}</li>
 				<li class="list-group-item text-right">
 				<span class="pull-left"><strong>Questions</strong></span> {{ model.questions|length }}<br/>
@@ -150,12 +152,12 @@
 	<div id="push"></div>
 </div>
 {% if 'Organizer' in model.facets or 'Gear Dealer' in model.facets %}
-<div class="modal fade" id="largeModal4" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+<div class="modal fade" id="largeModal0" tabindex="-1" role="dialog" aria-labelledby="largeModal0" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">
+                <h4 class="modal-title" id="myModalLabel0">
                     {% set _col_ = model.favorites %}
                     Favorited By
                     </h4>  
@@ -178,12 +180,12 @@
 </div>
 {% else %}
             {% for i in [1, 2, 3 ] %}
-                <div class="modal fade" id="largeModal{{i}}" tabindex="-1" role="dialog" aria-          labelledby="largeModal" aria-hidden="true">
+                <div class="modal fade" id="largeModal{{i}}" tabindex="-1" role="dialog" aria-labelledby="largeModal{{i}}" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title" id="myModalLabel">
+                                <h4 class="modal-title" id="myModalLabel1">
                                     {% if i == 1 %}
                                     {% set _col_ = model.following %}
                                     Following
@@ -198,56 +200,52 @@
                                     {% endif %}
                                 </h4>  
                             </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                {% for m in _col_ %}
+                                    <div class="col-sm-2">
+                                        <img style="height: 120px; width : 150px" src="/img/{{m.get_class_name()}}/{{m.id}}" />
+                                        <h6>{{ m.name }}</h6>
+        		                    </div>
+                                {% endfor %}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+{% endif %}
+
+<div class="modal fade" id="largeModal10" tabindex="-1" role="dialog" aria-labelledby="largeModal10" aria-hidden="true">
+    <form action="/model/{{ channel }}/{{model.id}}/edit" enctype="multipart/form-data" method="post">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel3">Profile Picture</h4>
+            </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    {% for m in _col_ %}
-                    <div class="col-sm-2">
-                        <img style="height: 120px; width : 150px" src="/img/{{m.get_class_name()}}/{{m.id}}" />
-                        <h6>{{ m.name }}</h6>
+                    <div class="col-sm-5">
+                        <img src="{% if model.has_no_image %}http://placehold.it/250x250{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}" class="avatar" alt="avatar"/>
+                    </div>
+                    <div class="col-sm-5">
+                        <h4 class="">Upload a different photo...</h4>
+                	    <input class="form-control" name="action" type="hidden" value="image_upload"/>
+                	    <input class="form-control" name="image" type="file"/>
         		    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
- <div class="modal fade" id="largeModal10" tabindex="-1" role="dialog" aria-          labelledby="largeModal" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title" id="myModalLabel">
-                                   Profile Picture</h4>  
-                            </div>
-        <div class="modal-body">
-            <div class="container-fluid">
-                <div class="col-sm-5">
-                    {% if model.id %}
-                        <img src="{% if model.has_no_image %}http://placehold.it/250x250{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}" class="avatar" alt="avatar">
-                        </div>
-                 <div class="col-sm-5">
-                 <h4 class="">Upload a different photo...</h4>
-				 <form action="/model/{{ channel }}/{{model.id}}/edit" enctype="multipart/form-data" method="post">
-                	<input class="form-control" name="action" type="hidden" value="image_upload"/>
-                	<input class="form-control" name="image" type="file"/>
-					
-				{% endif %}      
-                            
-        		  </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-info">Upload</button>
                 <button type="submit" class="btn btn-info" data-dismiss="modal">Close</button>
-                </form>
-                
             </div>
         </div>
-     </div>
+    </div>
+    </form>
 </div>
     <script>$( document ).ready(function() {
     $("[rel='tooltip']").tooltip();    
@@ -261,6 +259,4 @@
         }
     ); 
 });</script>  
-{% endfor %}
-{% endif %}
 {% endblock %}

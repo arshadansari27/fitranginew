@@ -94,8 +94,8 @@
 			   </ul>
 			</div>	
 		 </div>	
-		</div>
-		<div class="container" style="margin-top: 40px;">
+	</div>
+	<div class="container" style="margin-top: 40px;">
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
             {% for category, message in messages %}
@@ -107,13 +107,11 @@
             {% endfor %}
             {% endif %}
             {% endwith %}
-		</div>
-		{{ menu.render()|safe }}
+	</div>
+	{{ menu.render()|safe }}
+	{% block body %}{% endblock %}
 
-
-	    {% block body %}{% endblock %}
-
-        <div id="footer" style="background-color: lightgray">
+    <div id="footer" style="background-color: lightgray">
         <div class="container">
             <div class="row">
                 <div class="col-sm-8 text-muted">
