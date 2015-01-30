@@ -20,6 +20,9 @@ from app.handlers.views.model_view import ModelView
 from app.handlers.views.channel_view import ChannelView
 from app.handlers.views.main_view import HomeView, SearchView
 
+@app.route('/testgoogle')
+def googletest():
+    return render_template('/generic/test/card.html')
 
 @app.route('/')
 def home():
@@ -186,6 +189,22 @@ def registration():
 
     return render_template('/generic/main/registration.html', menu=MenuView(None))
 
+
+@app.route('/sociallogin', methods=['POST'])
+def social_login():
+    if request.method != 'POST':
+        return render_template('/generic/main/login.html', menu=MenuView(None))
+    name = request.form['name']
+    email = request.form['email']
+    profile = Profile.objects(email__iexact=email).first()
+    if profile is None or profile.id is None:
+        profile = Profile.create_new(name, email, "", is_verified=True, roles=['Enthusiast'])
+        profile.is_social_login = True
+        profile.save()
+    if profile.is_social_login and profile.id:
+        set_session_and_login(profile)
+        return jsonify(dict(location=url_for('home'), status='success'))
+    return jsonify(dict(location=url_for('login'), status='error'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
