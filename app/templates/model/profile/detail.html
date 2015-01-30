@@ -39,10 +39,17 @@
             {% endif %}
 			<br/>
         </div>
-      	<div class="col-sm-2"><a class="pull-right" href="/users">
-				<img title="profile image" class="img-circle img-responsive" src="{% if model.has_no_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}"/>
-			</a></div>
-    </div>
+      	<div class="col-sm-2">
+            <!--a id="" data-toggle="modal" data-target="#largeModal10" class="pull-right" href="">
+				<img title="profile image" class="img-circle img-responsive" src="{% if model.has_no_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}"/-->
+        <div class="thumbnail">
+                <div class="caption">
+                    <a href="" class="label label-danger"  data-toggle="modal" data-target="#largeModal10">Upload Photo</a>     
+                </div>
+              <img class="img-circle img-responsive" src="{% if model.has_no_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}" class="avatar" alt="avatar">
+			</div>
+        </div>
+    
   	<br/>
     <div class="row">
         <div class="col-sm-3">
@@ -207,6 +214,53 @@
         </div>
     </div>
 </div>
+
+ <div class="modal fade" id="largeModal10" tabindex="-1" role="dialog" aria-          labelledby="largeModal" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="myModalLabel">
+                                   Profile Picture</h4>  
+                            </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="col-sm-5">
+                    {% if model.id %}
+                        <img src="{% if model.has_no_image %}http://placehold.it/250x250{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}" class="avatar" alt="avatar">
+                        </div>
+                 <div class="col-sm-5">
+                 <h4 class="">Upload a different photo...</h4>
+				 <form action="/model/{{ channel }}/{{model.id}}/edit" enctype="multipart/form-data" method="post">
+                	<input class="form-control" name="action" type="hidden" value="image_upload"/>
+                	<input class="form-control" name="image" type="file"/>
+					
+				{% endif %}      
+                            
+        		  </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-info">Upload</button>
+                <button type="submit" class="btn btn-info" data-dismiss="modal">Close</button>
+                </form>
+                
+            </div>
+        </div>
+     </div>
+</div>
+    <script>$( document ).ready(function() {
+    $("[rel='tooltip']").tooltip();    
+ 
+    $('.thumbnail').hover(
+        function(){
+            $(this).find('.caption').slideDown(250); //.fadeIn(250)
+        },
+        function(){
+            $(this).find('.caption').slideUp(250); //.fadeOut(205)
+        }
+    ); 
+});</script>  
 {% endfor %}
 {% endif %}
 {% endblock %}
