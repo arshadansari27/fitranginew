@@ -1,5 +1,8 @@
 <div class="panel panel-default">
-	<div class="panel-heading"><a href="/model/{{model.channel_factory(model)}}/{{model.id}}" class="pull-right">View</a>
+	<div class="panel-heading">
+        <a href="{%if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}" class="pull-right">
+            View
+        </a>
 		<div class="panel-title">{{model.name}}</div>
 	</div>
 	<div class="panel-body">

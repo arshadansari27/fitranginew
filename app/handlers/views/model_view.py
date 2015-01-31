@@ -11,7 +11,7 @@ import random
 
 class ModelView(object):
 
-    def __init__(self, model, action, default='card', channel_name=None):
+    def __init__(self, model, action, default='card', channel_name=None, is_slug=False):
         self.action = action
         self.model = model
         _template = "%s%s"
@@ -32,7 +32,10 @@ class ModelView(object):
                 model_class = Node.model_factory(channel.name)
             else:
                 model_class = Content
-            self.model = model_class.objects(pk=model).first()
+            if is_slug:
+                self.model = model_class.get_by_slug(model)
+            else:
+                self.model = model_class.get_by_id(model)
             self.related_models = model_extractor.get_related(self.model)
             self.related = [ModelView(m, 'list')  for m in self.related_models]
             if not self.model.main_image or not self.model.main_image.image:

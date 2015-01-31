@@ -110,6 +110,12 @@ def page_not_found(e):
 def model(channel, key):
     return ModelView(key, 'detail', channel_name=channel).render()
 
+@app.route('/profile/<slug>')
+@app.route('/content/<slug>')
+def model_by_slug(slug):
+    return ModelView(request.path, 'detail', is_slug=True).render()
+
+
 @app.route('/api/tags', methods=['GET'])
 def search_tags():
     d = api.TagApi(query=request.args.get('query', None))
@@ -199,6 +205,8 @@ def social_login():
     profile = Profile.objects(email__iexact=email).first()
     if profile is None or profile.id is None:
         profile = Profile.create_new(name, email, "", is_verified=True, roles=['Enthusiast'])
+        profile.save()
+    if profile.is_social_login is None or not profile.is_social_login:
         profile.is_social_login = True
         profile.save()
     if profile.is_social_login and profile.id:

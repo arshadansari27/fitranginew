@@ -19,8 +19,7 @@
             <div class="col-sm-4">
                     
                 <div  style="background-color: LAVENDER">
-                
-                <a  class=""  href="/model/{{model.channel_factory(model.created_by)}}/{{model.created_by.id}}">
+                <a href="{%if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}">
                     <img title="profile image" style="width:30px;height:30px;" class="" src="{% if model.created_by and model.created_by.main_image and model.created_by.main_image.image %}/img/{{ model.created_by.get_class_name()}}/{{model.created_by.id}}{% else %}/assets/img/Profile-Picture.jpg{% endif %}"/>
                     
                 </a>

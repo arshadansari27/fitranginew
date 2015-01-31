@@ -253,8 +253,22 @@ class Content(Node, db.Document):
     location = db.StringField()
 
     @classmethod
+    def get_by_slug(cls, slug):
+        return Content.objects(slug__iexact=slug).first()
+
+    @classmethod
     def get_by_id(cls, id):
-        return Content.objects(pk=id).first()
+        content = Content.objects(pk=id).first()
+        if content.slug is None or len(content.slug) is 0 or not content.slug.startswith('/'):
+            original_slug = "/profile/%s" % content.name.lower().replace(',', '-').replace('.', '-').replace(' ', '-') if hasattr(content, 'name') and content.name is not None else "/content/%s" % content.title.lower().replace(' ', '-')
+            _slug = original_slug
+            count = 1
+            while Content.objects(slug=_slug).first() is not None:
+                _slug = original_slug + str(count)
+                count += 1
+            content.slug = _slug
+            content.save()
+        return  content
 
     def get_image(self):
         if self and self.main_image:
@@ -265,7 +279,7 @@ class Content(Node, db.Document):
     meta = {
         'allow_inheritance': True,
         'indexes': [
-            {'fields': ['title'], 'unique': False, 'sparse': False, 'types': False },
+            {'fields': ['slug', 'title'], 'unique': False, 'sparse': False, 'types': False },
         ],
     }
 

@@ -18,7 +18,7 @@
 				    {{ model.text|safe }}
                 </div>
                 <div class="col-sm-1">
-                <div class="fb-share-button" data-href="http://fitrangi.com/model/Destination/54496ef01b45960b9d936ab2" data-layout="button">
+                <div class="fb-share-button" data-href="{%if model.slug %}{{model.slug}}{% else %}/model/Destination/{{model.id}}{% endif %}" data-layout="button">
                 </div>
                     </div>
                 <div class="col-sm-3">

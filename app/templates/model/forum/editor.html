@@ -2,7 +2,10 @@
 {% block model_data %}
 <div class="container">
     {% if model and model.id %}
-	<h1 class="">Edit Question<br class=""><small><a href="/model/Forum/{{model.id}}" class="pull-right">Go Back</a></small></h1>
+	<h1 class="">Edit Question<br class=""><small>
+        <a href="{%if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}" class="pull-right">
+        Go Back
+        </a></small></h1>
     {% else %}
     <h1 class="">Add new Question</h1>
     {% endif %}

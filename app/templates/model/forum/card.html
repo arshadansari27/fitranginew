@@ -1,6 +1,6 @@
 <tr>
     <td class="">
-        <h4><a href="/model/{{model.channel_factory(model)}}/{{model.id}}">Multiline comments in Python</a></h4>
+        <h4><a href="{%if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}">>Multiline comments in Python</a></h4>
         <p>{{ model.author.name }}</p>
     </td>
     <td class="">
