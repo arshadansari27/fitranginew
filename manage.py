@@ -11,6 +11,11 @@ manager = Manager(app)
 manager.add_command("runserver", Server(use_debugger = True, use_reloader = True, host = '0.0.0.0', port=4500))
 
 @manager.command
+def path_urls():
+    from app.daemons.update_urls import update_slug
+    update_slug()
+
+@manager.command
 def daemon_keywords():
     from app.daemons.update_documents import update_keywords
     print 'Updating'
