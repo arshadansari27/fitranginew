@@ -20,10 +20,6 @@ from app.handlers.views.model_view import ModelView
 from app.handlers.views.channel_view import ChannelView
 from app.handlers.views.main_view import HomeView, SearchView
 
-@app.route('/testgoogle')
-def googletest():
-    return render_template('/generic/test/card.html')
-
 @app.route('/')
 def home():
     return HomeView(query=None).render()
@@ -37,6 +33,32 @@ def search():
     else:
         return ChannelView(channel, paginated=False, selected_facets=[], query=query,page=1, only_facet=False).render()
 
+
+@app.route('/forgot_password', methods=['POST'])
+def forgot_password():
+    try:
+        profile = Profile.objects(email__iexact=request.form['email']).first()
+        if profile is None or profile.id is None:
+            flash('This email is not registered, please try registering or login with social account.', category='danger')
+            return redirect(url_for('login'))
+        else:
+            flash("Successfully sent email with new password.", category='success')
+            mail_data = render_template('notifications/password_reset.html', user=profile)
+            import random
+            u, v, w = list('ABCEFGHIJKLMNOPQRSTUVWXYZ'), list('abcefghijklmnopqrstuvwxyz'), range(0, 10)
+            random.shuffle(u), random.shuffle(v), random.shuffle(w)
+            old_password = profile.password
+            profile.password = "%s%s%s" % (''.join(u[0:5]), ''.join(v[0:5]), ''.join(str(x) for x in w[0:3]))
+            profile.save()
+            from app.handlers.messaging import send_single_email
+            send_single_email("[Fitrangi] Password reset on Fitrangi.com", to_list=[profile.email], data=mail_data)
+            return redirect('/')
+    except Exception,e:
+        flash('Something went wrong with subscription, please try again later', category='danger')
+        if profile and old_password:
+            profile.password = old_password
+            profile.save()
+    return redirect('/')
 
 @app.route('/user/subscribe', methods=['POST'])
 def subscribe():
