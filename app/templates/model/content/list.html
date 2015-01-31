@@ -11,7 +11,7 @@
             <br/>
             <small style="font-family:courier,'new courier';" class="text-muted">Posted on {{ model.created_timestamp.strftime('%d-%m-%Y') }}</small>
             <br/>
-            <a href="/model/{{model.channel_factory(model)}}/{{model.id}}" class="text-info">Read More</a>
+            <a href="{% if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}" class="text-info">Read More</a>
         </h5>
     </div>
 </div>
