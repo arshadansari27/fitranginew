@@ -17,7 +17,7 @@ from app.handlers import login_required
 from app.handlers.views.facet_view import FacetView
 from app.handlers.views.menu_view import MenuView
 from app.handlers.views.model_view import ModelView
-from app.handlers.views.channel_view import ChannelView
+from app.handlers.views.channel_view import ChannelView,StreamView
 from app.handlers.views.main_view import HomeView, SearchView
 
 @app.route('/')
@@ -120,6 +120,11 @@ def channel(channel):
     facets = [v for v in (_facets.split(',') if len(_facets) > 0 else []) if v and len(v)  > 0]
     print facets
     return ChannelView(channel, paginated=False, selected_facets=facets, query=query,page=page, only_facet=only).render()
+
+@app.route('/stream/<i>')
+def stream(i):
+    page = request.args.get('page', 1)
+    return StreamView(page=page).render()
 
 
 def under_construction(e):

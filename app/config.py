@@ -1,6 +1,6 @@
 configuration = {
     'MENUS': {
-
+        'Me': '/stream/me',
         'Articles': '/channel/Article',
         'Destinations': '/channel/Destination',
         'Finder (Profiles)': '/channel/Profile',

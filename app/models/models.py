@@ -307,6 +307,10 @@ class Question(Content):
 
     def __unicode__(self): return self.title
 
+class Post(Content):
+    __template__ = "model/post/"
+    likes = db.ListField(db.ReferenceField('Profile'))
+    dislikes = db.ListField(db.ReferenceField('Profile'))
 
 class Profile(Content):
     __template__ = 'model/profile/'

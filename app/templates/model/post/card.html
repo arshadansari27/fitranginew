@@ -1,0 +1,21 @@
+<div class="panel panel-info">
+	<div class="panel-heading">
+		<div class="panel-title">
+            {% if model.created_by.main_image and model.created_by.main_image.image %}
+   		        <img src="/img/{{model.created_by.get_class_name()}}/{{model.created_by.id}}" height="30px" width="24px">
+            {% endif %}
+            By {{model.created_by.name}}{% if model.title %}, {{model.title}}{% endif %}
+        </div>
+	</div>
+	<div class="panel-body">
+        {% if model.main_image and model.main_image.image %}
+   		<img src="/img/{{model.get_class_name()}}/{{model.id}}" class="responsive">
+        <hr/>
+        {% endif %}
+		<p>
+            {{model.text}}
+        </p>
+   </div>
+</div>
+<hr>
+

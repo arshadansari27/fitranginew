@@ -8,6 +8,26 @@ from app.handlers.views.menu_view import MenuView
 from app.handlers.views.model_view import ModelView
 from app.handlers.extractors import get_all_models, get_channel, get_models_by_only_single
 
+class StreamView(object):
+
+    def __init__(self, page=1):
+        self.page = page
+        self.channel = get_channel('Stream')
+
+        _template = self.channel.template
+        if not _template:
+            raise Exception('The hell, where is the template')
+        self.template = "%s/list_card.html" % _template
+        self.menu_view = MenuView(self.channel.name)
+        if False and Post.objects.count() is 0:
+            for i in xrange(10):
+                p = Post(title="Test Title %d" % i, text="Test Text for some reason whatsoever.", created_by=g.user, likes=[g.user], channels=['Stream'])
+                p.save()
+
+    def render(self):
+        models = [ModelView(u, 'list', channel_name='Stream') for u in Post.objects.all()]
+        return render_template(self.template, menu=self.menu_view, user=g.user, channel_name=self.channel.name, models=models)
+
 
 class ChannelView(object):
 
