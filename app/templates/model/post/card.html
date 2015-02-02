@@ -9,7 +9,11 @@
         <div class="clearfix"></div>
         <hr>
         {{model.data|safe}}
-        <br><br><br><br>
+        <br><br>
+        {% if model.main_image %}
+        <img src="/img/{{model.get_class_name()}}/{{model.id}}" />
+        {% endif %}
+        <br><br>
 
         {% import 'generic/includes/comments_post.html' as comment_macro %}
         {{ comment_macro.show_comments(model.comments, model.id, user)}}

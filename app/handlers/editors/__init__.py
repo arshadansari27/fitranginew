@@ -1,12 +1,15 @@
 __author__ = 'arshad'
 
-from flask import request, redirect, flash, g, render_template
+from flask import request, redirect, flash, g, render_template, jsonify, send_file, url_for
 
 from app.handlers.editors.model_editor import ModelEditor
 from app.handlers.messaging import send_single_email
 from app import app
 from app.handlers import login_required, redirect_url
-from app.models.models import Profile
+from app.models.models import Profile, Post
+from StringIO import StringIO
+import random, os
+from PIL import Image
 
 @app.route('/model/<channel>/<key>/edit', methods=['GET', 'POST'])
 @app.route('/model/<channel>/add', methods=['GET', 'POST'])
@@ -41,6 +44,55 @@ def model_editor_view(channel, key=None):
     else:
         return ModelEditor(key, channel_name=channel).render()
 
+
+@app.route('/dialog/upload_image', methods=['GET', 'POST'])
+@login_required
+def image_uploader_dialog():
+    if request.method == 'POST':
+        _id = str(random.randint(9999999999999, 999999999999999999))
+        try:
+            f = request.files['0']
+            f.save(os.getcwd() + '/tmp/' + _id)
+            return jsonify(dict(status='success', id=_id))
+        except Exception, e:
+            print e
+            raise e
+    else:
+        print 'Rending GET'
+    return render_template('/generic/includes/modal_image_uploader.html', user=g.user)
+
+@app.route('/temp_image/<id>')
+@login_required
+def get_image_temp(id):
+    f = Image.open(os.getcwd() + '/tmp/' + id)
+    buffer = StringIO()
+    f.save(buffer, f.format)
+    buffer.seek(0)
+    return send_file(buffer, mimetype='image/' + f.format, add_etags=False, conditional=True)
+
+
+@app.route("/make_post", methods=['POST'])
+@login_required
+def make_post():
+    if request.method != 'POST':
+        return redirect(url_for('stream', (None,)))
+    try:
+        post_data = request.form["post_data"]
+        img_path = os.getcwd() + '/tmp/' + request.form['image_attached'] if len(request.form['image_attached']) > 0 else None
+        f = Image.open(img_path)
+        buffer = StringIO()
+        f.save(buffer, f.format)
+        buffer.seek(0)
+        p = Post()
+        p.add_new(g.user, text=post_data, channels=['Post'])
+        p.upload_image(buffer)
+        flash("Successfully posted.", category='success')
+        os.remove(img_path)
+        return redirect('/stream/me')
+    except Exception, e:
+        print e
+        flash("Unable to post.", category='error')
+        return redirect('stream/me')
 
 @app.route('/profile/remove-favorites', methods=['POST'])
 @login_required

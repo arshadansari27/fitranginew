@@ -44,7 +44,7 @@
             FB.api('/me', function(response) {
                 $.ajax({
                     type: 'POST',
-                    url: '/fbsociallogin',
+                    url: '/sociallogin',
                     data: {name: response.name, email: response.email}
                 }).done(function(msg) {
                     if (msg.status == 'success') {

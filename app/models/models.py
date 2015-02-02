@@ -157,6 +157,8 @@ class Node(object):
             return Product
         elif name in ['Question', 'Forum']:
             return Question
+        elif name in ['Post']:
+            return Post
         else:
             raise Exception("Unknown type")
 
@@ -268,7 +270,7 @@ class Content(Node, db.Document):
     @classmethod
     def get_by_id(cls, id):
         content = Content.objects(pk=id).first()
-        if content.slug is None or len(content.slug) is 0 or not content.slug.startswith('/'):
+        if type(content) != Post and (content.slug is None or len(content.slug) is 0 or not content.slug.startswith('/')):
             original_slug = "/profile/%s" % content.name.lower().replace(',', '-').replace('.', '-').replace(' ', '-') if hasattr(content, 'name') and content.name is not None else "/content/%s" % content.title.lower().replace(' ', '-')
             _slug = original_slug
             count = 1
@@ -301,6 +303,7 @@ class Content(Node, db.Document):
         r = random.randint(1111111, 9999998999)
         comment = Comment(created_by=author, text=comment_text, key="%s-%d" % (str(content.id), r))
         content.comments.append(comment)
+        content.modified_timestamp = datetime.datetime.now()
         content.save()
 
 class Answer(db.EmbeddedDocument):

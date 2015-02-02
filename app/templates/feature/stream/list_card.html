@@ -8,13 +8,16 @@
     <div class="container" id="main">
 		<div class="row">
                 <div class="col-md-12">
-                    <form>
-                        <div class="input-group">
-                            <textarea class="form-control" aria-label="..." rows="2"></textarea>
+                    <form id="post_form" action="/make_post" method="post">
+                            <textarea class="form-control" aria-label="..." rows="2" name="post_data"></textarea>
+                            <input class="hidden" name="image_attached" id="image_attached" value=""/>
+                            <br/>
+                            <span id="attachment_message"> </span>
+                            <br/>
                             <div class="input-group-btn">
-                                <button class="btn btn-primary btn-lg">Post</button>
+                                <button class="btn btn-primary" type="submit">Post</button>&nbsp;
+                                <button id="attach_image" class="btn btn-info" type="button">Attach Image</button>&nbsp;
                             </div>
-                        </div>
                     </form>
                     <br/>
                     <hr/>
@@ -30,5 +33,111 @@
             </div>
 	    </div><!--/row-->
     </div>
+
 {% endblock %}
 {% block script_list %}comments.js{% endblock %}
+{% block footer_scripts %}
+    <script language="JavaScript">
+        $(document).ready(function() {
+            $('body').on('click', ".remove_image", function() {
+                $("#image_attached").attr('value', "");
+                $("#attachment_message").html('');
+            });
+            var files = null;
+            function uploadFiles(event, onSuccess, onError) {
+                event.stopPropagation();
+                event.preventDefault();
+                var data = new FormData();
+                $.each(files, function (key, value) {
+                    data.append(key, value);
+                });
+                console.log("Sending data...");
+                $.ajax({
+                    url: '/dialog/upload_image',
+                    type: 'POST',
+                    data: data,
+                    cache: false,
+                    dataType: 'json',
+                    processData: false, // Don't process the files
+                    contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+                    success: function (data, textStatus, jqXHR) {
+                        if (typeof data.error === 'undefined') {
+                            // Success so call function to process the form
+                            onSuccess(data);
+                        }
+                        else {
+                            onError(data.error);
+                            console.log('ERRORS: ' + data.error);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        onError(textStatus);
+                        console.log('ERRORS: ' + textStatus);
+                    }
+                });
+            }
+
+            function prepareUpload(event) {
+                console.log("Getting file list: " + event.target.files);
+                files = event.target.files;
+            }
+            $('')
+            var img_id = null;
+            $("#attach_image").click(function (e) {
+                e.stopPropagation();
+                BootstrapDialog.show({
+                    message: function(dialog) {
+                        var $message = $('<div></div>');
+                        $message.load('/dialog/upload_image');
+                        return $message;
+                    },
+                    buttons: [
+                        {
+                            id: 'img-upload-btn',
+                            icon: 'glyphicon glyphicon-send',
+                            label: 'Upload Image from file',
+                            cssClass: 'btn-primary',
+                            autospin: true,
+                            action: function (dialogRef) {
+
+                                $('#img_uploader_form').on('submit', function(evt) {
+                                    uploadFiles(evt,
+                                        function(data) {
+                                            console.log("Success call back");
+                                            dialogRef.getModalBody().html('<img src="/temp_image/' + data.id + '"/>');
+                                            dialogRef.setClosable(true);
+                                            dialogRef.enableButtons(true);
+                                            $('#img-upload-btn').hide();
+                                            $("#image_attached").attr('value', data.id);
+                                            $("#attachment_message").html('<u><strong>Image Attached</strong></u><img src="/temp_image/' + data.id + '" height="20px" width="30px"/><button class="btn btn-link btn-sm remove_image">Remove</button>');
+                                        }, function(data) {
+                                            console.log("Error call back");
+                                            dialogRef.getModalBody().html('<div class="danger">Something went wrong when adding image.</div>');
+                                            dialogRef.setClosable(true);
+                                            dialogRef.enableButtons(true);
+                                            $('#img-upload-btn').hide();
+                                        }
+                                    );
+                                });
+                                dialogRef.enableButtons(false);
+                                dialogRef.setClosable(false);
+                                $("#img_uploader_form").submit();
+                                dialogRef.getModalBody().html('<div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"><span class="sr-only"></span></div><div>');
+                                /*setTimeout(function () {
+                                    dialogRef.close();
+                                }, 5000);*/
+                            }
+                        },
+                        {
+                            label: 'Close',
+                            action: function (dialogRef) {
+                                dialogRef.close();
+                            }
+                        }
+                    ]
+                });
+                $('body').on('change', 'input[type=file]', prepareUpload);
+            });
+        });
+    </script>
+{% endblock %}
