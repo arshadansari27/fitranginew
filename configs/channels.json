@@ -6,7 +6,7 @@
             "type": "Post",
             "menu_link": "/stream/me",
             "template": "feature/stream",
-            "menu":1
+            "menu":0
         },
         {
             "name": "Activity",
