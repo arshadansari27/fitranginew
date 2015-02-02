@@ -22,13 +22,15 @@ class StreamView(object):
 
 
     def render(self):
-        models = [ModelView(u, 'list', channel_name='Stream') for u in Post.objects.all().order_by('-modified_timestamp')]
+        user_of_interest = Profile.objects(pk=g.user.id).first().following
+        user_of_interest.append(g.user)
+        models = [ModelView(u, 'list', channel_name='Stream') for u in Post.objects(created_by__in=user_of_interest).all().order_by('-modified_timestamp')]
         models_arranged = {}
         for idx, m in enumerate(models):
                 models_arranged.setdefault(idx % 3, [])
                 models_arranged[idx % 3].append(m)
 
-        return render_template(self.template, menu=self.menu_view, user=g.user, channel_name=self.channel.name, models=models_arranged)
+        return render_template(self.template, menu=self.menu_view, user=g.user, channel_name=self.channel.name, models=models_arranged, total=len(models))
 
 
 class ChannelView(object):

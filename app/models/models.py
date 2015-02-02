@@ -5,6 +5,7 @@ from flask import render_template
 from mongoengine import Q
 from app.handlers.messaging import send_single_email
 from app.utils import convertLinks
+from ago import human
 
 class Configuration(object):
 
@@ -231,6 +232,10 @@ class Comment(db.EmbeddedDocument):
     keywords = db.ListField(db.StringField())
 
     @property
+    def since(self):
+        return human(self.created_on, precision=1)
+
+    @property
     def data(self):
         return convertLinks(self.text)
 
@@ -258,6 +263,11 @@ class Content(Node, db.Document):
     parent = db.ReferenceField('Content', required=False)
     keywords = db.ListField(db.StringField())
     location = db.StringField()
+
+    @property
+    def since(self):
+        return human(self.created_timestamp, precision=1)
+
 
     @property
     def data(self):
@@ -305,6 +315,7 @@ class Content(Node, db.Document):
         content.comments.append(comment)
         content.modified_timestamp = datetime.datetime.now()
         content.save()
+        return comment
 
 class Answer(db.EmbeddedDocument):
 

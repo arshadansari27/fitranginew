@@ -184,14 +184,16 @@ def comment(key=None):
     try:
         user = g.user
         comment = request.json['comment']
+        reload = request.json['reload']
         if not key:
             key = request.json['key']
         content = Content.get_by_id(key)
-        content.addComment(content.id, comment, user.id)
-        flash("Successfully added the comment", category='success')
-        mail_data = render_template('notifications/comment_posted.html', model=content)
-        send_single_email("[Fitrangi] Response to your content posted", to_list=[user.email], data=mail_data)
-        return jsonify(status='success', node=None, message="Successfully added the %s." % _type)
+        _comment = content.addComment(content.id, comment, user.id)
+        if reload:
+            flash("Successfully added the comment", category='success')
+            mail_data = render_template('notifications/comment_posted.html', model=content)
+            send_single_email("[Fitrangi] Response to your content posted", to_list=[user.email], data=mail_data)
+        return jsonify(status='success', node=dict(name=user.name, time=_comment.since, data=_comment.data, slug=user.slug), message="Successfully added the %s." % _type)
     except Exception, e:
         print e
         flash("Failed to add the comment", category='danger')
@@ -220,7 +222,7 @@ def registration():
             flash('Successfully Created Your Account.', category='success')
             mail_data = render_template('notifications/successfully_registered.html', user=profile)
             send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=mail_data)
-            return redirect(url_for('home'))
+            return redirect('/stream/me')
 
     return render_template('/generic/main/registration.html', menu=MenuView(None))
 
@@ -240,7 +242,7 @@ def social_login():
         profile.save()
     if profile.is_social_login and profile.id:
         set_session_and_login(profile)
-        return jsonify(dict(location=url_for('home'), status='success'))
+        return jsonify(dict(location='/stream/me', status='success'))
     return jsonify(dict(location=url_for('login'), status='error'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -252,7 +254,7 @@ def login():
         if profile and profile.id:
             set_session_and_login(profile)
             flash('Successfully logged in.', category='success')
-            return redirect(url_for('home'))
+            return redirect('/stream/me')
     return render_template('/generic/main/login.html', menu=MenuView(None))
 
 
