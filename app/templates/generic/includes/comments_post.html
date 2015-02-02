@@ -1,10 +1,28 @@
 {% macro show_comments(comments, key, user) -%}
-{% if comments|length > 0 %}
 <div>
     <br/>
-    <div>
+    <div class="well well-sm">
+    <form class="comment_form">
+        <div class="input-group">
+            <input type="text" class="form-control" id="comment_text_{{key}}" placeholder="Add a comment..">
+            <div class="input-group-btn">
+                <a href="#" class="comment_submit btn btn-primary btn-md" data-key="{{key}}">Comment</a>
+            </div>
+        </div>
+    </form>
+    {% if comments|length > 0 %}
+    <br/>
+    <br/>
+    <ul data-brackets-id="12674" id="sortable" class="list-unstyled ui-sortable">
 	{% for comment in comments[0:3] %}
-		<div class="panel panel-default">
+        <strong class="pull-left primary-font"><a href="{{comment.created_by.slug}}">{{ comment.created_by.name }}</a></strong>
+        <small class="pull-right text-muted"><span class="glyphicon glyphicon-time"></span>&nbsp;{{ comment.created_on.strftime('%d-%m-%Y %H:%M') }}<!--7 mins ago--></small>
+        <br/>
+        <li class="ui-state-default"> {{ comment.data|safe }}</li>
+        {% if not loop.last %}
+        <hr/>
+        {% endif %}
+		<!--div class="panel panel-default">
             <div class="panel-body">
             {% if comment.created_by == user %}
             <form action="/comments/{{key}}/delete/{{ comment.key }}" method="post">
@@ -20,9 +38,10 @@
 			<strong><a href="{{comment.created_by.slug}}">{{ comment.created_by.name }}</a> <small> {{ comment.created_on.strftime('%d-%m-%Y %H:%M') }}</small></strong>
 			<p>{{ comment.data|safe }}</p>
             </div>
-		</div>
+		</div-->
 	{% endfor %}
+    </ul>
+    {% endif %}
     </div>
 </div>
-{% endif %}
 {%- endmacro %}

@@ -34,6 +34,7 @@ class ModelView(object):
                 model_class = Content
             if is_slug:
                 self.model = model_class.get_by_slug(model)
+                channel = Channel.getByName(self.models.channel[0])
             else:
                 self.model = model_class.get_by_id(model)
             self.related_models = model_extractor.get_related(self.model)

@@ -4,9 +4,10 @@ from app.models import *
 
 def update_slug():
     for c in Content.objects.all():
-        print 'Updating:', c.title if c.title else c.name
-        u = Content.get_by_id(c.id)
-        print u.slug
+        try:
+            print type(c), ': ',c.id, c.channels[0]
+        except UnicodeEncodeError, e:
+            print type(c), ': ',c.id, '->', e
 
 
 if __name__ == '__main__':

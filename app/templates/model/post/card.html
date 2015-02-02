@@ -10,14 +10,7 @@
         <hr>
         {{model.data|safe}}
         <br><br><br><br>
-        <form class="comment_form">
-            <div class="input-group">
-                <input type="text" class="form-control" id="comment_text_{{model.id}}" placeholder="Add a comment..">
-                <div class="input-group-btn">
-                    <a href="#" class="comment_submit btn btn-info btn-md" data-key="{{model.id}}">Comment</a>
-                </div>
-            </div>
-        </form>
+
         {% import 'generic/includes/comments_post.html' as comment_macro %}
         {{ comment_macro.show_comments(model.comments, model.id, user)}}
     </div>
