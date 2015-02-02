@@ -42,8 +42,6 @@ def forgot_password():
             flash('This email is not registered, please try registering or login with social account.', category='danger')
             return redirect(url_for('login'))
         else:
-            flash("Successfully sent email with new password.", category='success')
-            mail_data = render_template('notifications/password_reset.html', user=profile)
             import random
             u, v, w = list('ABCEFGHIJKLMNOPQRSTUVWXYZ'), list('abcefghijklmnopqrstuvwxyz'), range(0, 10)
             random.shuffle(u), random.shuffle(v), random.shuffle(w)
@@ -51,10 +49,12 @@ def forgot_password():
             profile.password = "%s%s%s" % (''.join(u[0:5]), ''.join(v[0:5]), ''.join(str(x) for x in w[0:3]))
             profile.save()
             from app.handlers.messaging import send_single_email
+            flash("Successfully sent email with new password.", category='success')
+            mail_data = render_template('notifications/password_reset.html', user=profile)
             send_single_email("[Fitrangi] Password reset on Fitrangi.com", to_list=[profile.email], data=mail_data)
             return redirect('/')
     except Exception,e:
-        flash('Something went wrong with subscription, please try again later', category='danger')
+        flash('Something went wrong with reset of password, please try again later', category='danger')
         if profile and old_password:
             profile.password = old_password
             profile.save()
