@@ -50,7 +50,7 @@
 				<div class="navbar-header">
 				  <a href="#" style="margin-left:15px;" class="navbar-btn btn btn-default btn-plus dropdown-toggle" data-toggle="dropdown">{{ user.name }}&nbsp;<small><i class="glyphicon glyphicon-chevron-down"></i></small></a>
 				  <ul class="nav dropdown-menu">
-					  <li><a href="/model/Profile/{{user.id}}"><i class="glyphicon glyphicon-user" style="color:#1111dd;"></i> Profile</a></li>
+					  <li><a href="{% if user.slug %}{{user.slug}}{% else %}/model/Profile/{{user.id}}{% endif %}"><i class="glyphicon glyphicon-user" style="color:#1111dd;"></i> Profile</a></li>
                       <li><a href="/channel/Profile?facets=Enthusiast&only=1"> <i class="glyphicon glyphicon-envelope"></i> Members </a><li>
 					  <li><a href="#"><i class="glyphicon glyphicon-inbox" style="color:#11dd11;"></i> My Posts</a></li>
 					  <li class="nav-divider"></li>
