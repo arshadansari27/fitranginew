@@ -12,7 +12,7 @@
             {% if model.description and model.description|length > 0 %}
                 {{ model.description }}
             {% elif model.text and model.text |length > 0 %}
-                {{ model.text[0: 100]|safe }}
+                {{ model.data|safe }}
             {% else %}
                 Currently no description has been added for this article. Admin is working in it.
             {%endif%}

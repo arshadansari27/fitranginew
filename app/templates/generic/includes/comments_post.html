@@ -1,0 +1,28 @@
+{% macro show_comments(comments, key, user) -%}
+{% if comments|length > 0 %}
+<div>
+    <br/>
+    <div>
+	{% for comment in comments[0:3] %}
+		<div class="panel panel-default">
+            <div class="panel-body">
+            {% if comment.created_by == user %}
+            <form action="/comments/{{key}}/delete/{{ comment.key }}" method="post">
+                <input id="{{ comment.key }}" type="hidden" name="location" value=""/>
+                <p class="pull-right"><button class="btn btn-link" type="submit">X</button></p>
+                <script>
+                    (function() {
+                        $('#{{comment.key}}').attr('value', window.location.href);
+                    })();
+                </script>
+            </form>
+            {% endif %}
+			<strong><a href="{{comment.created_by.slug}}">{{ comment.created_by.name }}</a> <small> {{ comment.created_on.strftime('%d-%m-%Y %H:%M') }}</small></strong>
+			<p>{{ comment.data|safe }}</p>
+            </div>
+		</div>
+	{% endfor %}
+    </div>
+</div>
+{% endif %}
+{%- endmacro %}

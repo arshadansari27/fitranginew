@@ -19,14 +19,19 @@ class StreamView(object):
             raise Exception('The hell, where is the template')
         self.template = "%s/list_card.html" % _template
         self.menu_view = MenuView(self.channel.name)
-        if False and Post.objects.count() is 0:
+        if Post.objects.count() is 0:
             for i in xrange(10):
                 p = Post(title="Test Title %d" % i, text="Test Text for some reason whatsoever.", created_by=g.user, likes=[g.user], channels=['Stream'])
                 p.save()
 
     def render(self):
         models = [ModelView(u, 'list', channel_name='Stream') for u in Post.objects.all()]
-        return render_template(self.template, menu=self.menu_view, user=g.user, channel_name=self.channel.name, models=models)
+        models_arranged = {}
+        for idx, m in enumerate(models):
+                models_arranged.setdefault(idx % 3, [])
+                models_arranged[idx % 3].append(m)
+
+        return render_template(self.template, menu=self.menu_view, user=g.user, channel_name=self.channel.name, models=models_arranged)
 
 
 class ChannelView(object):

@@ -1,21 +1,24 @@
-<div class="panel panel-info">
-	<div class="panel-heading">
-		<div class="panel-title">
+<div class="panel panel-default">
+    <div class="panel-body">
+        <p>
             {% if model.created_by.main_image and model.created_by.main_image.image %}
-   		        <img src="/img/{{model.created_by.get_class_name()}}/{{model.created_by.id}}" height="30px" width="24px">
+   		        <img src="/img/{{model.created_by.get_class_name()}}/{{model.created_by.id}}" height="30px" width="40px" class="img-circle pull-right">
             {% endif %}
-            By {{model.created_by.name}}{% if model.title %}, {{model.title}}{% endif %}
-        </div>
-	</div>
-	<div class="panel-body">
-        {% if model.main_image and model.main_image.image %}
-   		<img src="/img/{{model.get_class_name()}}/{{model.id}}" class="responsive">
-        <hr/>
-        {% endif %}
-		<p>
-            {{model.text}}
+            <a href="#">{{model.created_by.name}}</a>
         </p>
-   </div>
+        <div class="clearfix"></div>
+        <hr>
+        {{model.data|safe}}
+        <br><br><br><br>
+        <form class="comment_form">
+            <div class="input-group">
+                <input type="text" class="form-control" id="comment_text_{{model.id}}" placeholder="Add a comment..">
+                <div class="input-group-btn">
+                    <a href="#" class="comment_submit btn btn-info btn-md" data-key="{{model.id}}">Comment</a>
+                </div>
+            </div>
+        </form>
+        {% import 'generic/includes/comments_post.html' as comment_macro %}
+        {{ comment_macro.show_comments(model.comments, model.id, user)}}
+    </div>
 </div>
-<hr>
-

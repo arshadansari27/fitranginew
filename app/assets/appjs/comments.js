@@ -22,4 +22,12 @@ $(document).ready(function(){
 		postComment({comment:$comment, key:$key});
 	});
 
+    $('.comment_form').on('click', '.comment_submit', function(e) {
+		e.stopPropagation();
+        var $key = $(this).attr('data-key');
+        var $comment = $('#comment_text_' + $key).val();
+        console.log($key + ": " + $comment)
+		postComment({comment:$comment, key:$key});
+	});
+
 });

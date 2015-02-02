@@ -122,6 +122,7 @@ def channel(channel):
     return ChannelView(channel, paginated=False, selected_facets=facets, query=query,page=page, only_facet=only).render()
 
 @app.route('/stream/<i>')
+@login_required
 def stream(i):
     page = request.args.get('page', 1)
     return StreamView(page=page).render()
@@ -192,6 +193,7 @@ def comment(key=None):
         send_single_email("[Fitrangi] Response to your content posted", to_list=[user.email], data=mail_data)
         return jsonify(status='success', node=None, message="Successfully added the %s." % _type)
     except Exception, e:
+        print e
         flash("Failed to add the comment", category='danger')
         return jsonify(status='error', node=None, message="Failed to add the %s." % _type)
 

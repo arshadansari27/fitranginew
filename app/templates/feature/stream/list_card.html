@@ -1,47 +1,29 @@
 {% extends 'generic/main/base.html' %}
 {% block body %}
-	<div class="container">
-        <div class="row well well-sm">
-            <form>
-                <div class="input-group">
-                    <textarea class="form-control" aria-label="..." rows="2"></textarea>
-                    <div class="input-group-btn">
-                        <button class="btn btn-primary btn-lg">Post</button>
-                    </div>
-                </div>
-                <h4 class="pull-left">Share your updates</h4>
-            </form>
-        </div>
-        <br/>
-        <hr/>
-        <br/>
+    <div class="container" id="main">
 		<div class="row">
-        {% if models|length > 0 %}
-            {% for m in models %}
-                {{m.render()|safe}}
-            {% endfor %}
-        {% else %}
-            <div class="jumbotron">
-                <h3>Follow someone to view updates or post something for your followers to see.</h3>
+                <div class="col-md-12">
+                    <form>
+                        <div class="input-group">
+                            <textarea class="form-control" aria-label="..." rows="2"></textarea>
+                            <div class="input-group-btn">
+                                <button class="btn btn-primary btn-lg">Post</button>
+                            </div>
+                        </div>
+                    </form>
+                    <br/>
+                    <hr/>
+                    <br/>
+                </div>
+                {% for k, m in models.iteritems() %}
+                    <div class="col-md-4 col-sm-6">
+					{% for v in m %}
+						{{ v.render()|safe }}
+					{% endfor %}
+				    </div>
+                {% endfor %}
             </div>
-        {% endif %}
-		</div>
-	</div>
-    <script>
-        BootstrapDialog.show({
-    title: 'Say-hello dialog',
-    message: 'Hello world!',
-    buttons: [{
-        id: 'btn-ok',
-        icon: 'glyphicon glyphicon-check',
-        label: 'OK',
-        cssClass: 'btn-primary',
-        autospin: false,
-        action: function(dialogRef){
-            dialogRef.close();
-        }
-    }]
-});
-    </script>
+	    </div><!--/row-->
+    </div>
 {% endblock %}
-
+{% block script_list %}comments.js{% endblock %}

@@ -4,6 +4,7 @@ from PIL import Image as PImage
 from flask import render_template
 from mongoengine import Q
 from app.handlers.messaging import send_single_email
+from app.utils import convertLinks
 
 class Configuration(object):
 
@@ -226,7 +227,11 @@ class Comment(db.EmbeddedDocument):
     created_on = db.DateTimeField(default=datetime.datetime.now, required=True)
     text = db.StringField()
     keywords = db.ListField(db.StringField())
-    
+
+    @property
+    def data(self):
+        return convertLinks(self.text)
+
     def __unicode__(self): return "%s..." % self.text[0: 30 if len(self.text) > 10 else len(self.text)] 
 
 class Content(Node, db.Document):
@@ -251,6 +256,10 @@ class Content(Node, db.Document):
     parent = db.ReferenceField('Content', required=False)
     keywords = db.ListField(db.StringField())
     location = db.StringField()
+
+    @property
+    def data(self):
+        return convertLinks(self.text)
 
     @classmethod
     def get_by_slug(cls, slug):
