@@ -8,11 +8,17 @@
       <meta name="description" content="">
       <meta name="author" content="fitrangi" >
       <link rel="stylesheet"  href="/assets/css/bootstrap.min.css">
-      
+
       <link rel="stylesheet" href="/assets/css/bootstrap-theme.min.css">
       <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
       <link type="text/css" rel="stylesheet" href="/assets/css/example.css" />
-      <script type="text/javascript" src="/assets/js/jquery-1.9.1.min.js"></script>
+      <link href="/assets/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+      <!--script type="text/javascript" src="/assets/js/jquery-1.9.1.min.js"></script-->
+      <script src="/assets/js/jquery-1.10.2.min.js"></script>
+
+      <script src="/assets/js/run_prettify.js"></script>
+
+
       {% block header_script %}{% endblock %}
 	  {% block header_css %}{% endblock %}
       <style>body { padding-top: 70px; }</style>
@@ -141,15 +147,9 @@
             </div>
         </div>
         </div>
-         <div class="modal" id="about_us" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-	                <div class="modal-header">
-		                <button class="close" type="button" data-dismiss="modal">×</button>
-		                <h3 class="modal-title">ABOUT US</h3>
-	                </div>
-	                <div class="modal-body">
-                        <p>Fitrangi.com is a gateway for "Adventure Sports in India" where you can find all the Information , Destinations, Organizers, Gear / Equipment Dealers, Upcoming Events, Inspirations, Videos, Images & Much More.</p>
+
+        <div class="hide" id="about_us" role="dialog">
+            <p>Fitrangi.com is a gateway for "Adventure Sports in India" where you can find all the Information , Destinations, Organizers, Gear / Equipment Dealers, Upcoming Events, Inspirations, Videos, Images & Much More.</p>
                         <p><strong>Vision & Mission</strong></p>
                         <p>"Fitrangi" means adventurous attitude. Fitrangi.com aim's towards providing a unique platform to bring together Adventure Sport Lovers, Organizers & everyone related to Adventure sports under one roof to connect and promote Adventure Sports in India.</p>
                         <p>We are working on creating an Online Space for Adventure Sports in India, where you will find everything related to the same. This platform has been created with the sole aim of providing you information & to inspire you when you are planning your next adventure activity.</p>
@@ -166,26 +166,21 @@
                         <p>We are working hard to make Fitrangi.com a one stop solution related to Adventure Sports in India, So we are continuously Looking for Volunteers, Partners, associations, clubs, writers, photographers etc. who can join us in this adventurous initiative which help us in getting better than we are at this moment. We don't plan to stop there. We want to be 'The Best'. For that we need continuous support from our visitors and users. We value your opinion & knowledge, so if you have any Suggestions, queries, complaints, etc. or you simply want to say "Hi" to our team then you can connect with us on: go@fitrangi.com</p>
                         <p><strong>YOU CAN ALSO FOLLOW US ON</strong></p>
                         <p><a href="#">Facebook</a>&nbsp;|&nbsp;<a href="#">Twitter</a>&nbsp;|&nbsp;<a href="#">Google+</a>&nbsp;|&nbsp;<a href="#">YouTube</a></p>
-	                </div>
-	                <div class="modal-footer">
-		                <button class="btn btn-default" data-dismiss="modal">Close</button>
-	                </div>
-                </div>
-            </div>
-         </div>
+        </div>
         <ul class="nav pull-right" style="position:fixed;bottom:0;right:2%;z-index:100;background: lightgray;font-size:24px;border-top-left-radius:3px;border-top-right-radius:3px;">
             <li><a href="#" title="Scroll to top"><i class="fa fa-arrow-up"></i></a></li>
         </ul>
 
         <div style="position:relative;bottom:0;background: #000000;height:60px;padding-top: 20px;">
             <div class="container">
-                <a href="#" data-toggle="modal" data-target="#about_us" >ABOUT US</a>
+                <a href="#" id="show_about_us" >ABOUT US</a>
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 <a href=""> PRIVACY POLICY &amp; TERMS</a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <span class="pull-right">Copyright ©2013 <a title="Fitrangi - Adventure Sports" href="/">Fitrangi </a> </span>
             </div>
         </div>
+
 
         <!--div class="container-fluid">
 	        <footer class="pull-right" style="position: relative; top:90%; left:0;">
@@ -195,7 +190,25 @@
             </footer>
         </div-->
 	    <script src="/assets/js/bootstrap.min.js"></script>
+        <script src="/assets/js/bootstrap-dialog.min.js"></script>
 	    <script src="/assets/appjs/app.js"></script>
+        <script language="JavaScript">
+            $("#show_about_us").click(function(e) {
+                e.stopPropagation();
+                BootstrapDialog.show({
+                    title: "About Us",
+                    message: $('#about_us').html(),
+                    buttons: [
+                        {
+                            label: 'Close',
+                            action: function (dialogItself) {
+                                dialogItself.close();
+                            }
+                        }
+                    ]
+                });
+            });
+        </script>
 	    <div id="script_name" class="hide">
 		    {% block script_list %}{% endblock %}
 	    </div>

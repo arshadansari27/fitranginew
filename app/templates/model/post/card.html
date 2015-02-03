@@ -2,14 +2,19 @@
     <div class="panel-body">
         <p>
             {% if model.created_by.main_image and model.created_by.main_image.image %}
-   		        <img src="/img/{{model.created_by.get_class_name()}}/{{model.created_by.id}}" height="30px" width="40px" class="img-circle pull-right">
+   		        <img src="/img/{{model.created_by.get_class_name()}}/{{model.created_by.id}}" height="30px" width="40px" class="img-circle">
             {% endif %}
             <a href="#">{{model.created_by.name}}</a>
+            <span class="pull-right">{{model.since}}</span>
         </p>
         <div class="clearfix"></div>
         <hr>
         {{model.data|safe}}
-        <br><br><br><br>
+        <br><br>
+        {% if model.main_image %}
+        <img src="/img/{{model.get_class_name()}}/{{model.id}}" />
+        {% endif %}
+        <br><br>
 
         {% import 'generic/includes/comments_post.html' as comment_macro %}
         {{ comment_macro.show_comments(model.comments, model.id, user)}}

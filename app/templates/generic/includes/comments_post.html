@@ -13,10 +13,10 @@
     {% if comments|length > 0 %}
     <br/>
     <br/>
-    <ul data-brackets-id="12674" id="sortable" class="list-unstyled ui-sortable">
+    <ul data-key="{{key}}" id="sortable" class="list-unstyled ui-sortable">
 	{% for comment in comments[0:3] %}
         <strong class="pull-left primary-font"><a href="{{comment.created_by.slug}}">{{ comment.created_by.name }}</a></strong>
-        <small class="pull-right text-muted"><span class="glyphicon glyphicon-time"></span>&nbsp;{{ comment.created_on.strftime('%d-%m-%Y %H:%M') }}<!--7 mins ago--></small>
+        <small class="pull-right text-muted"><span class="glyphicon glyphicon-time"></span>&nbsp;{{ comment.since }}<!--7 mins ago--></small>
         <br/>
         <li class="ui-state-default"> {{ comment.data|safe }}</li>
         {% if not loop.last %}

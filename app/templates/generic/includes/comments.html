@@ -25,7 +25,7 @@
                     })();
                 </script>
             </form>
-			<h4>{{ comment.created_by.name }} <small> {{ comment.created_on.strftime('%d-%m-%Y %H:%M') }}</small></h4>
+			<h4>{{ comment.created_by.name }} <small> {{ comment.since }}</small></h4>
 			<!--p><strong>{{ comment.title }}</strong></p-->
 			<p>{{ comment.text }}</p>
 		</div>

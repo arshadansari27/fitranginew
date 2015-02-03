@@ -12,7 +12,6 @@ jQuery(document).ready(function($){
     		url: options.url,
     		data: JSON.stringify(options.parameters),
     		success: function(data) { 
-    			console.log('Generic: ' + JSON.stringify(data));
     			var message = data.message;
     			var node = data.node;
     			var status = data.status;
@@ -20,7 +19,6 @@ jQuery(document).ready(function($){
     			if (status == 'success') {
     				options.success(message, node);
     				cls = 'success';
-    				
 				}
 				else {
     				cls = 'danger';
@@ -29,11 +27,13 @@ jQuery(document).ready(function($){
 				$('.ajax-message').addClass('alert-' + cls);
 				$('.ajax-message').removeClass('hide');
 				$('.ajax-message').append('<div id="alert-message">' + message + "</div>");
-				
-				if (status == 'success')
-					setTimeout("window.location.reload();", 2000);
-				else
-					setTimeout("$('.ajax-message').addClass('hide');$('.ajax-message').removeClass('alert-"+ cls +"');$('.alert-message').remove()", 5000);
+
+                if (options.reload) {
+                    if (status == 'success')
+                        setTimeout("window.location.reload();", 2000);
+                    else
+                        setTimeout("$('.ajax-message').addClass('hide');$('.ajax-message').removeClass('alert-" + cls + "');$('.alert-message').remove()", 5000);
+                }
 
     		},
     		contentType: "application/json",
