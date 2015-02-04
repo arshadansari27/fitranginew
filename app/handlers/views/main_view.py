@@ -10,12 +10,11 @@ import requests, simplejson as json
 
 
 class HomeView(object):
-
     def __init__(self, query):
         self.query = query
         self.template =  'feature/home.html'
         self.menu = MenuView(None)
-        self.destinations = [ModelView(m, 'list') for m in get_models_by('Destination', limit=8)]
+        self.destinations = [ModelView(m, 'list') for m in get_models_by('Destination', limit=6)]
         self.organizers = [ModelView(m, 'list') for m in get_models_by('Profile', ['Organizer'], limit=6)]
         self.articles = [ModelView(m, 'list', default='list') for m in get_models_by('Article', limit=4)]
         self.banner_articles = []

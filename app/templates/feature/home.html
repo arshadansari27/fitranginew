@@ -103,15 +103,26 @@
 
     <div class="container-fluid">
 	<br/>
-	<div class="header-title text-center"><h3>Top Trending Destinations<small><span class="pull-right"><a href="/channel/Destination" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></h3></div>
-        <br/>
-            <div class="container-fluid">
-		<div class="container-fluid">
-		{% for m in destinations %}
-			{{ m.render()|safe }}
-		{% endfor %}
-		</div>
-	</div>
+    <br/>
+        <div class="row">
+            <div class="col-sm-8">
+	            <div class="header-title text-center"><h3>Top Trending Destinations<small><span class="pull-right"><a href="/channel/Destination" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></h3></div>
+                <br/>
+                <div class="container-fluid">
+		            {% for m in destinations %}
+			            {{ m.render()|safe }}
+		            {% endfor %}
+		        </div>
+	        </div>
+            <div class="col-sm-4">
+                <div class="header-title text-center"><h3>Advertisement</h3></div>
+                <br/>
+                {% for a in adverts %}
+                    {{ a.render()|safe }}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
     <div class="container-fluid">
         <div class="col-sm-2" style="background-color: darkslategray; height: 120px;">
             <h3>CHOOSE YOUR ADVENTURE</h3>
