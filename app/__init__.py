@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, Blueprint
 import flask_admin
 from flask.ext.cache import Cache
 from flask.ext.mongoengine import MongoEngine
@@ -48,5 +48,9 @@ def start_app():
         logging.basicConfig(filename='fitrangi-flask-error.log',level=logging.DEBUG)
 
 
+
 start_app()
 from app.handlers.examples import *
+from app.modules.admin import admin_module
+app.register_blueprint(admin_module)
+#print app.url_map
