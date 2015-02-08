@@ -16,7 +16,7 @@ jQuery(document).ready(function($){
 
 	};
 
-	$logout = $('#logoutBtn')
+	$logout = $('#logoutBtn');
 	if ($logout) {
 		$(document).on('click', '#logoutBtn', function(e) {
 			e.stopPropagation();

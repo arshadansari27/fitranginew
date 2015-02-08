@@ -1,6 +1,6 @@
 __author__ = 'arshad'
 
-from app.models import Channel, Node, Content, Profile, Tag
+from app.models import Channel, Node, Content, Profile, Tag, Facet
 
 class ModelApi(object):
 
@@ -47,3 +47,16 @@ class TagApi(object):
             tags = Tag.objects().all()[0:7]
         _tags = [d.name for d in tags]
         return _tags
+
+class ChannelApi(object):
+
+    def dictify(self):
+        print Channel.all_data
+        channels = Channel.all_data
+        return [c.name for c in channels]
+
+class FacetApi(object):
+
+    def dictify(self):
+        print Facet.all_facets
+        return [u.name for u in Facet.all_facets]

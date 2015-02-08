@@ -53,4 +53,7 @@ start_app()
 from app.handlers.examples import *
 from app.modules.admin import admin_module
 app.register_blueprint(admin_module)
-#print app.url_map
+for r in app.url_map._rules:
+    if not str(r).startswith('/manage'): continue
+    print r
+

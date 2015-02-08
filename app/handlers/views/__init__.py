@@ -1,7 +1,7 @@
 __author__ = 'arshad'
 
 from jinja2 import Environment, FileSystemLoader
-from flask import render_template, request, g, flash, redirect, url_for, session, send_file, jsonify
+from flask import render_template, request, g, flash, redirect, url_for, session, send_file, jsonify, Response
 
 from app import app, cache
 from app.models import *
@@ -9,7 +9,7 @@ from app.settings import TEMPLATE_FOLDER
 from app.handlers.views import api
 from email.utils import parseaddr
 from app.handlers.messaging import send_single_email
-import re
+import re, simplejson as json
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
 
@@ -142,6 +142,18 @@ def model(channel, key):
 @app.route('/content/<slug>')
 def model_by_slug(slug):
     return ModelView(request.path, 'detail', is_slug=True).render()
+
+
+@app.route('/api/channels', methods=['GET'])
+def channels_list():
+    d = api.ChannelApi()
+    return Response(json.dumps([str(u) for u in d.dictify()]), mimetype="application/json")
+
+@app.route('/api/facets', methods=['GET'])
+def facets_list():
+    d = api.FacetApi()
+    print d.dictify()
+    return Response(json.dumps(d.dictify()), mimetype="application/json")
 
 
 @app.route('/api/tags', methods=['GET'])

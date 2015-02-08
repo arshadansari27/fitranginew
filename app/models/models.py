@@ -296,7 +296,15 @@ class Content(Node, db.Document):
             return self.main_image.image
         else:
             return None
-    
+
+    @property
+    def has_image(self):
+        if self and self.main_image and self.main_image.image:
+            print dir(self.main_image.image)
+            return True
+        else:
+            return False
+
     meta = {
         'allow_inheritance': True,
         'indexes': [

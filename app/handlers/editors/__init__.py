@@ -6,7 +6,7 @@ from app.handlers.editors.model_editor import ModelEditor
 from app.handlers.messaging import send_single_email
 from app import app
 from app.handlers import login_required, redirect_url
-from app.models.models import Profile, Post
+from app.models.models import Profile, Post, Content
 from StringIO import StringIO
 import random, os
 from PIL import Image
@@ -69,6 +69,29 @@ def get_image_temp(id):
     f.save(buffer, f.format)
     buffer.seek(0)
     return send_file(buffer, mimetype='image/' + f.format, add_etags=False, conditional=True)
+
+
+@app.route('/saveimagefromtemp', methods=['POST'])
+@login_required
+def save_image_from_temp():
+    model = request.form["model"]
+    image = request.form["image"]
+    if image:
+        img_path = os.getcwd() + '/tmp/' + image if len(image) > 0 else None
+    else:
+        raise Exception("invalid Image")
+    f = Image.open(img_path)
+    buffer = StringIO()
+    f.save(buffer, f.format)
+    buffer.seek(0)
+    content = Content.get_by_id(model)
+    content.upload_image(buffer)
+    content.save()
+    os.remove(img_path)
+    flash("Successfully updated the image", category='success')
+    return redirect(request.referrer)
+
+
 
 
 @app.route("/make_post", methods=['POST'])

@@ -24,7 +24,7 @@
       <style>body { padding-top: 70px; }</style>
 
     </head>
-  <body> 
+  <body {% if model %}data-node="{{model.id}}"{% endif %}>
 	<div class="navbar navbar-fixed-top header" style="background-color: #ffffff">
 		<div class="col-md-12">
 			<div class="navbar-header">

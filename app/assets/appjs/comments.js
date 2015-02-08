@@ -8,6 +8,7 @@ $(document).ready(function(){
 			parameters: {comment: options.comment, key: options.key, reload: options.reload},
     		success: function(message, node) { 
     			console.log('in success callback' + message);
+                window.location.reload();
 			},
 			error: function(message, node) {
     			console.log('in error callback' + message);

@@ -1,0 +1,118 @@
+{% extends 'base_admin.html' %}
+{% block page_header %}
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            {{ content_type | upper}}
+                        </h1>
+                        <ol class="breadcrumb">
+                            <li class="active">
+                                <i class="fa fa-user"></i>&nbsp; Publisher / Articles / {{content_type}}
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            {% endblock %}
+{% block content %}
+<div class="" style="background-color: rgb(255,255,255);">
+        <div class="container" data-edit-url="{{url_for('manage.ContentView:edit_content')}}" data-comment-remove-url="{{url_for('manage.ContentView:remove_comment')}}">
+            <div class="row">
+                <div class="">
+                    {% if content_type != 'forum' %}
+                    <div class="thumbnail">
+                        <img src="{% if not content.main_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ content.get_class_name()}}/{{content.id}}{% endif %}" class="avatar" alt="avatar"/>
+                        <br/>
+                        <div class="caption text-center"><a href="#" id="change_image" data-model="{{content.id}}"><strong>Change Cover Image</strong></a></div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <h3> {{ content.title }} <small><a href="#" class="edit-form-text" data-key="{{content.id}}" data-field="title" data-value="{{content.title}}">Edit</a></small></h3>
+                <br/>
+                <span><strong>URL: {{content.slug}}</strong> &nbsp; <a href="#" class="edit-form-text" data-key="{{content.id}}" data-field="slug" data-value="{{content.slug}}">Edit</a></span>
+            </div>
+
+            <br/>
+            <hr/>
+            <br/>
+            <div class="row">
+                <div class="heading">
+                    <h4 class="form-heading">Content</h4>
+                    <hr/>
+                </div>
+                <form class="summernote-content-form" action="#" method="POST">
+                    <textarea class="summernote" style="display: none;">
+                        {{content.data|safe}}
+                    </textarea>
+                    <button type="submit" class="btn btn-default">submit</button>
+                </form>
+            </div>
+            <br/>
+            <hr/>
+            <br/>
+            {% block extra_fields %}
+            {% endblock %}
+            <div class="row">
+                <div class="heading">
+                    <h4 class="form-heading">Channels <small>&nbsp; <a href="#" class="edit-form-tags" data-key="{{content.id}}" data-field="channels" data-value="{% for c in content.channels %}{{c}},{%endfor %}" data-type="channels">Edit</a></small></h4>
+                    <hr/>
+                </div>
+                {% for f in content.channels%}
+                <span>{{f}}{% if not loop.last %}, {% endif %}</span>
+                {% endfor %}
+                </table>
+            </div>
+            <br/>
+            <hr/>
+            <br/>
+            <div class="row">
+                <div class="heading">
+                    <h4 class="form-heading">Facets <small>&nbsp; <a href="#" class="edit-form-tags" data-key="{{content.id}}" data-field="facets" data-value="{% for c in content.facets %}{{c}},{%endfor %}" data-type="facets">Edit</a></small></h4>
+                    <hr/>
+                </div>
+                {% for f in content.facets %}
+                <span>{{f}}{% if not loop.last %}, {% endif %}</span>
+                {% endfor %}
+                </table>
+            </div>
+            <br/>
+            <hr/>
+            <br/>
+            <div class="row">
+                <div class="heading">
+                    <h4 class="form-heading">{% if content_type == 'forum' %}Answers{% else %}Comments{% endif %}</h4>
+                    <hr/>
+                </div>
+                <div>
+                    <table class="col-sm-12">
+                        {% for c in content.comments %}
+                        <tr>
+                            <td>{{c.created_by.name}}</td>
+                            <td>{{c.data}}</td>
+                            <td>
+                                <a href="#" class="remove-comment" data-key="{{content.id}}" data-comment-key="{{c.key}}">Delete</a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td>No Comments Posted Yet</td></tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <br/>
+            <hr/>
+            <br/>
+        </div><!--/container-->
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script language="JavaScript">
+$(document).ready(function() {
+
+});
+</script>
+{% endblock %}
