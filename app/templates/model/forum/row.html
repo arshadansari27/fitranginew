@@ -1,10 +1,10 @@
-<div class="row" style="background-color: HONEYDEW">
+<!--div class="row" style="background-color: HONEYDEW">
 
 
             <div class="col-sm-12">
                 <h3>
                     <a href="/model/{{model.channel_factory(model)}}/{{model.id}}" class="text-muted">{{ model.title }}</a>
-                    <br/> 
+                    <br/>
                 </h3>
             </div>
 
@@ -17,11 +17,11 @@
                     {% endfor %}
                 </div>
             <div class="col-sm-4">
-                    
+
                 <div  style="background-color: LAVENDER">
                 <a href="{%if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}">
                     <img title="profile image" style="width:30px;height:30px;" class="" src="{% if model.created_by and model.created_by.main_image and model.created_by.main_image.image %}/img/{{ model.created_by.get_class_name()}}/{{model.created_by.id}}{% else %}/assets/img/Profile-Picture.jpg{% endif %}"/>
-                    
+
                 </a>
                 
                 <span style="font-family:courier,'new courier';" class="text-muted "><strong>{% if model.created_by %}{{ model.created_by.name }}{% else %}Anonymous{% endif %}</strong> ({{ model.created_timestamp.strftime('%d-%m-%Y') }})</span>
@@ -35,12 +35,37 @@
                     <h4></h4>
                         </div>
                 </div>
-                     </div-->
+                     </div->
          </div>
             </div>
                 
                 <br/>
 
         </div>
-               <br/>
-     
+               <br/-->
+
+<div class="row">
+	<div class="col-sm-12">
+  		<section class="panel panel-info">
+              <header class="panel-heading">
+              </header>
+              <section class="panel-body">
+                <section class="col-md-9">
+                    <h3> <a href="/model/{{model.channel_factory(model)}}/{{model.id}}" class="text-muted">{{ model.title }}</a></h3>
+                    <hr>
+                  <section class="col-md-6">
+                      {% for f in model.facets %}<span><a href="#"><i class="glyphicon glyphicon-tag"> {{f}} </i></a></span> &nbsp; {% endfor %}
+                  </section>
+                </section>
+                <section class="col-md-3">
+                    <a href="{%if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}">
+                        <img title="profile image" style="width:40px;height:40px;" class="" src="{% if model.created_by and model.created_by.main_image and model.created_by.main_image.image %}/img/{{ model.created_by.get_class_name()}}/{{model.created_by.id}}{% else %}/assets/img/Profile-Picture.jpg{% endif %}"/>
+                    </a>
+                    <a href="#"><i class="glyphicon glyphicon-"></i> {% if model.created_by %}{{ model.created_by.name }}{% else %}Anonymous{% endif %} </a><br><br>
+                    <a href="#"><i class="glyphicon glyphicon-calendar"></i> {{ model.created_timestamp.strftime('%d-%m-%Y') }}  </a><br>
+                    <a href="#"><i class="glyphicon glyphicon-comment"></i> Comments:000  </a>
+                </section>
+              </section>
+        </section>
+    </div>
+</div>

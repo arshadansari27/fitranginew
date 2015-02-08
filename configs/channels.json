@@ -2,7 +2,7 @@
     "channels": [
         {
             "name": "Stream",
-            "value": "Updates",
+            "value": "Fitrangi Streams",
             "type": "Post",
             "menu_link": "/stream/me",
             "template": "feature/stream",
