@@ -1,11 +1,21 @@
-<div class="panel panel-default">
-    <div class="panel-heading">{{ model.title }}</div>
+<!--div class="panel panel-default">
+    <div class="featured">{{ model.title }}</div>
     <div class="panel-body">
+
         <a href="{{model.url}}">
-            <img width="300px" height="400px" src="/img/advertisement/{{model.id}}"/>
+            <img width="250px" height="400px" src="/img/advertisement/{{model.id}}"/>
         </a>
         <hr/>
         <p>{{ model.description }}</p>
         <p class="pull-right"><a href="{{model.url}}" target="_blank" class="btn btn-warning btn-sm">Know More</a></p>
     </div>
-</div>
+</div-->
+
+ <div class="view view-third">
+                    <img style=" width=250px; height=600px;" src="/img/advertisement/{{model.id}}" />
+                     <h2>{{ model.title }}</h2>
+                    <div class="mask">
+                        <p>{{ model.description }}</p>
+                        <a href="{{model.url}}" class="info">More</a>
+                    </div>
+                </div>

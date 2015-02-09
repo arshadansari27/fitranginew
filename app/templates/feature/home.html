@@ -105,7 +105,7 @@
 	<br/>
     <br/>
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-9">
 	            <div class="header-title text-center"><h3>Top Trending Destinations<small><span class="pull-right"><a href="/channel/Destination" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></h3></div>
                 <br/>
                 <div class="container-fluid">
@@ -114,9 +114,7 @@
 		            {% endfor %}
 		        </div>
 	        </div>
-            <div class="col-sm-4">
-                <div class="header-title text-center"><h3>Advertisement</h3></div>
-                <br/>
+            <div class="col-sm-3">
                 {% for a in adverts %}
                     {{ a.render()|safe }}
                 {% endfor %}
