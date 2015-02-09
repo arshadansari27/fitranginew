@@ -493,6 +493,13 @@ class VisitEvent(AnalyticsEvent):
 
 class Advertisement(db.Document):
     __template__ = 'model/advertisement/'
+    __FEATURED = 0
+    __FEATURED_LONG = 1
+    __NON_FEATURED_TOP = 2
+    __NON_FEATURED_MIDDLE = 3
+    __NON_FEATURED_BOTTOM = 4
+
+
 
     created_timestamp = db.DateTimeField(default=datetime.datetime.now, required=True)
     modified_timestamp = db.DateTimeField(default=datetime.datetime.now, required=True)
@@ -503,6 +510,7 @@ class Advertisement(db.Document):
     main_image = db.EmbeddedDocumentField(Image)
     published = db.BooleanField()
     published_timestamp = db.DateTimeField(required=False)
+    placements = db.ListField(db.IntField())
 
     def get_image(self):
         if self and self.main_image:
@@ -514,6 +522,7 @@ class Advertisement(db.Document):
             return img_io, format
         else:
             return None, None
+
 
 
 Configuration.load_from_configuration()

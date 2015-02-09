@@ -2,11 +2,13 @@ __author__ = 'arshad'
 
 from flask import render_template, g
 
+from app.models.models import Advertisement
 from app.handlers.extractors import search_models, get_models_by
 from app.handlers.views.menu_view import MenuView
 from app.handlers.views.model_view import ModelView
+from app.handlers.views.ad_view import AdView
 from app import cache
-import requests, simplejson as json
+import requests, simplejson as json, random
 
 
 class HomeView(object):
@@ -24,7 +26,10 @@ class HomeView(object):
         self.adventure_trips = [ModelView(m, 'list') for m in get_models_by('Adventure Trip', limit=8)]
 
     def render(self):
-        return render_template(self.template, menu=self.menu, banner_articles=self.banner_articles, articles=self.articles, destinations=self.destinations, organizers=self.organizers,  adventure_trips=self.adventure_trips, user=g.user, yt_links=get_youtube_links())
+        _adverts = list(Advertisement.objects(published__exact=True).all())
+        random.shuffle(_adverts)
+        adverts = [AdView('list', a) for a in _adverts[0:2]]
+        return render_template(self.template, menu=self.menu, banner_articles=self.banner_articles, articles=self.articles, destinations=self.destinations, organizers=self.organizers,  adventure_trips=self.adventure_trips, user=g.user, yt_links=get_youtube_links(), adverts=adverts)
 
 class SearchView(object):
 
