@@ -1,0 +1,53 @@
+{% extends 'base_admin.html' %}
+{% block page_header %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{ content_type | upper}}</h1>
+            <ol class="breadcrumb">
+                <li class="active"><i class="fa fa-user"></i>&nbsp; Users </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block content %}
+<div class="" style="background-color: rgb(255,255,255);">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <form action="{{search}}" method="POST">
+                <div class="input-group">
+                    <input name="query" type="text" class="form-control" placeholder="Search for...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" type="submit">Search</button>
+                        <a href="#" class="btn btn-primary">Add New</a>
+                    </span>
+                </div><!-- /input-group -->
+                </form>
+            </div><!-- /.col-lg-6 -->
+        </div>
+        <div><br/></div>
+        <div class="row">
+            <table class="col-sm-12 table table-responsive table-stripped">
+                {% for c in contents %}
+                    <tr>
+                        <td><img src="{% if not c.has_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ c.get_class_name()}}/{{c.id}}{% endif %}" height="40px"></td>
+                        <td>{{ c.name }}</td>
+                        <td>{{ c.created_by.name }}</td>
+                        <td><a href="{{detail}}{{c.id}}" >Details</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <nav>
+                <ul class="pagination pull-right">
+                    {% if prev %}
+                    <li><a href="{{prev}}" aria-label="Previous"><span aria-hidden="true" >&laquo;&nbsp;Previous</span></a></li>
+                    {% endif %}
+                    {% if next %}
+                    <li><a href="{{next}}" aria-label="Next"><span aria-hidden="true" class="col-sm-2">Next&nbsp;&raquo;</span></a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+{% endblock %}

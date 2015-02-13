@@ -53,7 +53,11 @@ def get_content_list(facets, user, not_in=False, template="content_list.html", c
     contents = query.all()[s: e]
     return render_template(template, content_type=content_type, contents=contents, user=user, active=active, prev=prev, next=next, detail=request.path + '/view/')
 
+class UserView(FlaskView):
 
+    @route('/users', methods=['GET'])
+    def view_users(self):
+        return get_content_list(["Profile"], g.user, template="users_list.html", active="users")
 
 class ContentView(FlaskView):
 
