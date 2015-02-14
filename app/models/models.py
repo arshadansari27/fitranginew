@@ -171,6 +171,8 @@ class Node(object):
 
     @classmethod
     def channel_factory(cls, model):
+        if cls == Advertisement:
+            return 'Advertisement'
         for channel in Channel.all_data:
             if channel.name in model.channels:
                 return channel.name
@@ -491,7 +493,7 @@ class VisitEvent(AnalyticsEvent):
     pass
 
 
-class Advertisement(db.Document):
+class Advertisement(db.Document, Node):
     __template__ = 'model/advertisement/'
     __FEATURED = 0
     __FEATURED_LONG = 1

@@ -1,0 +1,38 @@
+<div id="loginbox" style="" class="">
+    <form id="loginform" action="/login" method="post" class="form-horizontal" role="form">
+        <div style="margin-bottom: 25px" class="input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+            <input id="username" type="text" required data-validation-required-message="Please enter your name." class="form-control" name="username" value="" placeholder="email"/>
+        </div>
+        <div style="margin-bottom: 25px" class="input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+            <input id="password" type="password" required data-validation-required-message="Please enter your Password." class="form-control" name="password" placeholder="password">
+        </div>
+        <div style="margin-top:10px" >
+            <div class="col-sm-3 controls">
+                <button id="btn-login1" type="submit" class="btn btn-info">Login  </button>
+            </div>
+        </div>
+        <br/>
+        <hr/>
+        <br/>
+        <div class="">
+            <fb:login-button data-max-rows="0" data-size="large" scope="public_profile,email" onlogin="checkLoginState();">Login with Facebook</fb:login-button>
+            <br/>
+            <br/>
+            <span id="signinButton">
+                <span
+                                    class="g-signin"
+                                    data-callback="onSignInCallback"
+                                    data-clientid="445628400297-si4iclsg5i2imd3parigb643lep5iis7.apps.googleusercontent.com"
+                                    data-cookiepolicy="single_host_origin"
+                                    data-scope="email profile openid https://www.googleapis.com/auth/plus.me">
+                </span>
+            </span>
+
+        </div>
+    </form>
+</div>
+
+<script src="/assets/appjs/login-new.js" async defer></script>
+<script src="https://apis.google.com/js/client:platform.js" async defer></script>

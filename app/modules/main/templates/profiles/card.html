@@ -1,0 +1,13 @@
+{% macro show(model, size) -%}
+<div class="col-md-{{ size }}">
+    <a href="{%if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}">
+	<div class="view view-tenth">
+		<img src="/img/{{model.get_class_name()}}/{{model.id}}" />
+        <div class="mask">
+			<h2>{{ model.name }}</h2>
+        </div>
+		<p>{{ model.name }}</p>
+	</div>
+	</a>
+</div>
+{%- endmacro %}

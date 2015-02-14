@@ -54,8 +54,9 @@ def get_content_list(facets, user, not_in=False, template="content_list.html", c
     return render_template(template, content_type=content_type, contents=contents, user=user, active=active, prev=prev, next=next, detail=request.path + '/view/')
 
 class UserView(FlaskView):
+    route_base = "user"
 
-    @route('/users', methods=['GET'])
+    @route('/', methods=['GET'])
     def view_users(self):
         return get_content_list(["Profile"], g.user, template="users_list.html", active="users")
 
@@ -189,6 +190,8 @@ class ContentView(FlaskView):
 
 class ViewHandler(FlaskView):
 
+    route_base = '/'
+
     @route("/", methods=['GET', 'POST'])
     @login_required
     def index(self):
@@ -247,5 +250,6 @@ class ViewHandler(FlaskView):
     def settings(self):
         return render_template('settings.html', page_title='Account Manger', user=g.user, active='settings')
 
+UserView.register(admin_module)
 ContentView.register(admin_module)
 ViewHandler.register(admin_module)
