@@ -6,6 +6,43 @@ from mongoengine import Q
 from app.handlers.messaging import send_single_email
 from app.utils import convertLinks
 from ago import human
+from mongoengine import signals
+
+
+def handler(event):
+
+    def decorator(fn):
+        def apply(cls):
+            event.connect(fn, sender=cls)
+            return cls
+
+        fn.apply = apply
+        return fn
+
+    return decorator
+
+@handler(signals.pre_save)
+def update_content(sender, document):
+    document.modified = datetime.datetime.now()
+    if document.published and document.published_timestamp is None:
+        document.published_timestamp = datetime.datetime.now()
+    if isinstance(document, Profile):
+        if document.title is None and document.name is not None:
+            document.title = document.name
+        update_slug(sender, document, 'profile')
+    else:
+        update_slug(sender, document, 'content')
+
+def update_slug(sender, document, type):
+    if document.slug is not None and len(document.slug) > 0:
+        return
+    original_slug = "/%s/%s" % (type, document.title.lower().replace(',', '-').replace('.', '-').replace(' ', '-'))
+    _slug = original_slug
+    count = 1
+    while Content.objects(slug=_slug).first() is not None:
+        _slug = original_slug + str(count)
+        count += 1
+    document.slug = _slug
 
 class Configuration(object):
 
@@ -243,6 +280,8 @@ class Comment(db.EmbeddedDocument):
 
     def __unicode__(self): return "%s..." % self.text[0: 30 if len(self.text) > 10 else len(self.text)] 
 
+
+@update_content.apply
 class Content(Node, db.Document):
     __template__ = 'model/content/'
     __facets__ = ['Activity', 'Location']
@@ -282,15 +321,6 @@ class Content(Node, db.Document):
     @classmethod
     def get_by_id(cls, id):
         content = Content.objects(pk=id).first()
-        if type(content) != Post and (content.slug is None or len(content.slug) is 0 or not content.slug.startswith('/')):
-            original_slug = "/profile/%s" % content.name.lower().replace(',', '-').replace('.', '-').replace(' ', '-') if hasattr(content, 'name') and content.name is not None else "/content/%s" % content.title.lower().replace(' ', '-')
-            _slug = original_slug
-            count = 1
-            while Content.objects(slug=_slug).first() is not None:
-                _slug = original_slug + str(count)
-                count += 1
-            content.slug = _slug
-            content.save()
         return  content
 
     def get_image(self):
