@@ -1,8 +1,9 @@
-<div class="span9">{% for p in range(1, total_pages + 1) %}
-{% if p == current %}
-{{ p }} &nbsp;
-{% else %}
-<a href="{{link}}?page={{p}}{{ args }}">{{ p }}</a>&nbsp;&nbsp;
-{% endif %}
-{% endfor %}
+<div class="span9">
+    {% for p in pages %}
+        {% if p == current %}
+            {{ p }} &nbsp;
+        {% else %}
+            <a href="{{link}}?{{ args }}&page={{p}}">{{ p }}</a>&nbsp;&nbsp;
+        {% endif %}
+    {% endfor %}
 </div>

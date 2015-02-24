@@ -6,7 +6,7 @@ from app.models import *
 from app.handlers.views.facet_view import FacetView
 from app.handlers.views.menu_view import MenuView
 from app.handlers.views.model_view import ModelView
-from app.handlers.extractors import get_all_models, get_channel, get_models_by_only_single
+from app.handlers.extractors import get_all_models, get_channel, get_models_by_only_single, PAGE_SIZE
 
 class StreamView(object):
 
@@ -92,4 +92,10 @@ class PaginationInfo(object):
         self.page = page
 
     def render(self):
-        return ''
+        pages = range(self.page - 3, self.page + 3)
+        first = 1
+        last = int(self.total / PAGE_SIZE)  + 1
+        pages = filter(lambda p: True if 0 < p <= last else False, pages)
+        args = "&".join(["%s=%s" % (k, v) for k, v in self.args.iteritems()])
+
+        return render_template("/generic/main/pagination.html", pages=pages, first=first, last=last, current=self.page, args=args)

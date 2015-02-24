@@ -46,7 +46,7 @@ def get_all_models_all_channels(search_query=None):
         models[channel.name] = _models, (_total / 8) + 1
     return models
 
-def get_models_by_only_single(channel_name, facet, limit=None):
+def get_models_by_only_single(channel_name, facet, page=1, paginated=True, limit=None):
     model_class = Node.model_factory(channel_name)
 
     if channel_name and facet:
@@ -56,11 +56,15 @@ def get_models_by_only_single(channel_name, facet, limit=None):
     total = model_class.objects(__raw__=query).order_by('-created_timestamp').count()
     if limit:
         models = model_class.objects(__raw__=query).order_by('-created_timestamp').all()[:limit]
+    elif paginated:
+        start =  (page - 1) * PAGE_SIZE
+        end = start + PAGE_SIZE
+        models = model_class.objects(__raw__=query).order_by('-created_timestamp').all()[start:end]
     else:
         models = model_class.objects(__raw__=query).order_by('-created_timestamp').all()
     return models, total
 
-def get_models_by(channel_name, facets=[], facets_to_avoid=[], limit=None):
+def get_models_by(channel_name, facets=[], facets_to_avoid=[], page=1, paginated=True, limit=None):
     model_class = Node.model_factory(channel_name)
 
     if channel_name and len(facets) > 0:
@@ -76,11 +80,15 @@ def get_models_by(channel_name, facets=[], facets_to_avoid=[], limit=None):
 
     if limit:
         models = model_class.objects(__raw__=query).order_by('-created_timestamp').all()[:limit]
+    elif paginated:
+        start =  (page - 1) * PAGE_SIZE
+        end = start + PAGE_SIZE
+        models = model_class.objects(__raw__=query).order_by('-created_timestamp').all()[start:end]
     else:
         models = model_class.objects(__raw__=query).order_by('-created_timestamp').all()
     return models
 
-def get_all_models(channel, facets=[], search_query=None, page=1, paginated=True):
+def get_all_models(channel, facets=[], search_query=None, page=1, paginated=True, limit=None):
     model_class = Node.model_factory(channel.name)
 
     if channel and len(facets) > 0:
@@ -97,7 +105,9 @@ def get_all_models(channel, facets=[], search_query=None, page=1, paginated=True
     if channel.name == 'Forum':
         query['published'] = True
     total = model_class.objects(__raw__=query).count()
-    if paginated:
+    if limit:
+        models = model_class.objects(__raw__=query).all()[:limit]
+    elif paginated:
         start =  (page - 1) * PAGE_SIZE
         end = start + PAGE_SIZE
         models = model_class.objects(__raw__=query).all()[start:end]
