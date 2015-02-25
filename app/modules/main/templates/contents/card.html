@@ -1,7 +1,7 @@
 {% macro show(model) -%}
     <div class="col-md-4">
 		<div class="view1">
-			<img src="{% if model.main_image and model.main_image.image %}/img/{{model.get_class_name()}}/{{model.id}}{% else %}http://placehold.it/250x300{% endif %}" /><br/>
+			<img style="height: 75%;" src="{% if model.main_image and model.main_image.image %}/img/{{model.get_class_name()}}/{{model.id}}{% else %}http://placehold.it/250x300{% endif %}" /><br/>
 
             <a href="{%if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}">
         	<h5 class="text-muted">{% if model.name and model.name|length > 0 %}{{model.name}}{% else %}{{ model.title }}{% endif %}</h5>

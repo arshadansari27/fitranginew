@@ -1,3 +1,13 @@
+<style>
+/* CSS used here will be applied after bootstrap.css */
+#post-topic{
+  margin-top:50px;
+}
+i.glyphicon-comment{
+ margin:3px;
+}
+</style>
+
 <!--div class="row" style="background-color: HONEYDEW">
 
 
@@ -44,7 +54,7 @@
         </div>
                <br/-->
 
-<div class="row">
+<!--div class="row">
 	<div class="col-sm-12">
   		<section class="panel panel-info">
               <header class="panel-heading">
@@ -68,4 +78,35 @@
               </section>
         </section>
     </div>
-</div>
+</div-->
+
+
+
+    	<div class="col-md-12">
+  		    <section class="panel panel-info">
+                <header class="panel-heading">
+                </header>
+                <section class="panel-body">
+                        <section class="col-md-2">
+	                            <a href="{%if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}" style="padding-left: 15px;">
+                                    <img title="profile image" style="width:40px;height:40px;" class="img-circle" src="{% if model.created_by and model.created_by.main_image and model.created_by.main_image.image %}/img/{{ model.created_by.get_class_name()}}/{{model.created_by.id}}{% else %}/assets/img/Profile-Picture.jpg{% endif %}"/>
+                                </a>
+                                <br>
+                                <a href="#">
+                                    <i class="glyphicon glyphicon-"></i> {% if model.created_by %}{{ model.created_by.name }}{% else %}Anonymous{% endif %}
+                                </a>
+                        </section>
+                        <section class="col-md-8">
+                                <h4> <a href="/model/{{model.channel_factory(model)}}/{{model.id}}" class="text-muted">{{ model.title }}</a></h4>
+		                   <span>
+                             <a href="#"><i class="glyphicon glyphicon-calendar"></i>  {{ model.created_timestamp.strftime('%d-%m-%Y') }}   </a> &nbsp;
+	                         <a href="#"><i class="glyphicon glyphicon-comment"></i> 445  </a>&nbsp;
+	                         {% for f in model.facets %}
+                             <a class="" href="#"><i class="glyphicon glyphicon-tag"> </i>{{f}}</a> {% endfor %}&nbsp;
+                           </span>
+                        </section>
+                </section>
+            </section>
+        </div>
+
+

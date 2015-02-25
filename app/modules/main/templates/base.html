@@ -108,9 +108,15 @@
             {% endif %}
             {% endwith %}
 	</div>
+
     <div class="navbar navbar-default" id="subnav">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse2">
+	    <i class="glyphicon glyphicon-align-justify"></i>
+	</button>
+
+    <div class="collapse navbar-collapse" id="navbar-collapse2">
     <div class="col-md-12">
-	    <div class="collapse navbar-collapse" id="navbar-collapse2">
+
 		    <ul class="nav navbar-nav navbar-right">
                 <li class="{% if menu == 'stream' %}active{% endif %}"><a href="#">Streams</a></li>
                 <li class="{% if menu == 'activities' %}active{% endif %}"><a href="#">Activities</a></li>
@@ -127,7 +133,7 @@
           	</ul>
 		</div>
 	</div>
-    </div>
+   </div>
     <div class="container">
 	{% block body %}{% endblock %}
     </div>
