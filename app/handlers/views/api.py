@@ -27,7 +27,6 @@ class ModelApi(object):
             self.models = model_class.objects(__raw__=criteria).all()[0:5]
         else:
             self.models = model_class.objects(__raw__=criteria).all()
-        print [m.name for m in self.models]
 
 
     def dictify(self):
@@ -51,12 +50,10 @@ class TagApi(object):
 class ChannelApi(object):
 
     def dictify(self):
-        print Channel.all_data
         channels = Channel.all_data
         return [c.name for c in channels]
 
 class FacetApi(object):
 
     def dictify(self):
-        print Facet.all_facets
         return [u.name for u in Facet.all_facets]

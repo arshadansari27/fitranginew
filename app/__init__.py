@@ -51,10 +51,6 @@ def start_app():
 
 start_app()
 from app.handlers.examples import *
-from app.modules.admin import admin_module
-from app.modules.main import main_module
-app.register_blueprint(admin_module)
-app.register_blueprint(main_module)
 for r in app.url_map._rules:
     if not str(r).startswith('/manage') and not str(r).startswith('/main'): continue
     print r

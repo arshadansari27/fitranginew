@@ -1,0 +1,9 @@
+<tr>
+    <td><img
+            src="{% if not model.has_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}"
+            height="40px"></td>
+    <td>{{ model.name }}</td>
+    <td>{{ model.email }}</td>
+    <td>{% for role in model.roles %}{{ role }}{% if not loop.last %},{% endif %}{% endfor %}</td>
+    <td><a href="{{detail}}{{model.id}}">Details</a></td>
+</tr>

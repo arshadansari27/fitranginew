@@ -1,3 +1,5 @@
+from app.models.forms import ProfileEdit
+
 __author__ = 'arshad'
 
 from flask import render_template, request, g, flash, redirect
@@ -6,11 +8,25 @@ from app.models import *
 from app.handlers.views.menu_view import MenuView
 from app.utils import arrange_facets
 
+class AdEditor(object):
+
+    def __init__(self, model):
+        if isinstance(model, str) or isinstance(model, unicode):
+            self.model = Advertisement.objects(pk=model).first()
+        else:
+            self.model = model
+
+        self.template = "/model/advertisement/editor.html"
+
+    def render(self):
+        return render_template(self.template, content=self.model, user=g.user, channel='Advertisement')  # facets=arrange_facets(Facet.all_facets)
+
 
 class ModelEditor(object):
 
-    def __init__(self, model, channel_name=None, form=None):
+    def __init__(self, model, channel_name=None, form=None, **kwargs):
         self.channel = Channel.getByName(channel_name)
+        self.form = form
         model_class = Node.model_factory(self.channel.name)
         if model:
             self.model = model_class.objects(pk=model).first()
@@ -19,68 +35,53 @@ class ModelEditor(object):
             else:
                 self.model.has_no_image = False
         else:
-            self.model = model_class()
-            self.model.has_no_image = True
+            self.model = None
 
         self.template = '%s%s' % (model_class.__template__, 'editor.html')
-        self.menu_view = MenuView(channel_name)
-        self.form = form
         self.message = None
         self.category = None
 
     def render(self):
-        if not g.user and not 'Admin' in g.user.roles and not self.model.created_by.id ==g.user.id:
+        if not g.user and not 'Admin' in g.user.roles and not self.model.created_by.id == g.user.id:
             return redirect('/model/%s/%s' % (self.channel.name, str(self.model.id)))
-        return render_template(self.template, model=self.model, menu=self.menu_view, user=g.user, channel=self.channel.name, facets=arrange_facets(Facet.all_facets))
+        return render_template(self.template, content=self.model, user=g.user, channel=self.channel.name)  # facets=arrange_facets(Facet.all_facets)
 
-    def get_data_from_form(self):
-        data = dict((k, v) for k, v in self.form.iteritems() if k != 'action')
-        if data.has_key('published') and data['published'] == 'on':
-            data['published'] = True
+    @classmethod
+    def create_new(cls, owner, channel, title):
+        model_class = Node.model_factory(channel)
+        if channel == 'Profile':
+            model = model_class().add_new(owner, channels=[channel], facets=[], name=title)
         else:
-            data['published'] = False
-        return data
+            model = model_class().add_new(owner, channels=[channel], facets=[], title=title)
+        model.save()
+        #editor = ModelEditor(model, channel_name=channel)
+        return dict(node=str(model.id), status='success', message='successfully created')
 
-    def add_new(self):
-        data = self.get_data_from_form()
-        try:
-            category = 'success'
-            model_class = Node.model_factory(self.channel.name)
-            self.model = model_class()
-            if g.user and g.user.id:
-                user = g.user
+    @classmethod
+    def update_existing(cls, channel, model, **kwargs):
+        model_class = Node.model_factory(channel)
+        if isinstance(model, str):
+            model = model_class.get_by_id(model)
+        else:
+            model = model_class.get_by_id(model.id)
+        for k, v in kwargs.iteritems():
+            model.update_existing(**kwargs)
+            if k == 'published' and (v == 'on' or v == 'true' or v == 'True'):
+                model.published = True
             else:
-                user = None
-            self.model = self.model.add_new(user, **data)
-            message = 'Added '+ self.channel.name + '.'
-        except Exception, e:
-            category = 'error'
-            message = str(e)
-        flash(message, category=category)
+                model.published = False
+            model.save()
+
+        return ModelEditor(model, channel_name=channel)
 
 
-    def update(self):
-        data = self.get_data_from_form()
-        try:
-            category = 'success'
-            if self.form['action'] == 'update_existing':
-                self.model = self.model.update_existing(**data)
-                message = 'Updated the ' + self.__class__.__name__.lower() +'.'
-            elif self.form['action'] == 'change_password':
-                if data['confirm'] != data['password']:
-                    raise Exception('Passwords do not match.')
-                self.model = self.model.change_password(**data)
-                message = 'Successfully changed the password.'
-            elif self.form['action'] == 'image_upload':
-                image = request.files['image']
-                self.model = self.model.upload_image(image)
-                message = 'Successfully uploaded the image.'
-            else:
-                raise Exception("Unimplemented model updater")
-        except Exception, e:
-            category = 'error'
-            message = str(e)
-        flash(message, category=category)
-
-
-
+    @classmethod
+    def upload_image(cls, channel, model):
+        image = request.files['image']
+        model_class = Node.model_factory(channel)
+        if isinstance(model, str):
+            model = model_class.get_by_id(model)
+        else:
+            model = model_class.get_by_id(model.id)
+        model = model.upload_image(image)
+        return ModelEditor(model, channel_name=channel)

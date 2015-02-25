@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>{% if page_title %}{{ page_title }}{% else %} Admin panel {% endif %}</title>
+    <title>{% if page_title %}{{ page_title }}{% else %} Management Dashboard{% endif %}</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
@@ -37,7 +37,7 @@
 
 </head>
 
-<body data-key="{% if content %}{{content.id}}{% elif profile%}{{profile.id}}{% elif user %}{{user.id}}{% endif %}">
+<body data-key="" data-edit-url="{% if model %}/manage/model-edit/{{channel}}/{{model.id}}{% elif content %}/manage/model-edit/{{channel}}/{{content.id}}{% elif profile %}/manage/model-edit/{{channel}}/{{profile.id}}{% else %}/manage/model-edit/{{channel}}{% endif %}">
 
     <div id="wrapper">
 
@@ -51,7 +51,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{url_for('manage.ViewHandler:index')}}">Fitrangi Manager</a>
+                <a class="navbar-brand" href="/manage/dashboard">Fitrangi Manager</a>
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
@@ -138,14 +138,14 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{user.name}}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li class="{% if active=='profile'%}active{% endif %}">
-                            <a href="{{url_for('manage.ViewHandler:profile')}}"><i class="fa fa-fw fa-user"></i> Profile</a>
+                        <li class="{% if channel =='Profile'%}active{% endif %}">
+                            <a href="/manage/model-edit/Profile/{{user.id}}"><i class="fa fa-fw fa-user"></i> Profile</a>
                         </li>
-                        <li class="{% if active=='inbox'%}active{% endif %}">
-                            <a href="{{url_for('manage.ViewHandler:inbox')}}"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
+                        <li class="{% if channel =='Message'%}active{% endif %}">
+                            <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
                         </li>
                         <li class="{% if active=='settings'%}active{% endif %}">
-                            <a href="{{url_for('manage.ViewHandler:settings')}}"><i class="fa fa-fw fa-gear"></i> Settings</a>
+                            <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
                         <li>
@@ -160,78 +160,37 @@
                     <li class="{% if active == 'dashboard'%}active{% endif %}">
                         <a href="#"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
-                    <li  class="{% if content_type|lower in ['discussions', 'articles', 'blogs', 'destinations', 'activities'] or active== 'publish_approval' %} active{% endif %}">
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-edit"></i> Publisher<i class="fa fa-fw fa-caret-down"></i></a>
-                        <ul id="demo" class="nav collapse{% if content_type|lower in ['discussions', 'articles', 'blogs', 'destinations', 'activities'] or active== 'publish_approval' %} in active{% endif %}">
-                            {% if 'Admin' in user.roles %}
-                            <li>
-                                <a href="#">
-                                    <span class="{% if active|lower == 'publish_approval' %}text-primary{% endif %}">
-                                        Approvals
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{url_for('manage.ContentView:list_forum')}}">
-                                    <span class="{% if content_type|lower == 'discussions' %}text-primary{% endif %}">
-                                        Discussions
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{url_for('manage.ContentView:list_activity')}}">
-                                    <span class="{% if content_type|lower == 'activities' %}text-primary{% endif %}">
-                                        Activites
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{url_for('manage.ContentView:list_destination')}}">
-                                    <span class="{% if content_type|lower == 'destinations' %}text-primary{% endif %}">
-                                        Destinations
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{url_for('manage.ContentView:list_article')}}">
-                                    <span class="{% if content_type|lower == 'articles' %}text-primary{% endif %}">
-                                        Articles
-                                    </span>
-                                </a>
-                            </li>
-                            {% endif %}
-                            <li>
-                                <a href="#">
-                                    <span class="{% if content_type|lower == 'blogs' %}text-primary{% endif %}">
-                                        Blogs
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
                     {% if 'Admin' in user.roles %}
-                    <li class="{% if active == 'events'%}active{% endif %}">
-                        <a href="{{url_for('manage.ContentView:list_event')}}"><i class="fa fa-fw fa-table"></i> Events</a>
+                    <li class="{% if channel == 'Activity'%}active{% endif %}">
+                        <a href="{{url_for('channel_admin', channel='Activity')}}"><i class="fa fa-fw fa-table"></i> Activities</a>
                     </li>
-                    <li class="{% if active == 'advertisements'%}active{% endif %}">
-                        <a href="#"><i class="fa fa-fw fa-table"></i> Advertisements</a>
+                    <li class="{% if channel == 'Destination'%}active{% endif %}">
+                        <a href="{{url_for('channel_admin', channel='Destination')}}"><i class="fa fa-fw fa-table"></i> Destinations</a>
                     </li>
-                    <li class="{% if active == 'users'%}active{% endif %}">
-                        <a href="#"><i class="fa fa-fw fa-table"></i> Users </a>
+                    <li class="{% if channel == 'Article'%}active{% endif %}">
+                        <a href="{{url_for('channel_admin', channel='Article')}}"><i class="fa fa-fw fa-table"></i> Articles</a>
                     </li>
-                    <li class="{% if active == 'products'%}active{% endif %}">
-                        <a href="{{url_for('manage.ContentView:list_product')}}"><i class="fa fa-fw fa-table"></i> Products </a>
+                    <li class="{% if channel == 'Forum'%}active{% endif %}">
+                        <a href="{{url_for('channel_admin', channel='Forum')}}"><i class="fa fa-fw fa-table"></i> Forums</a>
                     </li>
-                    <li class="{% if active == 'orders'%}active{% endif %}">
-                        <a href="#"><i class="fa fa-fw fa-table"></i> Orders </a>
+                    <li class="{% if channel == 'Profile' %}active{% endif %}">
+                        <a href="{{url_for('channel_admin', channel='Profile')}}"><i class="fa fa-fw fa-table"></i> Profiles</a>
                     </li>
+                    <li class="{% if channel == 'Post'%}active{% endif %}">
+                        <a href="{{url_for('channel_admin', channel='Post')}}"><i class="fa fa-fw fa-table"></i> Posts</a>
+                    </li>
+                    <li class="{% if channel == 'Advertisement'%}active{% endif %}">
+                        <a href="{{url_for('channel_admin', channel='Advertisement')}}"><i class="fa fa-fw fa-table"></i> Advertisements</a>
                     {% endif %}
+                    <li class="{% if channel == 'Blog'%}active{% endif %}">
+                        <a href="{{url_for('channel_admin', channel='Blog')}}"><i class="fa fa-fw fa-table"></i> Blogs</a>
+                    </li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
         </nav>
 
-        <div id="page-wrapper">
+        <div id="page-wrapper" class="container">
 
             <div class="container-fluid">
             {% with messages = get_flashed_messages(with_categories=true) %}
@@ -548,10 +507,11 @@
     <script src="/assets/js/bootstrap-tagsinput.js"></script>
     <script src="/assets/js/handlebars-v2.0.0.js"></script>
     <script src="/assets/appjs/app.js"></script>
+    <script src="/assets/appjs/admin-editor.js"></script>
     {% block scripts %}
     {% endblock %}
     <div id="script_name" class="hide">
-        {% block script_list %}admin-editor.js{% endblock %}
+        {% block script_list %}{% endblock %}
     </div>
     <div id="footer-scripts" class="hide"></div>
 </body>

@@ -18,6 +18,8 @@ def convertLinks(text):
         www_lead = groups[1] or ''  # may be None
         return '<a href="http://{1}{2}" rel="nofollow">{0}{1}{2}</a>{3}{4}'.format(
             protocol, www_lead, *groups[2:])
+    if not text or len(text) is 0:
+        return ''
     return _link.sub(replace, text)
 
 def tag_remove(text):
@@ -65,6 +67,3 @@ class FacetOption(object):
     def __repr__(self):
         return "%s [%s]" % (self.name, ', '.join(self.facets))
 
-if __name__ == '__main__':
-    from app.models import Facet
-    print arrange_facets(Facet.all_facets)

@@ -7,10 +7,10 @@
 
             {% if user %}
 			    {% if model.id == user.id%}
-			        <a href="/model/Profile/{{model.id}}/edit" class="btn btn-link">Edit</a><br>
+			        <a href="/manage/model-edit/Profile/{{model.id}}" class="btn btn-link">Edit</a><br>
 			    {% else %}
                     {% if 'Admin' in user.roles %}
-                        <a href="/model/Profile/{{model.id}}/edit" class="btn btn-link">Edit</a>
+                        <a href="/manage/model-edit/Profile/{{model.id}}" class="btn btn-link">Edit</a>
                     {% endif %}
                     {% if 'Enthusiast' in model.facets %}
                         {% if model not in user.following %}

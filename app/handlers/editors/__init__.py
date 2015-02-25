@@ -11,6 +11,8 @@ from StringIO import StringIO
 import random, os
 from PIL import Image
 
+
+"""
 @app.route('/model/<channel>/<key>/edit', methods=['GET', 'POST'])
 @app.route('/model/<channel>/add', methods=['GET', 'POST'])
 @login_required
@@ -30,7 +32,6 @@ def model_editor_view(channel, key=None):
         if form.get('action', None) and form['action'] == 'update_existing':
             form['channels'] = [channel]
 
-        print 'Form data: ', str(form)
         if key:
             ModelEditor(key, channel_name=channel, form=form).update()
         else:
@@ -43,7 +44,7 @@ def model_editor_view(channel, key=None):
         return ModelEditor(key, channel_name=channel).render()
     else:
         return ModelEditor(key, channel_name=channel).render()
-
+"""
 
 @app.route('/dialog/upload_image', methods=['GET', 'POST'])
 @login_required
@@ -55,10 +56,7 @@ def image_uploader_dialog():
             f.save(os.getcwd() + '/tmp/' + _id)
             return jsonify(dict(status='success', id=_id))
         except Exception, e:
-            print e
             raise e
-    else:
-        print 'Rending GET'
     return render_template('/generic/includes/modal_image_uploader.html', user=g.user)
 
 @app.route('/temp_image/<id>')

@@ -88,7 +88,7 @@ def get_models_by(channel_name, facets=[], facets_to_avoid=[], page=1, paginated
         models = model_class.objects(__raw__=query).order_by('-created_timestamp').all()
     return models
 
-def get_all_models(channel, facets=[], search_query=None, page=1, paginated=True, limit=None):
+def get_all_models(channel, facets=[], search_query=None, page=1, paginated=True, limit=None, user=None):
     model_class = Node.model_factory(channel.name)
 
     if channel and len(facets) > 0:
@@ -104,6 +104,8 @@ def get_all_models(channel, facets=[], search_query=None, page=1, paginated=True
 
     if channel.name == 'Forum':
         query['published'] = True
+    if user and 'Admin' not in user.roles:
+        query['created_by']  = user.id
     total = model_class.objects(__raw__=query).count()
     if limit:
         models = model_class.objects(__raw__=query).all()[:limit]
@@ -141,3 +143,40 @@ def get_by(cls, **kwargs):
 def get_related(model):
     query = {'$and': [{'facets':{'$in': model.facets}}, {'_id': {'$ne': ObjectId(model.id)}}]}
     return model.__class__.objects(__raw__= query ).all()[0:3]
+
+
+def get_content_list(channel, user, not_in=False, page=1, search=None, path=None):
+    page = int(page)
+
+    query = {}
+    if path is None:
+        path = '/manage/%s/' % channel
+    p = path + "?page=%d"
+    if search:
+        p += '&query=' + search
+    if not_in:
+        if search:
+            query = dict(channels__in=[channel], title__icontains=search)
+        else:
+            query = dict(channels__nin=[channel])
+    else:
+        if search:
+            query = dict(channels__in=[channel], title__icontains=search)
+        else:
+            query = dict(channels__in=[channel])
+    if 'Admin' not in user.roles:
+        query['created_by'] = user
+    total = query.count()
+
+    s =  (page - 1) * PAGE_SIZE
+    e = s + PAGE_SIZE
+    if s == 0:
+        prev = None
+    else:
+        prev= p % (page - 1)
+    if e >= total:
+        next = None
+    else:
+        next = p % (page + 1)
+    contents = query.all()[s: e]
+    return contents, total, prev, next

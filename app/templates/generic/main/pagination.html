@@ -1,9 +1,29 @@
-<div class="span9">
+<nav class="pull-right">
+  <ul class="pagination">
+    {% if current != first %}
+    <li>
+      <a href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {% endif %}
     {% for p in pages %}
         {% if p == current %}
-            {{ p }} &nbsp;
+            <li>
+                <a class="text-muted" href="{{link}}?{{ args }}&page={{p}}">{{ p }}</a>
+            </li>
         {% else %}
-            <a href="{{link}}?{{ args }}&page={{p}}">{{ p }}</a>&nbsp;&nbsp;
+            <li>
+                <a href="{{link}}?{{ args }}&page={{p}}">{{ p }}</a>
+            </li>
         {% endif %}
     {% endfor %}
-</div>
+    {% if current != last %}
+    <li>
+      <a href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>

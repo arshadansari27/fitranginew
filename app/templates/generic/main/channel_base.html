@@ -24,8 +24,9 @@
 				</div>
 			{% endfor %}
 		</div>
-		{% if pageinfo %}
-			{{ pageinfo.render()|safe }}
-		{% endif %}
+        {% if pageinfo %}
+            {{ pageinfo.render()|safe }}
+        {% endif %}
+
 	</div>
 {% endblock %}

@@ -26,10 +26,15 @@ class HomeView(object):
         self.adventure_trips = [ModelView(m, 'list') for m in get_models_by('Adventure Trip', limit=8)]
 
     def render(self):
-        _adverts = list(Advertisement.objects(published__exact=True).all())
-        random.shuffle(_adverts)
-        adverts = [AdView('list', a) for a in _adverts[0:2]]
-        return render_template(self.template, menu=self.menu, banner_articles=self.banner_articles, articles=self.articles, destinations=self.destinations, organizers=self.organizers,  adventure_trips=self.adventure_trips, user=g.user, yt_links=get_youtube_links(), adverts=adverts)
+        _adverts = Advertisement.get_home_advertisements()
+        adverts = [AdView('list', a) for a in _adverts]
+
+        footer = Advertisement.get_home_footer_advertisement()
+        if footer:
+            footer_add = AdView('list', footer)
+        else:
+            footer_add = None
+        return render_template(self.template, menu=self.menu, banner_articles=self.banner_articles, articles=self.articles, destinations=self.destinations, organizers=self.organizers,  adventure_trips=self.adventure_trips, user=g.user, yt_links=get_youtube_links(), adverts=adverts, footer_advert=footer_add)
 
 class SearchView(object):
 

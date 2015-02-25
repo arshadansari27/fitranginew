@@ -188,6 +188,40 @@ $(document).ready(function(){
         });
     });
 
+    $('#add_new').on('click', function (e) {
+        e.stopPropagation();
+        var type = $(this).attr('data-type');
+        var url  = $("[data-edit-url]").attr('data-edit-url');
+        BootstrapDialog.show({
+            title: 'Add New ' + type,
+            message: '<div><input class="col-sm-12" id="add-data" name="data"><br/></div>',
+            buttons:[
+                {
+                    label: 'Save',
+                    action: function(dialogRef) {
+                        App.post({
+			                url: url,
+			                parameters: {title: $('#add-data').val(), action: 'create'},
+    		                success: function(message, node) {
+                                window.location.href= url + '/' + node;
+			                },
+			                error: function(message, node) {
+                                window.location.reload();
+    		                }
+		                });
+                        dialogRef.close();
+                    }
+                },
+                {
+                    label: 'Close',
+                    action: function (dialogRef) {
+                        dialogRef.close();
+                    }
+                }
+            ]
+        });
+    });
+
     $('.edit-form-text').on('click', function (e) {
         e.stopPropagation();
         var field = $(this).attr('data-field');
@@ -287,6 +321,47 @@ $(document).ready(function(){
         });
 
 
+    });
+
+    $('.edit-boolean').on('click', function (e) {
+        e.stopPropagation();
+        var field = $(this).attr('data-field');
+        var currentValue = ($(this).attr('data-value') == 'True')? 'checked': '';
+        var url  = $("[data-edit-url]").attr('data-edit-url');
+        BootstrapDialog.show({
+            title: 'Edit ' + field,
+            message: '<div>Check/Uncheck to change the state: <input class="col-sm-12" id="edit-'+field+'" type="checkbox" '+currentValue+'/><br/></div>',
+            buttons:[
+                {
+                    label: 'Test',
+                    action: function(dialogRef) {
+                        console.log($('#edit-' + field).val());
+                    }
+                },
+                {
+                    label: 'Save',
+                    action: function(dialogRef) {
+                        App.post({
+			                url: url,
+			                parameters: {field: field, data: $('#edit-' + field).prop('checked'), type: 'boolean'},
+    		                success: function(message, node) {
+                                window.location.reload();
+			                },
+			                error: function(message, node) {
+                                window.location.reload();
+    		                }
+		                });
+                        dialogRef.close();
+                    }
+                },
+                {
+                    label: 'Close',
+                    action: function (dialogRef) {
+                        dialogRef.close();
+                    }
+                }
+            ]
+        });
     });
 
     $('body').on('change', 'input[type=file]', prepareUpload);

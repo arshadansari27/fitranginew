@@ -11,7 +11,7 @@ import random
 
 class ModelView(object):
 
-    def __init__(self, model, action, default='card', channel_name=None, is_slug=False):
+    def __init__(self, model, action, default='card', channel_name=None, is_slug=False, detail_link=None):
         self.action = action
         self.model = model
         _template = "%s%s"
@@ -46,19 +46,26 @@ class ModelView(object):
             self.template = _template % (self.model.__class__.__template__, 'detail.html')
             self.menu_view = MenuView(channel_name)
             self.channel_name = channel_name
+        elif action == 'admin_list':
+            self.detail = detail_link
+            self.template = _template % (model.__class__.__template__, 'table.html')
+
 
     def render(self, size=3):
         if self.action == 'list':
             template = env.get_template(self.template)
             return template.render(model=self.model, size=size)
+        elif self.action == 'admin_list':
+            template = env.get_template(self.template)
+            return template.render(model=self.model, size=size, detail=self.detail)
         else:
             if 'Profile' in self.model.channels or 'Enthusiast' in self.model.facets:
                 contents = Content.objects(created_by__exact=self.model).all()[0: 3]
                 adverts = []
             else:
                 contents = []
-                _adverts = list(Advertisement.objects(published__exact=True).all())
+                _adverts = Advertisement.get_internal_advertisements()
                 random.shuffle(_adverts)
-                adverts = [AdView('list', a) for a in _adverts[0:6]]
+                adverts = [AdView('list', a) for a in _adverts]
             return render_template(self.template, channel=self.channel_name, model=self.model, menu=self.menu_view, user=g.user, contents=contents, related=self.related, adverts=adverts)
 

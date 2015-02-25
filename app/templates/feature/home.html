@@ -19,11 +19,10 @@
 
 {% endblock %}
 {% block body %}
-			
-		
-	<div class="container-fluid">
+<div class="container">
+	<div class="container">
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-12">
             <div id="carousel-generic" class="carousel slide" data-ride="carousel" style="overflow:hidden">
                 <ol class="carousel-indicators">
                     <li data-target="#carousel-generic" data-slide-to="0" class="active"></li>
@@ -48,80 +47,36 @@
             </div>
             <!--/myCarousel-->
             </div>
-            <div class="col-sm-4">
-                <div class="container-fluid">
-                    <div class="content text-center">
-                        <a href="http://adventuretourismconclave.com/" class="thumbnail"><img src="/assets/img/Website-Logoetc.png"/></a>
-                        <div class="well">
-                            <br/>
-                            <h4>Subscribe for latest updates!</h4>
 
-                            <br/>
-                            <form action="/user/subscribe" method="post" class="form-horizontal">
-                                <div class="input-group">
-                                    <input type="email" title="email" name="email" placeholder="Enter your email" class="input-lg form-control">
-                                    <span class="input-group-addon">
-                                        <input type="submit" value="Notify me!" class="btn btn-success">
-                                    </span>
-                                </div>
-                            </form>
-                            <br/>
-                            <br/>
-                            <p>
-                                
-                                
-                            <a href="https://plus.google.com/115019600318035585202/posts" target="_blank"> <i class="fa fa-google-plus fa-4x"></i> </a>
-                                
-                            &nbsp;
-                            &nbsp;
-                            &nbsp;
-                           <a href="https://twitter.com/FitRangi" target="_blank"> <i class="fa fa-twitter fa-4x"></i> </a>
-                                
-                                
-                            &nbsp;
-                            &nbsp;
-                            &nbsp;
-                           <a href="https://www.facebook.com/Fitrangi" target="_blank"> <i class="fa fa-facebook fa-4x"></i> </a> 
-                                
-                            &nbsp;
-                            &nbsp;
-                            &nbsp;
-                                 <a href="https://www.youtube.com/user/Fitrangi" target="_blank"> <i class="fa fa-youtube fa-4x"></i> </a> 
-                           </p>
-
-                        </div>
-
-                    </div>
-                </div>
-
-
-            </div>
         </div>
-        <!--/well-->
 	</div>
 
 
-    <div class="container-fluid">
+    <div class="container">
 	<br/>
     <br/>
         <div class="row">
             <div class="col-sm-9">
 	            <div class="header-title text-center"><h3>Top Trending Destinations<small><span class="pull-right"><a href="/channel/Destination" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></h3></div>
                 <br/>
-                <div class="container-fluid">
+                <div class="">
 		            {% for m in destinations %}
 			            {{ m.render()|safe }}
 		            {% endfor %}
 		        </div>
 	        </div>
             <div class="col-sm-3">
+                <div class="header-title text-center"><h3>Sponsors<small><span class="pull-right"><a href="/channel/Destination" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></h3></div>
+                <br/>
+                <div class="">
                 {% for a in adverts %}
                     {{ a.render()|safe }}
                 {% endfor %}
+                </div>
             </div>
         </div>
     </div>
-    <div class="container-fluid">
+    <div class="container">
         <div class="col-sm-2" style="background-color: darkslategray; height: 120px;">
             <h3>CHOOSE YOUR ADVENTURE</h3>
         </div>
@@ -211,7 +166,7 @@
         </a>
     </div></div>
 
-    <div class="container-fluid">
+    <div class="container">
 	    <br/>
         <br/>
         <div class="row">
@@ -232,20 +187,28 @@
         </div>
 	</div>
 
-    <div class="container-fluid">
+
+    <br/>
+    <div class="container">
+        {% if footer_advert %}
+            {{ footer_advert.render(long=True)|safe }}
+        {% endif %}
+    </div>
+    <div class="container">
 	<br/>
 	<div class="header-title text-center" ><h3>Interesting Events<small><span class="pull-right"><!--a href="/channel/Adventure Trip" class="btn btn-link"><font color="lightgray">View All</font></a--></span></small></h3></div>
         <br/>
-		<div class="container-fluid">
+		<div>
             {% for m in adventure_trips %}
             {{ m.render()|safe }}
             {% endfor %}
 		</div>
 	</div>
 
+    <br/>
+    <br/>
 
-
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
             <div class="col-sm-7">
                 <div class="header-title text-center" ><h3>Initiatives</h3></div>
@@ -253,10 +216,13 @@
                 <div id="myCarousel2" class="carousel slide">
                     <div class="carousel-inner" id="fitrangi-initiatives">
                         <div class="item active">
-                            <div class=""><a href="http://tees.fitrangi.com"><img src="/assets/img/tees1.jpg" alt="Image" class="img-responsive" width="100%"></a></div>
+                            <div class=""><a href="http://adventuretourismconclave.com/"><img src="/assets/img/Image-1.jpg" alt="Image" class="img-responsive" width="100%"></a></div>
                         </div>
                         <div class="item">
-                            <div class=""><a href="http://tees.fitrangi.com"><img src="/assets/img/tees2.jpg" alt="Image" class="img-responsive" width="100%"></a></div>
+                            <div class=""><a href="http://adventuretourismconclave.com/"><img src="/assets/img/Image-2.jpg" alt="Image" class="img-responsive" width="100%"></a></div>
+                        </div>
+                        <div class="item">
+                            <div class=""><a href="http://adventuretourismconclave.com/"><img src="/assets/img/Image-3.jpg" alt="Image" class="img-responsive" width="100%"></a></div>
                         </div>
                         
                         
@@ -272,18 +238,27 @@
                 {{ yt_macro.show_video(yt_links[0])}}
 
             </div>
-
-              <div id="footeradview" class="col-sm-12" style="background-color:darkslategray; height: 120px;">
-                  <div class="container" style="margin-top: 5px;">
-                     <span class="col-smm-2 col-smm-offset-1" ><a href="#"   title="foot-ads"><img src="/assets/img/HIGH SIZE PNG's/WATER - WONDERS/Snorkelling.png"></a></span>
-                     <span class="col-smm-2 col-smm-offset-1" ><a href="#"   title="foot-ads"><img src="/assets/img/HIGH SIZE PNG's/WATER - WONDERS/Snorkelling.png"></a></span>
-                     <span class="col-smm-2 col-smm-offset-1" ><a href="#"   title="foot-ads"><img src="assets/img/HIGH SIZE PNG's/WATER - WONDERS/Snorkelling.png"></a></span>
-                  </div>
-              </div>
-
         </div>
     </div>
     <br/>
+    <br/>
+    <div class="container">
+        <div class="text-center">
+            <div class="well">
+                <form action="/user/subscribe" method="post" class="form-horizontal">
+                    <div class="input-group">
+                        <input type="email" title="email" name="email" placeholder="Enter email to subscribe" class="input-lg form-control">
+                        <span class="input-group-addon">
+                            <input type="submit" value="Notify me!" class="btn btn-success">
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <br/>
 
     </div>
+</div>
 {% endblock %}

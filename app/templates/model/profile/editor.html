@@ -1,144 +1,120 @@
-{% extends 'generic/main/model_base.html' %}
-{% block model_data %}
-<div class="container">
-    {% if model and model.id %}
-	 <div class="panel panel-primary">
-<div class="panel-heading">Edit Profile</div></div> <br class=""><small><a href="/model/Profile/{{model.id}}" class="pull-right">Go Back</a></small></h1>
-    {% else %}
-    <div class="panel panel-primary">
-<div class="panel-heading">Add New Profile</div>
-    </div>
-
-    {% endif %}
-
-    <br class="">
-    <div class="row">
-                <!-- edit form column -->
-        <div class="col-md-9 personal-info">
-            <!--div class="alert alert-info alert-dismissable" style="display: none;"> <a class="panel-close close" data-dismiss="alert">×</a>  <i class="fa fa-coffee"></i>
-				This is an <strong class="">.alert</strong>. Use this to show important messages to the user.
-			</div-->
-             <h3 class="">Personal info</h3>
-
-			 <form action="{% if model.id %}/model/Profile/{{model.id}}/edit{% else %}/model/Profile/add{% endif %}" method="post" class="form-horizontal" role="form">
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Name:</label>
-                    <div class="col-lg-8">
-						<input class="form-control" value="{%if model.name %}{{ model.name }}{% endif %}" type="text" name="name" Placeholder="Full Name"/>
-                        {% for _c in model.channels %}
-                            <input type="hidden" name="channels" value="{{ _c }}"/>
-                        {% else %}
-                            <input type="hidden" name="channels" value="Profile"/>
-                        {% endfor %}
-                        {% for _f in model.facets %}
-                            <input type="hidden" name="facets" value="{{ _f }}"/>
-                        {% endfor %}
-						<input type="hidden" name="action" value="update_existing"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Username:</label>
-                    <div class="col-lg-8">
-						<input class="form-control" value="{% if model.username %}{{ model.username }}{% endif %}" type="text" name="username"/>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Email:</label>
-                    <div class="col-lg-8">
-						<input class="form-control" value="{% if model.email %}{{ model.email}}{% endif %}" type="text" name="email"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Phone:</label>
-                    <div class="col-lg-8">
-						<input class="form-control" value="{% if model.phone %}{{ model.phone}}{% endif %}" type="text" name="phone"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Address:</label>
-                    <div class="col-lg-8">
-						<textarea class="form-control" name="address">{%if model.address %}{{ model.address }}{% endif %}</textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Website:</label>
-                    <div class="col-lg-8">
-						<input class="form-control" value="{% if model.website %}{{ model.website}}{% endif %}" type="text" name="website"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">Facebook:</label>
-                    <div class="col-lg-8">
-						<input class="form-control" value="{% if model.facebook %}{{ model.facebook}}{% endif %}" type="text" name="facebook"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-lg-3 control-label">LinkedIn:</label>
-                    <div class="col-lg-8">
-						<input class="form-control" value="{% if model.linkedin %}{{ model.linkedin}}{% endif %}" type="text" name="linkedin"/>
-                    </div>
-                </div>
-                <div class="form-group target">
-                	<label class="col-md-3 control-label">About me:</label>
-                    <div class="col-md-8">
-						<textarea class="form-control" type="text" name="text">{% if model.text %}{{model.text}}{% endif %}</textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-3 control-label"></label>
-                    <div class="col-md-8">
-                        <input class="btn btn-primary" value="Save Changes" type="submit"> <span class=""></span>
-
-                        <input class="btn btn-default" value="Cancel" type="reset">
-                    </div>
-                </div>
-            </form>
-        {% if model.id %}
-       	<h3 class="">Change Password</h3>
-
-	   	<form action="/model/Profile/{{model.id}}/edit" method="post" class="form-horizontal" role="form">
-                <div class="form-group">
-                    <label class="col-md-3 control-label">Password:</label>
-                    <div class="col-md-8">
-                        <input class="form-control" name="password" type="password">
-						<input type="hidden" name="action" value="change_password"/>
-                    </div>
-                </div>
-                <div class="form-group target">
-                    <label class="col-md-3 control-label">Confirm password:</label>
-                    <div class="col-md-8">
-                        <input class="form-control" name="confirm" type="password">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-3 control-label"></label>
-                    <div class="col-md-8">
-                        <input class="btn btn-primary" value="Save Changes" type="submit"> <span class=""></span>
-
-                        <input class="btn btn-default" value="Cancel" type="reset">
-                    </div>
-                </div>
-            </form>
-       {% endif %}
-      </div>
-        <!-- left column >
-        <div class="col-md-3">
-            <div class="text-center">
-                <img src="{% if model.has_no_image %}http://placehold.it/300x300{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}" class="avatar" alt="avatar">
-                {% if model.id %}
-                 <h6 class="">Upload a different photo...</h6>
-				 <form action="/model/Profile/{{model.id}}/edit" enctype="multipart/form-data" method="post">
-                	<input class="form-control" name="action" type="hidden" value="image_upload"/>
-                	<input class="form-control" name="image" type="file"/>
-					<button type="submit" class="btn btn-info">Upload</button>
-				</form>
-                {% endif %}
+{% extends '/model/content/editor.html' %}
+{% block title_edit %}
+<h3> {{ content.name }} <small><a href="#" class="edit-form-text" data-key="{{content.id}}" data-field="name" data-value="{{content.name}}">Edit</a></small></h3>
+{% endblock %}
+{% block show_publish %}{% endblock %}
+{% block extra_fields %}
+        <div class="row">
+            <div class="heading">
+                <h4 class="form-heading">Email <small>&nbsp; <a href="#" class="edit-form-text" data-key="{{content.id}}" data-field="email" data-value="{{content.email}}" data-type="email">Edit</a></small></h4>
+            <hr/>
+            </div>
+            <span>{{content.email}}</span>
+        </div>
+        <br/>
+        <br/>
+        <!--div class="row">
+            <div class="heading">
+                <h4 class="form-heading">Username <small>&nbsp; <a href="#" class="edit-form-tags" data-key="{{content.id}}" data-field="contentname" data-value="{{content.contentname}}" data-type="contentname">Edit</a></small></h4>
+            <hr/>
             </div>
         </div-->
+        <div class="row">
+            <div class="heading">
+                <h4 class="form-heading">Phone <small>&nbsp; <a href="#" class="edit-form-text" data-key="{{content.id}}" data-field="phone" data-value="{{content.phone}}" data-type="phone">Edit</a></small></h4>
+                <hr/>
+            </div>
+            <span>{{content.phone}}</span>
+        </div>
+        <br/>
+        <br/>
+        <div class="row">
+            <div class="heading">
+                <h4 class="form-heading">Address <small>&nbsp; <a href="#" class="edit-form-text" data-key="{{content.id}}" data-field="address" data-value="{{content.address}}" data-type="email">Edit</a></small></h4>
+                <hr/>
+            </div>
+            <span>{{content.address}}</span>
+        </div>
+        <br/>
+        <br/>
+        <div class="row">
+            <div class="heading">
+                <h4 class="form-heading">Facebook link <small>&nbsp; <a href="#" class="edit-form-text" data-key="{{content.id}}" data-field="facebook" data-value="{{content.facebook}}" data-type="facebook">Edit</a></small></h4>
+                <hr/>
+            </div>
+            <span>{{content.facebook}}</span>
+        </div>
+        <br/>
+        <br/>
+         <div class="row">
+            <div class="heading">
+                <h4 class="form-heading">LinkedIN <small>&nbsp; <a href="#" class="edit-form-text" data-key="{{content.id}}" data-field="linkedin" data-value="{{content.linkedin}}" data-type="linkedin">Edit</a></small></h4>
+                <hr/>
+            </div>
+            <span>{{content.linkedin}}</span>
+        </div>
 
-        
-        <div class="row"></div>
-    </div>
-</div>
+        <br/>
+        <br/>
+        <div class="row">
+            <div class="heading">
+                <h4 class="form-heading">Website <small>&nbsp; <a href="#" class="edit-form-text" data-key="{{content.id}}" data-field="website" data-value="{{content.website}}" data-type="website">Edit</a></small></h4>
+                <hr/>
+            </div>
+            <span>{{content.website}}</span>
+        </div>
+
+        <br/>
+        <br/>
+        {% if 'Admin' in user.roles %}
+        <div class="row">
+            <div class="heading">
+                <h4 class="form-heading">Roles</h4>
+                <hr/>
+            </div>
+            {% for f in content.roles%}
+                <span>{{f}}{% if not loop.last %}, {% endif %}</span>
+            {% endfor %}
+        </div>
+        <br/>
+        <br/>
+        {% endif %}
+        <div class="row">
+            <div class="heading">
+                <h4 class="form-heading">Following</h4>
+                <hr/>
+            </div>
+            <table class="col-sm-12">
+                {% for f in content.following %}
+                    <tr>
+                        <td><img src="{% if not f.main_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ f.get_class_name()}}/{{f.id}}{% endif %}" class="avatar" alt="avatar" height="50px;"/></td>
+                        <td>{{f.name}}</td>
+                        <td><a href="#" data-key="{{f.id}}" data-remove-following>Remove</a></td>
+                    </tr>
+                {% else %}
+                    <p>You are currently following no one.</p>
+                {% endfor %}
+            </table>
+        </div>
+        <br/>
+        <br/>
+        <div class="row">
+                <div class="heading">
+                    <h4 class="form-heading">Favorites</h4>
+                    <hr/>
+                </div>
+                <table class="col-sm-12">
+                    {% for f in content.favorites %}
+                        <tr>
+                            <td><img src="{% if not f.main_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ f.get_class_name()}}/{{f.id}}{% endif %}" class="avatar" alt="avatar" height="50px;"/></td>
+                            <td>{{f.name}}</td>
+                            <td><a href="#" data-key="{{f.id}}" data-remove-favorite>Remove</a></td>
+                        </tr>
+                    {% else %}
+                    <p>You currently have no favorites.</p>
+                    {% endfor %}
+                </table>
+        </div>
+        <br/>
+        <br/>
 {% endblock %}

@@ -102,8 +102,7 @@ def getActivity():
         from app.models import Content
         regx = re.compile(name, re.IGNORECASE)
         activity =  Content.objects(__raw__={'title': {'$regex': regx}}).first()
-        print "Activy: ", activity
-        return redirect('/model/Activity/%s' % str(activity.id))
+        return redirect(activity.slug)
     else:
         return redirect("/")
 
@@ -118,8 +117,7 @@ def channel(channel):
     else:
         only = False
     facets = [v for v in (_facets.split(',') if len(_facets) > 0 else []) if v and len(v)  > 0]
-    print facets
-    return ChannelView(channel, paginated=False, selected_facets=facets, query=query,page=page, only_facet=only).render()
+    return ChannelView(channel, paginated=True, selected_facets=facets, query=query,page=page, only_facet=only).render()
 
 @app.route('/stream/<i>')
 @login_required
@@ -152,7 +150,6 @@ def channels_list():
 @app.route('/api/facets', methods=['GET'])
 def facets_list():
     d = api.FacetApi()
-    print d.dictify()
     return Response(json.dumps(d.dictify()), mimetype="application/json")
 
 
@@ -226,9 +223,7 @@ def registration():
             flash('Email already exists, have you forgotten your password?', category='danger')
             return redirect(url_for('registration'))
         profile = Profile.create_new(name, email, password)
-        print profile.name, profile.email
         profile = Profile.authenticate(email, password)
-        print profile.name, profile.email
         if profile and profile.id:
             set_session_and_login(profile)
             flash('Successfully Created Your Account.', category='success')
@@ -307,3 +302,5 @@ def after_request(response):
     event = VisitEvent(user=str(user.id) if user else None, url=request.url, ip_address=request.remote_addr)
     event.save()
     return response
+
+from admin_views import *

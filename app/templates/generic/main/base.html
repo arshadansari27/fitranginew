@@ -47,6 +47,10 @@
 				  </div>
 			  </form>
 			  <ul class="nav navbar-nav navbar-right">
+                  <li><a href="https://plus.google.com/115019600318035585202/posts" target="_blank"> <i class="fa fa-google-plus fa-2x"></i> </a></li>
+                  <li><a href="https://twitter.com/FitRangi" target="_blank"> <i class="fa fa-twitter fa-2x"></i> </a></li>
+                  <li><a href="https://www.facebook.com/Fitrangi" target="_blank"> <i class="fa fa-facebook fa-2x"></i> </a></li>
+                  <li><a href="https://www.youtube.com/user/Fitrangi" target="_blank"> <i class="fa fa-youtube fa-2x"></i> </a></li>
 
                 {% if not (user and user.id) %}
 				<li><a href="/channel/Profile?facets=Enthusiast&only=1"> <strong>Members</strong> </a><li>
@@ -54,14 +58,15 @@
 				{% if user and user.id %}
 				<li>
 				<div class="navbar-header">
-				  <a href="#" style="margin-left:15px;" class="navbar-btn btn btn-default btn-plus dropdown-toggle" data-toggle="dropdown">{{ user.name }}&nbsp;<small><i class="glyphicon glyphicon-chevron-down"></i></small></a>
+				  <a href="#" style="margin-left:15px;" class="navbar-btn btn btn-link btn-plus dropdown-toggle" data-toggle="dropdown">{{ user.name }}&nbsp;<small><i class="glyphicon glyphicon-chevron-down"></i></small></a>
 				  <ul class="nav dropdown-menu">
 					  <li><a href="{% if user.slug %}{{user.slug}}{% else %}/model/Profile/{{user.id}}{% endif %}"><i class="glyphicon glyphicon-user" style="color:#1111dd;"></i> Profile</a></li>
                       <li><a href="/channel/Profile?facets=Enthusiast&only=1"> <i class="glyphicon glyphicon-envelope"></i> Members </a><li>
 					  <li><a href="#"><i class="glyphicon glyphicon-inbox" style="color:#11dd11;"></i> My Posts</a></li>
 					  <li class="nav-divider"></li>
 					  {% if 'Admin' in user.roles %}
-					  <li><a href="/admin"><i class="glyphicon glyphicon-dashboard" style="color:#0000aa;"></i> Dashboard</a></li>
+					  <li><a href="/manage"><i class="glyphicon glyphicon-dashboard" style="color:#0000aa;"></i> Dashboard</a></li>
+                      <li><a href="/admin"><i class="glyphicon glyphicon-dashboard" style="color:#0000aa;"></i> Old Admin</a></li>
 					  {% endif %}
 					  {% if 'EventOrganiser' in user.roles %}
 					  <li><a href="/events"><i class="glyphicon glyphicon-cog" style="color:#dd1111;"></i> Events</a></li>
@@ -97,7 +102,7 @@
 				<li><a id="btn-login" href="/login"><strong>Sign In+</strong></a></li>
 				{% endif %}
                   <!--li><a href=""><i class="fa fa-shopping-cart fa-2x" title="Shopping Cart"></i><sub id="quantity">123</sub></a></li-->
-                  <li><a href="/"><i class="fa fa-home fa-2x"></i></a></li>
+
 			   </ul>
 			</div>	
 		 </div>	

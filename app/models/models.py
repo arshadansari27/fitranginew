@@ -187,7 +187,7 @@ class Node(object):
             return Profile
         elif name == 'Channel':
             return Channel
-        elif name in ['Activity', 'Destination', 'Article', 'Content']:
+        elif name in ['Activity', 'Destination', 'Article', 'Content', 'Blog']:
             return Content 
         elif  name in ['Event', 'Adventure Trip']:
             return Event 
@@ -197,6 +197,8 @@ class Node(object):
             return Question
         elif name in ['Post']:
             return Post
+        elif name == 'Advertisement':
+            return Advertisement
         else:
             raise Exception("Unknown type")
 
@@ -332,7 +334,6 @@ class Content(Node, db.Document):
     @property
     def has_image(self):
         if self and self.main_image and self.main_image.image:
-            print dir(self.main_image.image)
             return True
         else:
             return False
@@ -522,7 +523,7 @@ class LoginEvent(AnalyticsEvent):
 class VisitEvent(AnalyticsEvent):
     pass
 
-
+PLACEMENTS = ['HOME TOP', 'HOME FOOTER', 'INTERNAL']
 class Advertisement(db.Document, Node):
     __template__ = 'model/advertisement/'
     __FEATURED = 0
@@ -540,20 +541,46 @@ class Advertisement(db.Document, Node):
     description = db.StringField()
     url = db.StringField()
     main_image = db.EmbeddedDocumentField(Image)
+    long_image = db.EmbeddedDocumentField(Image)
     published = db.BooleanField()
     published_timestamp = db.DateTimeField(required=False)
-    placements = db.ListField(db.IntField())
+    placements = db.ListField(db.StringField(choices=PLACEMENTS))
 
-    def get_image(self):
-        if self and self.main_image:
-            img_io = cStringIO.StringIO()
-            img = PImage.open(self.main_image.image)
-            format = self.main_image.image.format
-            img.save(img_io, "JPEG", quality=70)
-            img_io.seek(0)
-            return img_io, format
+    def get_image(self, long=False):
+        if self and self.main_image and not long:
+            img = self.main_image
+        elif self and self.long_image and long:
+            img = self.long_image
         else:
             return None, None
+
+        img_io = cStringIO.StringIO()
+        img = PImage.open(img.image)
+        format = self.main_image.image.format
+        img.save(img_io, "JPEG", quality=70)
+        img_io.seek(0)
+        return img_io, format
+
+    @classmethod
+    def get_home_advertisements(cls):
+        return list(Advertisement.objects(placements__in=['HOME TOP'], published__exact=True).all()[0: 2])
+
+    @classmethod
+    def get_home_footer_advertisement(cls):
+        total = Advertisement.objects(placements__in=['HOME FOOTER'], published__exact=True).count()
+        if total is 0:
+            return None
+        if total > 1:
+            r = random.randint(0, total)
+        else:
+            r = 0
+        return Advertisement.objects(placements__in=['HOME FOOTER'], published__exact=True).all()[r]
+
+    @classmethod
+    def get_internal_advertisements(cls):
+        return list(Advertisement.objects(placements__in=['INTERNAL'], published__exact=True).all()[0: 6])
+
+
 
 
 

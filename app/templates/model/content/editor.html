@@ -1,42 +1,147 @@
-{% extends 'generic/main/model_editor_base.html' %}
-{% block form_block %}
-<div class="form-group">
-    <label class="col-lg-3 control-label">Title:</label>
+{% extends '/generic/admin/base_admin.html' %}
+{% block page_header %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                {{ content_type | upper}}
+                {% block title_edit %}
+                {{ content.title }} <small><a href="#" class="edit-form-text" data-key="{{content.id}}" data-field="title" data-value="{{content.title}}">(change)</a></small>
+                {% endblock %}
+            </h1>
+            <ol class="breadcrumb">
+                <li class="active"><i class="fa fa-user"></i>&nbsp; Home / {{ channel }} / {{content_type}}</li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block content %}
+<div class="" style="background-color: rgb(255,255,255);">
+        <div class="container" data-edit-url="/manage/model-edit/" data-comment-remove-url="/manage/model-comment-remove">
+            <div class="row">
+                <div class="">
+                    {% if content_type != 'forum' %}
+                    <div class="">
+                        <a href="#" id="change_image" data-model="{{content.id}}"  data-popover="true" data-html=true data-content="Update Image">
+                            <img src="{% if not content.main_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ content.get_class_name()}}/{{content.id}}{% endif %}" class="avatar" alt="avatar"/>
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
 
-    <div class="col-lg-8">
-        <input class="form-control" value="{%if model.title %}{{ model.title }}{% endif %}"
-               type="text"
-               name="title"/>
-        <input type="hidden" name="action" value="update_existing"/>
-        <input type="hidden" name="channels" value="{{ channel }}"/>
+                <br/>
+                {% if 'Admin' in user.roles %} <span><strong>URL: {{content.slug}}</strong> &nbsp; <a href="#" class="edit-form-text" data-key="{{content.id}}" data-field="slug" data-value="{{content.slug}}">(change)</a></span>{% endif %}
+            </div>
+
+            <br/>
+            <br/>
+            <div class="row">
+                <div class="heading">
+                    <h4 class="form-heading">Content</h4>
+                    <hr/>
+                </div>
+                <form class="summernote-content-form" action="#" method="POST">
+                    <textarea class="summernote" style="display: none;">
+                        {{content.data|safe}}
+                    </textarea>
+                    <button type="submit" class="btn btn-default">submit</button>
+                </form>
+            </div>
+            <br/>
+            <br/>
+            {% block extra_fields %}
+            {% endblock %}
+            {% if 'Admin' in user.roles %}
+            <div class="row">
+                <div class="heading">
+                    <h4 class="form-heading">Channels <small>&nbsp; <a href="#" class="edit-form-tags" data-key="{{content.id}}" data-field="channels" data-value="{% for c in content.channels %}{{c}},{%endfor %}" data-type="channels">(change)</a></small></h4>
+                    <hr/>
+                </div>
+                {% for f in content.channels%}
+                <span>{{f}}{% if not loop.last %}, {% endif %}</span>
+                {% endfor %}
+                </table>
+            </div>
+            <br/>
+            <br/>
+            <div class="row">
+                <div class="heading">
+                    <h4 class="form-heading">Facets <small>&nbsp; <a href="#" class="edit-form-tags" data-key="{{content.id}}" data-field="facets" data-value="{% for c in content.facets %}{{c}},{%endfor %}" data-type="facets">(change)</a></small></h4>
+                    <hr/>
+                </div>
+                {% for f in content.facets %}
+                <span>{{f}}{% if not loop.last %}, {% endif %}</span>
+                {% endfor %}
+                </table>
+            </div>
+            <br/>
+            <br/>
+            {% endif %}
+
+            {% block show_publish %}
+            <div class="row">
+                <div class="heading">
+                    <h4 class="form-heading">State: &nbsp; {% if content.published %}<strong><i>published</i></strong> {% else %} <strong><i>not published</i></strong>{% endif %}<small> <a href="#" class="edit-boolean" data-key="{{content.id}}" data-field="published" data-value="{{content.published}}" data-type="published">(Click to change)</a> </small></h4>
+                    <hr/>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            {% endblock %}
+
+            <div class="row">
+                <div class="heading">
+                    <h4 class="form-heading">{% if content_type == 'forum' %}Answers{% else %}Comments{% endif %}</h4>
+                    <hr/>
+                </div>
+                <div>
+                    <table class="col-sm-12">
+                        {% for c in content.comments %}
+                        <tr>
+                            <td>{{c.created_by.name}}</td>
+                            <td>{{c.data}}</td>
+                            <td>
+                                <a href="#" class="remove-comment" data-key="{{content.id}}" data-comment-key="{{c.key}}">Delete</a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td>No Comments Posted Yet</td></tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <br/>
+            <br/>
+        </div><!--/container-->
     </div>
 </div>
-<div class="form-group">
-    <label class="col-lg-3 control-label">Description:</label>
-
-    <div class="col-lg-8">
-        <textarea class="form-control" name="description">{%if model.description%}{{ model.description }}{% endif %}</textarea>
-    </div>
-</div>
-<div class="form-group">
-    <label class="col-lg-3 control-label">Published :</label>
-
-    <div class="col-lg-1">
-        <input type="checkbox" class="form-control" name="published" {%if model.published %}checked{% endif %}/>
-    </div>
-</div>
-<div class="form-group">
-    <label class="col-lg-3 control-label">Content:</label>
-
-    <div class="col-lg-8">
-        <textarea class="ckeditor" row="10" name="text">{%if model.text %}{{ model.text}}{% endif %}</textarea>
-    </div>
-</div>
-
 
 {% endblock %}
-{% block footer_script %}
-        <script src="/assets/js/typeahead.js"></script>
-         <script src="/static/js/hogan-2.0.0.js"></script>
-{% endblock %}
+{% block scripts  %}
+<script language="JavaScript">
+    $(document).ready(function() {
+        var originalLeave = $.fn.popover.Constructor.prototype.leave;
+        $.fn.popover.Constructor.prototype.leave = function (obj) {
+            var self = obj instanceof this.constructor ? obj : $(obj.currentTarget)[this.type](this.getDelegateOptions()).data('bs.' + this.type)
+            var container, timeout;
 
+            originalLeave.call(this, obj);
+
+            if (obj.currentTarget) {
+                container = $(obj.currentTarget).siblings('.popover')
+                timeout = self.timeout;
+                container.one('mouseenter', function () {
+                    clearTimeout(timeout);
+                    container.one('mouseleave', function () {
+                        $.fn.popover.Constructor.prototype.leave.call(self, self);
+                    });
+                })
+            }
+        };
+    });
+
+$('body').popover({ selector: '[data-popover]', trigger: 'click hover', placement: 'auto', delay: {show: 50, hide: 400}});
+
+</script>
+{% endblock %}

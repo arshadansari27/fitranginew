@@ -1,0 +1,78 @@
+{% extends '/generic/admin/base_admin.html' %}
+{% block page_header %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                {{ content.title }} <small><a href="#" class="edit-form-text" data-key="{{content.id}}" data-field="title" data-value="{{content.title}}">(change)</a></small>
+            </h1>
+            <ol class="breadcrumb">
+                <li class="active"><i class="fa fa-user"></i>&nbsp; Home / Advertisement / {{ content.title }}</li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+{% block content %}
+<div class="" style="background-color: rgb(255,255,255);">
+        <div class="container" data-edit-url="/manage/model-edit/">
+            <div class="row">
+                <div class="">
+                    <div class="">
+                        <a href="#" id="change_image" data-model="{{content.id}}"  data-popover="true" data-html=true data-content="Update Image">
+                            <img src="{% if not content.main_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ content.get_class_name()| lower}}/{{content.id}}{% endif %}" class="avatar" alt="avatar"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <div class="row">
+                <div class="heading">
+                    <h4 class="form-heading">State: &nbsp; {% if content.published %}<strong><i>published</i></strong> {% else %} <strong><i>not published</i></strong>{% endif %}<small> <a href="#" class="edit-boolean" data-key="{{content.id}}" data-field="published" data-value="{{content.published}}" data-type="published">(Click to change)</a> </small></h4>
+                    <hr/>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <div class="row">
+                <div class="heading">
+                    <h4 class="form-heading">Placements &nbsp; <small> <a href="#" class="edit-form-tags" data-key="{{content.id}}" data-field="placements" data-value="{% for p in content.placements %}{{p}}{% if not loop.last %},{% endif %}{% endfor %}" data-type="placements">(Click to change)</a> </small></h4>
+                    <hr/>
+                </div>
+                <span>
+                    {% for p in content.placement %}
+                        {{ p }}
+                    {% endfor %}
+                </span>
+            </div>
+        </div><!--/container-->
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts  %}
+<script language="JavaScript">
+    $(document).ready(function() {
+        var originalLeave = $.fn.popover.Constructor.prototype.leave;
+        $.fn.popover.Constructor.prototype.leave = function (obj) {
+            var self = obj instanceof this.constructor ? obj : $(obj.currentTarget)[this.type](this.getDelegateOptions()).data('bs.' + this.type)
+            var container, timeout;
+
+            originalLeave.call(this, obj);
+
+            if (obj.currentTarget) {
+                container = $(obj.currentTarget).siblings('.popover')
+                timeout = self.timeout;
+                container.one('mouseenter', function () {
+                    clearTimeout(timeout);
+                    container.one('mouseleave', function () {
+                        $.fn.popover.Constructor.prototype.leave.call(self, self);
+                    });
+                })
+            }
+        };
+    });
+
+$('body').popover({ selector: '[data-popover]', trigger: 'click hover', placement: 'auto', delay: {show: 50, hide: 400}});
+
+</script>
+{% endblock %}

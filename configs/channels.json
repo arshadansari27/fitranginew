@@ -36,6 +36,7 @@
             "name": "Blog",
             "value": "Blogs",
             "type": "Post",
+            "template": "feature/common",
             "menu": 0
 
         },
