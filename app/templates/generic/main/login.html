@@ -3,6 +3,22 @@
     <script src="https://apis.google.com/js/client:platform.js" async defer></script>
     <script>
 
+        function convertImgToBase64(url, callback, outputFormat) {
+            var canvas = document.createElement('CANVAS');
+            var ctx = canvas.getContext('2d');
+            var img = new Image;
+            img.crossOrigin = 'Anonymous';
+            img.onload = function () {
+                canvas.height = img.height;
+                canvas.width = img.width;
+                ctx.drawImage(img, 0, 0);
+                var dataURL = canvas.toDataURL(outputFormat || 'image/png');
+                callback.call(this, dataURL);
+                // Clean up
+                canvas = null;
+            };
+            img.src = url;
+        }
         function statusChangeCallback(response) {
             if (response.status === 'connected') {
                 testAPI();
@@ -26,10 +42,11 @@
                 xfbml      : true,  // parse social plugins on this page
                 version    : 'v2.1' // use version 2.1
             });
-
+            /*
             FB.getLoginStatus(function(response) {
                 statusChangeCallback(response);
             });
+            */
         };
 
         (function(d, s, id) {
@@ -40,19 +57,37 @@
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
 
+        var _login_with_data = function(profile_image, response) {
+            convertImgToBase64(profile_image, function(base64Img) {
+                var _login = function(image) {
+
+                    var data = null;
+                    if (image != null) {
+                        data = {name: response.name, email: response.email, file: image};
+                    } else {
+                        data = {name: response.name, email: response.email, file: ''};
+                    }
+                    $.ajax({
+                        type: 'POST',
+                        url: '/sociallogin',
+                        data: data
+                    }).done(function (msg) {
+                        if (msg.status == 'success') {
+                            window.location = msg.location;
+                        } else {
+                            alert("Invalid Login, try again");
+                        }
+                    });
+
+                };
+                _login(base64Img);
+            });
+        }
+
         function testAPI() {
             FB.api('/me', function(response) {
-                $.ajax({
-                    type: 'POST',
-                    url: '/sociallogin',
-                    data: {name: response.name, email: response.email}
-                }).done(function(msg) {
-                    if (msg.status == 'success') {
-                        window.location = msg.location;
-                    } else {
-                        alert("Invalid Login, try again");
-                    }
-                });
+                var profile_image= "https://graph.facebook.com/"+ response.id +"/picture?type=large";
+                _login_with_data(profile_image, {name: response.name, email: response.email});
             }, {scope: 'email, user_likes'});
         }
 
@@ -77,24 +112,19 @@
                     "Authorization": "Bearer " + resp['access_token']
                 }
             }).done(function (data) {
+                console.log(data);
                 var primaryEmail;
                 for (var i=0; i < data.emails.length; i++) {
                     if (data.emails[i].type === 'account') primaryEmail = data.emails[i].value;
                 }
                 var email = primaryEmail;
                 var name = data['displayName'];
-                console.log("Google Login: " + name + ", " + email);
-                $.ajax({
-                    type: 'POST',
-                    url: '/sociallogin',
-                    data: {name: name, email: email}
-                }).done(function(msg) {
-                    if (msg.status == 'success') {
-                        window.location = msg.location;
-                    } else {
-                        alert("Invalid Login, try again");
-                }
-            });
+                var image_url = data.image.url;
+                console.log("Google Login: " + name + ", " + email + ", " + image_url);
+                var profile_image = image_url.substring(0, image_url.indexOf("?") - 1) + "?sz=200";
+                console.log(profile_image)
+                _login_with_data(profile_image, {name: name, email: email});
+
             });
 
   }
@@ -164,7 +194,7 @@
                                     data-callback="onSignInCallback"
                                     data-clientid="445628400297-si4iclsg5i2imd3parigb643lep5iis7.apps.googleusercontent.com"
                                     data-cookiepolicy="single_host_origin"
-                                    data-scope="email profile openid https://www.googleapis.com/auth/plus.me">
+                                    data-scope="email profile openid https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.profile">
                                 </span>
                             </span>
 
@@ -208,4 +238,3 @@
 {% block footer %} 
 {% endblock %}
 
-    

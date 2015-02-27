@@ -19,6 +19,12 @@ from app.handlers.views.menu_view import MenuView
 from app.handlers.views.model_view import ModelView
 from app.handlers.views.channel_view import ChannelView,StreamView
 from app.handlers.views.main_view import HomeView, SearchView
+from StringIO import StringIO
+from PIL import Image as _Image_
+from base64 import decodestring
+import base64
+from io import BytesIO
+import os, cStringIO
 
 @app.route('/')
 def home():
@@ -241,15 +247,38 @@ def social_login():
     name = request.form['name']
     email = request.form['email']
     profile = Profile.objects(email__iexact=email).first()
+
     if profile is None or profile.id is None:
         profile = Profile.create_new(name, email, "", is_verified=True, roles=['Enthusiast'])
         profile.save()
+
     if profile.is_social_login is None or not profile.is_social_login:
         profile.is_social_login = True
         profile.save()
+
+
     if profile.is_social_login and profile.id:
+        img_uploaded = request.form['file']
+        if img_uploaded and len(img_uploaded) > 0:
+            try:
+                data = img_uploaded
+                data = data[data.index(','):]
+                s = StringIO(decodestring(data))
+                img = _Image_.open(s)
+                buffer = StringIO()
+                img.save(buffer, img.format)
+                buffer.seek(0)
+                profile.upload_image(buffer)
+                profile.save()
+            except Exception, e:
+                raise e
+            finally:
+                pass
+                #os.remove(img_path)
+
         set_session_and_login(profile)
         return jsonify(dict(location='/stream/me', status='success'))
+
     return jsonify(dict(location=url_for('login'), status='error'))
 
 @app.route('/login', methods=['GET', 'POST'])

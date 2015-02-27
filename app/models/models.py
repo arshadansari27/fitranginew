@@ -571,9 +571,10 @@ class Advertisement(db.Document, Node):
         if total is 0:
             return None
         if total > 1:
-            r = random.randint(0, total)
+            r = random.randint(0, total - 1)
         else:
             r = 0
+        print total, r
         return Advertisement.objects(placements__in=['HOME FOOTER'], published__exact=True).all()[r]
 
     @classmethod

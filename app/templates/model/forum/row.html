@@ -100,7 +100,9 @@ i.glyphicon-comment{
                                 <h4> <a href="/model/{{model.channel_factory(model)}}/{{model.id}}" class="text-muted">{{ model.title }}</a></h4>
 		                   <span>
                              <a href="#"><i class="glyphicon glyphicon-calendar"></i>  {{ model.created_timestamp.strftime('%d-%m-%Y') }}   </a> &nbsp;
-	                         <a href="#"><i class="glyphicon glyphicon-comment"></i> 445  </a>&nbsp;
+                             {% if model.comments|length > 0 %}
+	                         <a href="#"><i class="glyphicon glyphicon-comment"></i> {{model.comments | length }}</a>&nbsp;
+                             {% endif %}
 	                         {% for f in model.facets %}
                              <a class="" href="#"><i class="glyphicon glyphicon-tag"> </i>{{f}}</a> {% endfor %}&nbsp;
                            </span>

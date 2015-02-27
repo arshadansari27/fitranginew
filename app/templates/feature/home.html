@@ -22,7 +22,7 @@
 <div class="container">
 	<div class="container">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-8">
             <div id="carousel-generic" class="carousel slide" data-ride="carousel" style="overflow:hidden">
                 <ol class="carousel-indicators">
                     <li data-target="#carousel-generic" data-slide-to="0" class="active"></li>
@@ -47,7 +47,46 @@
             </div>
             <!--/myCarousel-->
             </div>
+            <div class="col-sm-4">
+                <div class="container-fluid">
+                    <div class="content text-center">
+                        <a href="http://adventuretourismconclave.com/" class="thumbnail"><img src="/assets/img/Website-Logoetc.png"/></a>
+                        <div class="well well-sm">
+                            <h4>Subscribe for latest updates!</h4>
+                            <br/>
+                            <form action="/user/subscribe" method="post" class="form-horizontal">
+                                <div class="">
+                                    <input type="email" title="email" name="email" placeholder="Enter your email" class="input-lg form-control">
+                                    <br/>
+                                    <input type="submit" value="Notify me!" class="btn btn-success">
+                                </div>
+                            </form>
+                            <br/>
+                            <p>
 
+
+                            <a href="https://plus.google.com/115019600318035585202/posts" target="_blank"> <i class="fa fa-google-plus fa-3x"></i> </a>
+
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+                           <a href="https://twitter.com/FitRangi" target="_blank"> <i class="fa fa-twitter fa-3x"></i> </a>
+
+
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+                           <a href="https://www.facebook.com/Fitrangi" target="_blank"> <i class="fa fa-facebook fa-3x"></i> </a>
+
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+                            <a href="https://www.youtube.com/user/Fitrangi" target="_blank"> <i class="fa fa-youtube fa-3x"></i> </a>
+                           </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 	</div>
 
@@ -66,7 +105,7 @@
 		        </div>
 	        </div>
             <div class="col-sm-3">
-                <div class="header-title text-center"><h3>Sponsors<small><span class="pull-right"><a href="/channel/Destination" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></h3></div>
+                <div class="header-title text-center"><strong>Advertisements</strong></div>
                 <br/>
                 <div class="">
                 {% for a in adverts %}
@@ -227,8 +266,12 @@
                         
                         
                     </div>
-                    <a class="left carousel-control" href="#myCarousel2" data-slide="prev">‹</a>
-                    <a class="right carousel-control" href="#myCarousel2" data-slide="next">›</a>
+                    <a class="left carousel-control" href="#myCarousel2" role="button" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                    <a class="right carousel-control" href="#myCarousel2" role="button" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
                 </div>
              </div>
             <div class="col-sm-5">
@@ -242,20 +285,7 @@
     </div>
     <br/>
     <br/>
-    <div class="container">
-        <div class="text-center">
-            <div class="well">
-                <form action="/user/subscribe" method="post" class="form-horizontal">
-                    <div class="input-group">
-                        <input type="email" title="email" name="email" placeholder="Enter email to subscribe" class="input-lg form-control">
-                        <span class="input-group-addon">
-                            <input type="submit" value="Notify me!" class="btn btn-success">
-                        </span>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+
 
     <br/>
 
