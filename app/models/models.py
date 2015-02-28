@@ -30,6 +30,10 @@ def update_content(sender, document):
         if document.title is None and document.name is not None:
             document.title = document.name
         update_slug(sender, document, 'profile')
+    elif isinstance(document, Product):
+        update_slug(sender, document, 'product')
+    elif isinstance(document, Event):
+        update_slug(sender, document, 'event')
     else:
         update_slug(sender, document, 'content')
 
@@ -113,6 +117,10 @@ class Channel(object):
 
     def __repr__(self):
         return self.name
+
+    @classmethod
+    def get_all_names(cls):
+        return  [c.name for c in Channel.all_data]
 
     @classmethod
     def getByName(cls, _name):
@@ -213,7 +221,7 @@ class Node(object):
         if cls == Advertisement:
             return 'Advertisement'
         for channel in Channel.all_data:
-            if channel.name in model.channels:
+            if channel.name in set(model.channels):
                 return channel.name
         raise Exception("Unset Channel for this model type %s %s" % (model.__class__.__name__, str(model)))
 
@@ -323,6 +331,10 @@ class Content(Node, db.Document):
     @classmethod
     def get_by_id(cls, id):
         content = Content.objects(pk=id).first()
+        if content.slug is None or len(content.slug) is 0:
+            if type(content) not in [Profile, Product, Event] and content.channels[0] not in Channel.get_all_names():
+                return
+            update_slug(None, content, content.channels[0])
         return  content
 
     def get_image(self):
@@ -365,6 +377,7 @@ class Answer(db.EmbeddedDocument):
     author = db.ReferenceField('Profile')
     answer = db.StringField()
 
+@update_content.apply
 class Question(Content):
     __template__ = 'model/forum/'
     answers = db.ListField(db.EmbeddedDocumentField(Answer))
@@ -376,6 +389,7 @@ class Post(Content):
     likes = db.ListField(db.ReferenceField('Profile'))
     dislikes = db.ListField(db.ReferenceField('Profile'))
 
+@update_content.apply
 class Profile(Content):
     __template__ = 'model/profile/'
     __facets__ = ['Profile']
@@ -450,21 +464,30 @@ class Profile(Content):
         return profile
 
 
+EVENT_TYPES = ['Adventure Trip', 'Conclave', 'Exhibition', 'Conference', 'Meet up']
+
+@update_content.apply
 class Event(Content):
     __template__ = 'model/event/'
     __facets__ = ['Activity', 'Location', 'When', 'Amount']
-    date = db.StringField()
+    event_type = db.StringField(choices=EVENT_TYPES)
+    start_date = db.StringField()
+    end_date = db.StringField()
     duration = db.StringField()
     experiences = db.StringField()
     organiser = db.ReferenceField('Profile')
     amount = db.StringField()
     contact = db.StringField()
     location = db.StringField()
+    source = db.StringField()
+    destination = db.StringField()
     features = db.StringField()
     important_notes = db.StringField()
     links = db.StringField()
 
 
+
+@update_content.apply
 class Product(Content):
     __template__ = 'model/product/'
     price = db.FloatField()

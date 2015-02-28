@@ -1,6 +1,26 @@
 {
  "facets": [
   {
+    "name": "Adventure Trip",
+    "parent": "Event"
+  },
+  {
+    "name": "Conference",
+    "parent": "Event"
+  },
+  {
+    "name": "Exhibition",
+    "parent": "Event"
+  },
+  {
+    "name": "Conclave",
+    "parent": "Event"
+  },
+  {
+    "name": "Conference",
+    "parent": "Event"
+  },
+  {
    "name": "Enthusiast",
    "parent": "Profile"
   },

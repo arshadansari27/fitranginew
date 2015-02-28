@@ -150,22 +150,24 @@ $(document).ready(function(){
         console.log($(this).attr('data-key'));
     });
 
-    $('.summernote').summernote();
-    $('.summernote-content-form').on('submit', function (e) {
-        e.preventDefault();
-        var url = $("[data-edit-url]").attr('data-edit-url');
-        var data = $(this).find('.summernote').code();
-        App.post({
-			url: url,
-			parameters: {key: $('body').attr('data-key'), data: data, reload: false},
-    		success: function(message, node) {
-                window.location.reload();
-			},
-			error: function(message, node) {
-                window.location.reload();
-    		}
-		});
-    });
+    if ($('.summernote').length > 0) {
+        $('.summernote').summernote();
+        $('.summernote-content-form').on('submit', function (e) {
+            e.preventDefault();
+            var url = $("[data-edit-url]").attr('data-edit-url');
+            var data = $(this).find('.summernote').code();
+            App.post({
+                url: url,
+                parameters: {key: $('body').attr('data-key'), data: data, reload: false},
+                success: function (message, node) {
+                    window.location.reload();
+                },
+                error: function (message, node) {
+                    window.location.reload();
+                }
+            });
+        });
+    }
 
     $('.remove-comment').on('click', function(e){
         e.stopPropagation();
@@ -265,8 +267,8 @@ $(document).ready(function(){
         var url  = $("[data-edit-url]").attr('data-edit-url');
         var apiType = $(this).attr('data-type');
         BootstrapDialog.show({
-            title: 'Edit ' + field,
-            message:  '<input id="edit-' + field + '" type="text" class="col-lg-12" value="'+currentValue+'" data-role="tagsinput"/>',
+            title: 'Edit ' + apiType,
+            message:  '<input id="edit-' + field + '" type="text" class="col-lg-12 col-sm-12" value="'+currentValue+'" data-role="tagsinput"/>',
             onshown: function(dialogRef){
                 var citynames = new Bloodhound({
                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),

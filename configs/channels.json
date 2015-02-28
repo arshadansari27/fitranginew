@@ -53,7 +53,7 @@
             "type": "Profile",
             "menu_link": "/channel/Profile",
             "template": "feature/profile",
-            "menu": 5,
+            "menu": 6,
             "sub_menu": [
                 ["Gear Dealer", "/channel/Profile?facets=Gear Dealer"],
                 ["Organizer", "/channel/Profile?facets=Organizer"]
@@ -61,12 +61,12 @@
 
         },
         {
-            "name": "Adventure Trip",
-            "value": "Adventure Trips",
+            "name": "Event",
+            "value": "Upcoming Events",
             "type": "Event",
-            "menu_link": "/channel/Adventure Trip",
-            "menu": 0,
-            "template": "feature/event"
+            "menu_link": "/channel/Event",
+            "template": "feature/event",
+            "menu": 5
         },
         {
             "name": "Conference",
@@ -86,7 +86,7 @@
             "value": "Forums",
             "type": "Post",
             "menu_link": "/channel/Forum",
-            "menu": 6,
+            "menu": 7,
             "template": "feature/forum"
         }
     ]

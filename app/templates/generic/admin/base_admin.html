@@ -51,7 +51,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/manage/dashboard">Fitrangi Manager</a>
+                <a class="navbar-brand" href="/">Fitrangi Manager</a>
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
@@ -158,7 +158,7 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li class="{% if active == 'dashboard'%}active{% endif %}">
-                        <a href="#"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        <a href="/manage/dashboard"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
                     {% if 'Admin' in user.roles %}
                     <li class="{% if channel == 'Activity'%}active{% endif %}">
@@ -169,6 +169,9 @@
                     </li>
                     <li class="{% if channel == 'Article'%}active{% endif %}">
                         <a href="{{url_for('channel_admin', channel='Article')}}"><i class="fa fa-fw fa-table"></i> Articles</a>
+                    </li>
+                    <li class="{% if channel == 'Event'%}active{% endif %}">
+                        <a href="{{url_for('channel_admin', channel='Event')}}"><i class="fa fa-fw fa-table"></i> Events</a>
                     </li>
                     <li class="{% if channel == 'Forum'%}active{% endif %}">
                         <a href="{{url_for('channel_admin', channel='Forum')}}"><i class="fa fa-fw fa-table"></i> Forums</a>

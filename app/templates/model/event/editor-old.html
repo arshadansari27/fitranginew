@@ -1,0 +1,158 @@
+{% extends 'generic/main/model_editor_base.html' %}
+
+
+{% block form_block %}
+<div class="form-group">
+    <label class="col-lg-3 control-label">Title:</label>
+
+    <div class="col-lg-8">
+        <input class="form-control" value="{%if model.title %}{{ model.title }}{% endif %}" type="text" name="title"/>
+        <input type="hidden" name="action" value="update_existing"/>
+        <input type="hidden" name="channels" value="{{ channel }}"/>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Event Type:</label>
+
+    <div class="col-lg-8">
+        <select class="form-control" name="channels">
+            <option value="Adventure Trip" selected>Adventure Trip</option>
+        </select>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Description:</label>
+
+    <div class="col-lg-8">
+        <textarea class="form-control" name="description">{%if model.description%}{{ model.description }}{% endif%}
+        </textarea>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Published :</label>
+
+    <div class="col-lg-1">
+        <input type="checkbox" class="form-control" name="published" {%if model.published %}checked{% endif %}/>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Content:</label>
+
+    <div class="col-lg-8">
+        <textarea class="ckeditor" row="10" name="text">{%if model.text %}{{ model.text}}{% endif %}</textarea>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Date:</label>
+
+    <div class="col-lg-8">
+        <input class="form-control" value="{%if model.date %}{{ model.date }}{% endif %}" type="text" name="date"/>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Duration:</label>
+
+    <div class="col-lg-8">
+        <input class="form-control" value="{%if model.duration %}{{ model.duration }}{% endif %}" type="text"
+               name="duration"/>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Location:</label>
+
+    <div class="col-lg-8">
+        <input class="form-control" value="{%if model.location %}{{ model.location }}{% endif %}" type="text"
+               name="location"/>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Organiser:</label>
+
+    <div class="col-lg-8">
+            	<div class="control-group">
+					<select id="select-repo" class="repositories" placeholder="Pick Organiser...">
+                        {% if model.organiser and model.organiser.id %}
+                        <option value="{{ model.organiser.id }}" selected>{{ model.organiser.name }}</option>
+                        {% endif %}
+					</select>
+				</div>
+
+        <input class="hidden" type="hidden" value="{%if model.organiser and model.organiser.id %}{{ model.organiser.id }}{% endif %}" type="text" name="organiser_ref" id="organiser_ref"/>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Contact :</label>
+
+    <div class="col-lg-8">
+        <input class="form-control" value="{%if model.contact %}{{ model.contact }}{% endif %}" type="text"
+               name="contact"/>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Amount:</label>
+
+    <div class="col-lg-8">
+        <input class="form-control" value="{%if model.amount %}{{ model.amount }}{% endif %}" type="text"
+               name="amount"/>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Experiences:</label>
+
+    <div class="col-lg-8">
+        <textarea class="form-control" name="experiences">{%if model.experiences %}{{ model.experiences }}{% else %}{%endif %}</textarea>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Important Notes:</label>
+
+    <div class="col-lg-8">
+        <textarea class="form-control" name="important_notes">{%if model.important_notes %}{{ model.important_notes }}{% else %}{% endif %}</textarea>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg-3 control-label">Links:</label>
+
+    <div class="col-lg-8">
+        <textarea class="form-control" name="links">{%if model.links %}{{ model.links }}{% else %}{% endif %}</textarea>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        var $select = $('#select-repo').selectize({
+            valueField: 'option_value',
+            labelField: 'option_display',
+            searchField: 'option_display',
+            create: false,
+            render: {
+                option: function(item, escape) {
+                    console.log(Object.keys(item));
+                    return '<div>' + '<span class="title">' + '<span class="name"><i class="icon"></i>' + escape(item.option_display) + '</span>' +'</span>' + '</div>';
+                }
+            },
+            score: function(search) {
+                return function(item) {return 1};
+            },
+            load: function(query, callback) {
+                if (!query.length) return callback();
+                $.ajax({
+                    url: '/api/models/Profile?query=' + encodeURIComponent(query) + '&facets=Organizer',
+                    type: 'GET',
+                    error: function() {
+                        callback();
+                    },
+                    success: function(res) {
+                        console.log(res);
+                        callback(res.result);
+                    }
+                });
+            },
+            onChange: function(value) {
+                if (!value.length) return;
+                $('#organiser_ref').val(value);
+            }
+        });
+    });
+</script>
+{% endblock %}

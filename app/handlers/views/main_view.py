@@ -23,7 +23,7 @@ class HomeView(object):
         self.banner_articles.extend([ModelView(m, 'list', default='banner') for m in get_models_by('Article', facets=['Top 5 Series'], limit=1)])
         self.banner_articles.extend([ModelView(m, 'list', default='banner') for m in get_models_by('Article', facets=['Explore'], limit=1)])
         self.banner_articles.extend([ModelView(m, 'list', default='banner') for m in get_models_by('Article', facets=['Informative'], limit=1)])
-        self.adventure_trips = [ModelView(m, 'list') for m in get_models_by('Adventure Trip', limit=8)]
+        self.adventure_trips = [ModelView(m, 'list') for m in get_models_by('Event', limit=8)]
 
     def render(self):
         _adverts = Advertisement.get_home_advertisements()
