@@ -1,7 +1,7 @@
 <div class="">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <a  class="pull-right" href="/model/{{model.channel_factory(model)}}/{{model.id}}">More</a>
+            <a  class="pull-right" href="{% if model.slug|length > 0 %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}">More</a>
             <h4>{{ model.title }}</h4>
         </div>
         <div class="panel-body">
@@ -10,7 +10,7 @@
             </p>
             <div class="clearfix"></div>
             <hr>
-            {% if model.description and model.description|length > 0 %}{{ model.description }}{% else %} {{ model.data|safe }} {%endif%}
+            {% if model.description and model.description|length > 0 %}{{ model.description }}{% else %} Click on more for details {% endif %}
         </div>
     </div>
     <script>console.log('{% for c in model.channels %} {{c}}, {% endfor %}');</script>

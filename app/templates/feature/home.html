@@ -236,10 +236,11 @@
 
 
     <br/>
-    <div class="container">
-        {% if footer_advert %}
-            {{ footer_advert.render(long=True)|safe }}
-        {% endif %}
+    <div class="container well well-sm">
+            <strong class="pull-right">Advertisement</strong>
+            {% if footer_advert %}
+                {{ footer_advert.render(long=True)|safe }}
+            {% endif %}
     </div>
     <div class="container">
 	<br/>

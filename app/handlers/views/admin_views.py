@@ -51,6 +51,8 @@ def model_edit(channel, model=None):
                 value = request.json.get('data', None)
                 if value:
                     value = value.split(',')
+                else:
+                    value = []
             else:
                 value = request.json.get('data', '')
             if type and type == 'boolean':

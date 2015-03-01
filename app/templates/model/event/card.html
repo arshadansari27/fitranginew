@@ -2,9 +2,9 @@
 		<div class="view1">
 			<img src="/img/{{model.get_class_name()}}/{{model.id}}" />
             <br/>
-            <!--a href="/model/{{model.channel_factory(model)}}/{{model.id}}"-->
+            <a href="{% if model.slug%}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}">
         	<h5 class="text-muted" >{{ model.title }}</h5>
-            <!--/a-->
+            </a>
 		</div>
 </div>
 

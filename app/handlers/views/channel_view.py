@@ -104,8 +104,25 @@ class ChannelView(object):
 
         _facets = []
         if len(selected_facets) > 0:
-            _facets = [_v for _v in selected_facets if Facet.find(_v) is not None]
-            self.facets = [f for f in Facet.all_facets if f.name in _facets]
+            _facets = []
+            for u in selected_facets:
+                f = Facet.find(u)
+                if f is not None:
+                    if isinstance(f, str):
+                        _facets.append(f)
+                        continue
+                    elif isinstance(f, Facet):
+                        _facets.append(f.name)
+                        continue
+
+                t = Tag.objects(name__iexact=u).first()
+                if not t:
+                    continue
+                _facets.append(t.name)
+
+
+            print '[*] Looking in ', _facets
+            self.facets = _facets
         else:
             self.facets = []
 

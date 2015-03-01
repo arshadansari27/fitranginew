@@ -17,6 +17,7 @@
 				<div class="container2">
 				    {{ model.data|safe }}
                 </div>
+                {% block extra_data %}{% endblock %}
                 <div class="col-sm-1">
                 <div class="fb-share-button" data-href="{%if model.slug %}{{model.slug}}{% else %}/model/Destination/{{model.id}}{% endif %}" data-layout="button">
                 </div>

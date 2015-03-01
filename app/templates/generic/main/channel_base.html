@@ -3,16 +3,6 @@
 	<div class="container-fluid">
 
         <div class="col-md-2">
-            {% if user and 'Admin' in user.roles %}
-            <div class="panel panel-default">
-                <div class="panel-heading"><div class="panel-title">Admin Actions</div></div>
-                <div class="panel-body">
-                    <a href="/model/{{channel_name}}/add">Add New</a>
-                </div>
-
-
-            </div>
-            {% endif %}
             {{ facets.render()|safe }}
         </div>
 		<div class="row">

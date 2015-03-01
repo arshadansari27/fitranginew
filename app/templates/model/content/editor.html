@@ -9,7 +9,7 @@
                 {% endblock %}
             </h1>
             <ol class="breadcrumb">
-                <li class="active"><i class="fa fa-user"></i>&nbsp; Home / {{ channel }} / {{content_type}}</li>
+                <li class="active"><i class="fa fa-user"></i>&nbsp; Home / {{ channel }} / {{content.title | capitalize}}</li>
             </ol>
         </div>
     </div>
@@ -19,7 +19,7 @@
         <div class="container" data-edit-url="/manage/model-edit/" data-comment-remove-url="/manage/model-comment-remove">
             <div class="row">
                 <div class="">
-                    {% if content_type != 'forum' %}
+                    {% if channel != 'Forum' %}
                     <div class="">
                         <a href="#" id="change_image" data-model="{{content.id}}"  data-popover="true" data-html=true data-content="Update Image">
                             <img src="{% if not content.main_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ content.get_class_name()}}/{{content.id}}{% endif %}" class="avatar" alt="avatar"/>
@@ -79,7 +79,7 @@
             <br/>
             {% endif %}
 
-            {% block show_publish %}
+            {% if 'Admin' in user.roles %}
             <div class="row">
                 <div class="heading">
                     <h4 class="form-heading">State: &nbsp; {% if content.published %}<strong><i>published</i></strong> {% else %} <strong><i>not published</i></strong>{% endif %}<small> <a href="#" class="edit-boolean" data-key="{{content.id}}" data-field="published" data-value="{{content.published}}" data-type="published">(Click to change)</a> </small></h4>
@@ -88,7 +88,7 @@
             </div>
             <br/>
             <br/>
-            {% endblock %}
+            {% endif %}
 
             <div class="row">
                 <div class="heading">

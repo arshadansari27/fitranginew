@@ -123,6 +123,7 @@ def channel(channel):
     else:
         only = False
     facets = [v for v in (_facets.split(',') if len(_facets) > 0 else []) if v and len(v)  > 0]
+    print '[*] Looking for ', facets
     return ChannelView(channel, paginated=True, selected_facets=facets, query=query,page=page, only_facet=only).render()
 
 @app.route('/stream/<i>')
@@ -158,6 +159,10 @@ def facets_list():
     d = api.FacetApi()
     return Response(json.dumps(d.dictify()), mimetype="application/json")
 
+@app.route('/api/events', methods=['GET'])
+def events_list():
+    d = api.EventApi()
+    return Response(json.dumps(d.dictify()), mimetype="application/json")
 
 @app.route('/api/tags', methods=['GET'])
 def search_tags():
@@ -272,9 +277,6 @@ def social_login():
                 profile.save()
             except Exception, e:
                 raise e
-            finally:
-                pass
-                #os.remove(img_path)
 
         set_session_and_login(profile)
         return jsonify(dict(location='/stream/me', status='success'))

@@ -57,3 +57,8 @@ class FacetApi(object):
 
     def dictify(self):
         return [u.name for u in Facet.all_facets]
+
+class EventApi(object):
+
+    def dictify(self):
+        return [u.name for u in Facet.all_facets if u.parent.lower() == 'event']
