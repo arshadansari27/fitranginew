@@ -127,7 +127,7 @@ class ChannelView(object):
             self.facets = []
 
         if only_facet:
-            self.models, total = get_models_by_only_single(self.channel.name, self.facets[0].name)
+            self.models, total = get_models_by_only_single(self.channel.name, self.facets[0])
         else:
             self.models, total = get_all_models(self.channel, _facets, query, page, paginated)
         self.paginated = paginated
