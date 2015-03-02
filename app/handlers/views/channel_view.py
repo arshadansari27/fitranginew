@@ -127,9 +127,10 @@ class ChannelView(object):
             self.facets = []
 
         if only_facet:
-            self.models, total = get_models_by_only_single(self.channel.name, self.facets[0])
+            self.models, total = get_models_by_only_single(self.channel.name, self.facets[0], page=page, paginated=paginated)
         else:
             self.models, total = get_all_models(self.channel, _facets, query, page, paginated)
+        print len(self.models), '->',total
         self.paginated = paginated
 
         _template = self.channel.template
@@ -173,7 +174,9 @@ class PaginationInfo(object):
     def render(self):
         pages = range(self.page - 3, self.page + 3)
         first = 1
-        last = self.total
+        last = int(self.total / PAGE_SIZE) + 1
+        if last is first:
+            last = None
         pages = filter(lambda p: True if 0 < p <= last else False, pages)
         args = "&".join(["%s=%s" % (k, v) for k, v in self.args.iteritems() if k != 'page'])
 

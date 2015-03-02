@@ -116,7 +116,7 @@ def get_all_models(channel, facets=[], search_query=None, page=1, paginated=True
     else:
         models = model_class.objects(__raw__=query).all()
 
-    return models, (total / PAGE_SIZE) + 1
+    return models, total
 
 
 def get_by(cls, **kwargs):
