@@ -11,8 +11,13 @@ PAGE_SIZE = 25
 
 def search_models(search_query):
     regx = re.compile(search_query, re.IGNORECASE)
-    query = {'$or': [{'name': {'$regex': regx}}, {'title': {'$regex': regx}}]}
-    return Content.objects(__raw__=query).all()
+    channels = [c for c in Channel.get_all_names() if c != 'Stream']
+    all_models = []
+    for c in channels:
+        query = {'channels': c, '$or': [{'name': {'$regex': regx}}, {'title': {'$regex': regx}}]}
+        models = Content.objects(__raw__=query).all()[0: 8]
+        all_models.extend(models)
+    return all_models
 
 
 def get_all_models_all_channels(search_query=None):
@@ -87,6 +92,19 @@ def get_models_by(channel_name, facets=[], facets_to_avoid=[], page=1, paginated
     else:
         models = model_class.objects(__raw__=query).order_by('-created_timestamp').all()
     return models
+
+def get_facets_by_query(channel, search_query=None) :
+    collection = Content._get_collection()
+    if search_query:
+        regx = re.compile(search_query, re.IGNORECASE)
+        match = {"$match": {"channels": {"$in": [channel.name]}, "$or": [{"title": {'$regex': regx}}, {"name": {'$regex': regx}}]}}
+    else:
+        match = {"$match": {"channels": {"$in": [channel.name]}}}
+    results = collection.aggregate([match, {"$unwind": "$facets"},{"$group": {"_id": "$facets", "count": {"$sum": 1}}}])
+    data = [r['_id'] for r in results['result'] if r['_id'] != channel.name and r['count'] > 0]
+    print data
+    return [Facet.get_facet_by_name(d) for d in data]
+
 
 def get_all_models(channel, facets=[], search_query=None, page=1, paginated=True, limit=None, user=None):
     model_class = Node.model_factory(channel.name)

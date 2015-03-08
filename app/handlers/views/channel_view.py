@@ -7,7 +7,7 @@ from app.handlers.views import env
 from app.handlers.views.facet_view import FacetView
 from app.handlers.views.menu_view import MenuView
 from app.handlers.views.model_view import ModelView
-from app.handlers.extractors import get_all_models, get_channel, get_models_by_only_single, PAGE_SIZE, get_content_list
+from app.handlers.extractors import get_all_models, get_channel, get_models_by_only_single, PAGE_SIZE, get_content_list, get_facets_by_query
 
 class StreamView(object):
 
@@ -137,7 +137,7 @@ class ChannelView(object):
         if not _template:
             raise Exception('The hell, where is the template')
         self.template = "%s/list_card.html" % _template
-        self.facet_view = FacetView(self.facets, self.channel, self.models)
+        self.facet_view = FacetView(get_facets_by_query(self.channel, query), self.channel, self.models)
         self.menu_view = MenuView(self.channel.name)
         self.model_views = [ModelView(model, 'list', default='row') for model in self.models]
         link = "/" + channel_name
@@ -159,8 +159,8 @@ class ChannelView(object):
                 models_arranged[idx % 3].append(model_view)
 
         if not self.paginated:
-            return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=None, user=g.user, channel_name=self.channel.name, tags=self.tags)
-        return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=self.pageinfo, user=g.user, channel_name=self.channel.name, tags=self.tags)
+            return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=None, user=g.user, channel_name=self.channel.name, tags=self.tags, query=self.query)
+        return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=self.pageinfo, user=g.user, channel_name=self.channel.name, tags=self.tags, query=self.query)
 
 
 class PaginationInfo(object):
