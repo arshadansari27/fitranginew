@@ -30,7 +30,7 @@ def arrange_facets(facets):
 
     names = tuple(sorted(f.name for f in facets))
     facets_to_choose = set(sorted(f.name for f in facets))
-    if MEMOIZED_FACETS.has_key(names):
+    if False and MEMOIZED_FACETS.has_key(names):
         return MEMOIZED_FACETS[names]
 
     facets_dict = {}
