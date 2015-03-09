@@ -160,7 +160,18 @@
                     <li class="{% if active == 'dashboard'%}active{% endif %}">
                         <a href="/manage/dashboard"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
+
                     {% if 'Admin' in user.roles %}
+                    <li class="{% if active == 'approval'%}active{% endif %}">
+                        <a href="/manage/approval"><i class="fa fa-fw fa-table"></i> Approval</a>
+                    </li>
+                    <li class="{% if channel == 'Profile' %}active{% endif %}">
+                        <a href="{{url_for('channel_admin', channel='Profile')}}"><i class="fa fa-fw fa-table"></i> Profiles</a>
+                    </li>
+                    {% endif %}
+
+                    {% if 'Admin' in user.roles or 'Editor' in user.roles %}
+
                     <li class="{% if channel == 'Activity'%}active{% endif %}">
                         <a href="{{url_for('channel_admin', channel='Activity')}}"><i class="fa fa-fw fa-table"></i> Activities</a>
                     </li>
@@ -170,24 +181,30 @@
                     <li class="{% if channel == 'Article'%}active{% endif %}">
                         <a href="{{url_for('channel_admin', channel='Article')}}"><i class="fa fa-fw fa-table"></i> Articles</a>
                     </li>
-                    <li class="{% if channel == 'Event'%}active{% endif %}">
-                        <a href="{{url_for('channel_admin', channel='Event')}}"><i class="fa fa-fw fa-table"></i> Events</a>
-                    </li>
-                    <li class="{% if channel == 'Forum'%}active{% endif %}">
-                        <a href="{{url_for('channel_admin', channel='Forum')}}"><i class="fa fa-fw fa-table"></i> Forums</a>
-                    </li>
-                    <li class="{% if channel == 'Profile' %}active{% endif %}">
-                        <a href="{{url_for('channel_admin', channel='Profile')}}"><i class="fa fa-fw fa-table"></i> Profiles</a>
-                    </li>
+
+
                     <li class="{% if channel == 'Post'%}active{% endif %}">
                         <a href="{{url_for('channel_admin', channel='Post')}}"><i class="fa fa-fw fa-table"></i> Posts</a>
                     </li>
-                    <li class="{% if channel == 'Advertisement'%}active{% endif %}">
-                        <a href="{{url_for('channel_admin', channel='Advertisement')}}"><i class="fa fa-fw fa-table"></i> Advertisements</a>
                     {% endif %}
+
+                    {% if 'Admin' in user.roles or 'Event Organizer' in user.roles or 'Editor' in user.roles %}
+                    <li class="{% if channel == 'Event'%}active{% endif %}">
+                        <a href="{{url_for('channel_admin', channel='Event')}}"><i class="fa fa-fw fa-table"></i> Events</a>
+                    </li>
+                    {% endif %}
+                    <li class="{% if channel == 'Forum'%}active{% endif %}">
+                        <a href="{{url_for('channel_admin', channel='Forum')}}"><i class="fa fa-fw fa-table"></i> Forums</a>
+                    </li>
                     <li class="{% if channel == 'Blog'%}active{% endif %}">
                         <a href="{{url_for('channel_admin', channel='Blog')}}"><i class="fa fa-fw fa-table"></i> Blogs</a>
                     </li>
+
+                    {% if 'Admin' in user.roles %}
+                    <li class="{% if channel == 'Advertisement'%}active{% endif %}">
+                        <a href="{{url_for('channel_admin', channel='Advertisement')}}"><i class="fa fa-fw fa-table"></i> Advertisements</a>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
             <!-- /.navbar-collapse -->

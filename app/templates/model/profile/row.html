@@ -6,7 +6,7 @@
 		<div class="panel-title">{{model.name}}</div>
 	</div>
 	<div class="panel-body">
-   		<img src="{% if model.main_image and model.main_image.image %}/img/{{model.get_class_name()}}/{{model.id}}{% else %}/assets/img/Profile-Picture.jpg{% endif %}" class="responsive">
+   		<center><img src="{% if model.visuals(url_only=True)|length > 0 %}{{model.visuals(url_only=True)}}{% else %}/assets/img/Profile-Picture.jpg{% endif %}" class="responsive"></center>
 		<hr/>
 		<p>
             {% if model.description and model.description|length > 0 %}

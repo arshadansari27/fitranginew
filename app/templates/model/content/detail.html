@@ -11,7 +11,8 @@
         <div class="">
             <div class="col-lg-12 ">
 			    <center>
-				    <img class="img-responsive img-border img-full" src="/img/{{ model.get_class_name()}}/{{model.id}}" alt="">
+                    {{ model.visuals(detail=True)|safe }}
+				    <!-img class="img-responsive img-border img-full" src="/img/{{ model.get_class_name()}}/{{model.id}}" alt=""-->
                 </center>
 				{% if model.text %}
 				<div class="container2">
@@ -19,7 +20,7 @@
                 </div>
                 {% block extra_data %}{% endblock %}
                 <div class="col-sm-1">
-                <div class="fb-share-button" data-href="{%if model.slug %}{{model.slug}}{% else %}/model/Destination/{{model.id}}{% endif %}" data-layout="button">
+                <div class="fb-share-button" data-href="{%if model.slug %}{{model.slug}}{% else %}/model/{{model.channels[0]}}/{{model.id}}{% endif %}" data-layout="button">
                 </div>
                     </div>
                 <div class="col-sm-3">

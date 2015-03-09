@@ -5,16 +5,21 @@
             "value": "Administrator"
         },
         {
-            "name": "anon",
-            "value": "Anonymous"
+            "name": "Enthusiast",
+            "value": "Enthusiast"
         },
         {
-            "name": "basic",
-            "value": "Basic User"
+            "name": "Editor",
+            "value": "Editor"
         },
         {
-            "name": "premium",
-            "value": "Premium User"
+            "name": "Event Organizer",
+            "value": "Event Organizer"
+        },
+        {
+            "name": "Product Owner",
+            "value": "Product Owner"
         }
+
     ]
 }

@@ -152,22 +152,33 @@ def model_by_slug(slug):
 @app.route('/api/channels', methods=['GET'])
 def channels_list():
     d = api.ChannelApi()
+    print "[*] Channels:", json.dumps(d.dictify())
     return Response(json.dumps([str(u) for u in d.dictify()]), mimetype="application/json")
 
 @app.route('/api/facets', methods=['GET'])
 def facets_list():
     d = api.FacetApi()
+    print "[*] Facets:", json.dumps(d.dictify())
     return Response(json.dumps(d.dictify()), mimetype="application/json")
 
 @app.route('/api/events', methods=['GET'])
 def events_list():
     d = api.EventApi()
+    print "[*] Events:", json.dumps(d.dictify())
     return Response(json.dumps(d.dictify()), mimetype="application/json")
 
 @app.route('/api/tags', methods=['GET'])
 def search_tags():
     d = api.TagApi(query=request.args.get('query', None))
-    return jsonify(dict(result=d.dictify()))
+    print "[*] Tags:", json.dumps(d.dictify())
+    return Response(json.dumps(d.dictify()), mimetype="application/json")
+    #return jsonify(dict(result=d.dictify()))
+
+@app.route('/api/roles', methods=['GET'])
+def roles_list():
+    d = api.RoleApi()
+    print "[*] Roles:", json.dumps(d.dictify())
+    return Response(json.dumps(d.dictify()), mimetype="application/json")
 
 @app.route('/api/models/<channel>', methods=['GET'])
 def search_models(channel):

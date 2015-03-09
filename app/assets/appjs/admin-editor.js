@@ -335,12 +335,6 @@ $(document).ready(function(){
             message: '<div>Check/Uncheck to change the state: <input class="col-sm-12" id="edit-'+field+'" type="checkbox" '+currentValue+'/><br/></div>',
             buttons:[
                 {
-                    label: 'Test',
-                    action: function(dialogRef) {
-                        console.log($('#edit-' + field).val());
-                    }
-                },
-                {
                     label: 'Save',
                     action: function(dialogRef) {
                         App.post({

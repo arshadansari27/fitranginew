@@ -1,7 +1,7 @@
 <div class="col-md-{{ size }}">
     <a href="{%if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}">
 	<div class="view view-tenth">
-		<img src="/img/{{model.get_class_name()}}/{{model.id}}" />
+        {{ model.visuals() | safe }}
         <div class="mask">
 			<h2>{{ model.name }}</h2>
         </div>

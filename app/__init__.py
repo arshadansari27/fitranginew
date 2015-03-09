@@ -51,7 +51,4 @@ def start_app():
 
 start_app()
 from app.handlers.examples import *
-for r in app.url_map._rules:
-    if not str(r).startswith('/manage') and not str(r).startswith('/main'): continue
-    print r
 

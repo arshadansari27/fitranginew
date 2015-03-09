@@ -47,7 +47,7 @@
                         <a href="" class="label label-danger"  data-toggle="modal" data-target="#largeModal10">Upload Photo</a>
                     </div>
                     {% endif %}
-                    <img class="img-circle img-responsive" src="{% if model.has_no_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ model.get_class_name()}}/{{model.id}}{% endif %}" class="avatar" alt="avatar"/>
+                    <img class="img-circle img-responsive" src="{{model.visuals(url_only=True)|safe}}" class="avatar" alt="avatar"/>
                 </div>
 			</div>
         </div>

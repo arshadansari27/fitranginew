@@ -70,6 +70,7 @@ class Configuration(object):
         data3 = get_roles()
         for d in data3:
             r = Role(d['name'], d['value'])
+            print "Role loaded", r.name
             Role.all_data_role.append(r)
 
 
@@ -231,12 +232,9 @@ class Node(object):
         self.created_timestamp = datetime.datetime.now()
         self.created_by = owner
         if self.__class__.__name__ == 'Question':
-            self.published = False
-
             mail_data = render_template('notifications/content_posted.html', user=owner, content=self)
             send_single_email("[Fitrangi] You have posted a question", to_list=[owner.email, 'admin@fitrangi.com'], data=mail_data)
-        else:
-            self.published = True
+        #self.published = True
         self.published_timestamp = datetime.datetime.now()
         self.save()
         return self
@@ -314,6 +312,37 @@ class Content(Node, db.Document):
     parent = db.ReferenceField('Content', required=False)
     keywords = db.ListField(db.StringField())
     location = db.StringField()
+    admin_published = db.BooleanField(default=False)
+    youtube_embed = db.StringField()
+
+    def visuals(self, small=False, url_only=False, detail=False):
+        if self.youtube_embed is not None and len(self.youtube_embed) > 0:
+            if detail:
+                height = 'height="480px"'
+            else:
+                height = ''
+            video = """
+            <div class="col-sm-12 col-md-12">
+                <center>
+                    <iframe src="//www.youtube.com/embed/%s?controls=2" frameborder="0" allowfullscreen width="100%%" %s></iframe>
+                </center>
+            </div>
+            """ % (str(self.youtube_embed), height)
+
+            return video
+        else:
+            if not self.has_image:
+                img_url = 'http://placehold.it/300x300&text=Fitrangi!'
+            else:
+                img_url = '/img/%s/%s' % (self.get_class_name(), str(self.id))
+            if not small:
+                sizing = ''
+            else:
+                sizing = 'height="30px" width="40px" class="img-circle"'
+            if url_only:
+                return img_url
+            return '<img src="%s" class="img-responsive %s" alt="%s" %s/>' % (img_url, 'img-circle' if small else '', self.name if hasattr(self, 'name') and self.name is not None and len(self.name) > 0 else self.title, sizing)
+
 
     @property
     def since(self):
@@ -451,6 +480,8 @@ class Profile(Content):
 
     @classmethod
     def authenticate(cls, email, password):
+        if password is None or len(password) is 0:
+            return False
         profile = Profile.objects(Q(email__iexact=email) & Q(password__exact=password)).first()
         if profile and profile.email == email:
             return profile
