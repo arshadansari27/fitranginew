@@ -40,7 +40,7 @@ def arrange_facets(facets):
             continue
         facets_dict[f['name']] = f['parent']
 
-    print "[*] FACET_DICT: ", facets_dict
+    print "[*] FACET_DICT: ", len(facets_dict)
     roots = set([])
     root_map = {}
     for f in facets:
