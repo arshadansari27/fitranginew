@@ -47,6 +47,7 @@ def arrange_facets(facets):
         p = f.parent
         while p is not None and facets_dict.has_key(p):
             p = facets_dict[p]
+
         root_map[f.name] = p
         roots.add(p)
     print "[*] ROOTS: ", roots
