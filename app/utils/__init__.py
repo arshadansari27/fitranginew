@@ -45,10 +45,15 @@ def arrange_facets(facets):
     root_map = {}
     for f in facets:
         p = f.parent
+        old = None
         while p is not None and facets_dict.has_key(p):
+            old = p
             p = facets_dict[p]
             root_map[f.name] = p
-        roots.add(p)
+        if p is not None:
+            roots.add(p)
+        else:
+            roots.add(old)
     print "[*] ROOTS: ", roots
     print "[*] ROOT MAP: ", root_map
 
