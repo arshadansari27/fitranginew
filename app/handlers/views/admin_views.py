@@ -76,7 +76,6 @@ def model_edit(channel, model=None):
                     value = False
             values = {}
             values[field] = value
-            print "Modifying:", id, field, value
             flash('Successfully updated', category="success")
             content.update_existing(**values)
             return jsonify(dict(node=str(content.id), message='Successfully updated', status='success'))
