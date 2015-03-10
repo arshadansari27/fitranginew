@@ -77,7 +77,7 @@
    "parent": "Product"
   },
   {
-   "name": "Accessores",
+   "name": "Accessories",
    "parent": "Product"
   },
   {
@@ -204,9 +204,6 @@
    "name": "West Bengal",
    "parent": "India"
   },
-
-
-
   {
    "name": "India",
    "parent": "Location"
@@ -232,8 +229,6 @@
    "name": "Hong Kong",
    "parent": "Location"
   },
-  
-  
   {
    "name": "Bungee jumping",
    "parent": "Sky - Fly"
@@ -392,35 +387,35 @@
   },
   {
    "name": "In a Week",
-   "parent": "When"
+   "parent": "Date"
   },
   {
    "name": "In a Month",
-   "parent": "When"
+   "parent": "Date"
   },
   {
    "name": "In 3 Months",
-   "parent": "When"
+   "parent": "Date"
   },
   {
    "name": "In 6 Months",
-   "parent": "When"
+   "parent": "Date"
   },
   {
    "name": "0 - 1000",
-   "parent": "Amount"
+   "parent": "Price"
   },
   {
    "name": "1000 - 5000",
-   "parent": "Amount"
+   "parent": "Price"
   },
   {
    "name": "5000 - 10000",
-   "parent": "Amount"
+   "parent": "Price"
   },
   {
    "name": "10000+",
-   "parent": "Amount"
+   "parent": "Price"
   }
  ]
 }

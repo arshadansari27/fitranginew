@@ -6,6 +6,7 @@
             "type": "Post",
             "menu_link": "/stream/me",
             "template": "feature/stream",
+            "facets": [],
             "menu": 1
         },
         {
@@ -14,6 +15,7 @@
             "type": "Post",
             "menu_link": "/channel/Activity",
             "template": "feature/common",
+            "facets": ["Activity"],
             "menu":2
         },
         {
@@ -22,6 +24,7 @@
             "type": "Post",
             "menu_link": "/channel/Destination",
             "template": "feature/common",
+            "facets": ["Activity", "Location"],
             "menu":3
         },
         {
@@ -30,6 +33,7 @@
             "type": "Post",
             "menu_link": "/channel/Article",
             "template": "feature/common",
+            "facets": ["Activity", "Location"],
             "menu":4
         },
         {
@@ -37,6 +41,7 @@
             "value": "Blogs",
             "type": "Post",
             "template": "feature/common",
+            "facets": ["Activity", "Location"],
             "menu": 0
 
         },
@@ -45,6 +50,7 @@
             "value": "Products",
             "type": "Product",
             "parent": "",
+            "facets": ["Activity", "Product", "Price"],
             "menu": 0
         },
         {
@@ -53,12 +59,12 @@
             "type": "Profile",
             "menu_link": "/channel/Profile",
             "template": "feature/profile",
+            "facets": ["Profile"],
             "menu": 6,
             "sub_menu": [
                 ["Gear Dealer", "/channel/Profile?facets=Gear Dealer"],
                 ["Organizer", "/channel/Profile?facets=Organizer"]
             ]
-
         },
         {
             "name": "Event",
@@ -66,20 +72,8 @@
             "type": "Event",
             "menu_link": "/channel/Event",
             "template": "feature/event",
+            "facets": ["Activity", "Location", "Price", "Date"],
             "menu": 5
-        },
-        {
-            "name": "Conference",
-            "value": "Conferences",
-            "type": "Event",
-            "menu": 0
-
-        },
-        {
-            "name": "Meetup",
-            "value": "Meetups",
-            "type": "Event",
-            "menu": 0
         },
         {
             "name": "Forum",
@@ -87,6 +81,7 @@
             "type": "Post",
             "menu_link": "/channel/Forum",
             "menu": 7,
+            "facets": ["Tag"],
             "template": "feature/forum"
         }
     ]

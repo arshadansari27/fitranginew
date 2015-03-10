@@ -316,7 +316,7 @@ class Content(Node, db.Document):
     youtube_embed = db.StringField()
 
     def visuals(self, small=False, url_only=False, detail=False):
-        if self.youtube_embed is not None and len(self.youtube_embed) > 0:
+        if not small and self.youtube_embed is not None and len(self.youtube_embed) > 0:
             if detail:
                 height = 'height="480px"'
             else:

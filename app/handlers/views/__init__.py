@@ -145,6 +145,8 @@ def model(channel, key):
 
 @app.route('/profile/<slug>')
 @app.route('/content/<slug>')
+@app.route('/event/<slug>')
+@app.route('/product/<slug>')
 def model_by_slug(slug):
     return ModelView(request.path, 'detail', is_slug=True).render()
 
