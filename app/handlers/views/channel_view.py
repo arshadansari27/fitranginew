@@ -1,13 +1,13 @@
 __author__ = 'arshad'
 
-from flask import render_template, request, g
+from flask import render_template, request, g, redirect
 
 from app.models import *
 from app.handlers.views import env
 from app.handlers.views.facet_view import FacetView
 from app.handlers.views.menu_view import MenuView
 from app.handlers.views.model_view import ModelView
-from app.handlers.extractors import get_all_models, get_channel, get_models_by_only_single, PAGE_SIZE, get_content_list
+from app.handlers.extractors import get_all_models, get_channel, PAGE_SIZE, get_facets_by_query
 
 class StreamView(object):
 
@@ -40,7 +40,9 @@ class AdminChannelView(object):
         self.channel_name = channel_name
         self.query = query
         self.channel = get_channel(channel_name)
-        self.models, total = get_all_models(self.channel, [], search_query=query, page=page, paginated=paginated, user=g.user)
+        admin_published=None
+        published=None
+        self.models, total = get_all_models(self.channel, [], search_query=query, page=page, paginated=paginated, user=g.user, owned=True, admin_published=admin_published, published=published)
 
         _template = self.channel.template
         if not _template:
@@ -59,6 +61,31 @@ class AdminChannelView(object):
         if not self.paginated:
             return render_template(self.template, models=self.model_views, pageinfo=None, user=g.user, channel=self.channel.name, tags=self.tags)
         return render_template(self.template, models=self.model_views, pageinfo=self.pageinfo, user=g.user, channel=self.channel.name, tags=self.tags, content_type=self.channel.name)
+
+class AdminApprovalView(object):
+
+    def __init__(self, query=None, page=1, paginated=True):
+        page = int(page)
+        self.query = query
+        self.models, total = get_all_models(None, [], search_query=query, page=page, paginated=paginated, user=g.user, owned=True, admin_published=False, published=True)
+
+        _template = "feature/common"
+        if not _template:
+            raise Exception('The hell, where is the template')
+        self.template = "%s/admin_list.html" % _template
+        self.model_views = [ModelView(model, 'admin_list', detail_link='/manage/model-edit/%s/' % model.channels[0]) for model in self.models]
+        link = "/manage/approval"
+        args = request.args
+        self.paginated = paginated
+        if self.paginated:
+            self.pageinfo = PaginationInfo(args, link, total, page)
+        self.tags = [t.name for t in Tag.objects.all()]
+
+    def render(self):
+        if 'Admin' not in g.user.roles:
+            return redirect('/manage')
+        return render_template(self.template, models=self.model_views, pageinfo=self.pageinfo, user=g.user, channel="Approvals", tags=self.tags, content_type="Approvals", active='approval')
+
 
 class AdminAdvertisementView(object):
 
@@ -92,6 +119,8 @@ class AdminAdvertisementView(object):
             self.pageinfo = PaginationInfo(args, link, total, page)
 
     def render(self):
+        if 'Admin' not in g.user.roles:
+            return redirect('/manage')
         return render_template("/generic/admin/advertisement_list.html", models=self.models, pageinfo=self.pageinfo, user=g.user, channel='Advertisement')
 
 class ChannelView(object):
@@ -127,16 +156,16 @@ class ChannelView(object):
             self.facets = []
 
         if only_facet:
-            self.models, total = get_models_by_only_single(self.channel.name, self.facets[0].name)
+            self.models, total = get_all_models(self.channel.name, [self.facets[0]], page=page, paginated=paginated, admin_published=True)
         else:
-            self.models, total = get_all_models(self.channel, _facets, query, page, paginated)
+            self.models, total = get_all_models(self.channel, self.facets, query, page, paginated, admin_published=True)
         self.paginated = paginated
 
         _template = self.channel.template
         if not _template:
             raise Exception('The hell, where is the template')
         self.template = "%s/list_card.html" % _template
-        self.facet_view = FacetView(self.facets, self.channel, self.models)
+        self.facet_view = FacetView(get_facets_by_query(self.channel, query), self.channel, self.models)
         self.menu_view = MenuView(self.channel.name)
         self.model_views = [ModelView(model, 'list', default='row') for model in self.models]
         link = "/" + channel_name
@@ -158,8 +187,8 @@ class ChannelView(object):
                 models_arranged[idx % 3].append(model_view)
 
         if not self.paginated:
-            return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=None, user=g.user, channel_name=self.channel.name, tags=self.tags)
-        return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=self.pageinfo, user=g.user, channel_name=self.channel.name, tags=self.tags)
+            return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=None, user=g.user, channel_name=self.channel.name, tags=self.tags, query=self.query)
+        return render_template(self.template, menu=self.menu_view, models=models_arranged, facets=self.facet_view, pageinfo=self.pageinfo, user=g.user, channel_name=self.channel.name, tags=self.tags, query=self.query)
 
 
 class PaginationInfo(object):
@@ -173,7 +202,9 @@ class PaginationInfo(object):
     def render(self):
         pages = range(self.page - 3, self.page + 3)
         first = 1
-        last = self.total
+        last = int(self.total / PAGE_SIZE) + 1
+        if last is first:
+            last = None
         pages = filter(lambda p: True if 0 < p <= last else False, pages)
         args = "&".join(["%s=%s" % (k, v) for k, v in self.args.iteritems() if k != 'page'])
 

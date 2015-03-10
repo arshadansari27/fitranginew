@@ -2,8 +2,8 @@ __author__ = 'arshad'
 
 from flask import render_template, g
 
-from app.models.models import Advertisement
-from app.handlers.extractors import search_models, get_models_by
+from app.models.models import Advertisement, Channel
+from app.handlers.extractors import get_all_models
 from app.handlers.views.menu_view import MenuView
 from app.handlers.views.model_view import ModelView
 from app.handlers.views.ad_view import AdView
@@ -16,14 +16,14 @@ class HomeView(object):
         self.query = query
         self.template =  'feature/home.html'
         self.menu = MenuView(None)
-        self.destinations = [ModelView(m, 'list') for m in get_models_by('Destination', limit=6)]
-        self.organizers = [ModelView(m, 'list') for m in get_models_by('Profile', ['Organizer'], limit=6)]
-        self.articles = [ModelView(m, 'list', default='list') for m in get_models_by('Article', limit=4)]
+        self.destinations = [ModelView(m, 'list') for m in get_all_models(Channel.getByName('Destination'), [], limit=6)[0]]
+        self.organizers = [ModelView(m, 'list') for m in get_all_models(Channel.getByName('Profile'), ['Organizer'], limit=6)[0]]
+        self.articles = [ModelView(m, 'list', default='list') for m in get_all_models(Channel.getByName('Article'), [], limit=4)[0]]
         self.banner_articles = []
-        self.banner_articles.extend([ModelView(m, 'list', default='banner') for m in get_models_by('Article', facets=['Top 5 Series'], limit=1)])
-        self.banner_articles.extend([ModelView(m, 'list', default='banner') for m in get_models_by('Article', facets=['Explore'], limit=1)])
-        self.banner_articles.extend([ModelView(m, 'list', default='banner') for m in get_models_by('Article', facets=['Informative'], limit=1)])
-        self.adventure_trips = [ModelView(m, 'list') for m in get_models_by('Event', limit=8)]
+        self.banner_articles.extend([ModelView(m, 'list', default='banner') for m in get_all_models(Channel.getByName('Article'), facets=['Top 5 Series'], limit=1)[0]])
+        self.banner_articles.extend([ModelView(m, 'list', default='banner') for m in get_all_models(Channel.getByName('Article'), facets=['Explore'], limit=1)[0]])
+        self.banner_articles.extend([ModelView(m, 'list', default='banner') for m in get_all_models(Channel.getByName('Article'), facets=['Informative'], limit=1)[0]])
+        self.adventure_trips = [ModelView(m, 'list') for m in get_all_models(Channel.getByName('Event'), [], limit=8)[0]]
 
     def render(self):
         _adverts = Advertisement.get_home_advertisements()
@@ -40,7 +40,13 @@ class SearchView(object):
 
     def __init__(self, query):
         self.query = query
-        self.models = search_models(search_query=query)
+        channels = [c for c in Channel.get_all_names() if c != 'Stream']
+        self.models = []
+        for c in channels:
+            models = get_all_models(c, [], search_query=query, limit=8)
+            if models and len(models) > 0:
+                self.models.extend(models)
+
         self.template =  'feature/search.html'
         self.menu = MenuView(None)
         self.model_group = {}

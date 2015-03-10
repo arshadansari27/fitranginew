@@ -22,8 +22,8 @@
                             </div>
                         {% else %}
                             <div id="accordion_{{_f.name.replace(' ', '-')}}">
-                                <a data-toggle="collapse" data-parent="#accordion_{{_f.name.replace(' ', '-').replace('&', '-')}}" href="#collapseTwo_{{_f.name.replace(' ', '-').replace('&', '-')}}"><strong>{{_f.name }}</strong><span class="pull-right"><i class="glyphicon glyphicon-plus-sign"></i></span> </a>
-                                <div id="collapseTwo_{{_f.name.replace(' ','-').replace('&', '-')}}" class="collapse">
+                                <a data-toggle="collapse" data-parent="#accordion_{{_f.name.replace(' ', '-').replace('&', '-')}}" href="#collapseTwo_{{_f.name.replace(' ', '-').replace('&', '-')}}"><strong>{{_f.name }}</strong></a>
+                                <div id="collapseTwo_{{_f.name.replace(' ','-').replace('&', '-')}}" class="collapse in">
                                     {% for _fl in _f.facets %}
                                         <div class="row-fluid">
                                             <input type="checkbox" class="pull-right" name="facets-{{_fl}}" value="{{_fl}}"/>
@@ -33,6 +33,7 @@
                                 </div>
                             </div>
                         {% endif %}
+                        {% if not loop.last %}<hr/>{% endif %}
                     {% endfor %}
                 {% endif %}
             </div>
@@ -72,6 +73,7 @@
 			var j = window.location.href.indexOf('?');
 			var loc = window.location.href.substring(0, j);
 			var subchannel = getParameterByName('subchannel');
+            var channel = getParameterByName('channel');
 			var facets = getParameterByName('facets');
 			if (this.checked == true ) {
 				if (facets != null && facets != undefined && facets.length > 0) {
@@ -103,6 +105,9 @@
 				}
 			}
 			var final_location = loc + '?';
+            if (channel != null && channel != undefined)
+                final_location = final_location + 'channel=' + channel + "&"
+
 			if (subchannel != null && subchannel != undefined)
 				final_location = final_location + 'subchannel=' + subchannel + "&"
 			if (facets != null && facets != undefined)

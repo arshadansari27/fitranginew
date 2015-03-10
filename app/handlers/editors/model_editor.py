@@ -34,6 +34,7 @@ class ModelEditor(object):
                 self.model.has_no_image = True
             else:
                 self.model.has_no_image = False
+
         else:
             self.model = None
 
@@ -53,6 +54,10 @@ class ModelEditor(object):
             model = model_class().add_new(owner, channels=[channel], facets=[], name=title)
         else:
             model = model_class().add_new(owner, channels=[channel], facets=[], title=title)
+        if channel == 'Stream':
+            model.published, model.admin_published = True, True
+        if channel == 'Blog':
+            model.published, model.admin_published = False, False
         model.save()
         #editor = ModelEditor(model, channel_name=channel)
         return dict(node=str(model.id), status='success', message='successfully created')
@@ -66,10 +71,14 @@ class ModelEditor(object):
             model = model_class.get_by_id(model.id)
         for k, v in kwargs.iteritems():
             model.update_existing(**kwargs)
-            if k == 'published' and (v == 'on' or v == 'true' or v == 'True'):
+            if k == 'published' and (v == 'on' or v == 'true' or v == 'True' or v == True):
                 model.published = True
             else:
                 model.published = False
+            if k == 'admin_published' and (v == 'on' or v == 'true' or v == 'True' or v == True):
+                model.admin_published = True
+            else:
+                model.admin_published = False
             model.save()
 
         return ModelEditor(model, channel_name=channel)

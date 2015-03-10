@@ -26,4 +26,6 @@ if __name__=='__main__':
     print get_channels()
     print '*' * 100
     print get_facets()
+    print '*' * 100
+    print get_roles()
 

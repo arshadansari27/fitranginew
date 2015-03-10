@@ -69,16 +69,17 @@
         {% if 'Admin' in user.roles %}
         <div class="row">
             <div class="heading">
-                <h4 class="form-heading">Roles</h4>
+                <h4 class="form-heading">Roles <small>&nbsp; <a href="#" class="edit-form-tags" data-key="{{content.id}}" data-field="roles" data-value="{% for c in content.roles %}{{c}}{% if not loop.last %},{% endif %}{%endfor %}" data-type="roles">(change)</a></small></h4>
                 <hr/>
             </div>
-            {% for f in content.roles%}
+            {% for f in content.roles %}
                 <span>{{f}}{% if not loop.last %}, {% endif %}</span>
             {% endfor %}
         </div>
         <br/>
         <br/>
         {% endif %}
+
         <div class="row">
             <div class="heading">
                 <h4 class="form-heading">Following</h4>
@@ -87,7 +88,7 @@
             <table class="col-sm-12">
                 {% for f in content.following %}
                     <tr>
-                        <td><img src="{% if not f.main_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ f.get_class_name()}}/{{f.id}}{% endif %}" class="avatar" alt="avatar" height="50px;"/></td>
+                        <td>{{f.visuals(small=True)|safe}}</td>
                         <td>{{f.name}}</td>
                         <td><a href="#" data-key="{{f.id}}" data-remove-following>Remove</a></td>
                     </tr>
@@ -106,7 +107,7 @@
                 <table class="col-sm-12">
                     {% for f in content.favorites %}
                         <tr>
-                            <td><img src="{% if not f.main_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ f.get_class_name()}}/{{f.id}}{% endif %}" class="avatar" alt="avatar" height="50px;"/></td>
+                            <td>{{f.visuals(small=True)|safe}}</td>
                             <td>{{f.name}}</td>
                             <td><a href="#" data-key="{{f.id}}" data-remove-favorite>Remove</a></td>
                         </tr>

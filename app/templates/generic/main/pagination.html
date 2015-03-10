@@ -1,6 +1,6 @@
 <nav class="pull-right">
   <ul class="pagination">
-    {% if current != first %}
+    {% if first and current != first %}
     <li>
       <a href="#" aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>
@@ -18,7 +18,7 @@
             </li>
         {% endif %}
     {% endfor %}
-    {% if current != last %}
+    {% if last and current != last %}
     <li>
       <a href="#" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>

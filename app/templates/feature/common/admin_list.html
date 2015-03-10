@@ -10,7 +10,7 @@
     </div>
 {% endblock %}
 {% block content %}
-<div class="container" style="background-color: rgb(255,255,255);">
+<div class="container-fluid" style="background-color: rgb(255,255,255);">
         <div class="row">
             <div class="col-sm-12">
                 <form action="" method="POST">
@@ -18,7 +18,7 @@
                     <input name="query" type="text" class="form-control" placeholder="Search for...">
                     <span class="input-group-btn">
                         <button class="btn btn-success" type="submit">Search</button>
-                        <a id="add_new" data-type="Content" href="#" class="btn btn-primary">Add New</a>
+                        {% if channel != 'Approvals' %}<a id="add_new" data-type="Content" href="#" class="btn btn-primary">Add New</a>{% endif %}
                     </span>
                 </div><!-- /input-group -->
                 </form>

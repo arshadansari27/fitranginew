@@ -9,7 +9,8 @@ __author__ = 'arshad'
 
 from flask import request
 from app import app
-from channel_view import AdminChannelView, AdminAdvertisementView
+from channel_view import AdminChannelView, AdminAdvertisementView, AdminApprovalView
+
 
 @app.route('/manage/channel/<channel>', methods=['GET', 'POST'])
 @login_required
@@ -23,6 +24,17 @@ def channel_admin(channel):
     if channel == 'Advertisement':
         return AdminAdvertisementView(query, page, paginated=True).render()
     return AdminChannelView(channel, paginated=True, query=query,page=page).render()
+
+@app.route('/manage/approval', methods=['GET', 'POST'])
+@login_required
+def approvals():
+    page = request.args.get('page', 1)
+    if request.method == 'POST':
+        query = request.form.get('query', '')
+    else:
+        query = request.args.get('query', '')
+
+    return AdminApprovalView(paginated=True, query=query,page=page).render()
 
 
 @app.route('/manage/advertisement-edit/<model>', methods=['GET', 'POST'])
@@ -45,6 +57,8 @@ def model_edit(channel, model=None):
             if not model:
                 raise Exception("Invalid access")
             content = Content.objects(pk=model).first()
+            if 'Profile' not in content.channels and content.created_by.id != g.user.id:
+                return redirect("/manage")
             field = request.json.get('field', 'text')
             type = request.json.get('type', None)
             if type == 'array':
@@ -62,10 +76,13 @@ def model_edit(channel, model=None):
                     value = False
             values = {}
             values[field] = value
-            print "Modifying:", id, field, value
             flash('Successfully updated', category="success")
             content.update_existing(**values)
             return jsonify(dict(node=str(content.id), message='Successfully updated', status='success'))
+    content = Content.objects(pk=model).first()
+    if 'Profile' not in content.channels and content.created_by.id != g.user.id:
+        flash("Unauthorized access", category="warning")
+        return redirect("/manage")
     return ModelEditor(model, channel_name=channel).render()
 
 

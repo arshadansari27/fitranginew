@@ -1,6 +1,7 @@
 __author__ = 'arshad'
 
-from app.models import Channel, Node, Content, Profile, Tag, Facet
+from app.models import Channel, Node, Content, Profile, Tag, Facet, Role
+
 
 class ModelApi(object):
 
@@ -49,16 +50,31 @@ class TagApi(object):
 
 class ChannelApi(object):
 
+    def __init__(self, query=None):
+        self.query = query
+
     def dictify(self):
         channels = Channel.all_data
         return [c.name for c in channels]
 
 class FacetApi(object):
 
+    def __init__(self, query=None):
+        self.query = query
+
     def dictify(self):
         return [u.name for u in Facet.all_facets]
 
 class EventApi(object):
 
+    def __init__(self, query=None):
+        self.query = query
+
     def dictify(self):
         return [u.name for u in Facet.all_facets if u.parent.lower() == 'event']
+
+class RoleApi(object):
+
+    def dictify(self):
+        data = [u.name for u in Role.all_data_role]
+        return data

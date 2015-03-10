@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import g, redirect, request, url_for
+from flask import g, redirect, request, url_for, abort
 
 def login_required(func):
 
@@ -11,6 +11,7 @@ def login_required(func):
             return redirect('login')
 
     return decoration
+
 
 def redirect_url(default='login'):
     return request.args.get('next') or request.referrer or url_for(default)

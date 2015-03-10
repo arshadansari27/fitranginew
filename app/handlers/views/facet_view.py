@@ -10,15 +10,11 @@ from app.utils import arrange_facets
 class FacetView(object):
 
     def __init__(self, facets, channel, models, template=None):
+        facets = [v for v in facets if v is not None]
         if template is None:
             self.template = 'generic/main/facets.html'
         else:
             self.template = template
-        facets = []
-        for m in models:
-            if not m.facets:
-                continue
-            facets.extend([Facet.get_facet_by_name(v) for v in m.facets if Facet.get_facet_by_name(v)])
         self.facets = {} if len(facets) is 0 else arrange_facets(facets)
         self.channel = channel
 

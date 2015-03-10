@@ -4,6 +4,7 @@
             height="40px"></td>
     <td>{{ model.title }}</td>
     <td>{{ model.created_by.name }}</td>
-    <td>{{ model.published }}</td>
+    <td> {% if model.published %}<i class="fa fa-check-circle"></i> {% else %} <i class="fa fa-close"></i> {% endif %}</td>
+    <td> {% if model.admin_published %}<i class="fa fa-check-circle"></i> {% else %} <i class="fa fa-close"></i> {% endif %}</td>
     <td><a href="{{detail}}{{model.id}}">Details</a></td>
 </tr>
