@@ -41,9 +41,11 @@ def arrange_facets(facets):
     print "[*] FACET_DICT: ", len(facets_dict)
     roots = set([])
     root_map = {}
+    parent_list  = set([])
     for f in facets:
         p = f.parent
         while p is not None and facets_dict.has_key(p):
+            parent_list.add(p)
             p = facets_dict[p]
 
         root_map[f.name] = p
@@ -52,7 +54,7 @@ def arrange_facets(facets):
     print "[*] ROOT MAP: ", root_map
 
     for k, v in facets_dict.iteritems():
-        if v in roots:
+        if v in roots and (k in facets_to_choose or k in parent_list):
             new_dict.setdefault(v, [])
             new_dict[v].append(FacetOption(k, []))
 
