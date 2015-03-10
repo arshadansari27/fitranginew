@@ -99,7 +99,9 @@
 					</ul>
 				 </li>-->
 				{% else %}
-				<li><a id="btn-login" href="/login"><strong>Sign In+</strong></a></li>
+				<!--li><a id="btn-login" href="/login"><strong>Sign In+</strong></a></li-->
+                <li><a id="signin" data-toggle="modal" data-target="#largeModal2" href="#"><strong>Sign In+</strong></a></li>
+
 				{% endif %}
                   <!--li><a href=""><i class="fa fa-shopping-cart fa-2x" title="Shopping Cart"></i><sub id="quantity">123</sub></a></li-->
 
@@ -172,6 +174,71 @@
                         <p><strong>YOU CAN ALSO FOLLOW US ON</strong></p>
                         <p><a href="#">Facebook</a>&nbsp;|&nbsp;<a href="#">Twitter</a>&nbsp;|&nbsp;<a href="#">Google+</a>&nbsp;|&nbsp;<a href="#">YouTube</a></p>
         </div>
+
+    <div class="modal fade" id="largeModal2" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+      <form id="signindmodal" action="/login" method="post" class="form-horizontal" role="form">
+         <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+             <div class="modal-header">
+                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                 <h4 class="modal-title" id="myModalLabel">Sign In</h4>
+             </div>
+           <div class="modal-body">
+             <div class="container-fluid">
+               <div class="col-sm-12">
+                 <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6 separator social-login-box"> <br />
+                            <a href="" class="btn facebook btn-block" role="button">Log in using Facebook</a>
+                            <br />
+                            <a href="" class="btn twitter btn-block" role="button">Log in using Google</a>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 login-box">
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <input id="username" type="text" required data-validation-required-message="Please enter your Email." class="form-control" name="username" value="" placeholder="email"/>
+                                    </div>
+                                    <div style="margin-bottom: 25px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                        <input id="password" type="password" required data-validation-required-message="Please enter your Password." class="form-control" name="password" placeholder="password">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-md-6">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" value="Remember">
+                                                Remember me
+                                            </label>
+                                        </div>
+                                    </div>
+                             </form>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <p class="pull-right" style="padding-top: 7px;"><a href="/forgotpassword">Forgot password?</a></p>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6" style="margin-top: 10px;">
+                                <button id="btn-login1" type="submit" class="btn btn-success" >Login  </button>
+                            </div>
+                            <div class="pull-right"> Don't have an account? <a href="/register">Sign up here</a></div>
+                        </div>
+                    </div>
+                </div>
+                            <div class="panel-footer">
+                                <div class="row">
+
+                                    <div class="col-xs-12 col-sm-12 col-md-12">
+
+                                        <button type="button" class="btn btn-labeled btn-danger pull-right" data-dismiss="modal">
+                                            <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>Close</button>
+                                    </div>
+                                </div>
+                            </div>
+               </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        </form>
+                    </div>
         <ul class="nav pull-right" style="position:fixed;bottom:0;right:2%;z-index:100;background: lightgray;font-size:24px;border-top-left-radius:3px;border-top-right-radius:3px;">
             <li><a href="#" title="Scroll to top"><i class="fa fa-arrow-up"></i></a></li>
         </ul>

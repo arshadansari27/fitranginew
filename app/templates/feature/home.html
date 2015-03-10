@@ -96,11 +96,7 @@
     <br/>
         <div class="row">
             <div class="col-sm-9">
-	            <div class="header-title text-center"><strong style="font-family:Acadian;
-                            font-size:1.5em;
-                            font-variant:small-caps;
-                            font-style:oblique;
-                            font-weight:800;">Top Trending Destinations<small><span class="pull-right"><a href="/channel/Destination" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></strong></div>
+	            <div class="header-title text-center"><strong class="nfont">Top Trending Destinations<small><span class="pull-right"><a href="/channel/Destination" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></strong></div>
                 <br/>
                 <div class="">
 		            {% for m in destinations %}
@@ -109,7 +105,7 @@
 		        </div>
 	        </div>
             <div class="col-sm-3">
-                <div class="header-title text-center"><strong style="font-family:Acadian;
+                <div class="header-title text-center"><strong style="font-family:Acadian;
                             font-size:1.3em;
                             font-variant:small-caps;
                             font-style:oblique;
@@ -218,13 +214,13 @@
         <br/>
         <div class="row">
             <div class="col-sm-8">
-                <div class="header-title text-center" ><h3>Featured Organizers<small><span class="pull-right"><a href="/channel/Profile?facets=Organizer" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></h3></div>
+                <div class="header-title text-center" ><h3 class="nfont">Featured Organizers<small><span class="pull-right"><a href="/channel/Profile?facets=Organizer" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></h3></div>
                 {% for m in organizers %}
 			        {{ m.render(4)|safe }}
 		        {% endfor %}
             </div>
             <div class="col-sm-4">
-                <div class="header-title text-center" ><h3>Popular Articles<small><span class="pull-right"><a href="/channel/Article" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></h3></div>
+                <div class="header-title text-center" ><h3 class="nfont">Popular Articles<small><span class="pull-right"><a href="/channel/Article" class="btn btn-link"><font color="lightgray">View All</font></a></span></small></h3></div>
                 <div class="well well-sm" style="color: #000000">
                 {% for m in articles %}
                 {{ m.render()|safe }}
@@ -244,7 +240,7 @@
     </div>
     <div class="container">
 	<br/>
-	<div class="header-title text-center" ><h3>Interesting Events<small><span class="pull-right"><!--a href="/channel/Adventure Trip" class="btn btn-link"><font color="lightgray">View All</font></a--></span></small></h3></div>
+	<div class="header-title text-center" ><h3 class="nfont">Interesting Events<small><span class="pull-right"><!--a href="/channel/Adventure Trip" class="btn btn-link"><font color="lightgray">View All</font></a--></span></small></h3></div>
         <br/>
 		<div>
             {% for m in adventure_trips %}
@@ -259,7 +255,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-7">
-                <div class="header-title text-center" ><h3>Initiatives</h3></div>
+                <div class="header-title text-center" ><h3 class="nfont">Initiatives</h3></div>
                 <br/>
                 <div id="myCarousel2" class="carousel slide">
                     <div class="carousel-inner" id="fitrangi-initiatives">
@@ -284,7 +280,7 @@
                 </div>
              </div>
             <div class="col-sm-5">
-                <div class="header-title text-center" ><h3>Fitrangi on youtube</h3></div>
+                <div class="header-title text-center" ><h3 class="nfont">Fitrangi on youtube</h3></div>
                 <br/>
                 {% import 'generic/includes/youtube.html' as yt_macro %}
                 {{ yt_macro.show_video(yt_links[0])}}
