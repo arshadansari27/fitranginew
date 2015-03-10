@@ -36,8 +36,6 @@ def arrange_facets(facets):
     facets_dict = {}
     new_dict = {}
     for f in FACETS:
-        if f['name'] not in names:
-            continue
         facets_dict[f['name']] = f['parent']
 
     print "[*] FACET_DICT: ", len(facets_dict)

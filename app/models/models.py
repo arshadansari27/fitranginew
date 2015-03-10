@@ -60,11 +60,13 @@ class Configuration(object):
         data1 = get_facets()
         for d in data1:
             f = Facet(d['name'], d['parent'])
+            print "Facet loaded", f.name, f.parent
             Facet.all_facets.append(f)
 
         data2 = get_channels()
         for d in data2:
             c = Channel(d['name'], d['type'], d['menu'], d['value'], d.get('template', None), d.get('menu_link', None), d.get('sub_menu', None))
+            print "Channel loaded", c.name
             Channel.all_data.append(c)
 
         data3 = get_roles()
