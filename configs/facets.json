@@ -5,6 +5,10 @@
     "parent": "Event"
   },
   {
+    "name": "Film Festival",
+    "parent": "Event"
+  },
+  {
     "name": "Conference",
     "parent": "Event"
   },
