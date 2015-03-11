@@ -318,7 +318,7 @@ class Content(Node, db.Document):
     youtube_embed = db.StringField()
 
     def visuals(self, small=False, url_only=False, detail=False):
-        if not small and self.youtube_embed is not None and len(self.youtube_embed) > 0:
+        if not small and not url_only and self.youtube_embed is not None and len(self.youtube_embed) > 0:
             if detail:
                 height = 'height="480px"'
             else:
@@ -434,6 +434,7 @@ class Profile(Content):
     following = db.ListField(db.ReferenceField('Profile'))
     follower = db.ListField(db.ReferenceField('Profile'))
     favorites = db.ListField(db.ReferenceField('Profile'))
+    favorited_by = db.ListField(db.ReferenceField('Profile'))
     blogs = db.ListField(db.ReferenceField('Content'))
     questions = db.ListField(db.ReferenceField('Content'))
     answers = db.ListField(db.ReferenceField('Content'))
@@ -445,17 +446,60 @@ class Profile(Content):
 
     def __unicode__(self): return self.name
 
+    @property
+    def products(self, page=1, paginated=False):
+        count = Product.objects(created_by=self).count()
+        if not paginated:
+
+            if count > 25:
+                return Product.objects(created_by=self).order_by('-created_timestamp').all()[0: 25]
+            else:
+                return Product.objects(created_by=self).order_by('-created_timestamp').all()
+        else:
+            start =  (page - 1) * 25
+            end = start + 25
+            query = Product.objects(created_by=self)
+            total = query.count()
+            if start >= total - 1:
+                return []
+            if end >= total - 1:
+                end = total
+            return Product.objects(created_by=self).order_by('-created_timestamp').all()[start: end]
+
+
+    @property
+    def events(self, page=1, paginated=False):
+        count = Event.objects(created_by=self).count()
+        if not paginated:
+            if count > 25:
+                return Event.objects(created_by=self).order_by('-created_timestamp').all()[0: 25]
+            else:
+                return Event.objects(created_by=self).order_by('-created_timestamp').all()
+        else:
+            start =  (page - 1) * 25
+            end = start + 25
+            query = Event.objects(created_by=self)
+            total = query.count()
+            if start >= total - 1:
+                return []
+            if end >= total - 1:
+                end = total
+            return Event.objects(created_by=self).order_by('-created_timestamp').all()[start: end]
+
     def remove_from_favorites(self, another_profile):
         assert isinstance(another_profile, self.__class__)
         self.favorites.remove(another_profile)
+        another_profile.favorited_by.remove(self)
         self.save()
 
     def add_to_favorites(self, another_profile):
         assert isinstance(another_profile, self.__class__)
-        mail_data = render_template('notifications/favorited.html', user=another_profile, adder=self)
-        send_single_email("[Fitrangi] Someone just favorited you", to_list=[another_profile.email], data=mail_data)
         self.favorites.append(another_profile)
         self.save()
+        another_profile.favorited_by.append(self)
+        another_profile.save()
+        mail_data = render_template('notifications/favorited.html', user=another_profile, adder=self)
+        send_single_email("[Fitrangi] Someone just favorited you", to_list=[another_profile.email], data=mail_data)
 
     def unfollow(self, another_profile):
         assert isinstance(another_profile, self.__class__)

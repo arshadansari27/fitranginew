@@ -80,19 +80,36 @@
             </ul>
         	
             <ul class="list-group">
-				<li class="list-group-item text-muted"><strong>Activity</strong> <i class="fa fa-dashboard fa-1x"></i></li>
-				{% if 'Retailer' in model.roles or 'EventOrganiser' in model.roles %}
-                    <li class="list-group-item text-right"><span class="pull-left"><strong>Events/Products</strong></span> 125</li>
+				<li class="list-group-item text-muted"><strong>Site Activity</strong> <i class="fa fa-dashboard fa-1x"></i></li>
+				{% if 'Gear Dealer' in  model.facets %}
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>Products</strong></span> {{model.products | length}}</li>
 				{% endif %}
-                
-                {% if 'Enthusiast' in model.facets %}
-                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal1">Following</a></strong></span> {{ model.following|length }}</li>
-				<li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal2">Followers</a></strong></span> {{ model.follower|length }}</li>
-                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal3">Favourite organisers</a></strong></span> {{ model.favorites|length }}</li>
-                
-                {% else %}
-                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="" data-toggle="modal" data-target="#largeModal4">Favourited By</a></strong></span> {{ model.favorites|length }}</li>
+                {% if 'Organizer' in  model.facets %}
+                <li class="list-group-item text-right"><span class="pull-left"><strong>Events</strong></span> {{ model.events|length}}</li>
                 {% endif %}
+
+                {% if model.following|length > 0 %}
+                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="show_profile_list" data-show="following" data-title="Following">Following</a></strong></span> {{ model.following|length }}</li>
+                {% else %}
+                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="">Following</a></strong></span> no one</li>
+                {% endif %}
+                {% if model.follower|length > 0 %}
+				<li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="show_profile_list" data-show="follower" data-title="Followers">Followers</a></strong></span> {{ model.follower|length }}</li>
+                {% else %}
+                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="">Followers</a></strong></span> no one </li>
+                {% endif %}
+
+                {% if model.favorites|length > 0 %}
+                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="show_profile_list" data-show="favorites" data-title="Favorites">Favourite Organisers</a></strong></span> {{ model.favorites|length }}</li>
+                {% else %}
+                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="">Favorites Organizers</a></strong></span>None Yet</li>
+                {% endif %}
+                {% if model.favorited_by|length > 0 %}
+                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="show_profile_list" data-show="favorited_by" data-title="Favorite By">Favorite By</a></strong></span> {{ model.favorited_by|length }}</li>
+                {% else %}
+                <li class="list-group-item text-right"><span class="pull-left"><strong><a href="#" class="">Favourite By</a></strong></span> No One</li>
+                {% endif %}
+
 				<li class="list-group-item text-right"><span class="pull-left"><strong>Blogs</strong></span> {{ model.blogs|length }}</li>
 				<li class="list-group-item text-right">
 				<span class="pull-left"><strong>Questions</strong></span> {{ model.questions|length }}<br/>
@@ -151,73 +168,60 @@
 
 	<div id="push"></div>
 </div>
-{% if 'Organizer' in model.facets or 'Gear Dealer' in model.facets %}
-<div class="modal fade" id="largeModal0" tabindex="-1" role="dialog" aria-labelledby="largeModal0" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel0">
-                    {% set _col_ = model.favorites %}
-                    Favorited By
-                    </h4>  
-            </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    {% for m in _col_ %}
-                    <div class="col-sm-2">
-                            <img style="height: 120px; width : 150px"                         src="/img/{{m.get_class_name()}}/{{m.id}}" />
-                        <h6>{{ m.name }}</h6>
-        		    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
+
+<script language="JavaScript">
+    $('.show_profile_list').click(function(e) {
+        e.stopPropagation();
+        var show = $(this).attr('data-show');
+        var title = $(this).attr('data-title');
+        console.log($('#show_' + show).html());
+        BootstrapDialog.show({
+            title: title,
+            message: '<div class="container-fluid"><div class="row">' + $('#show_' + show).html() + '</div></div> ',
+            buttons: [
+                {
+                    label: 'Close',
+                    action: function (dialogItself) {
+                            dialogItself.close();
+                    }
+                }
+            ]
+        });
+    });
+</script>
+
+<div id="show_favorites" class="hide">
+    {%- for m in model.favorites -%}
+        <div class="col-sm-4">
+            {{ m.visuals(small=True) | safe }}
+            <a href="{{m.slug}}">{{ m.name }}</a>
         </div>
-    </div>
+    {%- endfor -%}
 </div>
-{% else %}
-            {% for i in [1, 2, 3 ] %}
-                <div class="modal fade" id="largeModal{{i}}" tabindex="-1" role="dialog" aria-labelledby="largeModal{{i}}" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title" id="myModalLabel1">
-                                    {% if i == 1 %}
-                                    {% set _col_ = model.following %}
-                                    Following
-                                    {% elif i == 2 %}
-                                    {% set _col_ = model.follower %}
-                                    Followers
-                                    {% elif i == 3 %}
-                                    {% set _col_ = model.favorites %}
-                                    Favorites
-                                    {% else %}
-                                    Other people I care about
-                                    {% endif %}
-                                </h4>  
-                            </div>
-                            <div class="modal-body">
-                                <div class="container-fluid">
-                                {% for m in _col_ %}
-                                    <div class="col-sm-2">
-                                        <img style="height: 120px; width : 150px" src="/img/{{m.get_class_name()}}/{{m.id}}" />
-                                        <h6>{{ m.name }}</h6>
-        		                    </div>
-                                {% endfor %}
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-{% endif %}
+<div id="show_favorited_by" class="hide">
+    {%- for m in model.favorited_by -%}
+    <div class="col-sm-4">
+        {{ m.visuals(small=True) | safe }}
+        <a href="{{m.slug}}">{{ m.name }}</a>
+    </div>
+    {%- endfor -%}
+</div>
+<div id="show_following" class="hide">
+    {%- for m in model.following -%}
+    <div class="col-sm-4">
+        {{ m.visuals(small=True) | safe }}
+        <a href="{{m.slug}}">{{ m.name }}</a>
+    </div>
+    {%- endfor -%}
+</div>
+<div id="show_follower" class="hide">
+    {%- for m in model.follower -%}
+    <div class="col-sm-4">
+        {{ m.visuals(small=True) | safe }}
+        <a href="{{m.slug}}">{{ m.name }}</a>
+    </div>
+    {%- endfor -%}
+</div>
 
 <div class="modal fade" id="largeModal10" tabindex="-1" role="dialog" aria-labelledby="largeModal10" aria-hidden="true">
     <form action="/model/{{ channel }}/{{model.id}}/edit" enctype="multipart/form-data" method="post">
