@@ -296,6 +296,10 @@ def social_login():
 
     return jsonify(dict(location=url_for('login'), status='error'))
 
+@app.route('/login-modal', methods=['GET', 'POST'])
+def login_modal():
+    return render_template('/generic/modals/login.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
