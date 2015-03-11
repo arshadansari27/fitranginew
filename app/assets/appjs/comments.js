@@ -35,6 +35,7 @@ $(document).ready(function(){
 	};
 
 	$('#comment_form').on('click', '#comment_submit', function(e) {
+        console.log(e);
 		e.stopPropagation();
 		var $comment = $('#comment_text').val();
 		var $key = $('#comment_form').attr('data-key');
@@ -42,11 +43,27 @@ $(document).ready(function(){
 	});
 
     $('.comment_form').on('click', '.comment_submit', function(e) {
+        console.log(e);
 		e.stopPropagation();
-        e.preventDefault();
         var $key = $(this).attr('data-key');
         var $comment = $('#comment_text_' + $key).val();
 		postCommentUpdate({comment:$comment, key:$key, reload:false});
+        postCommentUpdate({comment:$comment, key:$key, reload:false});
+        $('#comment_text_' + $key).val('');
 	});
+
+    $('.comment_form').on('keydown', '.comment_form_text', function(e) {
+		e.stopPropagation();
+        console.log(e);
+        if (e.keyCode != 13){
+            console.log("not enter")
+            return;
+        }
+        var $key = $(this).attr('data-key');
+        var $comment = $('#comment_text_' + $key).val();
+		postCommentUpdate({comment:$comment, key:$key, reload:false});
+        $('#comment_text_' + $key).val('');
+	});
+
 
 });
