@@ -99,13 +99,10 @@
 					</ul>
 				 </li>-->
 				{% else %}
-<<<<<<< HEAD
 				<!--li><a id="btn-login" href="/login"><strong>Sign In+</strong></a></li-->
                 <li><a  href="#" id="show_login"><strong>Sign In+</strong></a></li>
-=======
-				<li><a id="btn-login" href="/login"><strong>Sign In+</strong></a></li>
                 <!--li><a id="signin" data-toggle="modal" data-target="#smallModal" href="#"><strong>Sign In+</strong></a></li-->
->>>>>>> 6f28ad2e99eeddf95fac4ab7c0083d1121ef5e91
+
 
 				{% endif %}
                   <!--li><a href=""><i class="fa fa-shopping-cart fa-2x" title="Shopping Cart"></i><sub id="quantity">123</sub></a></li-->
@@ -180,20 +177,28 @@
                         <p><a href="#">Facebook</a>&nbsp;|&nbsp;<a href="#">Twitter</a>&nbsp;|&nbsp;<a href="#">Google+</a>&nbsp;|&nbsp;<a href="#">YouTube</a></p>
         </div>
 
-        <!--div class="hide" id="login" role="dialog">
-            <div id="wrapper"-->
-                <form name="login-form" class="login-form" id="login" role="dialog" action="/login" method="post">
+        <div class="hide" id="login" role="dialog">
+                <form id="loginform" action="/login" method="post" class="form-horizontal" role="form">
+                                <fb:login-button data-max-rows="0"  data-size="xlarge" scope="public_profile,email" onlogin="checkLoginState();">Login with Facebook</fb:login-button>
+                            <span id="signinButton">
+                                <span
+                                    class="g-signin"
+                                    data-callback="onSignInCallback"
+                                    data-clientid="445628400297-si4iclsg5i2imd3parigb643lep5iis7.apps.googleusercontent.com"
+                                    data-cookiepolicy="single_host_origin"
+                                    data-scope="email profile openid https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.profile">
+                                </span>
+                            </span>
                     <div class="content">
-                            <input id="username" type="text" required data-validation-required-message="Please enter your name." class="form-control" name="username" value="" placeholder="email"/>
-                            <input id="password" type="password" required data-validation-required-message="Please enter your Password." class="form-control" name="password" placeholder="password">
-                    </div>
-
-                    <div class="footer">
-                    <input type="submit" name="submit" value="Login" class="button" />
-                    <input type="submit" name="submit" value="Register" class="register" />
+                            <input id="username" type="text" required data-validation-required-message="Please enter your email." class="form-control" name="username" value="" placeholder="YourEmail@xyz.com"/>
+                            <input id="password" type="password" required data-validation-required-message="Please enter your Password." class="form-control" name="password" placeholder="Your Password">
+                                <label class="pull-right">
+                                    <input id="login-remember" type="checkbox" name="remember" value="1"> Remember me
+                                </label>
+                    <button id="btn-login1" type="submit" class="btn btn-info">Login  </button>
                     </div>
                 </form>
-
+        </div>
 
 
 
@@ -268,6 +273,134 @@
         {% block footer_scripts %}{% endblock %}
         <div id="footer-scripts" class="hide"></div>
 		
+ <script src="https://apis.google.com/js/client:platform.js" async defer></script>
+    <script>
+
+        function convertImgToBase64(url, callback, outputFormat) {
+            var canvas = document.createElement('CANVAS');
+            var ctx = canvas.getContext('2d');
+            var img = new Image;
+            img.crossOrigin = 'Anonymous';
+            img.onload = function () {
+                canvas.height = img.height;
+                canvas.width = img.width;
+                ctx.drawImage(img, 0, 0);
+                var dataURL = canvas.toDataURL(outputFormat || 'image/png');
+                callback.call(this, dataURL);
+                // Clean up
+                canvas = null;
+            };
+            img.src = url;
+        }
+        function statusChangeCallback(response) {
+            if (response.status === 'connected') {
+                testAPI();
+            } else if (response.status === 'not_authorized') {
+                document.getElementById('status').innerHTML = 'Please log into this app.';
+            } else {
+                document.getElementById('status').innerHTML = 'Please log into Facebook.';
+            }
+        }
+
+        function checkLoginState() {
+            FB.getLoginStatus(function(response) {
+                statusChangeCallback(response);
+            });
+        }
+
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '526533334116117',
+                cookie     : true,  // enable cookies to allow the server to access
+                xfbml      : true,  // parse social plugins on this page
+                version    : 'v2.1' // use version 2.1
+            });
+            FB.getLoginStatus(function(response) {
+                statusChangeCallback(response);
+            });
+        };
+
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "http://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        var _login_with_data = function(profile_image, response) {
+            convertImgToBase64(profile_image, function(base64Img) {
+                var _login = function(image) {
+
+                    var data = null;
+                    if (image != null) {
+                        data = {name: response.name, email: response.email, file: image};
+                    } else {
+                        data = {name: response.name, email: response.email, file: ''};
+                    }
+                    $.ajax({
+                        type: 'POST',
+                        url: '/sociallogin',
+                        data: data
+                    }).done(function (msg) {
+                        if (msg.status == 'success') {
+                            window.location = msg.location;
+                        } else {
+                            alert("Invalid Login, try again");
+                        }
+                    });
+
+                };
+                _login(base64Img);
+            });
+        }
+
+        function testAPI() {
+            FB.api('/me', function(response) {
+                var profile_image= "https://graph.facebook.com/"+ response.id +"/picture?type=large";
+                _login_with_data(profile_image, {name: response.name, email: response.email});
+            }, {scope: 'email, user_likes'});
+        }
+
+        function make_base_auth(data) {
+            var hash = btoa(data);
+            return "Basic " + hash;
+        }
+
+        function onSignInCallback(resp) {
+            console.log(resp);
+            if (!resp.status.signed_in) {
+                return;
+            }
+            var data = atob(resp.id_token.split('.')[1]);
+            console.log(data);
+            $.ajax({
+                type: 'GET',
+                url: 'https://www.googleapis.com/plus/v1/people/me?key=AIzaSyC2G0kvBLJBEnBCUPf053z6mL5tgbWON5o',
+                dataType: 'json',
+                async: false,
+                headers: {
+                    "Authorization": "Bearer " + resp['access_token']
+                }
+            }).done(function (data) {
+                console.log(data);
+                var primaryEmail;
+                for (var i=0; i < data.emails.length; i++) {
+                    if (data.emails[i].type === 'account') primaryEmail = data.emails[i].value;
+                }
+                var email = primaryEmail;
+                var name = data['displayName'];
+                var image_url = data.image.url;
+                console.log("Google Login: " + name + ", " + email + ", " + image_url);
+                var profile_image = image_url.substring(0, image_url.indexOf("?") - 1) + "?sz=200";
+                console.log(profile_image)
+                _login_with_data(profile_image, {name: name, email: email});
+
+            });
+
+          }
+    </script>
+
 
   </body>
 </html>
