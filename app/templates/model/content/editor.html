@@ -25,13 +25,11 @@
             <br/>
             <div class="row">
                 <div class="">
-                    {% if channel != 'Forum' %}
                     <div class="">
                         <a href="#" id="change_image" data-model="{{content.id}}"  data-popover="true" data-html=true data-content="Update Image">
                             <img src="{% if not content.main_image %}http://placehold.it/300x300&text=Fitrangi!{% else %}/img/{{ content.get_class_name()}}/{{content.id}}{% endif %}" class="avatar" alt="avatar"/>
                         </a>
                     </div>
-                    {% endif %}
                 </div>
             </div>
             <br/>
@@ -39,6 +37,7 @@
             <div class="row">
 
                 <span><strong>Video Embed: </strong> &nbsp; <a href="#" class="edit-form-text" data-key="{{content.id}}" data-field="youtube_embed" data-value="{{content.youtube_embed}}">(change)</a></span>
+                <span class="text-muted">https://www.youtube.com/watch?v={Video ID}</span>
                 <br/>
                 {% if content.youtube_embed %} {{content.visuals(detail=True)|safe()}} {% endif %}
             </div>

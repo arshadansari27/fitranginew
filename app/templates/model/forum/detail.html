@@ -14,16 +14,23 @@
         <br />
         <p>
             <span class="glyphicon glyphicon-time"></span> Posted {{ model.since }} </p>
-        <hr>
-
-
-        <p class="lead">{{ model.data|safe }}</p>
-        {% if model.facets|length > 0 %}
-        {% for f in model.facets %}
-            <span class="label label-info">{{ f }}</span>
-        {% endfor %}
+        <hr/>
+        {% set graphics = model.visuals(detail=True) %}
+        {% if 'http://placehold.it/300x300&text=Fitrangi!' not in graphics %}
+        <div class="thumbnail">{{ model.visuals(detail=True) | safe }}</div>
+        {% endif %}
+        {% if model.data|length > 0 or model.facets|length > 0 %}
+        <div class="container table-bordered">
+            <p class="lead">{{ model.data|safe }}</p>
+            {% if model.facets|length > 0 %}
+            {% for f in model.facets %}
+                <span class="label label-info">{{ f }}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
         <hr/>
         {% endif %}
+
 
         <!--p><strong>Keywords:</strong>
         </p-->
