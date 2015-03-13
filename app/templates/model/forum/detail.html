@@ -36,7 +36,6 @@
         </ul-->
         <!--hr/-->
         <br/>
-        <h3><u>Answers:</u></h3>
         <div class="container-fluid">
         {% if model.comments|length > 0 %}
         {% for comment in model.comments %}
@@ -64,13 +63,12 @@
         <br/>
         {% endfor %}
         {% else %}
-        <p><strong>Be the first to Answer</strong></p>
+        <p><strong>Be the first to respond</strong></p>
         {% endif %}
 
         </div>
 
         <div class="well">
-            <h4>Post Answer:</h4>
             <form id="comment_form" role="form well" data-key="{{ model.id }}">
                 <div class="form-group">
                     <textarea id="comment_text" class="form-control" rows="3"></textarea>
