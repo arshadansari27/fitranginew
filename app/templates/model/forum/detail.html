@@ -17,7 +17,7 @@
         <hr>
 
 
-        <p class="lead">{{ model.data }}</p>
+        <p class="lead">{{ model.data|safe }}</p>
         {% if model.facets|length > 0 %}
         {% for f in model.facets %}
             <span class="label label-info">{{ f }}</span>
@@ -53,7 +53,7 @@
             </form>
             {% endif %}
             <div class="container-fluid" >
-                <span><strong>{{ comment.text }}</strong></span>
+                <span><strong>{{ comment.data|safe }}</strong></span>
                 <br/>
                 <h5 class="row pull-right">
                     <img style="width:30px;height:30px" class="" src="{% if comment.created_by and comment.created_by.main_image and comment.created_by.main_image.image %}/img/{{ comment.created_by.get_class_name()}}/{{comment.created_by.id}}{% else %}/assets/img/Profile-Picture.jpg{% endif %}">
