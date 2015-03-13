@@ -1,17 +1,16 @@
 <div class="">
 	<div class="panel panel-default">
-		<div class="panel-heading">
-			<a  class="pull-right" href="{% if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}">More</a>
-			<h4>{{ model.title }}</h4>
-		</div>
 		<div class="panel-body">
-			<p>
-			<!--img class="img-responsive" src="{% if model.main_image and model.main_image.image %}/img/{{model.get_class_name()}}/{{model.id}}{% else %}http://placehold.it/250x300{% endif %}"/-->
-            {{model.visuals() | safe}}
-			</p>
+            <a  class="pull-right" href="{% if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}">More</a>
+            <h4>{% block title %}{{ model.title }}{% endblock %}</h4>
+            <div class="clearfix"></div>
+            <hr/>
+			<center>
+            {% block visuals %}{{model.visuals() | safe}}{% endblock %}
+			</center>
 			<div class="clearfix"></div>
 			<hr/>
-			{% if model.description and model.description|length > 0 %}{{ model.description|safe }}{% else %} Not much description is available yet. {%endif%}
+			{% block description %}{% if model.description and model.description|length > 0 %}{{ model.description|safe }}{% else %} Click more to view details. {%endif%} {% endblock %}
 		
         </div>
 	</div>
