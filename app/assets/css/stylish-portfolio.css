@@ -16,6 +16,13 @@ body {
     font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+.text-white {
+    color: white;
+}
+.text-black {
+    color: #000000;
+}
+
 .text-vertical-center {
     display: table-cell;
     text-align: center;
@@ -63,12 +70,11 @@ hr.small {
     max-width: 100px;
 }
 
-/* Side Menu */
+/* Side Menu
 
 #sidebar-wrapper {
     z-index: 1000;
-    position: fixed;
-    right: 0;
+    position: absolute;
     width: 250px;
     height: 100%;
     margin-right: -250px;
@@ -83,7 +89,6 @@ hr.small {
 
 .sidebar-nav {
     position: absolute;
-    top: 0;
     width: 250px;
     margin: 0;
     padding: 0;
@@ -129,9 +134,8 @@ hr.small {
 
 #menu-toggle {
     z-index: 1;
-    position: fixed;
+    position: relative;
     top: 0;
-    right: 0;
 }
 
 #sidebar-wrapper.active {
@@ -147,15 +151,16 @@ hr.small {
 .toggle {
     margin: 5px 5px 0 0;
 }
-
+*/
 /* Header */
 
-.header {
+.header2 {
+    top: 0;
     display: table;
     position: relative;
     width: 100%;
-    height: 100%;
-    background: url(../img/bg.jpg) no-repeat center center scroll;
+    height: 80%;
+    background-image: url('/assets/img/bg_suburb.jpg');
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;

@@ -24,6 +24,8 @@ class ModelView(object):
                 self.template = _template % (model.__class__.__template__, 'banner.html')
             elif default == 'list':
                 self.template = _template % (model.__class__.__template__, 'list.html')
+            elif default == 'circle':
+                self.template = _template % (model.__class__.__template__, 'circle.html')
             else:
                 raise Exception("Unsupported")
         elif action == 'detail':

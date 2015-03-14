@@ -1,15 +1,13 @@
 <div class="">
 	<div class="panel panel-default">
 		<div class="panel-body">
-            <a  class="pull-right" href="{% if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}">More</a>
-            <h4>{% block title %}{{ model.title }}{% endblock %}</h4>
-            <div class="clearfix"></div>
-            <hr/>
 			<center>
             {% block visuals %}{{model.visuals() | safe}}{% endblock %}
 			</center>
+            <a  href="{% if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}">
+                <h4>{% block title %}{{ model.title }}{% endblock %}</h4>
+            </a>
 			<div class="clearfix"></div>
-			<hr/>
 			{% block description %}{% if model.description and model.description|length > 0 %}{{ model.description|safe }}{% else %} Click more to view details. {%endif%} {% endblock %}
 		
         </div>

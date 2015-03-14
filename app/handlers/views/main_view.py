@@ -12,18 +12,33 @@ import requests, simplejson as json, random
 
 
 class HomeView(object):
-    def __init__(self, query):
+    def __init__(self, query, type=None):
         self.query = query
         self.template =  'feature/home.html'
-        self.menu = MenuView(None)
-        self.destinations = [ModelView(m, 'list') for m in get_all_models(Channel.getByName('Destination'), [], limit=6)[0]]
-        self.organizers = [ModelView(m, 'list') for m in get_all_models(Channel.getByName('Profile'), ['Organizer'], limit=6)[0]]
-        self.articles = [ModelView(m, 'list', default='list') for m in get_all_models(Channel.getByName('Article'), [], limit=4)[0]]
+        if type == 2:
+            self.template =  'feature/home2.html'
+            self.menu = MenuView(None, additional_styles="margin-bottom: 0px;")
+            limit = 12
+        else:
+            self.menu = MenuView(None)
+            limit = 6
+
+        self.destinations = [ModelView(m, 'list') for m in get_all_models(Channel.getByName('Destination'), [], limit=limit)[0]]
+        self.organizers = [ModelView(m, 'list') for m in get_all_models(Channel.getByName('Profile'), ['Organizer'], limit=limit)[0]]
+        articles = get_all_models(Channel.getByName('Article'), [], limit=limit if type is 2 else 4)[0]
+        if type == 2:
+            self.articles = [ModelView(m, 'list') for m in articles]
+        else:
+            self.articles = [ModelView(m, 'list', default='list') for m in articles]
         self.banner_articles = []
         self.banner_articles.extend([ModelView(m, 'list', default='banner') for m in get_all_models(Channel.getByName('Article'), facets=['Top 5 Series'], limit=1)[0]])
         self.banner_articles.extend([ModelView(m, 'list', default='banner') for m in get_all_models(Channel.getByName('Article'), facets=['Explore'], limit=1)[0]])
         self.banner_articles.extend([ModelView(m, 'list', default='banner') for m in get_all_models(Channel.getByName('Article'), facets=['Informative'], limit=1)[0]])
-        self.adventure_trips = [ModelView(m, 'list') for m in get_all_models(Channel.getByName('Event'), [], limit=8)[0]]
+        self.adventure_trips = [ModelView(m, 'list') for m in get_all_models(Channel.getByName('Event'), [], limit=limit if type is 2 else 8)[0]]
+        if type == 2:
+            self.popular_profiles = [ModelView(m, 'list', default='circle') for m in get_all_models(Channel.getByName('Profile'), facets=[], limit=4)[0]]
+        else:
+            self.popular_profiles = []
 
     def render(self):
         _adverts = Advertisement.get_home_advertisements()
@@ -34,7 +49,7 @@ class HomeView(object):
             footer_add = AdView('list', footer)
         else:
             footer_add = None
-        return render_template(self.template, menu=self.menu, banner_articles=self.banner_articles, articles=self.articles, destinations=self.destinations, organizers=self.organizers,  adventure_trips=self.adventure_trips, user=g.user, yt_links=get_youtube_links(), adverts=adverts, footer_advert=footer_add)
+        return render_template(self.template, menu=self.menu, popular_profiles=self.popular_profiles, banner_articles=self.banner_articles, articles=self.articles, destinations=self.destinations, organizers=self.organizers,  adventure_trips=self.adventure_trips, user=g.user, yt_links=get_youtube_links(), adverts=adverts, footer_advert=footer_add)
 
 class SearchView(object):
 

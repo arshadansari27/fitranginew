@@ -26,6 +26,10 @@ import base64
 from io import BytesIO
 import os, cStringIO
 
+@app.route('/home2')
+def home2():
+    return HomeView(query=None, type=2).render()
+
 @app.route('/')
 def home():
     return HomeView(query=None).render()
