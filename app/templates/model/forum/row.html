@@ -84,8 +84,6 @@ i.glyphicon-comment{
 
     	<div class="col-md-12">
   		    <section class="panel panel-info">
-                <header class="panel-heading">
-                </header>
                 <section class="panel-body">
                         <section class="col-md-2">
 	                            <a href="{%if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}" style="padding-left: 15px;">
@@ -97,15 +95,17 @@ i.glyphicon-comment{
                                 </a>
                         </section>
                         <section class="col-md-8">
-                                <h4> <a href="/model/{{model.channel_factory(model)}}/{{model.id}}" class="text-muted">{{ model.title }}</a></h4>
-		                   <span>
-                             <a href="#"><i class="glyphicon glyphicon-calendar"></i>  {{ model.created_timestamp.strftime('%d-%m-%Y') }}   </a> &nbsp;
+                            <span><a href="/model/{{model.channel_factory(model)}}/{{model.id}}" class="text-muted"><strong>{{ model.title }}</strong></a></span>
+                            <br/>
+                            <br/>
+		                    <span>
+                             <a href="#"><i class="glyphicon glyphicon-calendar"></i>  {{ model.since }}   </a> &nbsp;
                              {% if model.comments|length > 0 %}
 	                         <a href="#"><i class="glyphicon glyphicon-comment"></i> {{model.comments | length }}</a>&nbsp;
                              {% endif %}
 	                         {% for f in model.facets %}
                              <a class="" href="#"><i class="glyphicon glyphicon-tag"> </i>{{f}}</a> {% endfor %}&nbsp;
-                           </span>
+                            </span>
                         </section>
                 </section>
             </section>

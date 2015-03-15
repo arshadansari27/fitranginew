@@ -1,23 +1,14 @@
-<div class="panel panel-default">
-	<div class="panel-heading">
-        <a href="{%if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}" class="pull-right">
-            View
-        </a>
-		<div class="panel-title">{{model.name}}</div>
-	</div>
-	<div class="panel-body">
-   		<center><img src="{% if model.visuals(url_only=True)|length > 0 %}{{model.visuals(url_only=True)}}{% else %}/assets/img/Profile-Picture.jpg{% endif %}" class="responsive"/></center>
-		<hr/>
-		<p>
-            {% if model.description and model.description|length > 0 %}
-                {{ model.description }}
-            {% elif model.text and model.text |length > 0 %}
-                {{ model.data|safe }}
-            {% else %}
-                User has not added any description.
-            {%endif%}
-        </p>
-   </div>
-</div>
-<hr>
+{% extends 'model/content/row.html' %}
+{% block title %} {{model.name}} {% endblock %}
+{% block visuals %}{{model.visuals() | safe}}{% endblock %}
+{% block description %}
+        {% if model.description and model.description|length > 0 %}
+            {{ model.description }}
+        {% elif model.text and model.text |length > 0 %}
+            {{ model.data|safe }}
+        {% else %}
+            User has not added any description.
+        {%endif%}
+{% endblock %}
+<!--center><img src="{% if model.visuals(url_only=True)|length > 0 %}{{model.visuals(url_only=True)}}{% else %}/assets/img/Profile-Picture.jpg{% endif %}" class="responsive"/></center-->
 

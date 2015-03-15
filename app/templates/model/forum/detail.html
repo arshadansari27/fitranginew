@@ -14,16 +14,23 @@
         <br />
         <p>
             <span class="glyphicon glyphicon-time"></span> Posted {{ model.since }} </p>
-        <hr>
-
-
-        <p class="lead">{{ model.data }}</p>
-        {% if model.facets|length > 0 %}
-        {% for f in model.facets %}
-            <span class="label label-info">{{ f }}</span>
-        {% endfor %}
+        <hr/>
+        {% set graphics = model.visuals(detail=True) %}
+        {% if 'http://placehold.it/300x300&text=Fitrangi!' not in graphics %}
+        <div class="thumbnail">{{ model.visuals(detail=True) | safe }}</div>
+        {% endif %}
+        {% if model.data|length > 0 or model.facets|length > 0 %}
+        <div class="container table-bordered">
+            <p class="lead">{{ model.data|safe }}</p>
+            {% if model.facets|length > 0 %}
+            {% for f in model.facets %}
+                <span class="label label-info">{{ f }}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
         <hr/>
         {% endif %}
+
 
         <!--p><strong>Keywords:</strong>
         </p-->
@@ -36,7 +43,6 @@
         </ul-->
         <!--hr/-->
         <br/>
-        <h3><u>Answers:</u></h3>
         <div class="container-fluid">
         {% if model.comments|length > 0 %}
         {% for comment in model.comments %}
@@ -53,7 +59,7 @@
             </form>
             {% endif %}
             <div class="container-fluid" >
-                <span><strong>{{ comment.text }}</strong></span>
+                <span><strong>{{ comment.data|safe }}</strong></span>
                 <br/>
                 <h5 class="row pull-right">
                     <img style="width:30px;height:30px" class="" src="{% if comment.created_by and comment.created_by.main_image and comment.created_by.main_image.image %}/img/{{ comment.created_by.get_class_name()}}/{{comment.created_by.id}}{% else %}/assets/img/Profile-Picture.jpg{% endif %}">
@@ -64,13 +70,12 @@
         <br/>
         {% endfor %}
         {% else %}
-        <p><strong>Be the first to Answer</strong></p>
+        <p><strong>Be the first to respond</strong></p>
         {% endif %}
 
         </div>
 
         <div class="well">
-            <h4>Post Answer:</h4>
             <form id="comment_form" role="form well" data-key="{{ model.id }}">
                 <div class="form-group">
                     <textarea id="comment_text" class="form-control" rows="3"></textarea>

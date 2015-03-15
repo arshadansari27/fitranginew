@@ -21,7 +21,18 @@
 
       {% block header_script %}{% endblock %}
 	  {% block header_css %}{% endblock %}
-      <style>body { padding-top: 70px; }</style>
+      <style>
+          body { padding-top: 70px; }
+
+          .loading-image {
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              margin-left: -32px;
+              margin-top: -32px;
+              z-index: -1;
+          }
+      </style>
 
     </head>
   <body {% if model %}data-node="{{model.id}}"{% endif %}>
@@ -252,6 +263,14 @@
         <div id="footer-scripts" class="hide"></div>
 		
 
+        <div id="loadingImage" class="loading-image">
+            <img src="/assets/img/ajax-loader.gif" />
+        </div>
+        <script language="JavaScript">
+            $(document).ready(function(){
+                $("#loadingImage").hide();
+            });
+        </script>
 
 
   </body>

@@ -364,7 +364,7 @@ class Content(Node, db.Document):
         content = Content.objects(pk=id).first()
         if content.slug is None or len(content.slug) is 0:
             if type(content) not in [Profile, Product, Event] and content.channels[0] not in Channel.get_all_names():
-                return
+                return content
             update_slug(None, content, content.channels[0])
         return  content
 

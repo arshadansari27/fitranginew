@@ -4,7 +4,7 @@
     <div class="well well-sm">
     <form class="comment_form">
         <div class="input-group">
-            <input type="text" class="form-control" id="comment_text_{{key}}" placeholder="Add a comment..">
+            <input type="text" class="form-control comment_form_text" data-key="{{key}}" id="comment_text_{{key}}" placeholder="Add a comment..">
             <div class="input-group-btn">
                 <a href="#" class="comment_submit btn btn-primary btn-md" data-key="{{key}}">Comment</a>
             </div>
@@ -14,7 +14,7 @@
     <br/>
     <br/>
     <ul data-key="{{key}}" id="sortable" class="list-unstyled ui-sortable">
-	{% for comment in comments[0:3] %}
+	{% for comment in comments[0:7] %}
         <strong class="pull-left primary-font"><a href="{{comment.created_by.slug}}">{{ comment.created_by.name }}</a></strong>
         <small class="pull-right text-muted"><span class="glyphicon glyphicon-time"></span>&nbsp;{{ comment.since }}<!--7 mins ago--></small>
         <br/>

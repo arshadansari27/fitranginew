@@ -7,6 +7,8 @@ jQuery(document).ready(function($){
 	};
 
 	App.post = function(options) {
+        console.log($("loadingImage"));
+        $('#loadingImage').show();
 		$.ajax({
     		type: 'POST',
     		url: options.url,
@@ -28,6 +30,7 @@ jQuery(document).ready(function($){
 				$('.ajax-message').removeClass('hide');
 				$('.ajax-message').append('<div id="alert-message">' + message + "</div>");
 
+                $('#loadingImage').hide();
                 if (options.reload) {
                     if (status == 'success')
                         setTimeout("window.location.reload();", 2000);
