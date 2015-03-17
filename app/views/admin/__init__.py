@@ -283,9 +283,9 @@ class ApprovalContentAdminView(ModelView):
 
     def get_query(self):
         if 'Admin' in g.user.roles:
-            return self.model.objects
+            return self.model.objects(published=True, admin_published=False)
         else:
-            return self.model.objects(author=g.user)
+            return self.model.objects(author=g.user, published=True, admin_published=False)
 
 
 class PreferenceView(flask_admin.BaseView):

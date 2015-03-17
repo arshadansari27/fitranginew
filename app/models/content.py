@@ -11,7 +11,8 @@ class Tag(db.Document):
 
 class Channel(db.Document):
     name = db.StringField()
-    type = db.StringField(choices=['Discussion Group', 'User Channel'])
+    type = db.StringField(choices=['Discussion Group', 'User Channel', 'Activity', 'Adventure', ''])
+    parent = db.ReferenceField('Channel')
 
 class Content(Node):
     title = db.StringField()
