@@ -22,6 +22,11 @@ import mongoengine
 
 from flask.ext.admin.contrib.mongoengine.ajax import QueryAjaxModelLoader
 from flask.ext.admin.model.ajax import DEFAULT_PAGE_SIZE
+from app import app
+
+@app.context_processor
+def process_context_admin():
+    return dict(user=g.user)
 
 
 class TagAjaxModelLoader(QueryAjaxModelLoader):
@@ -234,8 +239,8 @@ class ContentAdminView(ModelView):
 class ChannelAdminView(ModelView):
     create_template = 'admin_custom/create.html'
     edit_template = 'admin_custom/edit.html'
-    form_columns = ['name', 'type']
-    column_list = ('name', 'type')
+    form_columns = ['name', 'type', 'parent']
+    column_list = ('name', 'type', 'parent.name')
     column_filters = ['name']
     column_searchable_list = ('name', )
     form_overrides = dict(description=SummernoteTextAreaField)
@@ -306,7 +311,10 @@ class PreferenceView(flask_admin.BaseView):
         print "[*]", profile.email_enabled, profile.email_frequency
         form.email_frequency.data = profile.email_frequency
         form.email_enabled.data = 'y' if profile.email_enabled else None
-        return self.render('/admin_custom/settings.html', form=form, action_name='Edit Preferences')
+        return self.render('/admin_custom/settings.html', form=form, action_name='Edit Preferences', settings='prefs')
+
+    def is_visible(self):
+        return False
 
 class ChangePasswordView(flask_admin.BaseView):
 
@@ -324,7 +332,10 @@ class ChangePasswordView(flask_admin.BaseView):
                 flash('Password did not match', category='warning')
             else:
                 flash('Wrong password', category='danger')
-        return self.render('/admin_custom/settings.html', form=form, action_name='Change Password')
+        return self.render('/admin_custom/settings.html', form=form, action_name='Change Password', settings='password')
+
+    def is_visible(self):
+        return False
 
 class ProfileSettingAdminView(flask_admin.BaseView):
 
@@ -355,28 +366,31 @@ class ProfileSettingAdminView(flask_admin.BaseView):
         form.linked_in.data = profile.linked_in
         form.youtube_channel.data = profile.youtube_channel
         form.blog_channel.data = profile.blog_channel
-        return self.render('/admin_custom/settings.html', form=form, action_name='Edit Your Profile')
+        return self.render('/admin_custom/settings.html', form=form, action_name='Edit Your Profile', settings='profile')
 
+    def is_visible(self):
+        return False
 
 
 admin.add_view(ApprovalContentAdminView(Article, name='Article', endpoint='approval.article', category="Approvals"))
 admin.add_view(ApprovalContentAdminView(Blog, name='Blog', endpoint='approval.blog', category="Approvals"))
 admin.add_view(ApprovalContentAdminView(Discussion, name='Discussion', endpoint='approval.discussion', category="Approvals"))
-admin.add_view(ProfileAdminView(Profile, category="Content Manager"))
-admin.add_view(ActivityAdminView(Activity, category="Content Manager"))
-admin.add_view(AdventureAdminView(Adventure, category="Content Manager"))
-admin.add_view(PostAdminView(Post, category="Content Editing"))
+admin.add_view(ProfileAdminView(Profile, category="Admin"))
+admin.add_view(ActivityAdminView(Activity, category="Admin"))
+admin.add_view(AdventureAdminView(Adventure, category="Admin"))
+
+admin.add_view(ContentAdminView(Article, category="Editor"))
+admin.add_view(ContentAdminView(Blog, category="Editor"))
+admin.add_view(ContentAdminView(Discussion, category="Editor"))
+admin.add_view(PostAdminView(Post, category="Editor"))
+
 admin.add_view(EventAdminView(Event, category="Organizer"))
 admin.add_view(TripAdminView(Trip, category="Organizer"))
-admin.add_view(ContentAdminView(Article, category="Content Editing"))
-admin.add_view(ContentAdminView(Blog, category="Content Editing"))
-admin.add_view(ContentAdminView(Discussion, category="Content Editing"))
-admin.add_view(TagAdminView(Tag, category="Tools"))
-admin.add_view(ChannelAdminView(Channel, category="Tools"))
+
 admin.add_view(LocationAdminView(Location, category="Tools"))
-admin.add_link(MenuLink("Go Back", url="/", category="Settings"))
+admin.add_view(ChannelAdminView(Channel, category="Tools"))
+admin.add_view(TagAdminView(Tag, category="Tools"))
 admin.add_view(PreferenceView(name='Preference', endpoint='settings.preference', category="Settings"))
 admin.add_view(ChangePasswordView(name='Change Password', endpoint='settings.password', category="Settings"))
 admin.add_view(ProfileSettingAdminView(name='My Profile', endpoint='settings.my_profile', category="Settings"))
-admin.add_link(MenuLink("Logout", url="/logout", category="Settings"))
 

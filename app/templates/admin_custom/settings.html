@@ -10,7 +10,6 @@
 {% endblock %}
 
 {% block body %}
-    <h3>{{action_name}}</h3>
     <hr/>
     {% call lib.form_tag(form) %}
         {{ lib.render_form_fields(form, form_opts=form_opts) }}

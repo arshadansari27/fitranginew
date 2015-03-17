@@ -56,4 +56,6 @@ def save_image_from_temp():
     flash("Successfully updated the image", category='success')
     return redirect(request.referrer)
 
-
+@app.context_processor
+def process_context():
+    return dict(user=g.user)

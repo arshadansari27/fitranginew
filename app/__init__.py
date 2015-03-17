@@ -19,7 +19,7 @@ mandrill = Mandrill(app)
 db = MongoEngine()
 db.init_app(app)
 
-admin = flask_admin.Admin(app, 'Fitrangi Dashboard')
+admin = flask_admin.Admin(app, 'Fitrangi Dashboard', base_template='/admin/base_admin.html')
 
 #from flask.ext import login
 cache = Cache(app,config={'CACHE_TYPE': 'simple'})
