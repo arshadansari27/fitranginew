@@ -2,10 +2,7 @@ __author__ = 'arshad'
 
 from flask import render_template, g
 
-from app.models import Channel, Content, Node
-from app.handlers.views.menu_view import MenuView
 from app.handlers.views import env
-from app.handlers.extractors import model_extractor
 
 
 class AdView(object):

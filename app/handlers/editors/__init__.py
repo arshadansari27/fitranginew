@@ -6,7 +6,7 @@ from app.handlers.editors.model_editor import ModelEditor
 from app.handlers.messaging import send_single_email
 from app import app
 from app.handlers import login_required, redirect_url
-from app.models.models import Profile, Post, Content
+from app.models import Profile, Post, Content
 from StringIO import StringIO
 import random, os
 from PIL import Image

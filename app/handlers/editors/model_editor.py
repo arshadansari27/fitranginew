@@ -1,4 +1,3 @@
-from app.models.forms import ProfileEdit
 
 __author__ = 'arshad'
 
@@ -12,7 +11,7 @@ class AdEditor(object):
 
     def __init__(self, model):
         if isinstance(model, str) or isinstance(model, unicode):
-            self.model = Advertisement.objects(pk=model).first()
+            self.model = None #Advertisement.objects(pk=model).first()
         else:
             self.model = model
 
@@ -25,7 +24,7 @@ class AdEditor(object):
 class ModelEditor(object):
 
     def __init__(self, model, channel_name=None, form=None, **kwargs):
-        self.channel = Channel.getByName(channel_name)
+        self.channel = None #Channel.getByName(channel_name)
         self.form = form
         model_class = Node.model_factory(self.channel.name)
         if model:

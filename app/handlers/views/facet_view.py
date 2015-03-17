@@ -3,7 +3,6 @@ __author__ = 'arshad'
 from flask import g
 
 from app.handlers.views import env
-from app.models import Facet
 from app.utils import arrange_facets
 
 

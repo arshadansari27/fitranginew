@@ -2,7 +2,7 @@ __author__ = 'arshad'
 
 from flask import render_template, g
 
-from app.models import Channel, Content, Node, Advertisement
+from app.models import Content, Node
 from app.handlers.views.menu_view import MenuView
 from app.handlers.views.ad_view import AdView
 from app.handlers.views import env
@@ -30,7 +30,7 @@ class ModelView(object):
                 raise Exception("Unsupported")
         elif action == 'detail':
             if channel_name:
-                channel = Channel.getByName(channel_name)
+                channel = None #Channel.getByName(channel_name)
                 model_class = Node.model_factory(channel.name)
             else:
                 model_class = Content
@@ -66,7 +66,7 @@ class ModelView(object):
                 adverts = []
             else:
                 contents = []
-                _adverts = Advertisement.get_internal_advertisements()
+                _adverts = None #Advertisement.get_internal_advertisements()
                 random.shuffle(_adverts)
                 adverts = [AdView('list', a) for a in _adverts]
             return render_template(self.template, channel=self.channel_name, model=self.model, menu=self.menu_view, user=g.user, contents=contents, related=self.related, adverts=adverts)
