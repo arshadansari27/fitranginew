@@ -33,7 +33,7 @@ class Profile(Entity, db.Document):
     favorite_activities = db.ListField(db.ReferenceField('Activity'))
     bookmarks = db.ListField(db.StringField())
     is_business_profile = db.BooleanField()
-    roles = db.ListField(db.StringField(choices=(('Admin', 'Admin'), ('Editor', 'Editor'), ('Enthusiast', 'Enthusiast'), ('Organizer', 'Organizer'), ('Dealer', 'Dealer'))))
+    roles = db.ListField(db.StringField(choices=(('Admin', 'Admin'), ('Editor', 'Editor'), ('Enthusiast', 'Enthusiast'), ('Organizer', 'Organizer'), ('Gear Dealer', 'Gear Dealer'))))
     deactivated = db.BooleanField(default=False)
 
     meta = {

@@ -1,11 +1,13 @@
 from flask.ext.admin.menu import MenuLink
+from markupsafe import Markup
 from wtforms import fields, widgets, form
 from mongoengine import Q
 import flask_admin, hashlib
 from flask_admin.form import rules
 from flask_admin.contrib.mongoengine import ModelView
-from flask import g, request, flash
+from flask import g, request, flash, url_for
 from app import admin
+from app.utils import get_current_user
 from app.views.forms import ChangePasswordForm, UserPreferenceForm, ProfileForm
 
 # Define wtforms widget and field
@@ -26,7 +28,7 @@ from app import app
 
 @app.context_processor
 def process_context_admin():
-    return dict(user=g.user)
+    return dict(user=g.user, is_admin='Admin' in g.user.roles)
 
 
 class TagAjaxModelLoader(QueryAjaxModelLoader):
@@ -180,7 +182,7 @@ class CommentAdminView(ModelView):
     can_create = False
     create_template = 'admin_custom/create.html'
     edit_template = 'admin_custom/edit.html'
-    form_columns = ['content', 'author', 'cover_image']
+    form_columns = ['content', 'author']
     column_list = ('author', 'content')
     form_overrides = dict(content=SummernoteTextAreaField)
 
@@ -198,7 +200,7 @@ class CommentAdminView(ModelView):
 class PostAdminView(ModelView):
     create_template = 'admin_custom/create.html'
     edit_template = 'admin_custom/edit.html'
-    form_columns = ['title', 'content', 'author', 'cover_image','image_gallery', 'video_embed', 'map_embed']
+    form_columns = ['title', 'content', 'author', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'parent']
     column_list = ('title', 'author', 'vote_count')
     column_filters = ['title']
     column_searchable_list = ('title', )
@@ -215,14 +217,41 @@ class PostAdminView(ModelView):
         else:
             return self.model.objects(author=g.user)
 
+class PostForContentAdminView(PostAdminView):
+    can_create = False
+
+    def get_query(self):
+        content_id = request.args.get('content_id', None)
+        content_type = request.args.get('content_type', None)
+        if content_type == 'Article':
+            cls = Article
+        elif content_type == 'Blog':
+            cls = Blog
+        elif content_type == 'Discussion':
+            cls = Discussion
+        else:
+            cls = Post
+
+        if content_id is not None:
+            parent = cls.objects(pk=content_id).first()
+            return Post.objects(parent=parent)
+        else:
+            return Post.objects
+
+
+    def is_visible(self):
+        return False
+
 class ContentAdminView(ModelView):
     create_template = 'admin_custom/create.html'
     edit_template = 'admin_custom/edit.html'
     form_columns = ['title', 'description', 'content', 'author', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'tag_refs']
-    column_list = ('title', 'author', 'comments_count', 'admin_published')
+    column_list = ('title', 'author', 'comments_count', 'admin_published', 'comments')
     column_filters = ['title']
     column_searchable_list = ('title', )
     form_overrides = dict(content=SummernoteTextAreaField)
+
+    form_args = dict(author=dict(default=get_current_user))
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None:
@@ -235,6 +264,10 @@ class ContentAdminView(ModelView):
         else:
             return self.model.objects(author=g.user)
 
+    def _comments_formatter(view, context, model, name):
+        return Markup("<a href='%s'>%d</a>" % (url_for('content_post_admin_view.index_view', content_id=str(model.id), content_type=model.__class__.__name__), Post.objects(parent=model).count())) if Post.objects(parent=model).count() > 0 else ""
+
+    column_formatters = {    'comments': _comments_formatter}
 
 class ChannelAdminView(ModelView):
     create_template = 'admin_custom/create.html'
@@ -249,28 +282,6 @@ class ChannelAdminView(ModelView):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
             return True
         return False
-
-
-class DiscussionAdminView(ModelView):
-    create_template = 'admin_custom/create.html'
-    edit_template = 'admin_custom/edit.html'
-    form_columns = ['title', 'description', 'content', 'author', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'comments', 'source', 'type', 'published', 'admin_published', 'tag_refs', 'group']
-    column_list = ('title', 'author', 'comments_count')
-    column_filters = ['title']
-    column_searchable_list = ('title', )
-    form_overrides = dict(description=SummernoteTextAreaField, content=SummernoteTextAreaField)
-
-
-    def is_accessible(self):
-        if hasattr(g, 'user') and g.user is not None:
-            return True
-        return False
-
-    def get_query(self):
-        if 'Admin' in g.user.roles:
-            return self.model.objects
-        else:
-            return self.model.objects(author=g.user)
 
 class ApprovalContentAdminView(ModelView):
     can_create = False
@@ -375,17 +386,19 @@ class ProfileSettingAdminView(flask_admin.BaseView):
 admin.add_view(ApprovalContentAdminView(Article, name='Article', endpoint='approval.article', category="Approvals"))
 admin.add_view(ApprovalContentAdminView(Blog, name='Blog', endpoint='approval.blog', category="Approvals"))
 admin.add_view(ApprovalContentAdminView(Discussion, name='Discussion', endpoint='approval.discussion', category="Approvals"))
-admin.add_view(ProfileAdminView(Profile, category="Admin"))
-admin.add_view(ActivityAdminView(Activity, category="Admin"))
-admin.add_view(AdventureAdminView(Adventure, category="Admin"))
+admin.add_view(ProfileAdminView(Profile, category="Administration"))
+admin.add_view(ActivityAdminView(Activity, category="Administration"))
+admin.add_view(AdventureAdminView(Adventure, category="Administration"))
 
-admin.add_view(ContentAdminView(Article, category="Editor"))
-admin.add_view(ContentAdminView(Blog, category="Editor"))
-admin.add_view(ContentAdminView(Discussion, category="Editor"))
-admin.add_view(PostAdminView(Post, category="Editor"))
 
-admin.add_view(EventAdminView(Event, category="Organizer"))
-admin.add_view(TripAdminView(Trip, category="Organizer"))
+admin.add_view(ContentAdminView(Article, category="Editorial"))
+admin.add_view(ContentAdminView(Blog, category="Editorial"))
+admin.add_view(ContentAdminView(Discussion, category="Editorial"))
+admin.add_view(PostAdminView(Post, category="Editorial"))
+admin.add_view(PostForContentAdminView(Post, name="Posts on content", endpoint="content_post_admin_view"))
+
+admin.add_view(EventAdminView(Event, category="Organizers"))
+admin.add_view(TripAdminView(Trip, category="Organizers"))
 
 admin.add_view(LocationAdminView(Location, category="Tools"))
 admin.add_view(ChannelAdminView(Channel, category="Tools"))

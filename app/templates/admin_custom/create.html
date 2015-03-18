@@ -17,6 +17,10 @@
   				focus: true,                 // set focus to editable area after initializing summernote
 			});
             $('textarea').addClass("span8");
+            {% if not is_admin %}
+            $("#author").addClass('hide');
+            $('#author').parent().append('<span class="clearfix"><strong>{{user.name}}</strong></span>');
+            {% endif %}
 		});
 	</script>
 {% endblock %}
