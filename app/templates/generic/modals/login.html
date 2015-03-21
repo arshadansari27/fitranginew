@@ -101,7 +101,7 @@
             console.log(data);
             $.ajax({
                 type: 'GET',
-                url: 'https://www.googleapis.com/plus/v1/people/me?key=AIzaSyC2G0kvBLJBEnBCUPf053z6mL5tgbWON5o',
+                    url: 'https://www.googleapis.com/plus/v1/people/me?key=AIzaSyC2G0kvBLJBEnBCUPf053z6mL5tgbWON5o',
                 dataType: 'json',
                 async: false,
                 headers: {
@@ -141,7 +141,10 @@
                                 <a href="#" id="show_forgotpassword" >Forgot Password?</a>
 			                    </div>
                              <br/>
-                            <button id="btn-login1" type="submit" class="btn btn-info">Login  </button>
+                            <button id="btn-login1" type="submit" style="width: 100px;" class="btn btn-info"><b> Login </b></button> &nbsp;
+                                <div style="padding-top: 7px;">
+                                <a href="/register" id="show_forgotpassword" >Need an Account?</a>
+			                    </div>
                          </div>
                         <div class="col-sm-4 pull-right">
                             <fb:login-button data-max-rows="0"  data-size="large" scope="public_profile,email" onlogin="checkLoginState();">Login with Facebook</fb:login-button>
@@ -154,6 +157,7 @@
                                         data-clientid="445628400297-si4iclsg5i2imd3parigb643lep5iis7.apps.googleusercontent.com"
                                         data-cookiepolicy="single_host_origin"
                                         data-scope="email profile openid https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.profile">
+                                    <img src="https://developers.google.com/accounts/images/sign-in-with-google.png">
                                     </span>
                                 </span>
                         </div>
