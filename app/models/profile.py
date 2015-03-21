@@ -9,6 +9,12 @@ from adventure import Adventure
 from streams import Message
 import datetime, hashlib
 
+
+class ProfileType(db.Document):
+    name = db.StringField()
+
+    def __unicode__(self): return self.name
+
 @new_object.apply
 @update_content.apply
 class Profile(Entity, db.Document):
@@ -33,7 +39,8 @@ class Profile(Entity, db.Document):
     favorite_activities = db.ListField(db.ReferenceField('Activity'))
     bookmarks = db.ListField(db.StringField())
     is_business_profile = db.BooleanField()
-    roles = db.ListField(db.StringField(choices=(('Admin', 'Admin'), ('Editor', 'Editor'), ('Enthusiast', 'Enthusiast'), ('Organizer', 'Organizer'), ('Gear Dealer', 'Gear Dealer'))))
+    roles = db.ListField(db.StringField(choices=(('Admin', 'Admin'), ('Content Manager', 'Content Manager'), ('Basic User', 'Basic User'), ('Service Provider', 'Service Provider'))))
+    type = db.ListField(db.ReferenceField('ProfileType'))
     deactivated = db.BooleanField(default=False)
 
     meta = {
@@ -105,11 +112,21 @@ class Profile(Entity, db.Document):
         return [u for u in RelationShips.get_following(self) if isinstance(u, Profile)]
 
     @property
-    def wishlist(self):
-        return [u for u in RelationShips.get_wish_listed(self) if isinstance(u, Profile)]
+    def wish_list_adventure(self):
+        return [u for u in RelationShips.get_wish_listed(self) if isinstance(u, Adventure)]
 
     @property
-    def accomplished(self):
-        return [u for u in RelationShips.get_accomplished(self) if isinstance(u, Profile)]
+    def wish_list_adventure(self):
+        from app.models.store import Product
+        return [u for u in RelationShips.get_wish_listed(self) if isinstance(u, Product)]
+
+    @property
+    def accomplished_adventure(self):
+        return [u for u in RelationShips.get_accomplished(self) if isinstance(u, Adventure)]
+
+    @property
+    def bought_products(self):
+        from app.models.store import Product
+        return [u for u in RelationShips.get_accomplished(self) if isinstance(u, Product)]
 
 

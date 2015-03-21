@@ -11,11 +11,11 @@ from app.utils import get_current_user
 from app.views.forms import ChangePasswordForm, UserPreferenceForm, ProfileForm
 
 # Define wtforms widget and field
-from app.models.profile import Profile
+from app.models.profile import Profile, ProfileType
 from app.models.streams import ActivityStream, Message
 from app.models.content import Content, Channel, Comment, Article, Tag, Post, PostVote, Blog, Discussion
 from app.models.activity import Activity
-from app.models.adventure import Adventure, Location
+from app.models.adventure import Adventure, Location, State
 from app.models.event import Event
 from app.models.trip import Trip
 from app.models.relationships import RelationShips
@@ -92,12 +92,12 @@ class TagAdminView(ModelView):
 
 
 class LocationAdminView(ModelView):
-    create_template = 'admin_custom/create.html'
-    edit_template = 'admin_custom/edit.html'
-    form_columns = ['name', 'address', 'is_city', 'city', 'region', 'state', 'country', 'zipcode', 'geo_location', 'cover_image', 'image_gallery']
-    column_list = ('name', 'is_city', 'state', 'country')
-    column_filters = ['city', 'region', 'country']
-    column_searchable_list = ('city', 'region', 'country')
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
+    form_columns = ['name', 'address', 'is_city', 'city', 'region', 'zipcode', 'state', 'geo_location', 'cover_image', 'image_gallery']
+    column_list = ('name', 'is_city', 'state')
+    column_filters = ['city', 'region']
+    column_searchable_list = ('city', 'region')
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
@@ -106,8 +106,8 @@ class LocationAdminView(ModelView):
 
 
 class ActivityAdminView(ModelView):
-    create_template = 'admin_custom/create.html'
-    edit_template = 'admin_custom/edit.html'
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
     form_columns = ['name', 'description', 'about', 'dos', 'donts', 'safety_tips', 'tips', 'facts', 'highlights', 'cover_image', 'image_gallery', 'video_embed', 'map_embed']
     column_list = ('name', 'description', 'cover_image')
     column_filters = ['name']
@@ -122,8 +122,8 @@ class ActivityAdminView(ModelView):
 
 
 class AdventureAdminView(ModelView):
-    create_template = 'admin_custom/create.html'
-    edit_template = 'admin_custom/edit.html'
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
     form_columns = ['name', 'description', 'about', 'location', 'best_season', 'nearby_stay', 'nearby_eat', 'nearby_station', 'nearby_airport', 'reviews', 'activities','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image','image_gallery', 'video_embed', 'map_embed']
     column_list = ('name', 'description', 'cover_image')
     column_filters = ['name']
@@ -137,8 +137,8 @@ class AdventureAdminView(ModelView):
 
 
 class EventAdminView(ModelView):
-    create_template = 'admin_custom/create.html'
-    edit_template = 'admin_custom/edit.html'
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
     form_columns = ['name', 'description', 'about', 'scheduled_date', 'location', 'organizer','cover_image','image_gallery', 'video_embed', 'map_embed']
     column_list = ('name', 'description', 'organizer', 'cover_image')
     column_filters = ['name']
@@ -165,10 +165,10 @@ class TripAdminView(ModelView):
 
 
 class ProfileAdminView(ModelView):
-    create_template = 'admin_custom/create.html'
-    edit_template = 'admin_custom/edit.html'
-    form_columns = ['name', 'email', 'about', 'location', 'phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image','image_gallery']
-    column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login')
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
+    form_columns = ['name', 'email', 'about', 'location', 'phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image','image_gallery', 'type']
+    column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login', 'type')
     column_filters = ['name', 'email']
     column_searchable_list = ('name', 'email')
     form_overrides = dict(about=SummernoteTextAreaField)
@@ -180,8 +180,8 @@ class ProfileAdminView(ModelView):
 
 class CommentAdminView(ModelView):
     can_create = False
-    create_template = 'admin_custom/create.html'
-    edit_template = 'admin_custom/edit.html'
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
     form_columns = ['content', 'author']
     column_list = ('author', 'content')
     form_overrides = dict(content=SummernoteTextAreaField)
@@ -198,8 +198,8 @@ class CommentAdminView(ModelView):
             return self.model.objects(author=g.user)
 
 class PostAdminView(ModelView):
-    create_template = 'admin_custom/create.html'
-    edit_template = 'admin_custom/edit.html'
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
     form_columns = ['title', 'content', 'author', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'parent']
     column_list = ('title', 'author', 'vote_count')
     column_filters = ['title']
@@ -243,8 +243,8 @@ class PostForContentAdminView(PostAdminView):
         return False
 
 class ContentAdminView(ModelView):
-    create_template = 'admin_custom/create.html'
-    edit_template = 'admin_custom/edit.html'
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
     form_columns = ['title', 'description', 'content', 'author', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'tag_refs']
     column_list = ('title', 'author', 'comments_count', 'admin_published', 'comments')
     column_filters = ['title']
@@ -270,8 +270,8 @@ class ContentAdminView(ModelView):
     column_formatters = {    'comments': _comments_formatter}
 
 class ChannelAdminView(ModelView):
-    create_template = 'admin_custom/create.html'
-    edit_template = 'admin_custom/edit.html'
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
     form_columns = ['name', 'type', 'parent']
     column_list = ('name', 'type', 'parent.name')
     column_filters = ['name']
@@ -286,8 +286,8 @@ class ChannelAdminView(ModelView):
 class ApprovalContentAdminView(ModelView):
     can_create = False
     can_edit = False
-    create_template = 'admin_custom/create.html'
-    edit_template = 'admin_custom/edit.html'
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
     form_columns = ['title', 'description', 'content', 'author', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'comments', 'source', 'published', 'admin_published', 'tag_refs']
     column_list = ('title', 'author', 'published', 'admin_published')
     form_overrides = dict(description=SummernoteTextAreaField, content=SummernoteTextAreaField)
@@ -322,7 +322,7 @@ class PreferenceView(flask_admin.BaseView):
         print "[*]", profile.email_enabled, profile.email_frequency
         form.email_frequency.data = profile.email_frequency
         form.email_enabled.data = 'y' if profile.email_enabled else None
-        return self.render('/admin_custom/settings.html', form=form, action_name='Edit Preferences', settings='prefs')
+        return self.render('/admin/my_custom/settings.html', form=form, action_name='Edit Preferences', settings='prefs')
 
     def is_visible(self):
         return False
@@ -343,7 +343,7 @@ class ChangePasswordView(flask_admin.BaseView):
                 flash('Password did not match', category='warning')
             else:
                 flash('Wrong password', category='danger')
-        return self.render('/admin_custom/settings.html', form=form, action_name='Change Password', settings='password')
+        return self.render('/admin/my_custom/settings.html', form=form, action_name='Change Password', settings='password')
 
     def is_visible(self):
         return False
@@ -377,7 +377,7 @@ class ProfileSettingAdminView(flask_admin.BaseView):
         form.linked_in.data = profile.linked_in
         form.youtube_channel.data = profile.youtube_channel
         form.blog_channel.data = profile.blog_channel
-        return self.render('/admin_custom/settings.html', form=form, action_name='Edit Your Profile', settings='profile')
+        return self.render('/admin/my_custom/settings.html', form=form, action_name='Edit Your Profile', settings='profile')
 
     def is_visible(self):
         return False
@@ -400,6 +400,8 @@ admin.add_view(PostForContentAdminView(Post, name="Posts on content", endpoint="
 admin.add_view(EventAdminView(Event, category="Organizers"))
 admin.add_view(TripAdminView(Trip, category="Organizers"))
 
+admin.add_view(ModelView(State, category="Tools"))
+admin.add_view(ModelView(ProfileType, category="Tools"))
 admin.add_view(LocationAdminView(Location, category="Tools"))
 admin.add_view(ChannelAdminView(Channel, category="Tools"))
 admin.add_view(TagAdminView(Tag, category="Tools"))

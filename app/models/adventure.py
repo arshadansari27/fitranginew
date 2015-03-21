@@ -4,6 +4,9 @@ __author__ = 'arshad'
 
 from app.models import update_content, Entity, db
 
+class State(db.Document):
+    state = db.StringField()
+    country = db.StringField()
 
 @update_content.apply
 class Location(Entity, db.Document):
@@ -12,9 +15,8 @@ class Location(Entity, db.Document):
     city = db.StringField()
     is_city = db.BooleanField()
     region = db.StringField()
-    state = db.StringField()
-    country = db.StringField()
     zipcode = db.StringField()
+    state = db.ReferenceField('State')
 
     meta = {
         'indexes': [

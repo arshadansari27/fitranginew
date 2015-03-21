@@ -5,11 +5,11 @@ import flask_admin
 from flask.ext.cache import Cache
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.mandrill import Mandrill
-
+from flask.ext.mongorest import MongoRest
 from app import settings
 
 
-app = Flask(__name__, template_folder='templates', static_folder='assets')
+app = Flask(__name__, template_folder='templates', static_folder='static', static_url_path='')
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['MONGODB_SETTINGS'] = {'DB': settings.MONGODB_DB, 'HOST': settings.MONGODB_HOST, 'PORT': settings.MONGODB_PORT}
@@ -23,6 +23,9 @@ admin = flask_admin.Admin(app, 'Fitrangi Dashboard', base_template='/admin/base_
 
 #from flask.ext import login
 cache = Cache(app,config={'CACHE_TYPE': 'simple'})
+
+api = MongoRest(app)
+app.jinja_env.cache = {}
 
 def start_app():
     from app.models.extra.sessions import MongoSessionInterface
@@ -47,6 +50,7 @@ def start_app():
         logging.getLogger().setLevel(logging.DEBUG)
 
     from app.views.admin import *
+    from app.views.site import *
 
 
 
