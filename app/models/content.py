@@ -2,11 +2,18 @@ __author__ = 'arshad'
 
 from app.models import Node, update_content, db
 from app.models.profile import Profile
+import datetime
 
 class Tag(db.Document):
     name = db.StringField()
 
     def __unicode__(self): return self.name
+
+class Comment(db.EmbeddedDocument):
+    author = db.ReferenceField('Profile')
+    content = db.StringField()
+    created_timestamp = db.DateTimeField(default=datetime.datetime.now)
+    modified_timestamp = db.DateTimeField(default=datetime.datetime.now)
 
 
 class Channel(db.Document):
@@ -18,7 +25,7 @@ class Content(Node):
     title = db.StringField()
     content = db.StringField()
     author = db.ReferenceField('Profile')
-    comments = db.ListField(db.ReferenceField('Comment'))
+    comments = db.ListField(db.EmbeddedDocumentField(Comment))
     source = db.StringField()
     tags = db.ListField(db.StringField())
     tag_refs = db.ListField(db.ReferenceField('Tag'))
@@ -32,7 +39,7 @@ class Content(Node):
     def comments_count(self):
         return len(self.comments)
 
-    def __unicode__(self): return self.title
+    def __unicode__(self): return self.title if self.title else (self.content if self.content else 'Empty Post')
 
     def on_create(self):
         from app.models.streams import ActivityStream
@@ -46,15 +53,10 @@ class Content(Node):
         else:
             ActivityStream.push_content_to_stream(self)
 
-class Comment(db.EmbeddedDocument):
-    author = db.ReferenceField('Profile')
-    content = db.StringField()
-
 
 @update_content.apply
 class Post(Content, db.Document):
     parent = db.GenericReferenceField()
-    comments = db.ListField(db.EmbeddedDocumentField(Comment))
 
     meta = {
         'allow_inheritance': True,

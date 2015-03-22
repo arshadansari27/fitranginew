@@ -8,7 +8,7 @@ import os
 MONGODB_HOST = 'localhost'
 
 MONGODB_PORT = 27017
-MONGODB_DB   = 'adventure3'
+MONGODB_DB   = 'adventure2'
 TEMPLATE_FOLDER = 'app/templates'
 TEMPLATE_FOLDER = os.getcwd() + '/' + TEMPLATE_FOLDER
 MEDIA_FOLDER = os.getcwd() + '/app/assets/media/'

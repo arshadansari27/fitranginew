@@ -70,7 +70,7 @@
                     <ul id="submenu1" class="dropdown-menu mega-dropdown-menu container" role="menu" aria-labelledby="dropdown1">
 
 
-                        <li class="inner-level-dropdown dropdown {% if menu.main_menu == 'activity' %}active{% endif %} col-sm-1">
+                        <li class="inner-level-dropdown dropdown {% if menu.main_menu == 'activity' %}active{% endif %} col-sm-2">
 		        	        <a id="subdropdown1" href="#" class="dropdown-toggle" >Activities<b class="caret"></b></a>
 		                    <ul class="dropdown-menu multi-column columns-3" aria-labelledby="subdropdown1" role="menu">
 			                    <div class="row">
@@ -78,22 +78,23 @@
 			                    </div>
 		                    </ul>
 		                </li>
-		                <li class="inner-level-dropdown {% if menu.main_menu == 'adventure' %}active{% endif %} col-sm-1"><a href="#">Adventure</a></li>
+		                <li class="inner-level-dropdown {% if menu.main_menu == 'adventure' %}active{% endif %} col-sm-2"><a href="#">Adventure</a></li>
                     </ul>
                 </li>
                 <li id="dropdown2" class="top-level-dropdown dropdown mega-dropdown {% if menu.app_name == 'community'%}active{% endif %}">
                     <a href="#" class="dropdown-toggle" role="button" aria-expanded="false">Community</a>
                     <ul class="dropdown-menu mega-dropdown-menu container" role="menu" aria-labelledby="dropdown2">
-                        <li class="inner-level-dropdown {% if menu.main_menu == 'discussion' %}active{% endif %} col-sm-1"><a href="#">Discussion</a></li>
-                        <li class="inner-level-dropdown {% if menu.main_menu == 'profile' %}active{% endif %} col-sm-1"><a href="#">Profile Finder</a></li>
-                        <li class="inner-level-dropdown {% if menu.main_menu == 'event' %}active{% endif %} col-sm-1"><a href="#">Upcoming Events</a></li>
+                        <li class="inner-level-dropdown {% if menu.main_menu == 'discussion' %}active{% endif %} col-sm-2"><a href="#">Discussion</a></li>
+                        <li class="inner-level-dropdown {% if menu.main_menu == 'profile' %}active{% endif %} col-sm-2"><a href="#">Profile Finder</a></li>
+                        <li class="inner-level-dropdown {% if menu.main_menu == 'event' %}active{% endif %} col-sm-2"><a href="#">Upcoming Events</a></li>
                     </ul>
                 </li>
                 <li id="dropdown3" class="top-level-dropdown dropdown mega-dropdown {% if menu.app_name == 'jounal'%}active{% endif %}">
                     <a href="#" class="dropdown-toggle" role="button" aria-expanded="false">Journal</a>
                     <ul class="dropdown-menu mega-dropdown-menu container" role="menu" aria-labelledby="dropdown3">
-                        <li class="inner-level-dropdown {% if menu.main_menu == 'content' %}active{% endif %} col-sm-1"><a href="#">What's Trending</a></li>
-                        <li class="inner-level-dropdown {% if menu.main_menu == 'write_content' %}active{% endif %} col-sm-1"><a href="#">Write a blog</a></li>
+                        <li class="inner-level-dropdown {% if menu.main_menu == 'trending_content' %}active{% endif %} col-sm-2"><a href="#">Trending Posts</a></li>
+                        <li class="inner-level-dropdown {% if menu.main_menu == 'all_content' %}active{% endif %} col-sm-2"><a href="#">All Posts</a></li>
+                        <li class="inner-level-dropdown {% if menu.main_menu == 'write_content' %}active{% endif %} col-sm-2"><a href="#">Write a blog</a></li>
                     </ul>
                 </li>
 
@@ -153,21 +154,21 @@
 
     <div class="col-lg-4 col-md-4 col-sm-3 col-xs-12 social">
         <h3>Follow us</h3>
-        <a href="" class="fa fa-facebook-square"></a>
-        <a href="" class="fa fa-twitter-square"></a>
-        <a href="" class="fa fa-rss-square"></a>
-        <a href="" class="fa fa-linkedin-square"></a>
-        <a href="" class="fa fa-google-plus-square"></a>
-        <a href="" class="fa fa-youtube-square"></a>
-        <a href="" class="fa fa-vimeo-square"></a>
-        <a href="" class="fa fa-pinterest-square"></a>
+        <a href="" class="fa fa-facebook-square" target="_blank"></a>
+        <a href="" class="fa fa-twitter-square" target="_blank"></a>
+        <a href="" class="fa fa-rss-square" target="_blank"></a>
+        <a href="" class="fa fa-linkedin-square" target="_blank"></a>
+        <a href="" class="fa fa-google-plus-square" target="_blank"></a>
+        <a href="" class="fa fa-youtube-square" target="_blank"></a>
+        <a href="" class="fa fa-vimeo-square" target="_blank"></a>
+        <a href="" class="fa fa-pinterest-square" target="_blank"></a>
 
         <p>By Continuing past this page, you agree to
             Terms of Service.<br>
             All trademarks are properties
             of their respective owners.</p>
 
-        <p>&copy;2014-2015-Fitrangi<sup>TM</sup>. All right Reserved</p>
+        <p>&copy;2012 Fitrangi<sup>TM</sup>. All right Reserved</p>
 
     </div>
 
@@ -203,15 +204,24 @@ $(".dropdown").hover(
 <script>
     $(function(){
         $('li.top-level-dropdown>a').on('click', function (event) {
-            //$('li.dropdown.mega-dropdown').toggleClass('close');
+            event.stopPropagation();
             $('li.top-level-dropdown').removeClass('open');
             $(this).parent().toggleClass('open');
         });
         $('li.inner-level-dropdown>a').on('click', function (event) {
-            //$('li.dropdown.mega-dropdown').toggleClass('close');
+            event.stopPropagation();
             $('li.inner-level-dropdown').removeClass('open');
             $(this).parent().toggleClass('open');
         });
+        $('body').on('click', function (e) {
+            if (!$('li.dropdown').is(e.target)
+                && $('li.dropdown').has(e.target).length === 0
+                && $('.open').has(e.target).length === 0
+            ) {
+                $('li.dropdown').removeClass('open');
+            }
+        });
+
     });
 </script>
 

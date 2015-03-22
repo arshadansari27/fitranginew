@@ -18,8 +18,9 @@ class ProfileType(db.Document):
 @new_object.apply
 @update_content.apply
 class Profile(Entity, db.Document):
-
-    email = db.StringField(unique=True, required=True)
+    is_subscription_only = db.BooleanField(default=False)
+    subscription_date = db.DateTimeField(default=datetime.datetime.now)
+    email = db.StringField(unique=True)
     passwd = db.StringField()
     location = db.ReferenceField('Location')
     phone = db.StringField()
@@ -42,12 +43,16 @@ class Profile(Entity, db.Document):
     roles = db.ListField(db.StringField(choices=(('Admin', 'Admin'), ('Content Manager', 'Content Manager'), ('Basic User', 'Basic User'), ('Service Provider', 'Service Provider'))))
     type = db.ListField(db.ReferenceField('ProfileType'))
     deactivated = db.BooleanField(default=False)
+    is_verified = db.BooleanField(default=False)
 
     meta = {
         'indexes': [
             {'fields': ['email', 'slug', 'name'], 'unique': False, 'sparse': False, 'types': False },
         ],
     }
+
+    def __unicode__(self):
+        return self.name if self.name else (self.email if self.email else 'No name or email')
 
     @property
     def password(self):

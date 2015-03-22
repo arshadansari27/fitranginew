@@ -27,7 +27,6 @@ def handler(event):
 @handler(signals.pre_save)
 def update_content(sender, document):
     document.modified_timestamp = datetime.datetime.now()
-    print "Updating Document", document.id
     if hasattr(document, 'published'):
         if document.published and document.published_timestamp is None:
             document.published_timestamp = datetime.datetime.now()
@@ -38,11 +37,11 @@ def update_content(sender, document):
         use = document.name
     else:
         use = document.title
-    update_slug(sender, document, document.__class__.__name__.lower(), use)
+    if use is not None:
+        update_slug(sender, document, document.__class__.__name__.lower(), use)
 
 @handler(signals.post_save)
 def new_object(sender, document, created):
-    print "Creating Document", document.id
     document.on_create()
 
 
@@ -69,7 +68,7 @@ class Node(object):
     slug = db.StringField()
 
     def on_create(self):
-        print 'do nothing'
+        pass
 
     def add_cover_image(self, file):
         self.cover_image = file
@@ -111,6 +110,8 @@ class Entity(Node):
     about = db.StringField()
 
     def __unicode__(self): return self.name
+
+    def __repr__(self): return self.name
 
 class ExternalNetwork(object):
     external_name = db.StringField()

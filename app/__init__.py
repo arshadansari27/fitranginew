@@ -41,7 +41,6 @@ def start_app():
         profile.password = 'testing'
         profile.save()
 
-
     import logging
     if not app.debug:
         logging.basicConfig(filename='fitrangi-flask-error.log',level=logging.DEBUG)

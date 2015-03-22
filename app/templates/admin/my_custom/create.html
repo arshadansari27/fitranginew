@@ -1,13 +1,13 @@
 {% extends 'admin/model/create.html' %}
 {% block head_css %}
 	{{ super() }}
-	<link href="/assets/css/font-awesome.min.css" rel="stylesheet">
-	<link href="/assets/css/summernote.css" rel="stylesheet">
+	<link href="/css/font-awesome.min.css" rel="stylesheet">
+	<link href="/css/summernote.css" rel="stylesheet">
 {% endblock %}
 
 {% block tail %}
     {{ super() }}
-	<script src="/assets/js/summernote.min.js" type="text/javascript"></script>
+	<script src="/js/summernote.min.js" type="text/javascript"></script>
 	<script language="javascript">
 		$(document).ready(function() {
 			$('.summernote').summernote({

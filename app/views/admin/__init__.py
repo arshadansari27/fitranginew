@@ -112,8 +112,7 @@ class ActivityAdminView(ModelView):
     column_list = ('name', 'description', 'cover_image')
     column_filters = ['name']
     column_searchable_list = ('name',)
-    form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField, dos=SummernoteTextAreaField, donts=SummernoteTextAreaField, safety_tips=SummernoteTextAreaField,
-                          tips=SummernoteTextAreaField, facts=SummernoteTextAreaField, highlights=SummernoteTextAreaField)
+    form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField)
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
@@ -124,12 +123,11 @@ class ActivityAdminView(ModelView):
 class AdventureAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'about', 'location', 'best_season', 'nearby_stay', 'nearby_eat', 'nearby_station', 'nearby_airport', 'reviews', 'activities','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image','image_gallery', 'video_embed', 'map_embed']
+    form_columns = ['name', 'description', 'about', 'location', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'activities', 'reviews']
     column_list = ('name', 'description', 'cover_image')
     column_filters = ['name']
     column_searchable_list = ('name',)
-    form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField, nearby_eat=SummernoteTextAreaField, nearby_airport=SummernoteTextAreaField,
-                          nearby_station=SummernoteTextAreaField, reach_by_train=SummernoteTextAreaField, reach_by_road=SummernoteTextAreaField, reach_by_sea=SummernoteTextAreaField, reach_by_air=SummernoteTextAreaField)
+    form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField)
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
             return True
