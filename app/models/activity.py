@@ -5,6 +5,7 @@ from app.models.relationships import RelationShips
 
 @update_content.apply
 class Activity(Entity, db.Document):
+    icon = db.ImageField(thumbnail_size=(100, 100))
     dos = db.ListField(db.StringField())
     donts = db.ListField(db.StringField())
     safety_tips = db.ListField(db.StringField())

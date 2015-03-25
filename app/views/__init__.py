@@ -40,12 +40,10 @@ def setup_user():
 
 
 @app.context_processor
-def setup_content():
+def setup_context():
     user = g.user if hasattr(g, 'user') and g.user is not None else None
     activity_menu = view_menu()
-    d = dict(user=user, activity_menu=activity_menu, menu=get_menu_selection(request.path))
-    print "content processor: %s" % str(d)
-    return d
+    return dict(user=user, activity_menu=activity_menu, menu=get_menu_selection(request.path))
 
 #@cache.cached(timeout=3600 * 24)
 def get_menu_selection(request_path):
@@ -93,3 +91,5 @@ def get_menu_selection(request_path):
     menu = Menu(top, main, inner)
     print "menu: %s" % str(menu)
     return menu
+
+from .common import *

@@ -19,8 +19,8 @@ from app.models.adventure import Adventure, Location, State
 from app.models.event import Event
 from app.models.trip import Trip
 from app.models.relationships import RelationShips
-
 import mongoengine
+from flask.ext.admin.contrib.mongoengine.filters import BooleanEqualFilter, FilterLike, BaseMongoEngineFilter
 
 from flask.ext.admin.contrib.mongoengine.ajax import QueryAjaxModelLoader
 from flask.ext.admin.model.ajax import DEFAULT_PAGE_SIZE
@@ -29,6 +29,46 @@ from app import app
 @app.context_processor
 def process_context_admin():
     return dict(user=g.user, is_admin='Admin' in g.user.roles)
+
+class FilterAdventure(BaseMongoEngineFilter):
+    def apply(self, query, value):
+        adventure = Adventure.objects(name__icontains=value).first()
+        return query.filter(adventures__iexact=[adventure.id])
+
+    def operation(self):
+        return 'is'
+
+class FilterLocation(BaseMongoEngineFilter):
+    def apply(self, query, value):
+        location = Location.objects(name__icontains=value).first()
+        return query.filter(location__iexact=location.id)
+
+    def operation(self):
+        return 'is'
+
+class FilterActivities(BaseMongoEngineFilter):
+    def apply(self, query, value):
+        activity = Activity.objects(name__icontains=value).first()
+        return query.filter(activities__in=[activity.id])
+
+    def operation(self):
+        return 'is'
+
+class FilterChannel(BaseMongoEngineFilter):
+    def apply(self, query, value):
+        channel = Channel.objects(name__icontains=value).first()
+        return query.filter(channels__in=[channel.id])
+
+    def operation(self):
+        return 'is'
+
+class FilterProfileType(BaseMongoEngineFilter):
+    def apply(self, query, value):
+        type = ProfileType.objects(name__icontains=value).first()
+        return query.filter(type__iexact=type.id)
+
+    def operation(self):
+        return 'is'
 
 
 class TagAjaxModelLoader(QueryAjaxModelLoader):
@@ -108,7 +148,7 @@ class LocationAdminView(ModelView):
 class ActivityAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'about', 'dos', 'donts', 'safety_tips', 'tips', 'facts', 'highlights', 'cover_image', 'image_gallery', 'video_embed', 'map_embed']
+    form_columns = ['name', 'description', 'icon', 'about', 'dos', 'donts', 'safety_tips', 'tips', 'facts', 'highlights', 'cover_image', 'image_gallery', 'video_embed', 'map_embed']
     column_list = ('name', 'description', 'cover_image')
     column_filters = ['name']
     column_searchable_list = ('name',)
@@ -123,9 +163,9 @@ class ActivityAdminView(ModelView):
 class AdventureAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'about', 'location', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'activities', 'reviews']
+    form_columns = ['name', 'description', 'about', 'location', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'activities']
     column_list = ('name', 'description', 'cover_image')
-    column_filters = ['name']
+    column_filters = ['name', FilterLocation('location.id', 'Location'), FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name',)
     form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField)
     def is_accessible(self):
@@ -139,7 +179,7 @@ class EventAdminView(ModelView):
     edit_template = 'admin/my_custom/edit.html'
     form_columns = ['name', 'description', 'about', 'scheduled_date', 'location', 'organizer','cover_image','image_gallery', 'video_embed', 'map_embed']
     column_list = ('name', 'description', 'organizer', 'cover_image')
-    column_filters = ['name']
+    column_filters = ['name', FilterLocation('location', 'Location')]
     column_searchable_list = ('name', )
     form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField)
 
@@ -152,7 +192,7 @@ class EventAdminView(ModelView):
 class TripAdminView(ModelView):
     form_columns = ['name', 'description', 'about', 'adventure', 'starting_from', 'price', 'currency', 'discount_percentage', 'organizer',  'activities', 'difficulty_rating', 'registration', 'start_date', 'end_date', 'schedule', 'things_to_carry', 'inclusive', 'exclusive', 'others', 'comments', 'enquiries', 'announcements', 'cover_image','image_gallery', 'video_embed', 'map_embed']
     column_list = ('name', 'description', 'organizer', 'cover_image')
-    column_filters = ['name']
+    column_filters = ['name', FilterAdventure('adventure.id', 'Adventure'), FilterActivities('activities.id', 'Activity'), FilterLocation('starting_from.id', 'Start Location')]
     column_searchable_list = ('name', )
     form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField)
 
@@ -167,7 +207,7 @@ class ProfileAdminView(ModelView):
     edit_template = 'admin/my_custom/edit.html'
     form_columns = ['name', 'email', 'about', 'location', 'phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image','image_gallery', 'type']
     column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login', 'type')
-    column_filters = ['name', 'email']
+    column_filters = ['name', 'email', FilterProfileType('type.id', 'Type')]
     column_searchable_list = ('name', 'email')
     form_overrides = dict(about=SummernoteTextAreaField)
 
@@ -198,10 +238,8 @@ class CommentAdminView(ModelView):
 class PostAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['title', 'content', 'author', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'parent']
-    column_list = ('title', 'author', 'vote_count')
-    column_filters = ['title']
-    column_searchable_list = ('title', )
+    form_columns = ['author', 'content', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'parent']
+    column_list = ( 'author', 'content', 'vote_count')
     form_overrides = dict(content=SummernoteTextAreaField)
 
     def is_accessible(self):
@@ -243,9 +281,9 @@ class PostForContentAdminView(PostAdminView):
 class ContentAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['title', 'description', 'content', 'author', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'tag_refs']
-    column_list = ('title', 'author', 'comments_count', 'admin_published', 'comments')
-    column_filters = ['title']
+    form_columns = ['title', 'description', 'content', 'author', 'channels', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'tag_refs']
+    column_list = ('title', 'author', 'published', 'admin_published', 'comments', 'cover_image', 'channels')
+    column_filters = ['title', FilterChannel('channel.id', 'Channel')]
     column_searchable_list = ('title', )
     form_overrides = dict(content=SummernoteTextAreaField)
 

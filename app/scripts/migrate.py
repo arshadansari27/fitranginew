@@ -168,169 +168,266 @@ class Advertisement(db2.Document):
         img_io.seek(0)
         return img_io, format
 
+def save_cover_image(image, obj):
+    img_io = cStringIO.StringIO()
+    img = PImage.open(image)
+    format = image.format
+    img.save(img_io, "JPEG", quality=70)
+    img_io.seek(0)
+    obj.cover_image.put(img_io) #, format)
+
+
+def createProfileType(type):
+    from app.models.profile import Profile as newProfile, ProfileType as newProfileType
+    if newProfileType.objects(name__iexact=type).first() is not None:
+        return
+    ptype = newProfileType(name=type)
+    ptype.save()
+
+def create_subscription_profile(a):
+    from app.models.profile import Profile as newProfile, ProfileType as newProfileType
+    if len(a.message.strip()) is 0:
+        print 'Invalid message, skipping'
+        return
+    if newProfile.objects(email__iexact=a.message).first() is not None or Profile.objects(email__iexact=a.message).first() is not None:
+        print 'Profile seems to exists, so not to subscription for ', a.message
+        return
+
+    ptype = newProfileType.objects(name__iexact='Subscription Only').first()
+    p = newProfile(is_subscription_only=True, email=a.message)
+    p.type = [ptype]
+    p.save()
+    print 'Created subscription %s' % (a.message)
+
+def create_profile(a, profile_types):
+    from app.models.profile import Profile as newProfile, ProfileType as newProfileType
+    ptype = newProfileType.objects(name__in=profile_types).first()
+    roles = []
+    if 'Admin' in a.roles:
+        roles.append('Admin')
+    if 'Organizer' in profile_types or 'Gear Dealer' in profile_types:
+        roles.append('Service Provider')
+        is_business_profile = True
+    else:
+        is_business_profile = False
+    roles.append('Basic User')
+    if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
+        cover_image = a.main_image.image
+    else:
+        cover_image = None
+    size = newProfile.objects(email__iexact=a.name).count()
+    if size>0:
+        b = newProfile.objects(name__exact=a.name).first()
+        b.name, b.email, b.cover_image, b.is_business_profile = a.name, a.email, cover_image, False
+        b.website, b.facebook, b.linked_in, b.type = a.website, a.facebook, a.linkedin, [ptype]
+        b.roles, b.phone, b.about = roles, a.phone, a.description
+        b.is_subscription_only = False
+        print count, 'Updating Profile', b.name
+    else:
+        p = newProfile(name=a.name, email=a.email, is_business_profile=is_business_profile,
+                website=a.website, facebook=a.facebook, linked_in=a.linkedin, type=[ptype],
+                roles=roles, phone=a.phone)
+        b = p
+        print count, 'Creating Profile', b.name
+    if b and cover_image:
+        save_cover_image(cover_image, b)
+    if a.password:
+        b.password = a.password
+    try:
+        b.save()
+    except Exception, e:
+        print str(e), 'Unable to save', b.name
+
+def create_adventure(a):
+    from app.models.adventure import Adventure as newAdventure
+    if newAdventure.objects(name=a.title).first() is not None:
+        return
+    if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
+        cover_image = a.main_image.image
+    else:
+        cover_image = None
+    adventure = newAdventure(name=a.title, about=a.text, description=a.description)
+    if adventure and cover_image:
+        save_cover_image(cover_image, adventure)
+    adventure.save()
+    print count, 'Creating Adventure', adventure.name
+
+
+def create_activity(a):
+    from app.models.activity import Activity as newActivity
+    if newActivity.objects(name=a.title).first() is not None:
+        return
+    if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
+        cover_image = a.main_image.image
+    else:
+        cover_image = None
+    activity = newActivity(name=a.title, about=a.text, description=a.description)
+    if activity and cover_image:
+        save_cover_image(cover_image, activity)
+    activity.save()
+    print count, 'Creating Activity', activity.name
+
+
+def create_article(a):
+    from app.models.profile import Profile as newProfile, ProfileType as newProfileType
+    from app.models.content import (Article as newArticle, Post as newPost)
+    if newArticle.objects(title=a.title).first() is not None:
+        return
+
+    if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
+        cover_image = a.main_image.image
+    article = newArticle(title=a.title, content=a.text, description=a.description)
+    author = Profile.objects(pk=a.created_by.id).first()
+    print 'Article author', author.email
+    article.author = newProfile.objects(email__iexact=author.email).first()
+    for c in a.comments:
+        c_author = Profile.objects(pk=c.created_by.id).first()
+        nc = newPost(author=newProfile.objects(email__iexact=c_author.email).first(), created_timestamp=c.created_on, modified_timestamp=c.created_on, content=c.text)
+        nc.save()
+        article.comments.append(nc)
+    if article and cover_image:
+        save_cover_image(cover_image, article)
+    article.save()
+    print count, 'Creating Article', article.title
+
+def create_discussion(a):
+    from app.models.profile import Profile as newProfile, ProfileType as newProfileType
+    from app.models.content import (Discussion as newDiscussion,
+                                    Tag as newTag,
+                                    Post as newPost)
+    if newDiscussion.objects(title=a.title).first() is not None:
+        return
+    if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
+        cover_image = a.main_image.image
+    else:
+        cover_image = None
+    discussion = newDiscussion(title=a.title, content=a.text, description=a.description)
+    author = Profile.objects(pk=a.created_by.id).first()
+    discussion.author = newProfile.objects(pk=author.id).first()
+
+    if hasattr(discussion, 'facets') and discussion.tags:
+        tags = a.facets
+        tags_ref = [newTag.objects(name=t).first() for t in tags]
+        discussion.tag_refs = tags_ref
+    print 'Dicussion author', author.email, '->', discussion.author
+    for c in a.comments:
+        c_author = Profile.objects(pk=c.created_by.id).first()
+        nc = newPost(author=newProfile.objects(email__iexact=c_author.email).first(), created_timestamp=c.created_on, modified_timestamp=c.created_on, content=c.text)
+        nc.save()
+        discussion.comments.append(nc)
+    if discussion and cover_image:
+        save_cover_image(cover_image, discussion)
+    discussion.save()
+    print count, 'Creating Discussion', discussion.title
+
+def create_post(a):
+    from app.models.profile import Profile as newProfile, ProfileType as newProfileType
+    from app.models.content import (Post as newPost, Comment as newComment)
+    if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
+        cover_image = a.main_image.image
+    else:
+        cover_image = None
+    post = newPost(content=a.text, description=a.description)
+    author = Profile.objects(pk=a.created_by.id).first()
+    post.author = newProfile.objects(email__iexact=author.email).first()
+    for c in a.comments:
+        c_author = Profile.objects(pk=c.created_by.id).first()
+        comment = newComment(author=newProfile.objects(email__iexact=c_author.email).first(), created_timestamp=c.created_on, modified_timestamp=c.created_on, content=c.text)
+        post.comments.append(comment)
+    if post and cover_image:
+        save_cover_image(cover_image, post)
+    post.save()
+    print count, 'Creating Posts', post.content
+
+def create_event(a):
+    from app.models.event import Event as newEvent
+    if newEvent.objects(name=a.title).first() is not None:
+        return
+    if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
+        cover_image = a.main_image.image
+    else:
+        cover_image = None
+    event = newEvent(title=a.title, description=a.description, about=a.text)
+    if a.organiser:
+        organizer = Profile.objects(pk=a.organiser.id).first()
+        event.organizer = organizer
+    if event and cover_image:
+        save_cover_image(cover_image, event)
+    event.save()
+
+def create_trip(a):
+    from app.models.trip import Trip as newTrip
+    if newTrip.objects(name=a.title).first() is not None:
+        return
+    if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
+        cover_image = a.main_image.image
+    else:
+        cover_image = None
+    trip = newTrip(title=a.title, description=a.description, about=a.text)
+    if a.organiser:
+        organizer = Profile.objects(pk=a.organiser.id).first()
+        trip.organizer = organizer
+    if trip and cover_image:
+        save_cover_image(cover_image, trip)
+    trip.save()
+
+def create_tag(a):
+    from app.models.content import Tag as newTag
+    if newTag.objects(name__iexact=a.name).first() is not None:
+        return
+    tag = newTag(name=a.name)
+    tag.save()
+
+
 if __name__ == '__main__':
 
-    from app.models.profile import Profile as newProfile, ProfileType as newProfileType
-    from app.models.event import Event as newEvent
-    from app.models.activity import Activity as newActivity
-    from app.models.content import (Article as newArticle,
-                                    Tag as newTag,
-                                    Post as newPost,
-                                    Blog as newBlog,
-                                    Discussion as newDiscussion,
-                                    Comment as newComment)
-    from app.models.trip import Trip as newTrip
-    from app.models.store import Product as newProduct
-    from app.models.adventure import Adventure as newAdventure
 
     for a in ['Enthusiast', 'Gear Dealer', 'Organizer', 'Subscription Only']:
-        if newProfileType.objects(name__iexact=a).first() is not None:
-            print a, 'exists, moving on '
-            continue
-        ptype = newProfileType(name=a)
-        ptype.save()
-        print 'Creating profile type', ptype
+        createProfileType(a)
+
+    print '*' * 100
+    print 'Tags:', Tag.objects.count()
+    for a in Tag.objects.all():
+        create_tag(a)
+
 
     print '*' * 100
     print "Subscription Counts:", SubscriptionMessage.objects.count()
     count = 0
-    print '*' * 100
     for a in SubscriptionMessage.objects.all():
         count += 1
-        print 'Subscription: ', count
-        if len(a.message.strip()) is 0:
-            print 'Invalid message, skipping'
-            continue
-        if newProfile.objects(email__iexact=a.message).first() is not None or Profile.objects(email__iexact=a.message).first() is not None:
-            print 'Profile seems to exists, so not to subscription for ', a.message
-            continue
-
-        ptype = newProfileType.objects(name__iexact='Subscription Only').first()
-        print 'Applying %s to %s' % (ptype.name, a.message)
-        p = newProfile(is_subscription_only=True, email=a.message)
-        p.type = [ptype]
-        p.save()
+        create_subscription_profile(a)
+        print count, a.message
 
     print '*' * 100
     print "Profiles Enthusiast:", Profile.objects(facets__in=['Enthusiast', 'Enthusiasts']).count()
-    ptype = newProfileType.objects(name__iexact='Enthusiast').first()
     count = 0
     for a in Profile.objects(facets__in=['Enthusiast', 'Enthusiasts']).all():
         count += 1
-        if 'Admin' in a.roles:
-            role = 'Admin'
-        else:
-            role = 'Basic User'
-        if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
-            cover_image = a.main_image.image
-        else:
-            cover_image = None
-        size = newProfile.objects(email__iexact=a.name).count()
-        if size>0:
-            b = newProfile.objects(name__exact=a.name).first()
-            b.name, b.email, b.cover_image, b.is_business_profile = a.name, a.email, cover_image, False
-            b.website, b.facebook, b.linked_in, b.type = a.website, a.facebook, a.linkedin, [ptype]
-            b.roles, b.phone, b.about = [role], a.phone, a.description
-            b.is_subscription_only = False
-            print count, 'Updating Profile', b.name
-        else:
-            p = newProfile(name=a.name, email=a.email, cover_image=cover_image,
-                       website=a.website, facebook=a.facebook, linked_in=a.linkedin, type=[ptype],
-                       roles=[role], phone=a.phone)
-            b = p
-            print count, 'Creating Profile', b.name
-        if a.password:
-            b.password = a.password
-        try:
-            b.save()
-        except Exception, e:
-            print str(e), 'Unable to save', b.name
+        create_profile(a, profile_types=['Enthusiast', 'Enthusiasts'])
+        print count, a.name
 
     print "Profiles Organizer:", Profile.objects(facets__in=['Organizer']).count()
-    ptype = newProfileType.objects(name__iexact='Organizer').first()
     count = 0
     for a in Profile.objects(facets__in=['Organizer']).all():
         count += 1
-        if 'Admin' in a.roles:
-            role = 'Admin'
-        else:
-            role = 'Service Provider'
-        if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
-            cover_image = a.main_image.image
-        else:
-            cover_image = None
-        print 'Trying', a.name
-        size = newProfile.objects(name__exact=a.name).count()
-        if size > 0:
-            b = newProfile.objects(name__exact=a.name).first()
-            b.name, b.email, b.cover_image, b.is_business_profile = a.name, a.email, cover_image, True
-            b.website, b.facebook, b.linked_in, b.type = a.website, a.facebook, a.linkedin, [ptype]
-            b.roles, b.phone, b.about = [role, 'Basic User'], a.phone, a.description
-            b.is_subscription_only = False
-            print count, 'Updating Profile', b.name
-        else:
-            p = newProfile(name=a.name, email=a.email, cover_image=cover_image, is_business_profile=True,
-                       website=a.website, facebook=a.facebook, linked_in=a.linkedin, type=[ptype],
-                       roles=[role, 'Basic User'], phone=a.phone, about=a.description)
-            b = p
-            print count, 'Creating Profile', b.name
-        if a.password:
-            b.password = a.password
-        try:
-            b.save()
-        except Exception, e:
-            print str(e), 'Unable to save', b.name
+        create_profile(a, profile_types=['Organizer'])
+        print count, a.name
 
     print "Profiles Gear Dealer:", Profile.objects(facets__in=['Gear Dealer']).count()
-    ptype = newProfileType.objects(name__iexact='Gear Dealer').first()
     count = 0
     for a in Profile.objects(facets__in=['Gear Dealer']).all():
         count += 1
-        if 'Admin' in a.roles:
-            role = 'Admin'
-        else:
-            role = 'Service Provider'
-        if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
-            cover_image = a.main_image.image
-        else:
-            cover_image = None
-        size = newProfile.objects(name__iexact=a.name).count()
-        if size>0:
-            b = newProfile.objects(name__iexact=a.name).first()
-            b.name, b.email, b.cover_image, b.is_business_profile = a.name, a.email, cover_image, True
-            b.website, b.facebook, b.linked_in, b.type = a.website, a.facebook, a.linkedin, [ptype]
-            b.roles, b.phone, b.about = [role, 'Basic User'], a.phone, a.description
-            b.is_subscription_only = False
-            print count, 'Updating Profile', b.name
-        else:
-            p = newProfile(name=a.name, email=a.email, cover_image=cover_image, is_business_profile=True,
-                       website=a.website, facebook=a.facebook, linked_in=a.linkedin, type=[ptype],
-                       roles=[role, 'Basic User'], phone=a.phone, about=a.description)
-            b = p
-            print count, 'Creating Profile', b.name
-        if a.password:
-            b.password = a.password
-        try:
-            b.save()
-        except Exception, e:
-            print str(e), 'Unable to save', b.name
-
+        create_profile(a, profile_types=['Gear Dealer'])
+        print count, a.name
 
     print '*' * 100
     print "Activities:", Content.objects(facets='Activity').count()
     count = 0
     for a in Content.objects(facets='Activity').all():
         count += 1
-        if newActivity.objects(name=a.title).first() is not None:
-            continue
-        if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
-            cover_image = a.main_image.image
-        else:
-            cover_image = None
-        activity = newActivity(name=a.title, about=a.text, cover_image=cover_image, description=a.description)
-        activity.save()
-        print count, 'Creating Activity', activity.name
-
+        create_activity(a)
+        print count, a.title
 
 
     print '*' * 100
@@ -338,15 +435,8 @@ if __name__ == '__main__':
     count = 0
     for a in Content.objects(channels__in=['Destinations', 'Destination']).all():
         count += 1
-        if newAdventure.objects(name=a.title).first() is not None:
-            continue
-        if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
-            cover_image = a.main_image.image
-        else:
-            cover_image = None
-        adventure = newAdventure(name=a.title, about=a.text, cover_image=cover_image, description=a.description)
-        adventure.save()
-        print count, 'Creating Adventure', adventure.name
+        create_adventure(a)
+        print count, a.title
 
 
     print '*' * 100
@@ -354,23 +444,8 @@ if __name__ == '__main__':
     count = 0
     for a in Content.objects(facets='Article').all():
         count += 1
-        if newArticle.objects(title=a.title).first() is not None:
-            continue
-
-        if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
-            cover_image = a.main_image.image
-        else:
-            cover_image = None
-        article = newArticle(title=a.title, content=a.text, cover_image=cover_image, description=a.description)
-        author = Profile.objects(pk=a.created_by.id).first()
-        print 'Article author', author.email
-        article.author = newProfile.objects(email__iexact=author.email).first()
-        for c in a.comments:
-            c_author = Profile.objects(pk=c.created_by.id).first()
-            nc = newComment(author=newProfile.objects(email__iexact=c_author.email).first(), created_timestamp=c.created_on, content=c.text)
-            article.comments.append(nc)
-        article.save()
-        print count, 'Creating Article', article.title
+        create_article(a)
+        print count, a.title
 
 
     print '*' * 100
@@ -378,22 +453,7 @@ if __name__ == '__main__':
     count = 0
     for a in Question.objects().all():
         count += 1
-        if newDiscussion.objects(title=a.title).first() is not None:
-            continue
-        if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
-            cover_image = a.main_image.image
-        else:
-            cover_image = None
-        discussion = newDiscussion(title=a.title, content=a.text, cover_image=cover_image, description=a.description)
-        author = Profile.objects(pk=a.created_by.id).first()
-        discussion.author = newProfile.objects(pk=author.id).first()
-        print 'Dicussion author', author.email, '->', discussion.author
-        for c in a.comments:
-            c_author = Profile.objects(pk=c.created_by.id).first()
-            nc = newComment(author=newProfile.objects(email__iexact=c_author.email).first(), created_timestamp=c.created_on, content=c.text)
-            discussion.comments.append(nc)
-        discussion.save()
-        print count, 'Creating Discussion', discussion.title
+        create_discussion(a)
 
 
     print '*' * 100
@@ -401,63 +461,20 @@ if __name__ == '__main__':
     print "Posts:", Post.objects.count()
     for a in Post.objects.all():
         count += 1
-        if newPost.objects(title=a.title).first() is not None:
-            continue
-        if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
-            cover_image = a.main_image.image
-        else:
-            cover_image = None
-        post = newPost(title=a.title, content=a.text, cover_image=cover_image, description=a.description)
-        author = Profile.objects(pk=a.created_by.id).first()
-        post.author = newProfile.objects(email__iexact=author.email).first()
-        for c in a.comments:
-            c_author = Profile.objects(pk=c.created_by.id).first()
-            nc = newComment(author=newProfile.objects(email__iexact=c_author.email).first(), created_timestamp=c.created_on, content=c.text)
-            post.comments.append(nc)
-        post.save()
-        print count, 'Creating Posts', post.title
+        create_post(a)
 
     print '*' * 100
     print "Event:", Event.objects(channels__nin=['Adventure Trip']).count()
     for a in Event.objects(channels__nin=['Adventure Trip']).all():
-        if newTrip.objects(name=a.title).first() is not None:
-            continue
-        if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
-            cover_image = a.main_image.image
-        else:
-            cover_image = None
-        trip = newTrip(title=a.title, description=a.description, about=a.text, cover_image=cover_image)
-        if a.organiser:
-            organizer = Profile.objects(pk=a.organiser.id).first()
-            trip.organizer = organizer
-        trip.save()
+        create_event(a)
 
     print "Event Adventure Trips:", Event.objects(channels__in=['Adventure Trip']).count()
     for a in Event.objects(channels__in=['Adventure Trip']).all():
-        if newTrip.objects(name=a.title).first() is not None:
-            continue
-        if hasattr(a, 'main_image') and a.main_image and a.main_image.image:
-            cover_image = a.main_image.image
-        else:
-            cover_image = None
-        event = newEvent(title=a.title, description=a.description, about=a.text, cover_image=cover_image)
-        if a.organiser:
-            organizer = Profile.objects(pk=a.organiser.id).first()
-            trip.organizer = organizer
-        event.save()
-
+        create_trip(a)
 
     print '*' * 100
     print "Products:", Product.objects.count()
 
-
-    print '*' * 100
-    print 'Tags:', Tag.objects.count()
-    for a in Tag.objects.all():
-        if newTag.objects(name__iexact=a.name).first() is not None:
-            continue
-        tag = newTag(name=a.name)
-        tag.save()
 
     print '*' * 100
     print 'Advertisement:', Advertisement.objects.count()

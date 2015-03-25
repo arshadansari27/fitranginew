@@ -8,29 +8,28 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <link rel="icon" href="images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
 
     <title>Fitrangi</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="/css/bootstrap.css" rel="stylesheet">
 
     <!-- Fontawesome Icon CSS -->
-    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
 
     <!-- Google Font-->
     <link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Roboto:500,900,400italic,700italic,300,700,300italic,400'
-          rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:500,900,400italic,700italic,300,700,300italic,400' rel='stylesheet' type='text/css'>
 
     <!-- Custom CSS -->
-    <link href="css/my-style.css" rel="stylesheet">
-    <link href="css/menus.css" rel="stylesheet">
+    <link href="/css/my-style.css" rel="stylesheet">
+    <link href="/css/menus.css" rel="stylesheet">
 
 
     <!-- Popular Profiles CSS -->
-    <link href="css/poplr-pro.css" rel="stylesheet">
+    <link href="/css/poplr-pro.css" rel="stylesheet">
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -112,8 +111,12 @@
 
 
             <div class="top-icons navbar-nav navbar-right">
-                <div class="top-icon"><a href=""><img src="images/pro.jpg" class="radius-20" alt="profile"
-                                                      width="40"></a></div>
+                <div class="top-icon">
+                    <a href="">
+                        <!--img src="/media/profile/{{user.id}}/cover" class="radius-20" alt="profile" style="margin-top: 10px;"-->
+                        <img src="/media/profile/{{user.id}}/cover" class="radius-20" alt="profile" style="margin-top: 10px;">
+                    </a>
+                </div>
                 <div class="top-icon"><a href="" title="Notification"><i class="fa fa-bell"></i></a><span>12</span>
                 </div>
                 <div class="top-icon"><a href="" title="message"><i class="fa fa fa-envelope"></i></a></div>
@@ -179,12 +182,12 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/respond.min.js"></script>
-<script src="js/html5shiv.js"></script>
-<script src="js/modernizr.custom.85647.js"></script>
-<script src="js/css3-mediaqueries.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/respond.min.js"></script>
+<script src="/js/html5shiv.js"></script>
+<script src="/js/modernizr.custom.85647.js"></script>
+<script src="/js/css3-mediaqueries.js"></script>
 
 <!--<script>
 $(function(){

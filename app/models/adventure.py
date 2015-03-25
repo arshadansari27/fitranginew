@@ -8,6 +8,9 @@ class State(db.Document):
     state = db.StringField()
     country = db.StringField()
 
+    def __unicode__(self):
+        return "%s %s" % ("%s -" % self.state if self.state else '', self.country)
+
 @update_content.apply
 class Location(Entity, db.Document):
     geo_location = db.PointField()
@@ -66,3 +69,18 @@ class Adventure(Entity, db.Document):
 
     def unmark_from_done(self, profile):
         RelationShips.unaccomplish(profile, self)
+
+    def add_review(self, content, author):
+        from app.models.content import Post
+        review = Post(parent=self, content=content, author=author)
+        review.save()
+        self.reviews.append(review)
+        self.save()
+        return review
+
+    def remove_review(self, id):
+        from app.models.content import Post
+        review = Post.objects(pk=id).firs()
+        self.reviews.remove(review)
+        self.save()
+        review.delete()

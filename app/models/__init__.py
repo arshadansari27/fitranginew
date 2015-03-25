@@ -1,7 +1,9 @@
 #from models import *
 import datetime
+from PIL import Image
 
 from ago import human
+import cStringIO
 from mongoengine import signals
 from flask.ext.mongoengine.wtf import model_form
 
@@ -33,10 +35,13 @@ def update_content(sender, document):
     if hasattr(document, 'tag_refs'):
         if len(document.tag_refs) != len(document.tags) and not all(v.name in set(document.tags) for v in document.tag_refs):
             document.update_tags_list()
+    from app.models.content import Content
     if isinstance(document, Entity):
         use = document.name
-    else:
+    elif isinstance(document, Content):
         use = document.title
+    else:
+        use = None
     if use is not None:
         update_slug(sender, document, document.__class__.__name__.lower(), use)
 
@@ -56,10 +61,16 @@ def update_slug(sender, document, type, title):
         count += 1
     document.slug = _slug
 
+class EmbeddedImageField(db.EmbeddedDocument):
+    image = db.ImageField(thumbnail_size=(128, 128))
+    alt = db.StringField()
+    copyright = db.StringField()
+
+
 class Node(object):
 
     description = db.StringField()
-    image_gallery = db.ListField(db.ImageField(thumbnail_size=(128, 128)))
+    image_gallery = db.ListField(db.EmbeddedDocumentField(EmbeddedImageField))
     cover_image = db.ImageField(thumbnail_size=(128, 128))
     video_embed = db.StringField()
     map_embed = db.DictField()
@@ -67,19 +78,42 @@ class Node(object):
     modified_timestamp = db.DateTimeField(default=datetime.datetime.now)
     slug = db.StringField()
 
+
+    @property
+    def cover_image_path(self):
+        return '/media/' + self.__class__.__name__.lower() + '/' + str(self.id) + '/cover'
+
+    def get_cover_image(self):
+        if not hasattr(self, 'cover_image') or not self.cover_image:
+            return None, None
+        img_io = cStringIO.StringIO()
+        if not hasattr(self, 'cover_image') and self.cover_image is None:
+            return None, None
+        img = Image.open(self.cover_image)
+        format = img.format
+        img.save(img_io, "JPEG", quality=70)
+        img_io.seek(0)
+        return img_io, format
+
+    def get_gallery_image(self, index):
+        e_i = self.image_gallery[index]
+        i = e_i.image
+        img_io = cStringIO.StringIO()
+        img = Image.open(i)
+        format = img.format
+        img.save(img_io, "JPEG", quality=70)
+        img_io.seek(0)
+        return img_io, format
+
     def on_create(self):
         pass
 
     def add_cover_image(self, file):
-        self.cover_image = file
+        self.cover_image.put(file)
         self.save()
 
     def add_to_image_gallery(self, file):
         self.image_gallery.append(file)
-        self.save()
-
-    def remove_from_image_gallery(self, file):
-        self.image_gallery.remove(file)
         self.save()
 
     @property
@@ -132,6 +166,18 @@ class Charge(object):
 class NodeFactory(object):
 
     @classmethod
+    def get_by_id(cls, model_class, id):
+        from app.models.activity import Activity
+        from app.models.adventure import Adventure, Location
+        from app.models.content import Content, Discussion, Channel, Post, Article, Blog
+        from app.models.event import Event
+        from app.models.store import Product
+        from app.models.profile import Profile
+        from app.models.trip import Trip
+        model_class = NodeFactory.get_class_by_name(model_class.lower())
+        return model_class.get_by_id(id)
+
+    @classmethod
     def get_class_by_name(cls, name):
         from app.models.activity import Activity
         from app.models.adventure import Adventure, Location
@@ -140,6 +186,7 @@ class NodeFactory(object):
         from app.models.store import Product
         from app.models.profile import Profile
         from app.models.trip import Trip
+        name = name.lower()
 
         if name == 'activity': return Activity
         elif name == 'adventure': return Adventure
