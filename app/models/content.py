@@ -18,7 +18,7 @@ class Comment(db.EmbeddedDocument):
 
 class Channel(db.Document):
     name = db.StringField()
-    type = db.StringField(choices=['Discussion Group', 'User Channel', 'Activity', 'Adventure', ''])
+    type = db.StringField()
     parent = db.ReferenceField('Channel')
 
     def __unicode__(self):

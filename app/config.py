@@ -169,46 +169,43 @@ configuration = {
         },
     ],
 
-    'FACETS': {
-        'Activity':[ 
-        ],
-        'Article': [
-            ('Top 5 Series', []),
-            ('Explore', []),
-            ('Informative',[])
-        ],
-        'Profile': [
-            ('Organisers', []),
-            ('Gear Dealers', []),
-            ('NGO\'s', []),
-            ('Rescuers', []),
-            ('Trainers', []),
-            ('Guides', []),
-            ('Institutes', []),
-            ('Hotels', []),
-            ('Govt. Bodies', []),
-        ],
-        'Location': [
-            ('India', ['Andaman and Nicobar','Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Delhi','Goa','Gujarat','Haryana','Himachal Pradesh','Jammu and Kashmir','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur',
+    'channels': [
+        {'name': 'Journal', 'parent': None},
+        {'name': 'Top 5 Series', 'parent': 'Journal'},
+        {'name': 'Informative', 'parent': 'Journal'},
+        {'name': 'Explore', 'parent': 'Journal'},
+        {'name': 'News', 'parent': 'Journal'},
+        {'name': 'Guidelines', 'parent': 'Journal'},
+    ],
+    'profile_types': [
+        'Organizers',
+        'Gear Dealers',
+        'NGO\'s',
+        'Rescuers',
+        'Trainers',
+        'Guides',
+        'Institutes',
+        'Hotels',
+        'Govt. Bodies',
+    ],
+    'states': {
+        'India': ['Andaman and Nicobar','Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Delhi','Goa','Gujarat','Haryana','Himachal Pradesh','Jammu and Kashmir','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur',
                        'Punjab','Rajasthan','Sikkim','Tamil Nadu','Tripura','Uttar Pradesh',
-                       'Uttarakhand	','West Bengal']),
-            ('Nepal', []),
-            ('Thailand', []),
-            ('Macao', []),
-            ('Hong Kong', []),
-            ('Sri Lanka', [])
-        ],
-        'Product': [
-            ('Clothes', []),
-            ('Accessores', []),
-            ('Bags', []),
-            ('Footwear', []),
-            ('Gears', []),
-            ('Tools',[])
-        ]
-
-    }
-
-
-
+                       'Uttarakhand	','West Bengal'],
+        'Nepal': [],
+        'Thailand': [],
+        'Macao': [],
+        'Hong Kong': [],
+        'Sri Lanka': []
+    },
+    'tags': [
+        "Adventure Tourism Conclave 2015",
+        "Safety & Training ",
+        "Maharashtra GR",
+        "Marketing Challenges",
+        "Business Consultancy",
+        "India Perspective",
+        "Maharashtra Perspective",
+        "Emerging Trends & Technologies"
+    ]
 }
