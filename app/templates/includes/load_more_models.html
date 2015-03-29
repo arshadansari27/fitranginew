@@ -1,0 +1,21 @@
+{% macro show_button(model_view, card_type, page) -%}
+{% if page == 1 or page == '1' %}
+<div class="col-sm-12">
+    <button id="load_more" class="col-sm-12 btn-primary">Load more</button>
+</div>
+<script language="JavaScript">
+    (function(){
+        current_page = parseInt("{% if page %}{{page}}{% else %}1{% endif %}");
+        $("#load_more").on('click', function(e){
+            e.stopPropagation();
+            $.ajax({
+                url: "/listing/page?model_view={{model_view}}&card_type={{card_type}}&page=" + (current_page + 1)
+            }).done(function(data) {
+                $("#models").append(data);
+                current_page = parseInt(current_page) + 1;
+            });
+        });
+    })();
+</script>
+{% endif %}
+{%- endmacro %}
