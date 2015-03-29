@@ -1,0 +1,141 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+{{ super() }}
+<div class="row">
+    <div class="span12">
+        <h1>Dashboard</h1>
+        <hr/>
+        <p class="lead">Manage your content. {% if 'Admin' in user.roles %} Also, the entire site. {% endif %} Or you can go <a href="/"> back</a> to the portal.</p>
+        <p>
+            Fitrangi portal changes are managed from here. This is your dashboard to add content and manage the content.
+            {% if 'Admin' not in user.roles %}
+            Any blog added, will require <strong><em>admin's approval</em></strong> before showing up on the portal.
+            {% else %}
+            For most content, there will be another approval process before the content shows up on the portal.
+            {% endif %}
+        </p>
+        <hr/>
+        <p><strong>A little help below:</strong></p>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Menu</th>
+                    <th>What for</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if 'Admin' in user.roles %}
+                <tr>
+                    <td><strong><em>Approvals</em></strong></td>
+                    <td>Approval for articles, blogs and discussion to be done by admin, which means you.</td>
+                </tr>
+                {% endif %}
+                {% if 'Admin' in user.roles %}
+                <tr>
+                    <td><strong><em>Admin</em></strong></td>
+                    <td>
+                        <table class="">
+                            <tr>
+                                <td><em>Profile</em></td>
+                                <td>Manage user profiles</td>
+                            </tr>
+                            <tr>
+                                <td><em>Activity</em></td>
+                                <td>Manage acitivities listed on the portal</td>
+                            </tr>
+                            <tr>
+                                <td><em>Adventure</em></td>
+                                <td>Manage adventures listed on the portal</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                {% endif %}
+                {% if 'Admin' in user.roles or 'Editor' in user.roles %}
+                <tr>
+                    <td><strong><em>Editor</em></strong></td>
+                    <td>
+                        <table class="">
+                            <tr>
+                                <td><em>Article</em></td>
+                                <td>Manage articles on the portal</td>
+                            </tr>
+                            <tr>
+                                <td><em>Blog</em></td>
+                                <td>Manage blogs</td>
+                            </tr>
+                            <tr>
+                                <td><em>Discussion</em></td>
+                                <td>Manage discussions on the portal</td>
+                            </tr>
+                            <tr>
+                                <td><em>Post</em></td>
+                                <td>Manage posts on the portal</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td><strong><em>Editor</em></strong></td>
+                    <td>
+                        <table class="">
+                            <tr>
+                                <td><em>Blog</em></td>
+                                <td>Manage your blogs</td>
+                            </tr>
+                            <tr>
+                                <td><em>Discussion</em></td>
+                                <td>Manage discussions by you</td>
+                            </tr>
+                            <tr>
+                                <td><em>Post</em></td>
+                                <td>Manage posts by you</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                {% endif %}
+                {% if 'Admin' in user.roles or 'Organizer' in user.roles %}
+                <tr>
+                    <td><strong><em>Organizer</em></strong></td>
+                    <td>
+                        <table class="">
+                            <tr>
+                                <td><em>Trip</em></td>
+                                <td>Manage trips by adding upcoming trips</td>
+                            </tr>
+                            <tr>
+                                <td><em>Event</em></td>
+                                <td>Manage events by adding the upcoming ones</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                {% endif %}
+                {% if 'Admin' in user.roles %}
+                <tr>
+                    <td><strong><em>Tools</em></strong></td>
+                    <td>
+                        <table class="">
+                            <tr>
+                                <td><em>Location</em></td>
+                                <td>Manage locations that can be used by others.</td>
+                            </tr>
+                            <tr>
+                                <td><em>Channel</em></td>
+                                <td>Manage channels for content to be associated with.</td>
+                            </tr>
+                            <tr>
+                                <td><em>Tag</em></td>
+                                <td>Manage tags that people can use to put on their content.</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock body %}

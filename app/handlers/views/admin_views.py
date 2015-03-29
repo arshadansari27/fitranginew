@@ -3,7 +3,6 @@ from app.handlers import login_required
 from app.handlers.editors import ModelEditor
 from app.handlers.editors.model_editor import AdEditor
 from app.models import Content, Node, Profile
-from app.models.forms import ProfileEdit
 
 __author__ = 'arshad'
 

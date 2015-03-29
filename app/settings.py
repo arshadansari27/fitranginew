@@ -10,4 +10,5 @@ MONGODB_HOST = 'localhost'
 MONGODB_PORT = 27017
 MONGODB_DB   = 'adventure2'
 TEMPLATE_FOLDER = 'app/templates'
-folder = os.getcwd() + '/' + TEMPLATE_FOLDER
+TEMPLATE_FOLDER = os.getcwd() + '/' + TEMPLATE_FOLDER
+MEDIA_FOLDER = os.getcwd() + '/app/assets/media/'

@@ -2,7 +2,6 @@ __author__ = 'arshad'
 
 from flask import render_template, g
 
-from app.models.models import Advertisement, Channel
 from app.handlers.extractors import get_all_models
 from app.handlers.views.menu_view import MenuView
 from app.handlers.views.model_view import ModelView
@@ -23,6 +22,7 @@ class HomeView(object):
             self.menu = MenuView(None)
             limit = 6
 
+        """
         self.destinations = [ModelView(m, 'list') for m in get_all_models(Channel.getByName('Destination'), [], limit=limit)[0]]
         self.organizers = [ModelView(m, 'list') for m in get_all_models(Channel.getByName('Profile'), ['Organizer'], limit=limit)[0]]
         articles = get_all_models(Channel.getByName('Article'), [], limit=limit if type is 2 else 4)[0]
@@ -39,8 +39,10 @@ class HomeView(object):
             self.popular_profiles = [ModelView(m, 'list', default='circle') for m in get_all_models(Channel.getByName('Profile'), facets=[], limit=4)[0]]
         else:
             self.popular_profiles = []
+        """
 
     def render(self):
+        """
         _adverts = Advertisement.get_home_advertisements()
         adverts = [AdView('list', a) for a in _adverts]
 
@@ -49,13 +51,17 @@ class HomeView(object):
             footer_add = AdView('list', footer)
         else:
             footer_add = None
-        return render_template(self.template, menu=self.menu, popular_profiles=self.popular_profiles, banner_articles=self.banner_articles, articles=self.articles, destinations=self.destinations, organizers=self.organizers,  adventure_trips=self.adventure_trips, user=g.user, yt_links=get_youtube_links(), adverts=adverts, footer_advert=footer_add)
+        """
+        return render_template(self.template, menu=self.menu, popular_profiles=self.popular_profiles,
+                               banner_articles=self.banner_articles, articles=self.articles,
+                               destinations=self.destinations, organizers=self.organizers,
+                               adventure_trips=self.adventure_trips, user=g.user, yt_links=get_youtube_links())
 
 class SearchView(object):
 
     def __init__(self, query):
         self.query = query
-        channels = [c for c in Channel.get_all_names() if c != 'Stream']
+        channels = []
         self.models = []
         for c in channels:
             models = get_all_models(c, [], search_query=query, limit=8)
