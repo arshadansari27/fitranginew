@@ -1,6 +1,7 @@
 from app import app
 from flask import render_template, request
 from app.models.activity import Activity
+from app.utils.search_helper import listing_helper, node_helper
 from app.views.site.handlers import ActivityView, NodeView, NodeCollectionView
 from app.views.site.menus import view_menu
 
@@ -36,19 +37,6 @@ def list_adventure():
 def journal():
     return render_template("/site/features/community/index.html")
 
-@app.route("/listing/page")
-def paged_list():
-    card_type = request.args.get('card_type', 'detail')
-    model_view = request.args.get('model_view', None)
-    key = request.args.get('key', None)
-    value = request.args.get('value', None)
-    page = int(request.args.get('page', 1))
-    size = 10
-    filters = {}
-    if key and value:
-        filters[key] = value
-    return NodeCollectionView(model_name=model_view, card_type=card_type, filters=filters, paged=True, page=page, size=size).next_page(page)
-
 @app.route("/views/static")
 def static_model_views():
     card_type = request.args.get('card_type', 'detail')
@@ -70,25 +58,16 @@ def template_views():
         return 'Not Found', 404
     as_list = request.args.get('as_list', False)
     if not as_list:
-        key = request.args.get('key', 'pk')
-        value = request.args.get('value', '')
-        node_view = NodeView.factory(model_view)
-        context=dict(card_type=card_type, id=value, key=key)
-        view = node_view(**context).get_card()
+        node_view, context = node_helper()
+        view = node_view.get_card()
     else:
-        key = request.args.get('key', None)
-        value = request.args.get('value', None)
-        page = int(request.args.get('page', 1))
-        size = 10
-        filters = {}
-        if key and value:
-            filters[key] = value
-        if page:
-            paged = True
-        else:
-            paged = False
-
-        context = dict(model_name=model_view, card_type=card_type, filters=filters, paged=paged, page=page, size=size)
-        view = NodeCollectionView(**context).get_card()
+        collection_view, context = listing_helper()
+        view = collection_view.get_card()
 
     return render_template("site/empty_layout.html", view=view, **context)
+
+@app.route("/listing/page")
+def paged_list():
+    collection_view, context = listing_helper()
+    return collection_view.next_page(context.get('page'))
+
