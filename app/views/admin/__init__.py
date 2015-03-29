@@ -28,7 +28,10 @@ from app import app
 
 @app.context_processor
 def process_context_admin():
-    return dict(user=g.user, is_admin='Admin' in g.user.roles)
+    if g.user:
+        return dict(user=g.user, is_admin='Admin' in g.user.roles)
+    else:
+        return {}
 
 class FilterAdventure(BaseMongoEngineFilter):
     def apply(self, query, value):

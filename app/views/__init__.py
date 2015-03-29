@@ -35,8 +35,7 @@ def redirect_url(default='login'):
 
 @app.before_request
 def setup_user():
-    g.user = Profile.objects(email__iexact='arshadansari27@gmail.com').first()
-    print g.user
+    g.user = None#Profile.objects(email__iexact='arshadansari27@gmail.com').first()
 
 
 @app.context_processor
