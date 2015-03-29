@@ -19,17 +19,18 @@ def home():
 def activity_view():
     name = request.args.get('name')
     if name:
-        return ActivityView(MODEL_DETAIL_VIEW, name, key='name__iexact').get_card()
+        return render_template('site/features/generic_view.html', view=ActivityView(MODEL_DETAIL_VIEW, name, key='name__iexact').get_card())
     else:
         return 'Not found', 404
 
 @app.route("/explore/adventure")
 def list_adventure():
-    return render_template("/site/models/adventure/list.html")
+    view = NodeCollectionView("adventure", "grid", {})
+    return render_template('site/features/explore/adventures.html', view=view.get_card())
 
-@app.route("/journal")
+@app.route("/community")
 def journal():
-    return render_template("/site/features/journal.html")
+    return render_template("/site/features/community/index.html")
 
 
 @app.route("/views/static")

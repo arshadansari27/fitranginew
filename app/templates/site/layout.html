@@ -77,15 +77,15 @@
 			                    </div>
 		                    </ul>
 		                </li>
-		                <li class="inner-level-dropdown {% if menu.main_menu == 'adventure' %}active{% endif %} col-sm-2"><a href="#">Adventure</a></li>
+		                <li class="inner-level-dropdown {% if menu.main_menu == 'adventure' %}active{% endif %} col-sm-2"><a href="/explore/adventure">Adventure</a></li>
                     </ul>
                 </li>
                 <li id="dropdown2" class="top-level-dropdown dropdown mega-dropdown {% if menu.app_name == 'community'%}active{% endif %}">
-                    <a href="#" class="dropdown-toggle" role="button" aria-expanded="false">Community</a>
+                    <a href="/community" class="dropdown-toggle" role="button" aria-expanded="{% if menu.app_name == 'community'%}true{% else %}false{% endif %}">Community</a>
                     <ul class="dropdown-menu mega-dropdown-menu container" role="menu" aria-labelledby="dropdown2">
-                        <li class="inner-level-dropdown {% if menu.main_menu == 'discussion' %}active{% endif %} col-sm-2"><a href="#">Discussion</a></li>
-                        <li class="inner-level-dropdown {% if menu.main_menu == 'profile' %}active{% endif %} col-sm-2"><a href="#">Profile Finder</a></li>
-                        <li class="inner-level-dropdown {% if menu.main_menu == 'event' %}active{% endif %} col-sm-2"><a href="#">Upcoming Events</a></li>
+                        <li class="inner-level-dropdown {% if menu.main_menu == 'discussion' %}active{% endif %} col-sm-2"><a href="/community/discussions">Discussion</a></li>
+                        <li class="inner-level-dropdown {% if menu.main_menu == 'profile' %}active{% endif %} col-sm-2"><a href="/community/profiles">Profile Finder</a></li>
+                        <li class="inner-level-dropdown {% if menu.main_menu == 'event' %}active{% endif %} col-sm-2"><a href="/community/events">Upcoming Events</a></li>
                     </ul>
                 </li>
                 <li id="dropdown3" class="top-level-dropdown dropdown mega-dropdown {% if menu.app_name == 'jounal'%}active{% endif %}">
