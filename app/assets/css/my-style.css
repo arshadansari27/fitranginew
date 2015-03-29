@@ -1243,6 +1243,20 @@ ul.my-list-right li:before{
   	top: 7px;
 }
 
+.my-h2 {
+	font-family:Acadian;
+	font-size:2em;
+	font-variant:small-cap;
+	font-style:oblique;
+	font-weight:800;
+}
+.my-h3 {
+	font-family:Acadian;
+	font-size:1.5em;
+	font-variant:small-cap;
+	font-style:oblique;
+	font-weight:800;
+}
 
 
 
