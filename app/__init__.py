@@ -9,7 +9,7 @@ from flask.ext.mongorest import MongoRest
 from app import settings
 
 
-app = Flask(__name__, template_folder='templates', static_folder='static', static_url_path='')
+app = Flask(__name__, template_folder='templates', static_folder='assets', static_url_path='')
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['MONGODB_SETTINGS'] = {'DB': settings.MONGODB_DB, 'HOST': settings.MONGODB_HOST, 'PORT': settings.MONGODB_PORT}

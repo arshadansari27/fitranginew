@@ -24,9 +24,16 @@ class NodeCollectionView(View):
         models = self.extractor.get_list(self.paged, self.page, self.size)
         node_view = NodeView.factory(self.model_name)
         model_cards = [node_view(self.card_type, m.id).get_card() for m in models]
-        template_path = 'site/layouts/' + self.card_type + "_page.html"
+        template_path = 'site/layouts/list_page.html'
         template = env.get_template(template_path)
-        return template.render(dict(model_cards=model_cards))
+        context = dict(model_name=self.model_name, card_type=self.card_type, filters=self.filters, paged=self.paged, page=self.page, size=self.size)
+        context['model_cards'] = model_cards
+        return template.render(**context)
+
+    def next_page(self, page):
+        models = self.extractor.get_list(self.paged, page, self.size)
+        node_view = NodeView.factory(self.model_name)
+        return ''.join([node_view(self.card_type, m.id).get_card() for m in models])
 
 
 class NodeView(View):
