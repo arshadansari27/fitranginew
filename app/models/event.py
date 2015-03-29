@@ -9,6 +9,7 @@ class Event(Entity, ExternalNetwork, db.Document):
     scheduled_date = db.DateTimeField()
     location = db.ReferenceField('Location')
     organizer = db.ReferenceField('Profile')
+    comments = db.ListField(db.ReferenceField('Post'))
 
     meta = {
         'indexes': [

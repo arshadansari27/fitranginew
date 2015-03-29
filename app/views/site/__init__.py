@@ -32,6 +32,19 @@ def journal():
     return render_template("/site/features/journal.html")
 
 
+@app.route("/views/static")
+def static_model_views():
+    card_type = request.args.get('card_type', 'detail')
+    model_view = request.args.get('model_view', None)
+    if not model_view:
+        return 'Not Found', 404
+    from app.views import env
+    template_path = 'site/models/' + model_view + '/' + card_type + ".html"
+    template = env.get_template(template_path)
+    context = {}
+    view = template.render(**context)
+    return render_template("site/empty_layout.html", view=view)
+
 @app.route("/views/template")
 def template_views():
     card_type = request.args.get('card_type', 'detail')

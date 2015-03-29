@@ -29,7 +29,7 @@ def get_start_end(page):
 class RelationShips(db.Document):
     subject = db.GenericReferenceField()
     object = db.GenericReferenceField()
-    relation = db.StringField(choices=inverse_relation.keys())
+    relation = db.StringField()
 
     meta = {
         'indexes': [
@@ -40,7 +40,6 @@ class RelationShips(db.Document):
 
     @classmethod
     def create_relationship(cls, subject, object, relation):
-        assert inverse_relation.has_key(relation)
         from app.models.streams import ActivityStream
         if RelationShips.objects(subject=subject, object=object, relation=relation).first() is None:
             relationship = RelationShips(subject=subject, object=object, relation=relation)

@@ -61,7 +61,7 @@ class ActivityStream(db.Document):
             return ActivityStream.objects(profile=profile, created_timestamp__gt=datetime.datetime.now()).all()
         else:
             from app.models.relationships import RelationShips
-            profiles = list(profile.get_profiles_followed_by_me())
+            profiles = list(profile.following)
             profiles.append(profile)
             return ActivityStream.objects(profile__in=profiles, created_timestamp__gt=datetime.datetime.now()).all()
 

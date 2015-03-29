@@ -47,7 +47,8 @@ def update_content(sender, document):
 
 @handler(signals.post_save)
 def new_object(sender, document, created):
-    document.on_create()
+    if created:
+        document.on_create()
 
 
 def update_slug(sender, document, type, title):

@@ -32,6 +32,10 @@ class Content(Node):
     source = db.StringField()
     tags = db.ListField(db.StringField())
     tag_refs = db.ListField(db.ReferenceField('Tag'))
+    channels = db.ListField(db.ReferenceField('Channel'))
+    published = db.BooleanField()
+    published_timestamp = db.DateTimeField()
+    admin_published = db.BooleanField()
 
     def update_tags_list(self):
         self.tags = []
@@ -119,15 +123,10 @@ class PostVote(db.Document):
     }
 
 
-class Journal(Content):
-    channels = db.ListField(db.ReferenceField('Channel'))
-    published = db.BooleanField()
-    published_timestamp = db.DateTimeField()
-    admin_published = db.BooleanField()
 
 
 @update_content.apply
-class Article(Journal, db.Document):
+class Article(Content, db.Document):
     meta = {
         'indexes': [
             {'fields': ['-modified_timestamp', '-published_timestamp', 'author'], 'unique': False, 'sparse': False, 'types': False },
@@ -137,7 +136,7 @@ class Article(Journal, db.Document):
 
 
 @update_content.apply
-class Blog(Journal, db.Document):
+class Blog(Content, db.Document):
     meta = {
         'indexes': [
             {'fields': ['-modified_timestamp', '-published_timestamp', 'author'], 'unique': False, 'sparse': False, 'types': False },
@@ -147,7 +146,7 @@ class Blog(Journal, db.Document):
 
 
 @update_content.apply
-class Discussion(Journal, db.Document):
+class Discussion(Content, db.Document):
     meta = {
         'indexes': [
             {'fields': ['-modified_timestamp', '-published_timestamp', 'author'], 'unique': False, 'sparse': False, 'types': False },
