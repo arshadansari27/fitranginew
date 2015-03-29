@@ -1,8 +1,10 @@
+from base64 import decodestring
 from app.models import NodeFactory
+from app.models.profile import Profile, ProfileType
 
 __author__ = 'arshad'
 
-from flask import render_template, g, request, jsonify, send_file, flash, redirect
+from flask import render_template, g, request, jsonify, send_file, flash, redirect, url_for, session
 from app.views import login_required
 from app import app
 from StringIO import StringIO
@@ -79,3 +81,110 @@ def save_image_from_temp():
     os.remove(img_path)
     flash("Successfully updated the image", category='success')
     return redirect(request.referrer)
+
+
+
+
+@app.route('/sociallogin', methods=['POST'])
+def social_login():
+    if request.method != 'POST':
+        return render_template('/generic/main/login.html')
+    name = request.form['name']
+    email = request.form['email']
+    profile = Profile.objects(email__iexact=email).first()
+
+    if profile is None or profile.id is None:
+        profile = Profile.create_new(name, email, "", is_verified=True, roles=['Enthusiast'])
+        profile.save()
+
+    if profile.is_social_login is None or not profile.is_social_login:
+        profile.is_social_login = True
+        profile.save()
+
+
+    if profile.is_social_login and profile.id:
+        img_uploaded = request.form['file']
+        if img_uploaded and len(img_uploaded) > 0:
+            try:
+                data = img_uploaded
+                data = data[data.index(','):]
+                s = StringIO(decodestring(data))
+                img = Image.open(s)
+                buffer = StringIO()
+                img.save(buffer, img.format)
+                buffer.seek(0)
+                profile.cover_image.put(buffer)
+                profile.save()
+            except Exception, e:
+                raise e
+
+        session['user'] = str(profile.id)
+        return jsonify(dict(location='/stream/me', status='success'))
+
+    return jsonify(dict(location=url_for('login'), status='error'))
+
+@app.route('/login-modal', methods=['GET'])
+def login_modal():
+    return render_template('site/modals/login.html')
+
+@app.route('/registration-modal', methods=['GET'])
+def registration_modal():
+    return render_template('site/modals/registration.html')
+
+@app.route('/login', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('username', None)
+        password = request.form.get('password', None)
+        profile = Profile.authenticate(email, password)
+        if profile and profile.id:
+            session['user'] = str(profile.id)
+            return jsonify(dict(status='success', message='Successfully logged in.', node=str(profile.id)))
+    return jsonify(dict(status='error', message='Failed to register. Please try again.'))
+
+@app.route('/register', methods=['GET', 'POST'])
+def registration():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+        confirm = request.form['confirm']
+        if password != confirm:
+            flash('Passwords do not match', category='danger')
+            return redirect(url_for('registration'))
+        type = ProfileType.objects(name__icontains='subscription')
+        if Profile.objects(email__iexact=email, type__ne=type).first():
+            flash('Email already exists, have you forgotten your password?', category='danger')
+            return redirect(url_for('registration'))
+        type = ProfileType.objects(name__icontains='enthusiast')
+        profile = Profile(name=name, email=email, type=type, roles=['Basic User'])
+        profile.password  = password
+        profile.save()
+        if profile and profile.id:
+            session['user'] = str(profile.id)
+            """
+            mail_data = render_template('notifications/successfully_registered.html', user=profile)
+            send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=mail_data)
+            """
+            return jsonify(dict(status='success', message='Profile created and logged in.', node=str(profile.id)))
+    return jsonify(dict(status='error', message='Failed to register. Please try again.'))
+
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    if hasattr(g, 'user'):
+        g.user = None
+    session.clear()
+    return redirect(url_for('home'))
+
+@app.before_request
+def before_request():
+    userid = session.get('user', None)
+    if userid is None or len(userid) == 0:
+        g.user = None
+    else:
+        user = Profile.objects(pk=userid).first()
+        if user:
+            g.user = user
+        else:
+            g.user = None

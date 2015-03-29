@@ -26,12 +26,8 @@ def activity_view():
 
 @app.route("/explore/adventure")
 def list_adventure():
-    page = int(request.args.get('page', 1))
-    if page is 1:
-        view = NodeCollectionView("adventure", "grid", {}).get_card()
-        return render_template('site/features/explore/adventures.html', view=view)
-    else:
-        return NodeCollectionView("adventure", "grid", {}, page=page).next_page()
+    view = NodeCollectionView("adventure", "grid", {}, paged=True, size=20, page=1).get_card()
+    return render_template('site/features/explore/adventures.html', view=view)
 
 @app.route("/community")
 def journal():
