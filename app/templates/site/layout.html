@@ -111,15 +111,19 @@
 
 
             <div class="top-icons navbar-nav navbar-right">
+              {% if not (user and user.id) %}
+				    <a  href="#" id="show_login"><strong>Sign In+</strong></a>
+				    <a  href="#" id="show_signup"><strong>Signup</strong></a>
+              {% elif user and user.id  %}
                 <div class="top-icon">
                     <a href="">
                         <!--img src="/media/profile/{{user.id}}/cover" class="radius-20" alt="profile" style="margin-top: 10px;"-->
                         <img src="/media/profile/{{user.id}}/cover" class="radius-20" alt="profile" style="margin-top: 10px;">
                     </a>
                 </div>
-                <div class="top-icon"><a href="" title="Notification"><i class="fa fa-bell"></i></a><span>12</span>
-                </div>
+                <div class="top-icon"><a href="" title="Notification"><i class="fa fa-bell"></i></a><span>12</span></div>
                 <div class="top-icon"><a href="" title="message"><i class="fa fa fa-envelope"></i></a></div>
+              {% endif %}
             </div>
 
 
