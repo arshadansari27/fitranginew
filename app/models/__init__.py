@@ -106,6 +106,10 @@ class Node(object):
         img_io.seek(0)
         return img_io, format
 
+    @property
+    def gallery_size(self):
+        return len(u for u in self.image_gallery if u.image is not None)
+
     def on_create(self):
         pass
 

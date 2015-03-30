@@ -1,7 +1,10 @@
-<div id="models" class="row">
+{% if model_cards|length > 0 %}
+<div id="models" class="row-fluid">
     {% for model_card in model_cards %}
         {{model_card|safe}}
     {% endfor %}
 </div>
+<br/>
 {% import 'includes/load_more_models.html' as load_more %}
 {{ load_more.show_button(model_name, card_type, page) }}
+{% endif %}
