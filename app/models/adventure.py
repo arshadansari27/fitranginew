@@ -30,13 +30,13 @@ class Location(Entity, db.Document):
 
 @update_content.apply
 class Adventure(Entity, db.Document):
-    best_season = db.StringField()
+    best_season = db.ListField(db.StringField(choices=['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']))
     location = db.ReferenceField('Location')
     nearby_stay = db.ListField(db.StringField())
     nearby_eat = db.ListField(db.StringField())
     nearby_station = db.ListField(db.StringField())
     nearby_airport = db.ListField(db.StringField())
-    extremity_level = db.IntField()
+    extremity_level = db.StringField(choices=['Easy', 'Medium', 'Difficult'])
     activities = db.ListField(db.ReferenceField('Activity'))
     reach_by_air = db.ListField(db.StringField())
     reach_by_train = db.ListField(db.StringField())
