@@ -14,7 +14,7 @@ activity_menu_group = """
 """
 activity_menu = '<li class="%s"><a href="%s">%s</a></li>'
 
-#@cache.cached(timeout=3600 * 24)
+@cache.cached(timeout=3600 * 24)
 def view_menu(inner=None):
     activities = get_activities()
     count = len(activities)

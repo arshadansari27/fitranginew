@@ -111,24 +111,32 @@
                 </div>
             </div>
 
-
-            <div class="top-icons navbar-nav navbar-right">
-              {% if not (user and user.id) %}
-				    <a  href="#" id="show_login"><strong>Sign In+</strong></a>
-				    <a  href="#" id="show_signup"><strong>Signup</strong></a>
-              {% elif user and user.id  %}
-                <div class="top-icon">
-                    <a href="">
-                        <!--img src="/media/profile/{{user.id}}/cover" class="radius-20" alt="profile" style="margin-top: 10px;"-->
-                        <img src="/media/profile/{{user.id}}/cover" class="radius-20" alt="profile" style="margin-top: 10px;">
-                    </a>
-                </div>
-                <div class="top-icon"><a href="" title="Notification"><i class="fa fa-bell"></i></a><span>12</span></div>
-                <div class="top-icon"><a href="" title="message"><i class="fa fa fa-envelope"></i></a></div>
-              {% endif %}
-            </div>
-
-
+            <ul class="top-icons nav navbar-nav navbar-right">
+                {% if not (user and user.id) %}
+      	        <li><div class="top-icon"><a class="show_login" href="#" title="Login"><i class="fa fa-user"></i></a></div></li>
+                <li><div class="top-icon"><a class="show_signup" href="#" title="Register"><i class="fa fa-key"></i></a></div></li>
+                {% elif user and user.id  %}
+                <li><div class="top-icon"><a href="" title="Notifications"><i class="fa fa-bell"></i></a><span>12</span></div></li>
+                <li><div class="top-icon"><a href="" title="Messages"><i class="fa fa-envelope"></i></a></div></li>
+                <li class="dropdown">
+                    <div class="top-icon">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="/media/profile/{{user.id}}/cover" class="radius-20 profile-pic" alt="profile" width="40">
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <img class="img-responsive" src="/media/profile/{{user.id}}/cover" />
+                                <a class="change" href="">Change Picture</a>
+                            </li>
+                            <li><a href="#"><i class="fa fa-cog"></i> Account Settings</a></li>
+                            <li><a href="#"><i class="fa fa-question"></i> Help</a></li>
+                            <li><a href="signin.html"><i class="fa fa-lock"></i> Log Out</a></li>
+                        </ul>
+                    </div>
+                </li>
+                {% endif %}
+            </ul>
         </div>
         <!--/.nav-collapse -->
     </div>
@@ -241,9 +249,12 @@ $(".dropdown").hover(
 </script>
 
 <script language="JavaScript">
-    $("#show_login").click(function(e) {
+
+
+
+    $(".show_login").click(function(e) {
         e.stopPropagation();
-        BootstrapDialog.show({
+        window.$loginDialog = new BootstrapDialog({
             title: "Sign in",
             message: $('<div></div>').load('/login-modal'),
             buttons: [
@@ -255,10 +266,12 @@ $(".dropdown").hover(
                 }
             ]
         });
+        window.$loginDialog.realize();
+        window.$loginDialog.open();
     });
-    $("#show_signup").click(function(e) {
+    $(".show_signup").click(function(e) {
         e.stopPropagation();
-        BootstrapDialog.show({
+        window.$signupDialog = new BootstrapDialog({
             title: "Registration",
             message: $('<div></div>').load('/registration-modal'),
             buttons: [
@@ -266,7 +279,29 @@ $(".dropdown").hover(
                     label: 'Register',
                     cssClass: 'btn-primary',
                     action: function (dialogItself) {
-                        dialogItself.close();
+                        var name = $('#signup-name').val();
+                        var email = $('#signup-email').val();
+                        var password = $("#signup-password").val();
+                        var confirm = $("#signup-confirm").val();
+                        console.log("Registering with: " +name + ", " + email + ", " + password + ", " + confirm);
+                        $.ajax({
+                            type: 'POST',
+                            url: '/register',
+                            data: {
+                                name: name,
+                                email: email,
+                                password: password,
+                                confirm: confirm
+                            }
+                        }).done(function (msg) {
+                            if (msg.status == 'success') {
+                                dialogItself.close();
+                                window.location.reload();
+                            } else {
+                                $("#message").html(msg.message);
+                                $("#error").show();
+                            }
+                        });
                     }
                 },
                 {
@@ -277,7 +312,11 @@ $(".dropdown").hover(
                 }
             ]
         });
+
+        window.$signupDialog.realize();
+        window.$signupDialog.open();
     });
+
 </script>
 
 <script>

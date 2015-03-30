@@ -1,4 +1,5 @@
 from base64 import decodestring
+from app.handlers.messaging import send_single_email
 from app.models import NodeFactory
 from app.models.profile import Profile, ProfileType
 
@@ -94,7 +95,10 @@ def social_login():
     profile = Profile.objects(email__iexact=email).first()
 
     if profile is None or profile.id is None:
-        profile = Profile.create_new(name, email, "", is_verified=True, roles=['Enthusiast'])
+        types = [ProfileType.objects(name__icontains='enthusiast').first()]
+        assert len(types) > 0
+        profile = Profile(name=name, email=email, is_verified=True, roles=['Basic User'], type=types)
+        profile.password = ''
         profile.save()
 
     if profile.is_social_login is None or not profile.is_social_login:
@@ -113,7 +117,7 @@ def social_login():
                 buffer = StringIO()
                 img.save(buffer, img.format)
                 buffer.seek(0)
-                profile.cover_image.put(buffer)
+                profile.cover_image.replace(buffer)
                 profile.save()
             except Exception, e:
                 raise e
@@ -131,16 +135,21 @@ def login_modal():
 def registration_modal():
     return render_template('site/modals/registration.html')
 
+@app.route('/forgot-password-modal', methods=['GET'])
+def forgot_password_modal():
+    return render_template('site/modals/forgot-password.html')
+
 @app.route('/login', methods=['POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('username', None)
+        email = request.form.get('email', None)
         password = request.form.get('password', None)
+        remember = request.form.get('remember', None)
         profile = Profile.authenticate(email, password)
         if profile and profile.id:
             session['user'] = str(profile.id)
             return jsonify(dict(status='success', message='Successfully logged in.', node=str(profile.id)))
-    return jsonify(dict(status='error', message='Failed to register. Please try again.'))
+    return jsonify(dict(status='error', message='Failed to login. Please try again.'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def registration():
@@ -152,22 +161,49 @@ def registration():
         if password != confirm:
             flash('Passwords do not match', category='danger')
             return redirect(url_for('registration'))
-        type = ProfileType.objects(name__icontains='subscription')
-        if Profile.objects(email__iexact=email, type__ne=type).first():
+        type = ProfileType.objects(name__icontains='subscription').first()
+        if Profile.objects(email__iexact=email, type__nin=[str(type.id)]).first():
             flash('Email already exists, have you forgotten your password?', category='danger')
             return redirect(url_for('registration'))
         type = ProfileType.objects(name__icontains='enthusiast')
-        profile = Profile(name=name, email=email, type=type, roles=['Basic User'])
+        profile = Profile(name=name, email=email, type=[type], roles=['Basic User'])
         profile.password  = password
         profile.save()
         if profile and profile.id:
             session['user'] = str(profile.id)
-            """
             mail_data = render_template('notifications/successfully_registered.html', user=profile)
             send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=mail_data)
-            """
             return jsonify(dict(status='success', message='Profile created and logged in.', node=str(profile.id)))
     return jsonify(dict(status='error', message='Failed to register. Please try again.'))
+
+@app.route('/forgot_password', methods=['POST'])
+def forgot_password():
+    email = request.form.get('email', None)
+    if not email:
+        return jsonify(dict(status='error', message='No email provided.'))
+    try:
+        profile = Profile.objects(email__iexact=email).first()
+        if profile is None or profile.id is None or 'Subscription Only' in [u.name for u in profile.type]:
+            return jsonify(dict(status='error', message='User does not exists.'))
+        else:
+            import random
+            u, v, w = list('ABCEFGHIJKLMNOPQRSTUVWXYZ'), list('abcefghijklmnopqrstuvwxyz'), range(0, 10)
+            random.shuffle(u), random.shuffle(v), random.shuffle(w)
+            old_password = profile.password
+            password = "%s%s%s" % (''.join(u[0:5]), ''.join(v[0:5]), ''.join(str(x) for x in w[0:3]))
+            profile.password = password
+            profile.save()
+            from app.handlers.messaging import send_single_email
+            flash("Successfully sent email with new password.", category='success')
+            mail_data = render_template('notifications/password_reset.html', user=profile, password=password)
+            send_single_email("[Fitrangi] Password reset on Fitrangi.com", to_list=[profile.email], data=mail_data)
+            return jsonify(dict(status='success', message='Password has been reset, please check  your email.', node=str(profile.id)))
+    except Exception,e:
+        print e
+        if profile and old_password:
+            profile.password = old_password
+            profile.save()
+    return jsonify(dict(status='error', message='Cannot reset the password.'))
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required

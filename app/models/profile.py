@@ -44,6 +44,7 @@ class Profile(Entity, db.Document):
     type = db.ListField(db.ReferenceField('ProfileType'))
     deactivated = db.BooleanField(default=False)
     is_verified = db.BooleanField(default=False)
+    is_social_login = db.BooleanField(default=False)
 
     meta = {
         'indexes': [
@@ -91,8 +92,8 @@ class Profile(Entity, db.Document):
     def authenticate(cls, email, password):
         if password is None or len(password) is 0:
             return False
-        profile = Profile.objects(Q(email__iexact=email) & Q(passwd__exact=hashlib.md5(password).hexdigest)).first()
-        if profile:
+        profile = Profile.objects(email__iexact=email).first()
+        if profile and profile.password == hashlib.md5(password).hexdigest():
             if profile.user_since is None:
                 profile.user_since = datetime.datetime.now()
             profile.save()
