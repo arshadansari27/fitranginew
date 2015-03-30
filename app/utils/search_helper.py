@@ -13,9 +13,9 @@ def listing_helper():
     search_query = request.args.get('query', None)
     filters = {}
     if search_query is not None and len(search_query) > 0:
-        query_list = search_query.split(',') if ',' in search_query else [search_query]
+        query_list = search_query.split(';') if ';' in search_query else [search_query]
         for q in query_list:
-            key, value = q.split("=")
+            key, value = q.split(":")
             filters[key] = value
     context = dict(model_name=model_view, card_type=card_type, filters=filters, page=page, size=size, search_query=search_query)
     collection_view = NodeCollectionView(model_view, card_type, filters=filters, paged=True, page=page, size=size)
