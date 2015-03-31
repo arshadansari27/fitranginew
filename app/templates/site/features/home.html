@@ -478,86 +478,66 @@
             <div class="form-group">
                 <label class="my-h3">Be Adventureous. Be Fitrangi! Join us by Registering right now.</label>
                 <!--<button class="btn btn-primary" data-toggle="modal" data-target="#signup-modal">Register</button>-->
-               <button type="button" id="show_signup" class="btn btn-primary">Register</button>
-
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#subscribe-modal"
-                        data-whatever="@getbootstrap">Subscribe
+                <button type="button" class="btn btn-primary show_signup">Register
+                </button>
+                <button type="button" class="btn btn-primary show_subscribe">Subscribe
                 </button>
             </div>
         </form>
     </div>
-
-            <!-----------------------Bootstrap MODAL For Signup---------------------->
-    <div class="modal fade" id="signup-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h6 class="modal-title my-h3" id="exampleModalLabel">Sign up</h6>
-                </div>
-                <form name="signup-form" action="">
-                <div class="modal-body">
-                        <div class="form-group">
-                            <label class="control-label">Username:</label>
-                            <input type="text"  id="username" class="form-control" placeholder="YOUR USERNAME" required="Please Enter Username" >
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Email:</label>
-                            <input type="email" id="email" class="form-control" placeholder="XYZ123@ABC.COM" required="Please Enter Your Email">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label">Password:</label>
-                            <input type="password" id="password" class="form-control" placeholder="********" required="Password Is Required">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label">Confirm Password:</label>
-                            <input type="password" id="confirm-password" class="form-control" placeholder="********" required="Confirm Your Password">
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" id="btn-signup"  class="btn btn-primary">Signup</button>
-                </div>
-               </form>
-            </div>
-        </div>
-    </div>
-        <!-----------------------Bootstrap MODAL For Subscribe---------------------->
-    <div class="modal fade" id="subscribe-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h6 class="modal-title my-h3" id="exampleModalLabel">Subscribe For Latest Fitrangi Updates!!!</h6>
-                </div>
-                <form name="subscribe-form" action="">
-                <div class="modal-body">
-                        <div class="form-group">
-                            <label class="control-label">Name:</label>
-                            <input type="text" id="name" class="form-control" placeholder="YOUR NAME" required="Please Enter Your Name" >
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Email:</label>
-                            <input type="email" id="email" class="form-control" placeholder="XYZ123@ABC.COM" required="Please Enter Your Email">
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" id="btn-subscribe" class="btn btn-primary">Subscribe</button>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
 </section>
 
+<!-----------------------Bootstrap MODAL For Subscribe---------------------->
+
+
+<script language="JavaScript">
+        $(document).ready(function(){
+            $('.show_subscribe').click(function(){
+                subscription_modal_text = '<div><div id="subscribe-form"><input type="text" id="subscription-name" class="form-control" placeholder="Name" required="Please Enter Your Name"><br/><input type="email" id="subscription-email" class="form-control" placeholder="email" required="Please Enter Your Email">' +'</div>' + '<div id="subscribe-message"></div>' + '</div>';
+                console.log(subscription_modal_text);
+                BootstrapDialog.show({
+                    title: 'Subscribe For Latest Fitrangi Updates!',
+                    message: subscription_modal_text,
+                    buttons: [
+                        {
+                            label: 'Close',
+                            action: function(dialogRef) {
+                                dialogRef.close()
+                            }
+                        },
+                        {
+                            label: 'Subscribe',
+                            cssClass: 'btn-primary',
+                            action: function(dialogRef){
+                                var subscription_name = $('#subscription-name').val();
+                                var subscription_email = $('#subscription-email').val();
+                                console.log('Subscribing: '+ subscription_name + ", " + subscription_email);
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/subscribe',
+                                    data: {
+                                        name: subscription_name,
+                                        email:subscription_email
+                                    }
+                                }).done(function (msg) {
+                                    $('#subscribe-message').html(msg.message);
+                                    $('#subscribe-message').addClass('alert');
+                                    if (msg.status == 'success') {
+                                        $('#subscribe-form').hide();
+                                        $('#subscribe-message').addClass('alert-success');
+                                        $('#subscribe-message').show();
+
+                                    } else {
+                                        $('#subscribe-message').addClass('alert-error');
+                                        $('#subscribe-message').show();
+                                    }
+                                });
+                            }
+                        }
+                    ]
+                });
+            });
+        });
+</script>
 
 {% endblock %}

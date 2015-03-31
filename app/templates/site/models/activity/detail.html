@@ -1,7 +1,4 @@
 {# % extends 'site/models/common/_detail.html' % #}
-<link href="../css/fotorama.css" rel="stylesheet">
-<script src="../js/jquery.min.js"></script>
-<script src="../js/fotorama.js"></script>
 
 <section class="container-fluid p-0">
     <div class="activity-banner">
@@ -13,7 +10,7 @@
                 </div>
             </div>
             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                <h2>Trekking & Hiking</h2>
+                <h2>{{ model.name }}</h2>
             </div>
         </div>
     </div>
@@ -28,7 +25,7 @@
                         <li class="active"><a href="#about"  role="tab" data-toggle="tab" aria-controls="about" aria-expanded="false">
                         <span class="fa fa-home"></span> <strong>About</strong></a></li>
                         <li class=""><a href="#adventures"  role="tab" data-toggle="tab" aria-controls="adventures" aria-expanded="false">'
-                        <span class="fa fa-child"></span> <strong>Adventures</strong> <span class="badge">12</span></a></li>
+                        <span class="fa fa-child"></span> <strong>Adventures</strong> </a></li>
                         <li class=""><a href="#favourited" role="tab" data-toggle="tab" aria-controls="favourited" aria-expanded="false">
                         <span class="fa fa-star"></span> <strong>Favourited By</strong> <span class="badge">15</span></a></li>
                         <li class=""><a href="#photosvideos" role="tab" data-toggle="tab" aria-controls="photosvideos" aria-expanded="false">
@@ -45,214 +42,45 @@
                 <div id="myTabContent" class="tab-content">
                   <div role="tabpanel" class="tab-pane fade active in" id="about" aria-labelledby="about">
                     <div class="col-xs-12 col-md-12 tab-details">
-                                    <p><img src="../images/img1.jpg" class="img-responsive">
-                                        Kerala is a coastal state located in the south of India and
-                                        stretches to a length of nearly 580 km, offering some excellent beaches and hilly mountains perfect for tourists wanting to have
-                                        a laidback holiday. The tropical weather of this state acts as a big booster for greater footfall of tourists visiting this place. Due
-                                        to the picturesque landscape and soothing environment, the state is also tagged as ‘God’s own country’ and is among the
-                                        most highly visited tourist regions in this part of the world. The state is squeezed in between the Western Ghats and the Arabian
-                                        Sea.
-                                    </p>
-                                    <strong class="block">Relation To India:</strong>
-                                    Kerala has a diverse landscape to its credit, which ranges from coconut wrapped beaches, stunning mountain ranges, wildlife
-                                    reserves, spice plantations and the peaceful backwaters. Towards the southern part of the state are situated the Kovalam beaches,
-                                    which are one of the best beaches preferred by tourists in Kerala. The mountain ranges of the Western Ghats which are located in this region are often converted into the tea and spice plantations, and offer another visual marvel to the onlookers. The places such as Alleppey, Varkala, Munnar and Kochi are some of the hot towns of the state, which offers the tourists more than just a holiday.</p>
-                                    <p><strong class="block">Tips / Precautions / Interesting Facts:</strong>
-                                        The state also harbours an exclusive wildlife sanctuary named the Wayanad wildlife sanctuary, which is a lush green medley of the spice plantations as well
-                                        as the paddy fields. This wildlife sanctuary is the abode of the different species of elephants. When one pays a visit here, one can find the herds of elephants
-                                        roaming here and there in their own rhythm. The jeep safaris are also conducted to make the tourists aware with the natural habitat of the wildlife. Having won
-                                        several awards across the globe for its ecotourism initiatives, the state of Kerala is truly a “gods own country”.
-                                    </p>
+                        {{model.about|safe}}
                     </div>
+                    {% if model.dos|length > 0 %}
                     <div class="col-xs-12 col-md-5 tab-details pull-left">
                         <h3>Do's</h3>
                         <ul class="my-list-right">
-                            <li>Trekking shoes & other related gears are compulsary</li>
-                            <li>Trekking shoes & other related gears are compulsary</li>
-                            <li>Trekking shoes & other related gears are compulsary</li>
-                            <li>Trekking shoes & other related gears are compulsary</li>
-                            <li>Trekking shoes & other related gears are compulsary</li>
+                            {% for do in model.dos %}
+                                <li>{{do}}</li>
+                            {% endfor %}
                         </ul>
                     </div>
+                    {% endif %}
+                    {% if model.donts|length > 0 %}
                     <div class="col-xs-12 col-md-5 tab-details pull-right">
                           <h3>Don'ts</h3>
                           <ul class="my-list-wrong">
-                                <li>Trekking shoes & other related gears are compulsary</li>
-                                <li>Trekking shoes & other related gears are compulsary</li>
-                                <li>Trekking shoes & other related gears are compulsary</li>
-                                <li>Trekking shoes & other related gears are compulsary</li>
-                                <li>Trekking shoes & other related gears are compulsary</li>
+                              {% for dont in model.donts %}
+                                <li>{{dont}}</li>
+                              {% endfor %}
                           </ul>
                     </div>
+                    {% endif %}
                   </div>
                     <!--------------ADVENTURE TAB DATA--------->
                   <div role="tabpanel" class="tab-pane fade" id="adventures" aria-labelledby="adventures">
-                     <hr class="clearfix divider">
-                      <section class="container-fluid p-0">
-                         <div class="container fitrangi-thumb">
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                  <div class="thumbnail">
-                                        <img src="../images/slider-3.jpg" alt="...">
-                                        <div class="caption captop">
-                                            <article>
-                                                <h4>51 Votes : </h4>
-                                                <a href="" class="btn rating-medium">MEDIUM</a>
-                                            </article>
-                                        </div>
-                                        <div class="caption capbottom">
-                                            <a href="" class="btn btn-default"><span class="fa fa-user"></span></a>
-                                            <a href="" class="btn btn-default"><span class="fa fa-tags"></span></a>
-                                        </div>
-                                        <div class="caption">
-                                            <h4>Lorem Ipsum at Ladakh</h4>
-                                        </div>
-                                  </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                  <div class="thumbnail">
-                                          <img src="../images/slider-3.jpg" alt="...">
-                                          <div class="caption captop">
-                                            <article>
-                                                <h4>51 Votes : </h4>
-                                                <a href="" class="btn rating-easy">EASY</a>
-                                            </article>
-                                          </div>
-                                          <div class="caption capbottom">
-                                            <a href="" class="btn btn-default"><span class="fa fa-user"></span></a>
-                                            <a href="" class="btn btn-default"><span class="fa fa-tags"></span></a>
-                                          </div>
-                                          <div class="caption">
-                                            <h4>Lorem Ipsum at Ladakh</h4>
-                                          </div>
-                                  </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                  <div class="thumbnail">
-                                          <img src="../images/slider-3.jpg" alt="...">
-                                          <div class="caption captop">
-                                            <article>
-                                                <h4>51 Votes : </h4>
-                                                <a href="" class="btn rating-medium">MEDIUM</a>
-                                            </article>
-                                          </div>
-                                          <div class="caption capbottom">
-                                            <a href="" class="btn btn-default"><span class="fa fa-user"></span></a>
-                                            <a href="" class="btn btn-default"><span class="fa fa-tags"></span></a>
-                                          </div>
-                                          <div class="caption">
-                                            <h4>Lorem Ipsum at Ladakh</h4>
-                                          </div>
-                                  </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                  <div class="thumbnail">
-                                          <img src="../images/slider-3.jpg" alt="...">
-                                          <div class="caption captop">
-                                              <article>
-                                                  <h4>51 Votes : </h4>
-                                                  <a href="" class="btn rating-extreme">EXTREME</a>
-                                              </article>
-                                          </div>
-                                          <div class="caption capbottom">
-                                              <a href="" class="btn btn-default"><span class="fa fa-user"></span></a>
-                                              <a href="" class="btn btn-default"><span class="fa fa-tags"></span></a>
-                                          </div>
-                                          <div class="caption">
-                                              <h4>Lorem Ipsum at Ladakh</h4>
-                                          </div>
-                                  </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                  <div class="thumbnail">
-                                          <img src="../images/slider-3.jpg" alt="...">
-                                          <div class="caption captop">
-                                            <article>
-                                                <h4>51 Votes : </h4>
-                                                <a href="" class="btn rating-easy">EASY</a>
-                                            </article>
-                                          </div>
-                                          <div class="caption capbottom">
-                                            <a href="" class="btn btn-default"><span class="fa fa-user"></span></a>
-                                            <a href="" class="btn btn-default"><span class="fa fa-tags"></span></a>
-                                          </div>
-                                          <div class="caption">
-                                            <h4>Lorem Ipsum at Ladakh</h4>
-                                          </div>
-                                  </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                  <div class="thumbnail">
-                                          <img src="../images/slider-3.jpg" alt="...">
-                                          <div class="caption captop">
-                                            <article>
-                                                <h4>51 Votes : </h4>
-                                                <a href="" class="btn rating-extreme">EXTREME</a>
-                                            </article>
-                                          </div>
-                                          <div class="caption capbottom">
-                                            <a href="" class="btn btn-default"><span class="fa fa-user"></span></a>
-                                            <a href="" class="btn btn-default"><span class="fa fa-tags"></span></a>
-                                          </div>
-                                          <div class="caption">
-                                            <h4>Lorem Ipsum at Ladakh</h4>
-                                          </div>
-                                  </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                  <div class="thumbnail">
-                                          <img src="../images/slider-3.jpg" alt="...">
-                                          <div class="caption captop">
-                                            <article>
-                                                <h4>51 Votes : </h4>
-                                                <a href="" class="btn rating-difficult">DIFFICULT</a>
-                                            </article>
-                                          </div>
-                                          <div class="caption capbottom">
-                                            <a href="" class="btn btn-default"><span class="fa fa-user"></span></a>
-                                            <a href="" class="btn btn-default"><span class="fa fa-tags"></span></a>
-                                          </div>
-                                          <div class="caption">
-                                            <h4>Lorem Ipsum at Ladakh</h4>
-                                          </div>
-                                  </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                  <div class="thumbnail">
-                                          <img src="../images/slider-3.jpg" alt="...">
-                                          <div class="caption captop">
-                                            <article>
-                                                <h4>51 Votes : </h4>
-                                                <a href="" class="btn rating-easy">EASY</a>
-                                            </article>
-                                          </div>
-                                          <div class="caption capbottom">
-                                            <a href="" class="btn btn-default"><span class="fa fa-user"></span></a>
-                                            <a href="" class="btn btn-default"><span class="fa fa-tags"></span></a>
-                                          </div>
-                                          <div class="caption">
-                                            <h4>Lorem Ipsum at Ladakh</h4>
-                                          </div>
-                                  </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                  <div class="thumbnail">
-                                            <img src="../images/slider-3.jpg" alt="...">
-                                            <div class="caption captop">
-                                                    <article>
-                                                        <h4>51 Votes : </h4>
-                                                        <a href="" class="btn rating-difficult">DIFFICULT</a>
-                                                    </article>
-                                            </div>
-                                            <div class="caption capbottom">
-                                                  <a href="" class="btn btn-default"><span class="fa fa-user"></span></a>
-                                                  <a href="" class="btn btn-default"><span class="fa fa-tags"></span></a>
-                                            </div>
-                                            <div class="caption">
-                                                  <h4>Lorem Ipsum at Ladakh</h4>
-                                            </div>
-                                  </div>
-                            </div>
+                     <section class="p-0">
+                         <div id="activity_adventure" class="fitrangi-thumb">
+
                          </div>
+                         <script>
+                             $(document).ready(function() {
+                                 $.ajax({
+                                    type: 'get',
+                                    url: '/views/template?model_view=adventure&card_type=grid&as_list=True&page=1&layout=nolayout'
+                                }).done(function (data) {
+                                    $('#activity_adventure').html(data);
+                                });
+                             });
+                         </script>
                       </section>
                   </div>
                     <!-----------FAVOURITED TAB DATA------->
@@ -409,11 +237,6 @@
                        <section class="container-fluid journal ">
                             <h2 class="my-h2">Trekking & Hiking:Popular from journal</h2>
                             <div class="container">
-                                <a href="" class="col-lg-4 col-md-4 col-sm-6 col-xs-12 radius-15 ">
-                                <img src="../images/journal-1.jpg">
-                                <h4>Lorem Ipsum dolor sit is the dummy content</h4>
-                                </a>
-
                                 <a href="" class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                                 <img src="../images/journal-1.jpg">
                                 <h4>Lorem Ipsum dolor sit is the dummy content</h4>
@@ -424,7 +247,12 @@
                                 <h4>Lorem Ipsum dolor sit is the dummy content</h4>
                                 </a>
 
-                                <a href="" class="col-lg-6 col-md-6 col-sm-6 col-xs-12 radius-15">
+                                <a href="" class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                <img src="../images/journal-1.jpg">
+                                <h4>Lorem Ipsum dolor sit is the dummy content</h4>
+                                </a>
+
+                                <a href="" class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                 <img src="../images/journal-1.jpg">
                                 <h4>Lorem Ipsum dolor sit is the dummy content</h4>
                                 </a>

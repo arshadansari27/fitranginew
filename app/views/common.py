@@ -139,6 +139,28 @@ def registration_modal():
 def forgot_password_modal():
     return render_template('site/modals/forgot-password.html')
 
+@app.route('/subscribe', methods=['POST'])
+def subscribe():
+    if request.method == 'POST':
+        email = request.form.get('email', None)
+        name = request.form.get('name', None)
+
+        if not email or not name:
+            return jsonify(dict(status='error', message='Invalid name or email. Please try again.'))
+
+        profile = Profile.objects(email__iexact=email).first()
+        if not profile:
+            print 'Subscribing ', name, email
+            type = ProfileType.objects(name__iexact='Subscription Only').first()
+            profile = Profile(name=name, email=email, type=[type], role=['Basic User'])
+            profile.save()
+            return jsonify(dict(status='success', message='Successfully Subscribed...', node=str(profile.id)))
+        else:
+            return jsonify(dict(status='success', message='Already a user or subscribed...', node=str(profile.id)))
+
+    return jsonify(dict(status='error', message='Failed to login. Please try again.'))
+
+
 @app.route('/login', methods=['POST'])
 def login():
     if request.method == 'POST':

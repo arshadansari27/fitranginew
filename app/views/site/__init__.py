@@ -48,8 +48,8 @@ def static_model_views():
 
 @app.route("/views/template")
 def template_views():
-    card_type = request.args.get('card_type', 'detail')
     model_view = request.args.get('model_view', None)
+    layout = request.args.get('layout', 'empty_layout')
     if not model_view:
         return 'Not Found', 404
     as_list = request.args.get('as_list', False)
@@ -60,7 +60,7 @@ def template_views():
         collection_view, context = listing_helper()
         view = collection_view.get_card()
 
-    return render_template("site/empty_layout.html", view=view, **context)
+    return render_template("site/layouts/%s.html" % layout, view=view, **context)
 
 @app.route("/listing/page")
 def paged_list():
