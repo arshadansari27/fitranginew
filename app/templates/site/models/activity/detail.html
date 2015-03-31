@@ -1,7 +1,5 @@
-{# % extends 'site/models/common/_detail.html' % #}
-
 <section class="container-fluid p-0">
-    <div class="activity-banner">
+    <div class="activity-banner"  style="background:url({{model.cover_image_path}}) no-repeat ; background-size: 100%;">
         <div class="container">
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                 <div class="favourite">
@@ -68,8 +66,7 @@
                     <!--------------ADVENTURE TAB DATA--------->
                   <div role="tabpanel" class="tab-pane fade" id="adventures" aria-labelledby="adventures">
                      <section class="p-0">
-                         <div id="activity_adventure" class="fitrangi-thumb">
-
+                         <div id="activity_adventure">
                          </div>
                          <script>
                              $(document).ready(function() {
@@ -107,163 +104,61 @@
                   </div>
                         <!-----------DISCUSSION TAB DATA------->
                   <div role="tabpanel" class="tab-pane fade" id="discussions" aria-labelledby="discussions">
-                         <hr class="clearfix divider">
-                        <section class="container-fluid discussion pb-20">
-                          <h2 class="my-h2">Trekking & Hiking:Latest Discussion</h2>
-                          <div class="container">
-                             <ul class="media-list">
-                                  <li class="media">
-                                    <div class="pull-left">
-                                      <a href="#">
-                                        <img class="img-circle" src="../images/pro.jpg" width="120"  alt="...">
-                                      </a>
-                                    </div>
-                                    <div class="media-body">
-                                      <h4 class="media-heading">Lorem Ipsum is simply dummy text of the printing typesetting industry.</h4>
-                                        <div class="media-bottom">
-
-                                            <div class="pull-right">
-                                                <a href=""><span class="fa fa-comment"></span> Comment Here</a>
-                                                <a href=""><span class="fa fa-tag"></span> Tag it Here</a>
-                                            </div>
-
-                                            <div class="media-right">
-                                                <a class="last-seen">32Min</a>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                  </li>
-                                  <li class="media">
-                                    <div class="pull-left">
-                                      <a href="#">
-                                        <img class="img-circle" src="../images/pro.jpg" width="120"  alt="...">
-                                      </a>
-                                    </div>
-                                    <div class="media-body">
-                                      <h4 class="media-heading">Lorem Ipsum is simply dummy text of the printing typesetting industry.</h4>
-                                        <div class="media-bottom">
-
-                                            <div class="pull-right">
-                                                <a href=""><span class="fa fa-comment"></span> Comment Here</a>
-                                                <a href=""><span class="fa fa-tag"></span> Tag it Here</a>
-                                            </div>
-
-                                            <div class="media-right">
-                                                <a class="last-seen">32Min</a>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                  </li>
-                                  <li class="media">
-                                    <div class="pull-left">
-                                      <a href="#">
-                                        <img class="img-circle" src="../images/pro.jpg" width="120"  alt="...">
-                                      </a>
-                                    </div>
-                                    <div class="media-body">
-                                      <h4 class="media-heading">Lorem Ipsum is simply dummy text of the printing typesetting industry.</h4>
-                                        <div class="media-bottom">
-
-                                            <div class="pull-right">
-                                                <a href=""><span class="fa fa-comment"></span> Comment Here</a>
-                                                <a href=""><span class="fa fa-tag"></span> Tag it Here</a>
-                                            </div>
-
-                                            <div class="media-right">
-                                                <a class="last-seen">32Min</a>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                  </li>
-                                  <li class="media">
-                                    <div class="pull-left">
-                                      <a href="#">
-                                        <img class="img-circle" src="../images/pro.jpg" width="120"  alt="...">
-                                      </a>
-                                    </div>
-                                    <div class="media-body">
-                                      <h4 class="media-heading">Lorem Ipsum is simply dummy text of the printing typesetting industry.</h4>
-                                        <div class="media-bottom">
-
-                                            <div class="pull-right">
-                                                <a href=""><span class="fa fa-comment"></span> Comment Here</a>
-                                                <a href=""><span class="fa fa-tag"></span> Tag it Here</a>
-                                            </div>
-
-                                            <div class="media-right">
-                                                <a class="last-seen">32Min</a>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                  </li>
-                                  <li class="media">
-                                    <div class="pull-left">
-                                      <a href="#">
-                                        <img class="img-circle" src="../images/pro.jpg" width="120"  alt="...">
-                                      </a>
-                                    </div>
-                                    <div class="media-body">
-                                      <h4 class="media-heading">Lorem Ipsum is simply dummy text of the printing typesetting industry.</h4>
-                                        <div class="media-bottom">
-
-                                            <div class="pull-right">
-                                                <a href=""><span class="fa fa-comment"></span> Comment Here</a>
-                                                <a href=""><span class="fa fa-tag"></span> Tag it Here</a>
-                                            </div>
-
-                                            <div class="media-right">
-                                                <a class="last-seen">32Min</a>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                  </li>
-                             </ul>
-                                 <hr class="clearfix divider">
-                                <div class="pull-left">
-                                <button class="btn btn-primary">Add a discussion</button>
-                                <button class="btn btn-primary">Go to discussion</button>
+                        <section class="container-fluid border-grey-b mb-10">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <h4 class="oswald pl-10 pt-15">Trekking & Hiking : Discussion</h4>
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-primary">Add a Discussion</button>
+                                    <button type="button" class="btn btn-primary">Go to Discussion</button>
                                 </div>
-                          </div>
+                            </div>
                         </section>
+                        <div class="container-fluid discussion">
+                            <ul id="discussion_models" class="media-list">
+
+                            </ul>
+
+                        </div>
+                        <script>
+                             $(document).ready(function() {
+                                 $.ajax({
+                                    type: 'get',
+                                    url: '/views/template?model_view=discussion&card_type=row&as_list=True&page=1&layout=nolayout'
+                                }).done(function (data) {
+                                    $('#discussion_models').html(data);
+                                });
+                             });
+                        </script>
+
+
+
                   </div>
                         <!-----------JOURNALS TAB DATA------->
                   <div role="tabpanel" class="tab-pane fade" id="journals" aria-labelledby="journals">
-                       <hr class="clearfix divider">
-                       <section class="container-fluid journal ">
-                            <h2 class="my-h2">Trekking & Hiking:Popular from journal</h2>
-                            <div class="container">
-                                <a href="" class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                <img src="../images/journal-1.jpg">
-                                <h4>Lorem Ipsum dolor sit is the dummy content</h4>
-                                </a>
-
-                                <a href="" class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                <img src="../images/journal-1.jpg">
-                                <h4>Lorem Ipsum dolor sit is the dummy content</h4>
-                                </a>
-
-                                <a href="" class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                <img src="../images/journal-1.jpg">
-                                <h4>Lorem Ipsum dolor sit is the dummy content</h4>
-                                </a>
-
-                                <a href="" class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                <img src="../images/journal-1.jpg">
-                                <h4>Lorem Ipsum dolor sit is the dummy content</h4>
-                                </a>
-
-                                <a href="" class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                <img src="../images/journal-1.jpg">
-                                <h4>Lorem Ipsum dolor sit is the dummy content</h4>
-                                </a>
-                                <div class="pull-left">
-                                    <button class="btn btn-primary">Go to Journal</button>
+                      <section class="container-fluid border-grey-b mb-10">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <h4 class="oswald pl-10 pt-15">Trekking & Hiking:Popular from journal</h4>
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-primary">Go to Journal</button>
                                 </div>
+                                <br/>
+                            </div>
+                        </section>
+                       <section class="container-fluid journal ">
+
+                            <div class="container">
+                                <div id="article_models">
+                                </div>
+                                <script>
+                                    $(document).ready(function() {
+                                        $.ajax({
+                                            type: 'get',
+                                            url: '/views/template?model_view=article&card_type=grid&as_list=True&page=1&layout=nolayout'
+                                        }).done(function (data) {
+                                            $('#article_models').html(data);
+                                        });
+                                    });
+                                </script>
                             </div>
                             <hr class="clearfix divider">
                        </section>

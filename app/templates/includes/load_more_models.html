@@ -1,18 +1,22 @@
 {% macro show_button(model_view, card_type, page) -%}
 {% if page == 1 or page == '1' %}
 <div class="col-sm-offset-2 col-sm-8">
-    <button id="load_more" class="col-sm-12 btn-primary">Load more</button>
+    <button id="load_more_{{model_view}}_{{card_type}}" class="col-sm-12 btn-primary">Load more</button>
 </div>
 <script language="JavaScript">
     (function(){
-        current_page = parseInt("{% if page %}{{page}}{% else %}1{% endif %}");
-        $("#load_more").on('click', function(e){
+        if (window.current_page == undefined) {
+            window.current_page =  {};
+        }
+
+        window.current_page.{{model_view}}_{{card_type}} = parseInt("{% if page %}{{page}}{% else %}1{% endif %}");
+        $("#load_more_{{model_view}}_{{card_type}}").on('click', function(e){
             e.stopPropagation();
             $.ajax({
-                url: "/listing/page?model_view={{model_view}}&card_type={{card_type}}&page=" + (current_page + 1)
+                url: "/listing/page?model_view={{model_view}}&card_type={{card_type}}&page=" + (current_page.{{model_view}}_{{card_type}} + 1)
             }).done(function(data) {
-                $("#models").append(data);
-                current_page = parseInt(current_page) + 1;
+                $("#models_{{model_view}}_{{card_type}}").append(data);
+                window.current_page.{{model_view}}_{{card_type}} = parseInt(window.current_page.{{model_view}}_{{card_type}}) + 1;
             });
         });
     })();
