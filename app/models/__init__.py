@@ -160,7 +160,7 @@ class ExternalNetwork(object):
 
 class Charge(object):
     price = db.DecimalField()
-    currency = db.StringField(choices=['INR'])
+    currency = db.StringField(choices=['INR', 'USD'])
     discount_percentage = db.IntField()
 
     @property
