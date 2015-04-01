@@ -40,7 +40,7 @@
                 <div id="myTabContent" class="tab-content">
                   <div role="tabpanel" class="tab-pane fade active in" id="about" aria-labelledby="about">
                     <div class="col-xs-12 col-md-12 tab-details">
-                        {{model.about|safe}}
+                        {{model.process_about|safe}}
                     </div>
                     {% if model.dos|length > 0 %}
                     <div class="col-xs-12 col-md-5 tab-details pull-left">
@@ -66,7 +66,7 @@
                     <!--------------ADVENTURE TAB DATA--------->
                   <div role="tabpanel" class="tab-pane fade" id="adventures" aria-labelledby="adventures">
                      <section class="p-0">
-                         <div id="activity_adventure">
+                         <div id="activity_adventure" class="container-fluid fitrangi-thumb">
                          </div>
                          <script>
                              $(document).ready(function() {

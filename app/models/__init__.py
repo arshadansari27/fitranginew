@@ -9,10 +9,16 @@ from flask.ext.mongoengine.wtf import model_form
 
 from app import db
 from app.models.extra.fields import ListField
+from app.utils import convertLinks
 
 
 db.ListField = ListField
 
+
+(ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, PRODUCT, ARTICLE, BLOG, LOCATION, POST, DISCUSSION, CHANNEL) =  (
+    "activity", "adventure", "event", "trip", "profile", "product",
+    "article", "blog", "location", "post", "discussion", "channel"
+)
 
 def handler(event):
 
@@ -84,6 +90,10 @@ class Node(object):
     def cover_image_path(self):
         return '/media/' + self.__class__.__name__.lower() + '/' + str(self.id) + '/cover'
 
+    @property
+    def gallery_image_path(self):
+        return '/media/' + self.__class__.__name__.lower() + '/' + str(self.id) + '/gallery/'
+
     def get_cover_image(self):
         if not hasattr(self, 'cover_image') or not self.cover_image:
             return None, None
@@ -108,7 +118,7 @@ class Node(object):
 
     @property
     def gallery_size(self):
-        return len(u for u in self.image_gallery if u.image is not None)
+        return len([u for u in self.image_gallery if u.image is not None])
 
     def on_create(self):
         pass
@@ -123,7 +133,7 @@ class Node(object):
 
     @property
     def since(self):
-        return human(self.created_on, precision=1)
+        return human(self.created_timestamp, precision=1)
 
     """
     @property
@@ -147,6 +157,10 @@ class Node(object):
 class Entity(Node):
     name = db.StringField()
     about = db.StringField()
+
+    @property
+    def process_about(self):
+        return convertLinks(self.about)
 
     def __unicode__(self): return self.name
 
@@ -180,6 +194,7 @@ class NodeFactory(object):
         from app.models.profile import Profile
         from app.models.trip import Trip
         model_class = NodeFactory.get_class_by_name(model_class.lower())
+        print '*' * 10, model_class.__name__
         return model_class.get_by_id(id)
 
     @classmethod
@@ -193,18 +208,18 @@ class NodeFactory(object):
         from app.models.trip import Trip
         name = name.lower()
 
-        if name == 'activity': return Activity
-        elif name == 'adventure': return Adventure
-        elif name == 'event': return Event
-        elif name == 'trip': return Trip
-        elif name == 'profile': return Profile
-        elif name == 'product': return Product
-        elif name == 'article': return Article
-        elif name == 'blog': return Blog
-        elif name == 'location': return Location
-        elif name == 'post': return Post
-        elif name == 'discussion': return Discussion
-        elif name == 'channel': return Channel
+        if name == ACTIVITY: return Activity
+        elif name == ADVENTURE: return Adventure
+        elif name == EVENT: return Event
+        elif name == TRIP: return Trip
+        elif name == PROFILE: return Profile
+        elif name == PRODUCT: return Product
+        elif name == ARTICLE: return Article
+        elif name == BLOG: return Blog
+        elif name == LOCATION: return Location
+        elif name == POST: return Post
+        elif name == DISCUSSION: return Discussion
+        elif name == CHANNEL: return Channel
         else: return None
 
 if __name__ == '__main__':

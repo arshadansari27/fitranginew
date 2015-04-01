@@ -1,3 +1,6 @@
+from ago import human
+from app.utils import convertLinks
+
 __author__ = 'arshad'
 
 from app.models import Node, update_content, db
@@ -14,6 +17,15 @@ class Comment(db.EmbeddedDocument):
     content = db.StringField()
     created_timestamp = db.DateTimeField(default=datetime.datetime.now)
     modified_timestamp = db.DateTimeField(default=datetime.datetime.now)
+
+    @property
+    def since(self):
+        return human(self.created_timestamp, precision=1)
+
+    @property
+    def process_content(self):
+        return convertLinks(self.content.replace('\n', '<br/>'))
+
 
 
 class Channel(db.Document):
@@ -37,10 +49,18 @@ class Content(Node):
     published_timestamp = db.DateTimeField()
     admin_published = db.BooleanField()
 
+    @property
+    def sorted_comments(self):
+        return sorted(self.comments, reverse=True)
+
     def update_tags_list(self):
         self.tags = []
         for t in self.tag_refs:
             self.tags.append(t.name)
+
+    @property
+    def process_content(self):
+        return convertLinks(self.content.replace('\n', '<br/>'))
 
     @property
     def comments_count(self):
@@ -89,6 +109,22 @@ class Post(Node, db.Document):
     }
 
     @property
+    def partial_content(self):
+        content = self.content
+        split_content = content.split(' ')
+        if len(split_content) > 20:
+            split_content = split_content[:20]
+        return convertLinks(' '.join(split_content))
+
+    @property
+    def sorted_comments(self):
+        return sorted(self.comments, reverse=True)
+
+    @property
+    def process_content(self):
+        return convertLinks(self.content.replace('\n', '<br/>'))
+
+    @property
     def vote_count(self):
         return PostVote.objects(post=self).count()
 
@@ -104,11 +140,11 @@ class Post(Node, db.Document):
 
     @property
     def up_votes(self):
-        return PostVote.objects(post=self, up=True).count()
+        return PostVote.objects(post=self, up_vote=True).count()
 
     @property
     def down_votes(self):
-        return PostVote.objects(post=self, up=False).count()
+        return PostVote.objects(post=self, up_vote=False).count()
 
 
 class PostVote(db.Document):

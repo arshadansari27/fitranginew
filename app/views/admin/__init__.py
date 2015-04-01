@@ -241,7 +241,7 @@ class CommentAdminView(ModelView):
 class PostAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['author', 'content', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'parent']
+    form_columns = ['author', 'content', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'parent', 'comments']
     column_list = ( 'author', 'content', 'vote_count')
     form_overrides = dict(content=SummernoteTextAreaField)
 

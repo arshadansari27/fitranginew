@@ -1,3 +1,4 @@
+from app.models import PROFILE, ACTIVITY, ADVENTURE, ARTICLE, BLOG, POST, EVENT, TRIP
 from app.views.site.extractors import NodeExtractor
 
 __author__ = 'arshad'
@@ -58,21 +59,21 @@ class NodeEditor(object):
         if type is None:
             raise Exception("Invalid message")
         else:
-            if type == 'profile':
+            if type == PROFILE:
                 return ProfileEditor
-            elif type == 'activity':
+            elif type == ACTIVITY:
                 return ActivityEditor
-            elif type == 'adventure':
+            elif type == ADVENTURE:
                 return AdventureEditor
-            elif type == 'trip':
+            elif type == TRIP:
                 return TripEditor
-            elif type == 'event':
+            elif type == EVENT:
                 return EventEditor
-            elif type in ['article', 'blog']:
+            elif type in [ARTICLE, BLOG]:
                 return ContentEditor
-            elif type == 'post':
+            elif type == POST:
                 return PostEditor
-            elif type == 'activity_stream':
+            elif type == 'stream':
                 return StreamEditor
             else:
                 raise Exception("Not implemented")

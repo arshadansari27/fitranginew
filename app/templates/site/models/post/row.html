@@ -1,1 +1,110 @@
-{% extends 'site/models/common/_row.html' %}
+ <section class="row">
+
+	<article class="post-profile lightgrey-bg">
+        <img src="{{model.author.cover_image_path}}" class="img-circle img-responsive pull-left p-5" width="60" height="100">
+        <a href="" class="btn btn-default btn-xs mt-10 grey pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-plus"></i></a>
+        <h4>{{model.author.name}}</h4>
+	    {% if model.author.location %}<h5><span>{{model.author.location.name}}</span> </h5>{% endif %}
+        <h5 class="ago-line">{{model.since}}</h5>
+    </article>
+
+
+  	    <!--p><a href="" class="red">read more</a></p-->
+    {% if model.video_embed and model.video_embed|length > 0 %}
+        <article>{{model.video_embed}}</article><hr/>
+    {% endif %}
+    {% if model.cover_image and model.cover_image_path|length > 0 %}
+        <article><img src="{{model.cover_image_path}}" width="100%"/></article><hr/>
+    {% endif %}
+    {% if model.content and model.content|length > 0 %}
+        <article data-content-view="partial" data-model-id="{{model.id}}">
+            {{ model.partial_content|safe }}>...<br/><a href="#" data-read-more="{{model.id}}">Read more</a>
+        </article>
+        <article data-content-view="complete" data-model-id="{{model.id}}">
+            {{ model.process_content|safe }}>
+        </article>
+
+        <hr/>
+    {% endif %}
+
+    {% if model.gallery_size > 0 %}
+        <div class="row">
+            {% for indx in xrange(model.gallery_size) %}
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+            <a href="#" target="_blank">
+                <img src="{{model.gallery_image_path}}{{indx}}" class="img-responsive img-thumbnail">
+            </a>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <article>
+            <button class="btn btn-default btn-noti" type="button"><i class="fa fa-thumbs-o-up"></i> <span class="noti-badge">{{model.up_votes}}</span></button>
+            <button class="btn btn-default btn-noti" type="button"><i class="fa fa-thumbs-o-down"></i> <span class="noti-badge">{{model.down_votes}}</span></button>
+	        <button class="btn btn-default btn-noti" type="button"><i class="fa fa-comment-o"></i> <span class="noti-badge">{{model.comments|length}}</span></button>
+            <button class="btn btn-default pull-right" type="button"><i class="fa fa-share-square-o"></i> </button>
+    </article>
+    <hr/>
+    {% if model.comments|length > 0 %}
+    <button data-model-id="{{model.id}}" data-button-show="1" class="col-sm-12 col-md-12 col-xs-12 btn btn-link pull-left">Show All</button><br/>
+    {% endif %}
+    <div data-model-id="{{model.id}}" data-comments="comment-list">
+    {% for comment in model.sorted_comments %}
+        <article class="well well-sm otherpost-profile " data-model-id="{{model.id}}" data-comment="comment">
+            <img src="{{comment.author.cover_image_path}}" class="img-circle img-responsive pull-left p-5" width="60" height="100">
+            <h4>{{comment.author.name}}</h4>
+            <h5 class="seen-report-like m-0">{{comment.since}}<a href="" class="report">Report</a><a href="" class="like">Like</a></h5>
+            <br/>
+            <div class="container">
+                <span>{{comment.process_content|safe}}</span>
+            </div>
+        </article>
+    {% endfor %}
+    </div>
+
+    {% if user %}
+    <article class="write-comment media box-sizing-content">
+            <img src="{{user.cover_image_path}}" class="img-circle img-responsive pull-left p-5" width="60" height="100">
+            <div class="media-body">
+      		    <textarea data-model-id="{{model.id}}" data-comment-text="1" class="form-control no-radius" rows="1" placeholder="Write Comment.."></textarea>
+	        </div>
+    </article>
+    {% endif %}
+
+    <hr class="clearfix">
+ <script>
+$(document).ready(function(){
+    var model_id = "{{model.id}}";
+    $('[data-model-id="' + model_id + '"][data-content-view="complete"]').hide();
+    $('[data-read-more="' + model_id + '"]').on('click', function(e){
+        e.stopPropagation();
+        $('[data-model-id="' + model_id + '"][data-content-view="partial"]').hide();
+        $('[data-model-id="' + model_id + '"][data-content-view="complete"]').show();
+    });
+
+    $('[data-model-id="' + model_id + '"][data-comment-text="1"]').on('keypress', function(event) {
+        event.stopPropagation();
+        if (event.which != 13) {
+            return;
+        }
+        $.ajax({
+            type: 'post',
+            url: '/sub_comment/{{model.id}}',
+            data: {content: $('[data-model-id=' + model_id + '][data-comment-text=1]').val()}
+        }).done(function (data) {
+            $('[data-model-id="'+model_id+'"][data-comments="comment-list"]').prepend(data);
+            $('[data-model-id="' + model_id + '"][data-comment-text="1"]').val('');
+        });
+    });
+
+    $comments_list = $('[data-model-id="' + model_id +'"][data-comments="comment-list"]');
+    $comments_list.hide();
+    $btn = $('[data-model-id="' + model_id + '"][data-button-show="1"]');
+    $btn.click(function(){
+        $comments_list.show();
+        $btn.hide();
+    });
+});
+</script>
+</section>

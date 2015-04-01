@@ -37,6 +37,14 @@ def redirect_url(default='login'):
 def setup_user():
     g.user = None#Profile.objects(email__iexact='arshadansari27@gmail.com').first()
 
+def force_setup_context(context={}):
+    user = g.user if hasattr(g, 'user') and g.user is not None else None
+    activity_menu = view_menu()
+    d = dict(user=user, activity_menu=activity_menu, menu=get_menu_selection(request.path))
+    for k, v in d.iteritems():
+        context[k] = v
+    return context
+
 
 @app.context_processor
 def setup_context():
@@ -44,7 +52,7 @@ def setup_context():
     activity_menu = view_menu()
     return dict(user=user, activity_menu=activity_menu, menu=get_menu_selection(request.path))
 
-#@cache.cached(timeout=3600 * 24)
+@cache.cached(timeout=3600 * 24)
 def get_menu_selection(request_path):
     top, main, inner = None, None, None
     if '/explore' in request_path:
@@ -88,7 +96,6 @@ def get_menu_selection(request_path):
             return "%s -> %s -> %s" % (self.app_name, self.main_menu, self.inner)
 
     menu = Menu(top, main, inner)
-    print "menu: %s" % str(menu)
     return menu
 
 from .common import *

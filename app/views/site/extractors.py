@@ -1,5 +1,5 @@
 from bson import ObjectId, json_util
-from app.models import Node
+from app.models import Node, ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, BLOG, POST, DISCUSSION
 from app.models.activity import Activity
 from app.models.adventure import Adventure
 from app.models.content import Article, Post, Discussion, Blog
@@ -56,23 +56,23 @@ class NodeExtractor(object):
         if type(model_name) == type:
             model_name = model_name.__name__
         model_name = model_name.lower().strip()
-        if model_name == 'activity':
+        if model_name == ACTIVITY:
             return ActivityExtractor
-        elif model_name == 'adventure':
+        elif model_name == ADVENTURE:
             return AdventureExtractor
-        elif model_name == 'trip':
+        elif model_name == TRIP:
             return TripExtractor
-        elif model_name == 'event':
+        elif model_name == EVENT:
             return EventExtractor
-        elif model_name == 'profile':
+        elif model_name == PROFILE:
             return ProfileExtractor
-        elif model_name == 'article':
+        elif model_name == ARTICLE:
             return ArticleExtractor
-        elif model_name == 'blog':
+        elif model_name == BLOG:
             return BlogExtractor
-        elif model_name == 'post':
+        elif model_name == POST:
             return PostExtractor
-        elif model_name == 'discussion':
+        elif model_name == DISCUSSION:
             return DiscussionExtractor
         else:
             raise Exception("Invalid model name for extractor")
