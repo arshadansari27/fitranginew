@@ -1,1 +1,99 @@
-{% extends 'site/models/common/_grid.html' %}
+{#% extends 'site/models/common/_grid.html' %#}
+<section class="container-fluid profiles pb-20">
+    <h2 class="my-h2">Profiles</h2>
+
+    <div class="container">
+    {#% if user.type is enthusiast %#}
+        <ul class="pp-grid">
+            <li>
+                <div class="pp-item pp-img-1">
+                    <div class="pp-info">
+                        <h3>Arshad Ansari</h3>
+
+                        <p>Mumbai</p>
+                    </div>
+                </div>
+            </li>
+
+            <li>
+                <div class="pp-item pp-img-1">
+                    <div class="pp-info">
+                        <h3>Arshad Ansarie</h3>
+
+                        <p>Mumbai</p>
+                    </div>
+                </div>
+            </li>
+
+            <li>
+                <div class="pp-item pp-img-1">
+                    <div class="pp-info">
+                        <h3>Arshad Ansari</h3>
+
+                        <p>Mumbai</p>
+                    </div>
+                </div>
+            </li>
+    {#% else %#}
+            <li>
+                <div class="pp-item pp-img-1">
+                    <div class="pp-info">
+                        <h3>Arshad Ansari</h3>
+
+                        <p>Mumbai</p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        {#% else %#}
+        <hr>
+
+        <ul class="pp-grid">
+
+            <li>
+                <div class="pagep-item pp-img-2">
+                    <div class="pagep-info">
+                        <h3>Crazy Sky</h3>
+                        <p>Mumbai</p>
+                    </div>
+                </div>
+            </li>
+
+            <li>
+                <div class="pagep-item pp-img-3">
+                    <div class="pagep-info">
+                        <h3>Crazy Sky</h3>
+                        <p>Mumbai</p>
+                    </div>
+                </div>
+            </li>
+
+            <li>
+                <div class="pagep-item pp-img-2">
+                    <div class="pagep-info">
+                        <h3>Crazy Sky</h3>
+                         <p>Mumbai</p>
+                    </div>
+                </div>
+            </li>
+
+
+            <li>
+                <div class="pagep-item pp-img-3 no-radius">
+                    <div class="pagep-info">
+                        <h3>Crazy Sky</h3>
+
+                        <p>Mumbai</p>
+                    </div>
+                </div>
+
+            </li>
+        </ul>
+
+        <!--div class="pull-right">
+            <button class="btn btn-primary">View All</button>
+        </div-->
+
+    </div>
+
+</section>
