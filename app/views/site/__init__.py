@@ -44,7 +44,7 @@ def static_model_views():
     template = env.get_template(template_path)
     context = {}
     view = template.render(**context)
-    return render_template("site/empty_layout.html", view=view)
+    return render_template("site/layouts/empty_layout.html", view=view)
 
 @app.route("/views/template")
 def template_views():
