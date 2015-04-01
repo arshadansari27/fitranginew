@@ -48,7 +48,7 @@ def static_model_views():
     from app.views import force_setup_context
     context = force_setup_context({})
     view = template.render(**context)
-    return render_template("site/empty_layout.html", view=view)
+    return render_template("site/layouts/empty_layout.html", view=view)
 
 @app.route("/views/template")
 def template_views():
