@@ -1,22 +1,22 @@
 from jinja2 import Template
 from app import app
-from flask import render_template, request, g
-from app.models.activity import Activity
+from flask import render_template, request, g, redirect
+from app.models import Node, NodeFactory
 from app.models.content import Content, Post, Comment
 from app.utils.search_helper import listing_helper, node_helper
-from app.views.site.handlers import ActivityView, NodeView, NodeCollectionView
+from app.handlers import ActivityView, NodeView, NodeCollectionView, AdventureCollectionView
 from app.views.site.menus import view_menu
 
-(MODEL_DETAIL_VIEW, MODEL_LIST_ROW_VIEW,
- MODEL_LIST_GRID_VIEW, MODEL_LIST_POD_VIEW) = ('detail',
-                                               'row',
-                                               'grid',
-                                               'pod')
+(MODEL_DETAIL_VIEW, MODEL_LIST_ROW_VIEW, MODEL_LIST_GRID_VIEW, MODEL_LIST_POD_VIEW) = ('detail', 'row', 'grid', 'pod')
 
 
 @app.route("/")
+def act_home():
+    return redirect('/explore')
+
+@app.route("/explore")
 def home():
-    return render_template("/site/features/home.html")
+    return render_template("/site/pages/landings/home.html")
 
 @app.route("/explore/activity")
 def activity_view():
@@ -29,8 +29,15 @@ def activity_view():
 
 @app.route("/explore/adventure")
 def list_adventure():
-    view = NodeCollectionView("adventure", "grid", {}, paged=True, size=20, page=1).get_card()
-    return render_template('site/features/explore/adventures.html', view=view)
+    from app.views import force_setup_context
+    query = request.args.get('query', '')
+    page = int(request.args.get('page', 1))
+    if not query or len(query) is 0:
+        query = None
+    context = force_setup_context({})
+    card = AdventureCollectionView(card_type="grid", query=query, size=20, page=page).get_card(context)
+    context['card'] = card
+    return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/community")
 def journal():
@@ -65,11 +72,21 @@ def template_views():
         view = collection_view.get_card()
     return render_template("site/layouts/%s.html" % layout, view=view, **context)
 
-@app.route("/listing/page")
+@app.route("/listings")
 def paged_list():
     collection_view, context = listing_helper()
     context['user'] = g.user if hasattr(g, 'user') and g.user is not None else None
-    return collection_view.next_page(context.get('page'))
+    page = int(context.get('page'))
+    return collection_view.next_page(page)
+
+@app.route('/options')
+def ajax_options():
+    model_name = request.args.get('model_name', '')
+    attr = request.args.get('attr', None)
+    options = (getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all())
+    results = ('<option value="%s">' % u for u in options)
+    return ''.join(results)
+
 
 @app.route('/activity/<slug>')
 @app.route('/adventure/<slug>')

@@ -15,9 +15,11 @@ from app.utils import convertLinks
 db.ListField = ListField
 
 
-(ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, PRODUCT, ARTICLE, BLOG, LOCATION, POST, DISCUSSION, CHANNEL) =  (
+(ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, PRODUCT, ARTICLE,
+ BLOG, LOCATION, POST, DISCUSSION, CHANNEL, STREAM, MESSAGE) =  (
     "activity", "adventure", "event", "trip", "profile", "product",
-    "article", "blog", "location", "post", "discussion", "channel"
+    "article", "blog", "location", "post", "discussion", "channel",
+    "stream", "message"
 )
 
 def handler(event):
@@ -206,6 +208,7 @@ class NodeFactory(object):
         from app.models.store import Product
         from app.models.profile import Profile
         from app.models.trip import Trip
+        from app.models.streams import ActivityStream, Message, UserMessage
         name = name.lower()
 
         if name == ACTIVITY: return Activity
@@ -220,6 +223,8 @@ class NodeFactory(object):
         elif name == POST: return Post
         elif name == DISCUSSION: return Discussion
         elif name == CHANNEL: return Channel
+        elif name == STREAM: return ActivityStream
+        elif name == MESSAGE: return  Message
         else: return None
 
 if __name__ == '__main__':

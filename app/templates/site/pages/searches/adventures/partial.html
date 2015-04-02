@@ -1,1 +1,31 @@
-{% extends 'site/pages/commons/list_page.html' %}
+<section class="container-fluid border-grey-b mb-10">
+<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+<h4 class="oswald pl-10 pt-15">Trekking & Hiking Adventures in India</h4>
+</div>
+
+<div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+	<form class="form-inline mb-10 pull-right">
+		<select class="form-control">
+  			<option class="">FILTER BY RATING</option>
+  			<option class="rating-easy">EASY</option>
+  			<option class="rating-medium">MEDIUM</option>
+  			<option class="rating-difficult">DIFFICULT</option>
+  			<option class="rating-extreme">EXTREME</option>
+		</select>
+		<input class="form-control" list="location" placeholder="FILTER BY LOCATION">
+		<datalist id="location">
+   			<option value="Lorem Ipsum ">
+    		<option value="Iorem Ipsum ">
+    		<option value="Jorem Ipsum ">
+    		<option value="Morem Ipsum ">
+			<option value="Korem Ipsum ">
+		</datalist>
+		<button class="btn btn-default oswald">RESET</button>
+	</form>
+</div>
+
+</section>
+
+<div id="models_list" class="container-fluid fitrangi-thumb">
+    {% include 'site/pages/commons/list_page.html' %}
+</div>

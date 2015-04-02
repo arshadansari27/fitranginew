@@ -1,1 +1,71 @@
-{% extends 'site/pages/commons/list_page.html' %}
+<section class="container-fluid p-0">
+    <div class="adventures-banner" style="background: url(/images/adventures-banner.jpg) no-repeat center center;">
+
+        <section class="container">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 filter-adventures-heading">
+                <h2>Find Near by Adventures. 2500+ Adventures and Counting </h2>
+                <h3>Filter by City/State or Find Location by Activity</h3>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
+
+                <input data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
+                <datalist id="activity">
+                    <option value="">
+                </datalist>
+                <script>
+                    $(document).ready(function(){
+                        $.ajax({
+                            url: '/options?model_name=activity&attr=name'
+                        }).done(function (data) {
+                            $('#activity').append(data);
+                        });
+                    });
+                </script>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
+
+                <input data-filter="location__location__name" list="location" placeholder="FILTER BY LOCATION">
+                <datalist id="location">
+                    <option value="">
+                </datalist>
+                <script>
+                    $(document).ready(function(){
+                        $.ajax({
+                            url: '/options?model_name=location&attr=name'
+                        }).done(function (data) {
+                            $('#location').append(data);
+                        });
+                    });
+                </script>
+            </div>
+
+            <div class="col-lg-offset-4 col-md-offset-4">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <a data-filter-submit="search" href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">GO</a>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <a data-filter-submit="reset"  href="" class="btn btn-info blue-bg no-radius w-100 mt-15">RESET</a>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</section>
+
+<hr class="clearfix divider">
+<script>
+    $(document).ready(function(){
+        var filters = '{{model_name}}';
+        window.filters = window.filters || {};
+        window.filters[filters] = window.filters[filters] || [];
+        var filters_list = window.filters[filters];
+        filters_list.push('location_location__name');
+        filters_list.push('activities__activity__name');
+    });
+</script>
+<section class="container-fluid p-0">
+    <div id="models_list" class="container fitrangi-thumb">
+        {% include 'site/pages/commons/list_page.html' %}
+    </div>
+</section>

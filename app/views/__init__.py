@@ -15,27 +15,10 @@ from app.settings import TEMPLATE_FOLDER
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
 
-def login_required(func):
-
-    @wraps(func)
-    def decoration(*args, **kwargs):
-        admin_user = Profile.objects(roles='Admin').first()
-        g.user = admin_user
-        if hasattr(g, 'user') and g.user is not None and g.user.id is not None:
-            return func(*args, **kwargs)
-        else:
-            return redirect('login')
-
-    return decoration
-
-
-def redirect_url(default='login'):
-    return request.args.get('next') or request.referrer or url_for(default)
-
-
 @app.before_request
 def setup_user():
-    g.user = None#Profile.objects(email__iexact='arshadansari27@gmail.com').first()
+    if session.get('user') is not None:
+        g.user = Profile.objects(pk=session['user']).first()
 
 def force_setup_context(context={}):
     user = g.user if hasattr(g, 'user') and g.user is not None else None

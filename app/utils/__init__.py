@@ -1,6 +1,7 @@
 import re
 
-from flask import g
+from functools import wraps
+from flask import g, redirect, request, url_for, abort
 from app.settings import MEDIA_FOLDER
 from rake import extract_keywords
 from app.utils.general import get_facets
@@ -20,6 +21,33 @@ def get_current_user():
         return g.user
     else:
         return None
+
+def convert_query_to_filter(query):
+    filters = []
+    if query is None or len(query) is 0:
+        return {}
+    if ';' not in query:
+        filters.append(query)
+    else:
+        for u in query.split(';'):
+            filters.append(u)
+    return dict([tuple(f.split(':')) for f in filters])
+
+
+def login_required(func):
+
+    @wraps(func)
+    def decoration(*args, **kwargs):
+        if hasattr(g, 'user') and g.user is not None and g.user.id is not None:
+            return func(*args, **kwargs)
+        else:
+            return redirect('login')
+
+    return decoration
+
+
+def redirect_url(default='login'):
+    return request.args.get('next') or request.referrer or url_for(default)
 
 def save_media(file):
         folder = "%s%s" % (MEDIA_FOLDER, str(datetime.datetime.now()).split(' ')[0].replace('-', ''))

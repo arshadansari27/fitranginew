@@ -1,12 +1,92 @@
-{% block filters %}{% endblock %}
-
-{% if model_cards|length > 0 %}
-<div id="models_{{model_name}}_{{card_type}}" class="row-fluid">
-    {% for model_card in model_cards %}
-        {{model_card|safe}}
-    {% endfor %}
+<div  data-model="{{model_name}}" data-card-type="{{card_type}}" data-type="model-container" class="row-fluid">
 </div>
 <br/>
-{% import 'includes/load_more_models.html' as load_more %}
-{{ load_more.show_button(model_name, card_type, page) }}
-{% endif %}
+<div class="col-sm-offset-2 col-sm-8">
+    <button data-model="{{model_name}}" data-card-type="{{card_type}}" data-action="load-more" class="col-sm-12 btn-primary">Load more</button>
+</div>
+<br/>
+<script language="JavaScript">
+
+    $(document).ready(function(){
+
+        var model_name = '{{model_name}}';
+        var card_type = '{{card_type}}';
+        var key = model_name + '-' + card_type;
+        var loadMoreSelector = '[data-model=' + model_name + '][data-card-type=' + card_type + '][data-action=load-more]';
+        var container = $('[data-model="' + model_name + '"][data-card-type="' + card_type + '"][data-type="model-container"]');
+
+        var load_models = function() {
+            window.current_page = window.current_page || {};
+            window.current_page[key] = window.current_page[key] || 1;
+
+
+            var filters = '{{model_name}}';
+            window.filters = window.filters || {};
+            window.filters[filters] = window.filters[filters] || [];
+            var filters_list = window.filters[filters];
+
+            var query = "";
+            for(var u = 0; u < filters_list.length; u++) {
+                var $input = $('[data-filter="' + filters_list[u] +'"]');
+                var name = filters_list[u];
+                var value = $input.val();
+
+                if (value == undefined ||value == null || value.length == 0 || value == '--') {
+                    continue;
+                }
+
+                query += name + ":"  + value;
+                if (u < filters_list.length - 1) {
+                    query += ';'
+                }
+            }
+
+
+            var url = '/listings?model_view=' + model_name + '&card_type=' + card_type + '&page=' + (window.current_page[key]) + '&query=' + query;
+            console.log(url);
+
+            var filters_list = window.filters[filters];
+            //console.log('[*] ' + window.current_page[key] + ' -> ' + url);
+            $.ajax({
+                url: url
+            }).done(function (data) {
+                container.append(data);
+            });
+            window.current_page[key] = parseInt(window.current_page[key]) + 1;
+
+        };
+
+        load_models();
+
+
+        $(loadMoreSelector).on('click', function(e){
+            e.stopPropagation();
+            load_models();
+        });
+
+        var filterSearch = '[data-filter-submit="search"]';
+        $(filterSearch).on('click', function(e){
+            e.stopPropagation();
+            window.current_page[key] = 1;
+            container.html('');
+            load_models();
+        });
+
+        var resetSearch = '[data-filter-submit="reset"]';
+        $(resetSearch).on('click', function(e){
+            e.stopPropagation();
+            var filters = '{{model_name}}';
+            window.filters = window.filters || {};
+            window.filters[filters] = window.filters[filters] || [];
+            var filters_list = window.filters[filters];
+            window.current_page[key] = 1;
+            for(var u = 0; u < filters_list.length; u++) {
+                var $input = $('[data-filter="' + filters_list[u] +'"]');
+                $input.val('');
+            }
+            container.html('');
+            load_models();
+        });
+
+    });
+</script>

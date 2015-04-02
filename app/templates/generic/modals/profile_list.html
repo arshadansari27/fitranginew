@@ -1,8 +1,0 @@
-{%- macro show_profile_list(models) -%}
-    {%- for m in models -%}
-        <div class="col-sm-4 col-md-4">
-            {{ m.name }}
-            {{ m.visuals(small=True) | safe }}
-        </div>
-    {%- endfor -%}
-{%- endmacro %}

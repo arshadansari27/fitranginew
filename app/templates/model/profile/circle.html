@@ -1,9 +1,0 @@
-<div class="col-md-{{ size }}">
-    <a href="{%if model.slug %}{{model.slug}}{% else %}/model/{{model.channel_factory(model)}}/{{model.id}}{% endif %}">
-	<div class="text-center">
-        <img src="{{ model.visuals(url_only=True) | safe }}" class="img-circle img-responsive" style="max-width: 180px; min-height: 180px; max-height: 180px; min-width: 180px;"/>
-	</div>
-	</a>
-</div>
-
-

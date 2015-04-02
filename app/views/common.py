@@ -6,7 +6,7 @@ from app.models.profile import Profile, ProfileType
 __author__ = 'arshad'
 
 from flask import render_template, g, request, jsonify, send_file, flash, redirect, url_for, session
-from app.views import login_required
+from app.utils import login_required
 from app import app
 from StringIO import StringIO
 from PIL import Image
