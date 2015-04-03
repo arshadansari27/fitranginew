@@ -166,7 +166,7 @@ class ActivityAdminView(ModelView):
 class AdventureAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'about', 'location', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'activities']
+    form_columns = ['name', 'description', 'about', 'location', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'activities', 'reviews']
     column_list = ('name', 'description', 'cover_image')
     column_filters = ['name', FilterLocation('location.id', 'Location'), FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name',)
@@ -241,8 +241,8 @@ class CommentAdminView(ModelView):
 class PostAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['author', 'content', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'parent', 'comments']
-    column_list = ( 'author', 'content', 'vote_count')
+    form_columns = ['author', 'content', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'parent', 'comments', 'parent']
+    column_list = ( 'author', 'content', 'vote_count', 'parent')
     form_overrides = dict(content=SummernoteTextAreaField)
 
     def is_accessible(self):
@@ -284,7 +284,7 @@ class PostForContentAdminView(PostAdminView):
 class ContentAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['title', 'description', 'content', 'author', 'channels', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'tag_refs']
+    form_columns = ['title', 'description', 'content', 'author', 'channels', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'tags']
     column_list = ('title', 'author', 'published', 'admin_published', 'comments', 'cover_image', 'channels')
     column_filters = ['title', FilterChannel('channel.id', 'Channel')]
     column_searchable_list = ('title', )

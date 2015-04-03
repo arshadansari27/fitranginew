@@ -5,3 +5,4 @@ db_address.txt
 .DS_Store
 *.log
 *.rdb
+tmp/

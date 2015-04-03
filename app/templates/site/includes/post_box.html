@@ -1,0 +1,126 @@
+{% macro show_post_form(parent_node, post_type) %}
+<div class="container well well-sm">
+    <div class="form-group">
+        <textarea rows="5" class="form-control" placeholder="Write what you think" name="post_content" id="post_content"></textarea>
+        <input type="hidden" id="post_image_id" name="post_image_id" value=""/>
+        <input type="hidden" id="post_type" name="post_type" value="{{post_type}}"/>
+        <input type="hidden" id="parent_type" name="parent_type" value="{{parent_node.__class__.__name__|lower}}"/>
+        <input type="hidden" id="parent_id" name="parent_id" value="{{parent_node.id}}"/>
+
+    </div>
+    <div class="upload-image-view">
+        <div id="cropContainerModal" class="thumbnail"></div>
+    </div>
+    <div class="form-group">
+        <a href="#" class="upload-image-button btn btn-default btn-xs mt-10 grey"><i class="fa fa-camera fs-20"></i></a>
+        <!--a href="#" class="btn btn-default btn-xs mt-10 grey"><i class="fa fa-location-arrow fs-20"></i></a-->
+        <button id="btn-post-add"class="btn btn-primary btn-xs mt-10 pull-right">Post</button>
+    </div>
+    <div class="form-group">
+        <div id="post-alert" class="alert"></div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+
+        $(".upload-image-view").hide();
+        $("#post-alert").hide();
+
+        var clear = function() {
+            $('#cropContainerModal').html('');
+            $('#post_content').val('');
+            $(".upload-image-view").hide();
+            $('#post-alert').fadeOut(2000, function(){
+                $('#post-alert').html('');
+                $('#post-alert').removeClass('alert-warning');
+            });
+        };
+
+        var show_error = function(message) {
+            $('#post-alert').addClass('alert-warning');
+            $("#post-alert").html(message);
+            $('#post-alert').show();
+            clear();
+        };
+
+        $('#btn-post-add').click(function(e){
+            e.stopPropagation(); e.preventDefault();
+            jQuery.ajax({
+                url: '/post/add',
+                data: {
+                    image: $('#post_image_id').val(),
+                    post_type: $("#post_type").val(),
+                    parent_type: $('#parent_type').val(),
+                    parent: $('#parent_id').val(),
+                    content: $('#post_content').val()
+                },
+                type: 'POST',
+                success: function(data){
+                    if (data.status == 'success') {
+                        $('#post-alert').html('Successfully posted');
+                        $('#post-alert').addClass('alert-success');
+                        $('#post-alert').show();
+                        $('#post-alert').fadeOut(2000, function(){
+                            $('#post-alert').html('');
+                            $('#post-alert').removeClass('alert-success');
+                        });
+                        clear();
+                    } else {
+                        show_error(data.message);
+                    }
+                },
+                error: function(data) {
+                    show_error(data);
+                }
+            });
+
+        });
+
+        $(".upload-image-button").click(function(e){
+            BootstrapDialog.show({
+                title: 'Upload Image',
+                message: '<input type="file" name="img" class="form-control"/>',
+                buttons: [
+                    {
+                        label: 'Close',
+                        action: function(dialogRef) {
+                            dialogRef.close();
+                        }
+                    },
+                    {
+                        label: 'Upload Image',
+                        cssClass: 'btn-primary',
+                        action: function(dialogRef) {
+                            var data = new FormData();
+                            jQuery.each(jQuery('input[type=file]')[0].files, function(i, file) {
+                                data.append('file-'+i, file);
+                            });
+                            dialogRef.enableButtons(false);
+                            dialogRef.setClosable(false);
+                            dialogRef.getModalBody().html('<p>Uploading File.</p><br/><img src="/img/loading.gif">');
+                            jQuery.ajax({
+                                url: '/dialog/upload_image',
+                                data: data,
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                type: 'POST',
+                                success: function(data){
+                                    $("#cropContainerModal").html('<img src="' + data.url + '" width="100%">');
+                                    $(".upload-image-view").show();
+                                    $("#post_image_id").val(data.url);
+                                    dialogRef.close();
+                                },
+                                error: function(data) {
+                                    dialogRef.setMessage('Something went wrong when uploading the file.');
+                                }
+                            });
+
+                        }
+                    }
+                ]
+            });
+        });
+    });
+</script>
+{% endmacro %}

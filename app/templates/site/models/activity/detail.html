@@ -66,20 +66,50 @@
                   </div>
                     <!--------------ADVENTURE TAB DATA--------->
                   <div role="tabpanel" class="tab-pane fade" id="adventures" aria-labelledby="adventures">
-                     <section class="p-0">
-                         <div id="activity_adventure" class="container-fluid fitrangi-thumb">
-                         </div>
-                         <script>
-                             $(document).ready(function() {
-                                 $.ajax({
-                                    type: 'get',
-                                    url: '/views/template?model_view=adventure&card_type=grid&as_list=True&page=1&layout=nolayout'
-                                }).done(function (data) {
-                                    $('#activity_adventure').html(data);
-                                });
-                             });
-                         </script>
-                      </section>
+                     <section class="container-fluid border-grey-b mb-10">
+                        <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                            <h4 class="oswald pl-10 pt-15">Trekking & Hiking Adventures in India</h4>
+                        </div>
+
+                        <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+	                        <form class="form-inline mb-10 pull-right">
+                                <input data-model="adventure" data-filter="activities__activity__name" type="hidden" value="{{model.name}}">
+		                        <select  data-model="adventure" data-filter="extremity_level" class="form-control">
+  			                        <option class="" value="">BY RATING</option>
+  			                        <option class="rating-easy" value="easy">EASY</option>
+  			                        <option class="rating-medium" value="medium">MEDIUM</option>
+  			                        <option class="rating-difficult" value="difficult">DIFFICULT</option>
+  			                        <option class="rating-extreme" value="extreme">EXTREME</option>
+		                        </select>
+                                <input  data-model="adventure" class="form-control" data-filter="location__location__name" list="location" placeholder="BY LOCATION">
+                                <datalist id="location">
+                                    <option value="">
+                                </datalist>
+
+		                        <button class="btn btn-default oswald">RESET</button>
+	                        </form>
+                        </div>
+                    </section>
+
+                    <script>
+                        $(document).ready(function(){
+                            var filters = 'adventure';
+                            window.filters = window.filters || {};
+                            window.filters[filters] = window.filters[filters] || [];
+                            var filters_list = window.filters[filters];
+                            filters_list.push('extremity_level');
+                            filters_list.push('activities__activity__name');
+                            filters_list.push('location__location__name');
+                            $.ajax({
+                                url: '/options?model_name=location&attr=name'
+                            }).done(function (data) {
+                                $('#location').append(data);
+                            });
+                        });
+                      </script>
+                      <div id="models_list" class="container-fluid fitrangi-thumb">
+                            {{ adventure_list|safe }}
+                      </div>
                   </div>
                     <!-----------FAVOURITED TAB DATA------->
                   <div role="tabpanel" class="tab-pane fade" id="favourited" aria-labelledby="favourited">
@@ -114,24 +144,20 @@
                                 </div>
                             </div>
                         </section>
-                        <div class="container-fluid discussion">
-                            <ul id="discussion_models" class="media-list">
 
-                            </ul>
-
-                        </div>
+                        <input data-model="discussion" data-filter="tags" type="hidden" value="{{model.name}}">
                         <script>
-                             $(document).ready(function() {
-                                 $.ajax({
-                                    type: 'get',
-                                    url: '/views/template?model_view=discussion&card_type=row&as_list=True&page=1&layout=nolayout'
-                                }).done(function (data) {
-                                    $('#discussion_models').html(data);
-                                });
-                             });
+                        $(document).ready(function(){
+                            var filters = 'discussion';
+                            window.filters = window.filters || {};
+                            window.filters[filters] = window.filters[filters] || [];
+                            var filters_list = window.filters[filters];
+                            filters_list.push('tags');
+                        });
                         </script>
-
-
+                        <div class="container-fluid discussion">
+                            {{ discussion_list | safe }}
+                        </div>
 
                   </div>
                         <!-----------JOURNALS TAB DATA------->
@@ -145,24 +171,19 @@
                                 <br/>
                             </div>
                         </section>
-                       <section class="container-fluid journal ">
-
-                            <div class="container">
-                                <div id="article_models">
-                                </div>
-                                <script>
-                                    $(document).ready(function() {
-                                        $.ajax({
-                                            type: 'get',
-                                            url: '/views/template?model_view=article&card_type=grid&as_list=True&page=1&layout=nolayout'
-                                        }).done(function (data) {
-                                            $('#article_models').html(data);
-                                        });
-                                    });
-                                </script>
-                            </div>
-                            <hr class="clearfix divider">
-                       </section>
+                       <input data-model="article" data-filter="tags" type="hidden" value="{{model.name}}">
+                        <script>
+                        $(document).ready(function(){
+                            var filters = 'article';
+                            window.filters = window.filters || {};
+                            window.filters[filters] = window.filters[filters] || [];
+                            var filters_list = window.filters[filters];
+                            filters_list.push('tags');
+                        });
+                        </script>
+                        <div class="container-fluid discussion">
+                            {{ article_list | safe }}
+                        </div>
                   </div>
                 </div>
             </div>

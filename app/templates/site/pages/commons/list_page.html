@@ -1,9 +1,16 @@
+{% if card_type == 'grid' %}
 <div  data-model="{{model_name}}" data-card-type="{{card_type}}" data-type="model-container" class="row-fluid">
 </div>
+{% else %}
+<ul data-model="{{model_name}}" data-card-type="{{card_type}}" data-type="model-container" class="row-fluid">
+</ul>
+{% endif %}
 <br/>
+{% if last_page >= current_page %}
 <div class="col-sm-offset-2 col-sm-8">
     <button data-model="{{model_name}}" data-card-type="{{card_type}}" data-action="load-more" class="col-sm-12 btn-primary">Load more</button>
 </div>
+{% endif %}
 <br/>
 <script language="JavaScript">
 
@@ -14,20 +21,16 @@
         var key = model_name + '-' + card_type;
         var loadMoreSelector = '[data-model=' + model_name + '][data-card-type=' + card_type + '][data-action=load-more]';
         var container = $('[data-model="' + model_name + '"][data-card-type="' + card_type + '"][data-type="model-container"]');
-
         var load_models = function() {
             window.current_page = window.current_page || {};
             window.current_page[key] = window.current_page[key] || 1;
-
-
-            var filters = '{{model_name}}';
             window.filters = window.filters || {};
-            window.filters[filters] = window.filters[filters] || [];
-            var filters_list = window.filters[filters];
+            window.filters[model_name] = window.filters[model_name] || [];
+            var filters_list = window.filters[model_name];
 
             var query = "";
             for(var u = 0; u < filters_list.length; u++) {
-                var $input = $('[data-filter="' + filters_list[u] +'"]');
+                var $input = $('[data-model="'+model_name+'"][data-filter="' + filters_list[u] +'"]');
                 var name = filters_list[u];
                 var value = $input.val();
 
@@ -45,8 +48,8 @@
             var url = '/listings?model_view=' + model_name + '&card_type=' + card_type + '&page=' + (window.current_page[key]) + '&query=' + query;
             console.log(url);
 
-            var filters_list = window.filters[filters];
-            //console.log('[*] ' + window.current_page[key] + ' -> ' + url);
+            var filters_list = window.filters[model_name];
+            console.log('[*] ' + window.current_page[key] + ' -> ' + window.filters[model_name]);
             $.ajax({
                 url: url
             }).done(function (data) {
@@ -75,10 +78,9 @@
         var resetSearch = '[data-filter-submit="reset"]';
         $(resetSearch).on('click', function(e){
             e.stopPropagation();
-            var filters = '{{model_name}}';
             window.filters = window.filters || {};
-            window.filters[filters] = window.filters[filters] || [];
-            var filters_list = window.filters[filters];
+            window.filters[model_name] = window.filters[model_name] || [];
+            var filters_list = window.filters[model_name];
             window.current_page[key] = 1;
             for(var u = 0; u < filters_list.length; u++) {
                 var $input = $('[data-filter="' + filters_list[u] +'"]');

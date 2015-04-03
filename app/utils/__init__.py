@@ -30,6 +30,8 @@ def convert_query_to_filter(query):
         filters.append(query)
     else:
         for u in query.split(';'):
+            if not u or len(u) is 0:
+                continue
             filters.append(u)
     return dict([tuple(f.split(':')) for f in filters])
 
@@ -78,58 +80,4 @@ def convertLinks(text):
 
 def tag_remove(text):
     return TAG_RE.sub('', text)
-
-def arrange_facets(facets):
-    print "[*] Arranging facets" , facets
-
-    names = tuple(sorted(f.name for f in facets))
-    facets_to_choose = set(sorted(f.name for f in facets))
-    if False and MEMOIZED_FACETS.has_key(names):
-        return MEMOIZED_FACETS[names]
-
-    facets_dict = {}
-    new_dict = {}
-    for f in FACETS:
-        facets_dict[f['name']] = f['parent']
-
-    print "[*] FACET_DICT: ", len(facets_dict)
-    roots = set([])
-    root_map = {}
-    parent_list  = set([])
-    for f in facets:
-        p = f.parent
-        while p is not None and facets_dict.has_key(p):
-            parent_list.add(p)
-            p = facets_dict[p]
-
-        root_map[f.name] = p
-        roots.add(p)
-    print "[*] ROOTS: ", roots
-    print "[*] ROOT MAP: ", root_map
-
-    for k, v in facets_dict.iteritems():
-        if v in roots and (k in facets_to_choose or k in parent_list):
-            new_dict.setdefault(v, [])
-            new_dict[v].append(FacetOption(k, []))
-
-    print "[*] New DICT 1: ", new_dict
-
-    for root in new_dict.keys():
-        for first in new_dict[root]:
-            for k, v in facets_dict.iteritems():
-                if v == first.name and k in facets_to_choose:
-                    first.facets.append(k)
-
-    print "[*] New DICT 2: ", new_dict
-
-    MEMOIZED_FACETS[names] = new_dict
-    return new_dict
-
-class FacetOption(object):
-    def __init__(self, name, facets):
-        self.name = name
-        self.facets = facets
-
-    def __repr__(self):
-        return "[Facet Option] %s [%s]" % (self.name, ', '.join(self.facets))
 

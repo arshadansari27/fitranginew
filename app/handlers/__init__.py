@@ -22,6 +22,7 @@ class NodeCollectionView(View):
         self.card_type = card_type
         self.is_partial = is_partial
         self.only_list = only_list
+        self.extractor = NodeExtractor.factory(self.model_name, self.filters)
 
     def get_card(self, context=None):
         from app.views import env
@@ -33,10 +34,14 @@ class NodeCollectionView(View):
         else:
             for k, v in c.iteritems():
                 context[k] = v
+
+        last_page = self.extractor.last_page(self.size)
+        current_page = self.page
+        context['last_page'] = last_page
+        context['current_page'] = current_page
         return template.render(**context)
 
     def next_page(self, page):
-        self.extractor = NodeExtractor.factory(self.model_name, self.filters)
         models = self.extractor.get_list(self.paged, page, self.size)
         return ''.join([NodeView.factory(self.model_name, self.card_type, m.id).get_card() for m in models])
 
@@ -248,7 +253,11 @@ class ActivityView(NodeView):
         super(ActivityView, self).__init__(ACTIVITY, card_type, id, key)
 
     def get_detail_context(self):
-        return {}
+        return {
+            'adventure_list': AdventureCollectionView("grid", "", is_partial=True).get_card(),
+            'discussion_list': DiscussionCollectionView("row", "", is_partial=True).get_card(),
+            'article_list': ArticleCollectionView("grid", "", is_partial=True).get_card()
+        }
 
     def get_card_context(self):
         return {}

@@ -12,18 +12,59 @@ from StringIO import StringIO
 from PIL import Image
 import random, os
 
-@app.route('/dialog/upload_image', methods=['GET', 'POST'])
+@app.route('/dialog/upload_image', methods=['POST'])
 @login_required
 def image_uploader_dialog():
-    if request.method == 'POST':
-        _id = str(random.randint(9999999999999, 999999999999999999))
-        try:
-            f = request.files['0']
-            f.save(os.getcwd() + '/tmp/' + _id)
-            return jsonify(dict(status='success', id=_id))
-        except Exception, e:
-            raise e
-    return render_template('/generic/includes/modal_image_uploader.html', user=g.user)
+    _id = str(random.randint(9999999999999, 999999999999999999))
+    try:
+        f = request.files['file-0']
+        path = os.getcwd() + '/tmp/' + _id
+        print path
+        f.save(path)
+        i = Image.open(path)
+        originalImgWidth , originalImgHeight = i.size
+        response = dict(status="success",
+				url="/temp_image/%s" % str(_id),
+				width=originalImgWidth,
+				height=originalImgHeight)
+        return jsonify(response)
+    except Exception, e:
+        raise e
+
+@app.route('/dialog/crop_image', methods=['POST'])
+@login_required
+def image_cropper_dialog():
+    image_url = request.form.get('imgUrl', None)
+    if image_url is None:
+        raise Exception("Invalid Image")
+    crop_width = int(float(request.form['cropW']))
+    crop_height = int(float(request.form['cropH']))
+    img_width = int(float(request.form['imgW']))
+    img_height = int(float(request.form['imgH']))
+
+    x = int(request.form['imgX1'])
+    y = int(request.form['imgY1'])
+
+    size = (img_width, img_height)
+    box = (x, y, x + crop_width, y + crop_height)
+
+
+    _id = image_url.split("/")[-1]
+    path = os.getcwd() + '/tmp/' + _id
+    img = Image.open(path)
+    img.thumbnail(size)
+    resize = StringIO.StringIO()
+    img.save(resize, 'JPEG')
+    resize.seek(0)
+    resize_img = Image.open(resize)
+    region = resize_img.crop(box)
+    region.load()
+    cropped = StringIO.StringIO()
+    region.save(cropped, 'JPEG')
+    cropped.seek(0)
+    with open(path , 'rb') as _f:
+        _f.write(cropped)
+    return jsonify(dict(status='success', url='/temp_image/%s' % str(_id)))
 
 @app.route('/temp_image/<id>')
 @login_required
