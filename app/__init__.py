@@ -1,7 +1,7 @@
 import os
-
-from flask import Flask
 import flask_admin
+from flask.ext.admin import AdminIndexView, expose
+from flask import Flask, g
 from flask.ext.cache import Cache
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.mandrill import Mandrill
@@ -19,15 +19,15 @@ mandrill = Mandrill(app)
 db = MongoEngine()
 db.init_app(app)
 
-admin = flask_admin.Admin(app, 'Fitrangi Dashboard', base_template='/admin/base_admin.html')
 
 #from flask.ext import login
 cache = Cache(app,config={'CACHE_TYPE': 'simple'})
-
+admin = None
 api = MongoRest(app)
 app.jinja_env.cache = {}
 
 def start_app():
+    global admin
     from app.models.extra.sessions import MongoSessionInterface
     from app.models.profile import Profile
 
@@ -48,11 +48,22 @@ def start_app():
         logging.basicConfig()
         logging.getLogger().setLevel(logging.DEBUG)
 
-    from app.views.admin import *
-    from app.views.site import *
+    class MyAdminIndexView(AdminIndexView):
+
+        @expose('/')
+        def index(self):
+            if not (hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles):
+                return redirect('/')
+            return super(MyAdminIndexView, self).index()
+
+
+    admin = flask_admin.Admin(app, 'Fitrangi Dashboard',index_view=MyAdminIndexView(), base_template='/admin/base_admin.html')
+
 
 
 
 start_app()
+from app.views.admin import *
+from app.views.site import *
 #from app.handlers.examples import *
 

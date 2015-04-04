@@ -47,17 +47,28 @@ class NodeExtractor(object):
     def get_single(self):
         return self.get_query().first()
 
+    def last_page(self, size):
+        count = self.get_query().count()
+        return (count / size) + 1
+
     def get_query(self):
         if len(self.filters) > 0:
+            print '[*]', self.filters
             filters = {}
             for k, v in self.filters.iteritems():
                 if '__' in k:
                     fields = k.split('__')
-                    assert len(fields) is 3
-                    __filters = {}
-                    __filters[fields[2]] = v
-                    __node = NodeExtractor.factory(fields[1], __filters).get_single()
-                    filters[fields[0]] =  __node
+                    if len(fields) >= 3:
+                        __filters = {}
+                        __filters[fields[2]] = v
+                        __node = NodeExtractor.factory(fields[1], __filters).get_single()
+                        if len(fields) == 4:
+                            f = "%s__%s" % (fields[0], fields[3])
+                        else:
+                            f = fields[0]
+                        filters[f] =  __node
+                    else:
+                        filters[k] = v
                 else:
                     filters[k] = v
             return self.model_class().objects(**filters)

@@ -1,13 +1,50 @@
+import os
 from jinja2 import Template
+from PIL import Image
 from app import app
-from flask import render_template, request, g, redirect
+from flask import render_template, request, g, redirect, jsonify
 from app.models import Node, NodeFactory
 from app.models.content import Content, Post, Comment
 from app.utils.search_helper import listing_helper, node_helper
-from app.handlers import ActivityView, NodeView, NodeCollectionView, AdventureCollectionView
+from app.utils import login_required
+from app.handlers import ActivityView, NodeView, NodeCollectionView, AdventureCollectionView, NodeExtractor
 from app.views.site.menus import view_menu
 
 (MODEL_DETAIL_VIEW, MODEL_LIST_ROW_VIEW, MODEL_LIST_GRID_VIEW, MODEL_LIST_POD_VIEW) = ('detail', 'row', 'grid', 'pod')
+
+
+@app.route('/test/post')
+def post_box():
+    from app.models.adventure import Adventure
+    model = Adventure.objects.first()
+    return render_template('site/pages/commons/empty_view.html', model=model, user=g.user, post_type='review')
+
+@app.route('/post/add', methods=['POST'])
+@login_required
+def add_post():
+    content = request.form['content']
+    author = g.user
+    post_type = request.form.get('post_type', None)
+    assert post_type is not None
+    parent = request.form.get('parent', None)
+    if parent:
+        parent_type = request.form.get('parent_type', None)
+        extractor = NodeExtractor.factory(parent_type.lower(), {'pk': parent})
+        parent = extractor.get_single()
+    else:
+        parent = None
+    image = request.form.get('image')
+    if image and len(image) > 0:
+        image = image.split('/')[-1]
+        path = os.getcwd() + '/tmp/' + image
+    else:
+        path = None
+    print '[*]', path
+    post = Post(content=content, author=author, type=post_type, parent=parent)
+    if image:
+        post.cover_image.put(open(path, 'rb'))
+    post.save()
+    return jsonify(dict(status='success', post=str(post.id)))
 
 
 @app.route("/")
@@ -22,7 +59,7 @@ def home():
 def activity_view():
     name = request.args.get('name')
     if name:
-        return render_template('site/features/generic_view.html', view=ActivityView(MODEL_DETAIL_VIEW, name, key='name__iexact').get_card())
+        return render_template('site/pages/commons/view.html', card=ActivityView(MODEL_DETAIL_VIEW, name, key='name__iexact').get_card())
     else:
         return 'Not found', 404
 
@@ -99,9 +136,8 @@ def ajax_options():
 @app.route('/post/<slug>')
 def model_view(slug):
     model_type = [u for u in request.path.split('/') if u and len(u) > 0][0]
-    node_view = NodeView.factory(model_type)
-    view = node_view(MODEL_DETAIL_VIEW, '/%s/%s' % (model_type, slug), key='slug__iexact')
-    return render_template('site/features/generic_view.html', view=view.get_card())
+    view = NodeView.factory(model_type, MODEL_DETAIL_VIEW, '/%s/%s' % (model_type, slug), key='slug__iexact')
+    return render_template('site/pages/commons/view.html', card=view.get_card())
 
 
 @app.route('/sub_comment/<post_id>', methods=['POST'])

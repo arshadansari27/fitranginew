@@ -100,6 +100,7 @@ class Post(Node, db.Document):
     content = db.StringField()
     author = db.ReferenceField('Profile')
     comments = db.ListField(db.EmbeddedDocumentField(Comment))
+    type = db.StringField(choices=['comment', 'review', 'stream'])
 
     meta = {
         'allow_inheritance': True,
@@ -107,6 +108,12 @@ class Post(Node, db.Document):
             {'fields': ['-modified_timestamp', 'author'], 'unique': False, 'sparse': False, 'types': False },
         ],
     }
+
+    def __repr__(self):
+        return "%s %s" % (self.author.name, self.content[0: 25])
+
+    def __unicode__(self):
+        return "%s %s" % (self.author.name, self.content[0: 25])
 
     @property
     def partial_content(self):

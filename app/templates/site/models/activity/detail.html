@@ -68,6 +68,7 @@
                     <!--------------ADVENTURE TAB DATA--------->
 
                   <div role="tabpanel" class="tab-pane fade" id="adventures" aria-labelledby="adventures">
+<<<<<<< HEAD
 
                     <section class="container-fluid border-grey-b mb-10">
                         <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
@@ -293,6 +294,53 @@
                       </div>
                   </div><!--Tab Pane End-->
 
+=======
+                     <section class="container-fluid border-grey-b mb-10">
+                        <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                            <h4 class="oswald pl-10 pt-15">Trekking & Hiking Adventures in India</h4>
+                        </div>
+
+                        <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+	                        <form class="form-inline mb-10 pull-right">
+                                <input data-model="adventure" data-filter="activities__activity__name" type="hidden" value="{{model.name}}">
+		                        <select  data-model="adventure" data-filter="extremity_level" class="form-control">
+  			                        <option class="" value="">BY RATING</option>
+  			                        <option class="rating-easy" value="easy">EASY</option>
+  			                        <option class="rating-medium" value="medium">MEDIUM</option>
+  			                        <option class="rating-difficult" value="difficult">DIFFICULT</option>
+  			                        <option class="rating-extreme" value="extreme">EXTREME</option>
+		                        </select>
+                                <input  data-model="adventure" class="form-control" data-filter="location__location__name" list="location" placeholder="BY LOCATION">
+                                <datalist id="location">
+                                    <option value="">
+                                </datalist>
+
+		                        <button class="btn btn-default oswald">RESET</button>
+	                        </form>
+                        </div>
+                    </section>
+
+                    <script>
+                        $(document).ready(function(){
+                            var filters = 'adventure';
+                            window.filters = window.filters || {};
+                            window.filters[filters] = window.filters[filters] || [];
+                            var filters_list = window.filters[filters];
+                            filters_list.push('extremity_level');
+                            filters_list.push('activities__activity__name');
+                            filters_list.push('location__location__name');
+                            $.ajax({
+                                url: '/options?model_name=location&attr=name'
+                            }).done(function (data) {
+                                $('#location').append(data);
+                            });
+                        });
+                      </script>
+                      <div id="models_list" class="container-fluid fitrangi-thumb">
+                            {{ adventure_list|safe }}
+                      </div>
+                  </div>
+>>>>>>> 2ef2aa236337bc08a31651eb19f1b2d553f0124d
                     <!-----------FAVOURITED TAB DATA------->
 
                   <div role="tabpanel" class="tab-pane fade" id="favourited" aria-labelledby="favourited">
@@ -401,6 +449,7 @@
                                     <img class="media-object img-circle p-10" src="../images/pro.jpg" width="100"  alt="...">
                                   </a>
                                 </div>
+<<<<<<< HEAD
 
                                 <div class="media-body">
                                   <h4 class="media-heading">Lorem Ipsum is simply dummy text of the printing typesetting industry.</h4>
@@ -528,6 +577,24 @@
                         });
                     </script>
                   </div><!--Tab Pane End-->
+=======
+                            </div>
+                        </section>
+
+                        <input data-model="discussion" data-filter="tags" type="hidden" value="{{model.name}}">
+                        <script>
+                        $(document).ready(function(){
+                            var filters = 'discussion';
+                            window.filters = window.filters || {};
+                            window.filters[filters] = window.filters[filters] || [];
+                            var filters_list = window.filters[filters];
+                            filters_list.push('tags');
+                        });
+                        </script>
+                        <div class="container-fluid discussion">
+                            {{ discussion_list | safe }}
+                        </div>
+>>>>>>> 2ef2aa236337bc08a31651eb19f1b2d553f0124d
 
                         <!-----------JOURNALS TAB DATA------->
 
@@ -537,6 +604,7 @@
                                 <h4 class="oswald pl-10 pt-15">Journals</h4>
                             </div>
                         </section>
+<<<<<<< HEAD
 
       	                <section class="container-fluid fitrangi-journal">
 
@@ -575,6 +643,21 @@
 
                             <hr class="clearfix divider">
                        </section>
+=======
+                       <input data-model="article" data-filter="tags" type="hidden" value="{{model.name}}">
+                        <script>
+                        $(document).ready(function(){
+                            var filters = 'article';
+                            window.filters = window.filters || {};
+                            window.filters[filters] = window.filters[filters] || [];
+                            var filters_list = window.filters[filters];
+                            filters_list.push('tags');
+                        });
+                        </script>
+                        <div class="container-fluid discussion">
+                            {{ article_list | safe }}
+                        </div>
+>>>>>>> 2ef2aa236337bc08a31651eb19f1b2d553f0124d
                   </div>
                 </div>
             </div>

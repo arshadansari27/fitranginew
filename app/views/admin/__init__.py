@@ -1,3 +1,4 @@
+from flask.ext.admin import BaseView, expose, AdminIndexView
 from flask.ext.admin.menu import MenuLink
 from markupsafe import Markup
 from wtforms import fields, widgets, form
@@ -5,7 +6,7 @@ from mongoengine import Q
 import flask_admin, hashlib
 from flask_admin.form import rules
 from flask_admin.contrib.mongoengine import ModelView
-from flask import g, request, flash, url_for
+from flask import g, request, flash, url_for, redirect
 from app import admin
 from app.utils import get_current_user
 from app.views.forms import ChangePasswordForm, UserPreferenceForm, ProfileForm
@@ -122,6 +123,8 @@ class SummernoteTextAreaField(fields.TextAreaField):
 class GeneralTextAreaField(fields.TextAreaField):
     widget = GeneralTextAreaWidget()
 
+
+
 class TagAdminView(ModelView):
     column_filters = ['name']
 
@@ -166,7 +169,7 @@ class ActivityAdminView(ModelView):
 class AdventureAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'about', 'location', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'activities']
+    form_columns = ['name', 'description', 'about', 'location', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'activities', 'reviews']
     column_list = ('name', 'description', 'cover_image')
     column_filters = ['name', FilterLocation('location.id', 'Location'), FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name',)
@@ -241,8 +244,8 @@ class CommentAdminView(ModelView):
 class PostAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['author', 'content', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'parent', 'comments']
-    column_list = ( 'author', 'content', 'vote_count')
+    form_columns = ['author', 'content', 'cover_image', 'type','image_gallery', 'video_embed', 'map_embed', 'parent', 'comments', 'parent']
+    column_list = ( 'author', 'content', 'vote_count', 'parent', 'type')
     form_overrides = dict(content=SummernoteTextAreaField)
 
     def is_accessible(self):
@@ -284,7 +287,7 @@ class PostForContentAdminView(PostAdminView):
 class ContentAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['title', 'description', 'content', 'author', 'channels', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'tag_refs']
+    form_columns = ['title', 'description', 'content', 'author', 'channels', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'tags']
     column_list = ('title', 'author', 'published', 'admin_published', 'comments', 'cover_image', 'channels')
     column_filters = ['title', FilterChannel('channel.id', 'Channel')]
     column_searchable_list = ('title', )
@@ -421,6 +424,13 @@ class ProfileSettingAdminView(flask_admin.BaseView):
     def is_visible(self):
         return False
 
+class RestrictedAdminView(ModelView):
+
+    def is_accessible(self):
+        if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
+            return True
+        return False
+
 
 admin.add_view(ApprovalContentAdminView(Article, name='Article', endpoint='approval.article', category="Approvals"))
 admin.add_view(ApprovalContentAdminView(Blog, name='Blog', endpoint='approval.blog', category="Approvals"))
@@ -439,8 +449,8 @@ admin.add_view(PostForContentAdminView(Post, name="Posts on content", endpoint="
 admin.add_view(EventAdminView(Event, category="Organizers"))
 admin.add_view(TripAdminView(Trip, category="Organizers"))
 
-admin.add_view(ModelView(State, category="Tools"))
-admin.add_view(ModelView(ProfileType, category="Tools"))
+admin.add_view(RestrictedAdminView(State, category="Tools"))
+admin.add_view(RestrictedAdminView(ProfileType, category="Tools"))
 admin.add_view(LocationAdminView(Location, category="Tools"))
 admin.add_view(ChannelAdminView(Channel, category="Tools"))
 admin.add_view(TagAdminView(Tag, category="Tools"))
