@@ -1,39 +1,98 @@
 <section class="container-fluid p-0">
-    <div class="adventure-banner"  style="background:url({{model.cover_image_path}}) no-repeat ; background-size: 100%;">
-        <div class="container">
+<div class="adventure-banner"  style="background:url({{model.cover_image_path}}) no-repeat ; background-size: 100%;">
 
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 season text-right">
-            {% if model.best_season|length > 0 %}
-            <h3>Best Season : </h3>
-                {% for best_season in model.best_seasons %}
-                    <a href="" class="label label-danger">{{best_season}}</a>
-                {% endfor %}
-            {% endif %}
-            </div>
+<div class="container">
 
-            <section class="container carousel-caption">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 season text-right">
+{% if model.best_season|length > 0 %}
+<h3>Best Season : </h3>
+    {% for best_season in model.best_seasons %}
+        <a href="" class="label label-danger">{{best_season}}</a>
+    {% endfor %}
+{% endif %}
+</div>
 
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 adventure-heading">
-                    <h2>{{model.name}}</h2>
-                    <article>
-                    <h4>{% if model.reviews|length > 0 %}{{model.reviews|length}} Reviews: {% else %} No Reviews {% endif %}</h4>
-                        <a href="" class="btn rating-{% if model.extremity_level %}{{model.extremity_level|lower}}{% else%}easy{% endif %}">{% if model.extremity_level %}{{model.extremity_level}}{% else %}No Rating Yet{% endif %}</a>
-                    </article>
-                </div>
+<section class="container carousel-caption">
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 adventure-heading">
+<h2>{{model.name}}</h2>
+
+<article>
+<h4>{% if model.reviews|length > 0 %}{{model.reviews|length}} Reviews: {% else %} No Reviews {% endif %}</h4>
+    <a href="" class="btn rating-{% if model.extremity_level %}{{model.extremity_level|lower}}{% else%}easy{% endif %}">{% if model.extremity_level %}{{model.extremity_level}}{% else %}No Rating Yet{% endif %}</a>
+</article>
+
+</div>
 
 
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <ul class="nav nav-pills nav-justified">
-                        <li><a href="#"><span class="fa fa-check"></span> Done This</a></li>
-                        <li><a href="#"><span class="fa fa-star"></span> Add to Wishlist</a></li>
-                        <li><a href="#"><span class="fa fa-edit"></span> Write Review</a></li>
-                      <li><a href="#"><span class="fa fa-edit"></span> Send Enquiry</a></li>
-                    </ul>
-                </div>
-            </section>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+<ul class="nav nav-pills nav-justified">
+	<li><a href="#"><span class="fa fa-check"></span> Done This</a></li>
+    <li><a href="#"><span class="fa fa-star"></span> Add to Wishlist</a></li>
+    <li><a href="#"><span class="fa fa-edit"></span> Write Review</a></li>
+
+  <li><a href="#"><span class="fa fa-edit"></span> Send Enquiry</a></li>
+
+
+</ul>
+
+</div>
+
+
+</section>
+
+
+
+</div>
+
+</div>
+</section>
+
+
+<section class="container-fluid p-0">
+<div role="tabpanel" data-example-id="togglable-tabs">
+
+<div class="border-grey-t border-grey-b h-56">
+<div class="container text-center">
+<ul id="myTab" class="nav nav-tabs" role="tablist">
+
+	<li class="active"><a href="#about-reviews"  role="tab" data-toggle="tab" aria-controls="about-reviews" aria-expanded="false">
+    <span class="fa fa-home"></span> <strong>About & Reviews</strong></a></li>
+
+    <li class=""><a href="#how-to-reach"  role="tab" data-toggle="tab" aria-controls="how-to-reach" aria-expanded="false">'
+    <span class="fa fa-child"></span> <strong>How to Reach</strong> </a></li>
+
+    <li class=""><a href="#nearby-offbeat-stays" role="tab" data-toggle="tab" aria-controls="nearby-offbeat-stays" aria-expanded="false">
+	<span class="fa fa-star"></span> <strong>Nearby Offbeat Stays</strong> </a></li>
+
+    <li class=""><a href="#nearby-facilities" role="tab" data-toggle="tab" aria-controls="nearby-facilities" aria-expanded="false">
+	<span class="fa fa-star"></span> <strong>Nearby Facilities</strong> </a></li>
+
+
+
+</ul>
+</div>
+</div>
+
+<div class="container">
+<div id="myTabContent" class="tab-content">
+
+
+      <div role="tabpanel" class="tab-pane fade active in" id="about-reviews" aria-labelledby="about-reviews">
+
+      <div class="col-xs-12 col-md-{% if model.image_gallery|length > 0 %}6{% else %}12{% endif %} p-25" style="line-height:1.9;">
+            {{model.process_about|safe}}
+            <script>console.log('{{model.process_content}}');</script>
+      </div>
+      {% if model.image_gallery|length > 0 %}
+      <div class="col-xs-12 col-md-6 tab-details">
+
+        <div class="fotorama thumbnail" data-nav="thumbs">
+            {% for idx in xrange(model.gallery_size) %}
+            <a href=""><img src="{{model.gallery_image_path}}/{{idx}}"></a>
+            {% endfor %}
         </div>
-<<<<<<< HEAD
-=======
 
       </div>
       {% endif %}
@@ -84,279 +143,204 @@
       <div class="caption">
         <h4>Thumbnail label</h4>
       </div>
->>>>>>> 2ef2aa236337bc08a31651eb19f1b2d553f0124d
     </div>
+</div>
+
+<div class="col-md-12 col-xs-12">
+    <div class="thumbnail">
+      <img src="/images/slider-3.jpg" alt="...">
+      <div class="overlay-caption">Lorem Ipsum Dolor Sit</div>
+      <div class="caption">
+        <h4>Thumbnail label</h4>
+      </div>
+    </div>
+</div>
+</section>
+!-->
+
+<article class="border-grey-b">
+<h5 class="grey">Other Adventure to do Near</h5>
+<h4 class="blue">Nanda Devi, Uttrakhand</h4>
+</article>
+
+<section class="row-fluid other-adventure">
+
+<article class="media">
+<div class="media-left">
+<img src="/images/pro-pic.jpg" width="38">
+</div>
+<div class="media-body">
+<strong>Lorem Ipsum dummy</strong>
+<p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
+</div>
+<div class="media-right">
+<a href="" class="btn rating-easy btn-sm">EASY</a>
+</div>
+</article>
+
+<article class="media">
+<div class="media-left">
+<img src="/images/pro-pic.jpg" width="38">
+</div>
+<div class="media-body">
+<strong>Lorem Ipsum dummy</strong>
+<p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
+</div>
+<div class="media-right">
+<a href="" class="btn rating-medium btn-sm">MEDIUM</a>
+</div>
+</article>
+
+
+<article class="media">
+<div class="media-left">
+<img src="/images/pro-pic.jpg" width="38">
+</div>
+<div class="media-body">
+<strong>Lorem Ipsum dummy</strong>
+<p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
+</div>
+<div class="media-right">
+<a href="" class="btn rating-difficult btn-sm">DIFFICULT</a>
+</div>
+</article>
+
+<article class="media">
+<div class="media-left">
+<img src="/images/pro-pic.jpg" width="38">
+</div>
+<div class="media-body">
+<strong>Lorem Ipsum dummy</strong>
+<p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
+</div>
+<div class="media-right">
+<a href="" class="btn rating-extreme btn-sm">EXTREME</a>
+</div>
+</article>
+
 </section>
 
 
-<section class="container-fluid p-0">
-    <div role="tabpanel" data-example-id="togglable-tabs">
-        <div class="border-grey-t border-grey-b h-56">
-            <div class="container text-center">
-                <ul id="myTab" class="nav nav-tabs" role="tablist">
-                    <li class="active"><a href="#about-reviews"  role="tab" data-toggle="tab" aria-controls="about-reviews" aria-expanded="false">
-                    <span class="fa fa-home"></span> <strong>About & Reviews</strong></a></li>
+<article class="border-grey-b">
+<h5 class="grey">Popular Adventure to do </h5>
+<h4 class="blue">Nanda Devi, Uttrakhand</h4>
+</article>
 
-                    <li class=""><a href="#how-to-reach"  role="tab" data-toggle="tab" aria-controls="how-to-reach" aria-expanded="false">'
-                    <span class="fa fa-child"></span> <strong>How to Reach</strong> </a></li>
+<section class="row-fluid other-adventure">
 
-                    <li class=""><a href="#nearby-offbeat-stays" role="tab" data-toggle="tab" aria-controls="nearby-offbeat-stays" aria-expanded="false">
-                    <span class="fa fa-star"></span> <strong>Nearby Offbeat Stays</strong> </a></li>
+<article class="media">
+<div class="media-left">
+<img src="/images/pro-pic.jpg" width="38">
+</div>
+<div class="media-body">
+<strong>Lorem Ipsum dummy</strong>
+<p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
+</div>
+<div class="media-right">
+<a href="" class="btn rating-easy btn-sm">EASY</a>
+</div>
+</article>
 
-                    <li class=""><a href="#nearby-facilities" role="tab" data-toggle="tab" aria-controls="nearby-facilities" aria-expanded="false">
-                    <span class="fa fa-star"></span> <strong>Nearby Facilities</strong> </a></li>
-                </ul>
-            </div>
-        </div>
+<article class="media">
+<div class="media-left">
+<img src="/images/pro-pic.jpg" width="38">
+</div>
+<div class="media-body">
+<strong>Lorem Ipsum dummy</strong>
+<p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
+</div>
+<div class="media-right">
+<a href="" class="btn rating-medium btn-sm">MEDIUM</a>
+</div>
+</article>
+
+
+<article class="media">
+<div class="media-left">
+<img src="/images/pro-pic.jpg" width="38">
+</div>
+<div class="media-body">
+<strong>Lorem Ipsum dummy</strong>
+<p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
+</div>
+<div class="media-right">
+<a href="" class="btn rating-difficult btn-sm">DIFFICULT</a>
+</div>
+</article>
+
+<article class="media">
+<div class="media-left">
+<img src="/images/pro-pic.jpg" width="38">
+</div>
+<div class="media-body">
+<strong>Lorem Ipsum dummy</strong>
+<p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
+</div>
+<div class="media-right">
+<a href="" class="btn rating-extreme btn-sm">EXTREME</a>
+</div>
+</article>
+
+</section>
+
+
+</div><!--col3 End-->
+
+</div><!--Row End-->
+      </div><!--Tab Pane End-->
+
+      <div role="tabpanel" class="tab-pane fade" id="how-to-reach" aria-labelledby="how-to-reach">
+
+      <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span> Nanda Devi, Uttarakhand</h4>
+
+<div class="tab-details">
+<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d440565.0691163623!2d79.93369230694586!3d30.381782752954738!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39a704540ec4d2b1%3A0x38dd8bc49c6b6fab!2sNanda+Devi%2C+Nanda+Devi+National+Park%2C+Chamoli%2C+Uttarakhand+246443!5e0!3m2!1sen!2sin!4v1427481266423" width="100%" height="600" frameborder="0" style="border:0"></iframe>
+</div>
+
+        <hr class="divider clearfix">
 
         <div class="container">
-            <div id="myTabContent" class="tab-content">
-                <div role="tabpanel" class="tab-pane fade active in" id="about-reviews" aria-labelledby="about-reviews">
+        <h4>How to Reach</h4>
 
-                  <div class="col-xs-12 col-md-{% if model.image_gallery|length > 0 %}6{% else %}12{% endif %} p-25" style="line-height:1.9;">
-                        {{model.process_about|safe}}
-                        <script>console.log('{{model.process_content}}');</script>
-                  </div>
-                  {% if model.image_gallery|length > 0 %}
-                  <div class="col-xs-12 col-md-6 tab-details">
-                    <div class="fotorama thumbnail" data-nav="thumbs">
-                        {% for idx in xrange(model.gallery_size) %}
-                        <a href=""><img src="{{model.gallery_image_path}}/{{idx}}"></a>
-                        {% endfor %}
-                    </div>
-                  </div>
-                  {% endif %}
+        <strong>By Air : </strong>
+        <p>Flights are available from Delhi to Dehradun (Jolly Grant Airport) thrice in a week. Regular flights are available to Delhi from
+Mumbai and other metro cities.</p>
 
-                  <hr class="w-100 clearfix border-grey-b" />
+		<strong>By Train : </strong>
+        <p>A range of trains are connected to Dehradun via Delhi.Also many of the rail routes connect Rishikesh and Haridwar via Delhi.</p>
 
-                  <div class="row">
+		<strong>By Road : </strong>
+        <p>Drive Delhi to Haridwar NH-47 (229kms), from Haridwar to Joshimath (257kms)</p>
 
-                    <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-                        <div class="form-group">
-                            <label>Reviews</label>
-                            <textarea class="form-control radius-5" rows="5" placeholder="Write a Review"></textarea>
-                        </div>
-                        <div id="reviews_list"></div>
-                      <script>
-                            $(document).ready(function() {
-                                $.ajax({
-                                    type: 'get',
-                                    url: '/views/template?model_view=post&card_type=row&as_list=True&page=1&layout=nolayout'
-                                }).done(function (data) {
-                                    $('#reviews_list').html(data);
-                                });
-                            });
-                      </script>
-                    </div><!--col9 End-->
+        <strong>Transportation from Airport/Train Station/Bus Stand:</strong>
+        <p>Taxis & Private Vehicles are available Delhi to Rishikesh / Haridwar / Joshimath</p>
 
-                    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                        <!--
-                        <h4 class="lightgrey">Sponsored</h4>
-
-                        <section class="row sponsored-thumb">
-                        <div class="col-md-12 col-xs-12">
-                            <div class="thumbnail">
-                              <img src="/images/slider-3.jpg" alt="...">
-                              <div class="overlay-caption">Lorem Ipsum Dolor Sit</div>
-                              <div class="caption">
-                                <h4>Thumbnail label</h4>
-                              </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12 col-xs-12">
-                            <div class="thumbnail">
-                              <img src="/images/slider-3.jpg" alt="...">
-                              <div class="overlay-caption">Lorem Ipsum Dolor Sit</div>
-                              <div class="caption">
-                                <h4>Thumbnail label</h4>
-                              </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12 col-xs-12">
-                            <div class="thumbnail">
-                              <img src="/images/slider-3.jpg" alt="...">
-                              <div class="overlay-caption">Lorem Ipsum Dolor Sit</div>
-                              <div class="caption">
-                                <h4>Thumbnail label</h4>
-                              </div>
-                            </div>
-                        </div>
-                        </section>
-                        !-->
-
-                        <article class="border-grey-b">
-                        <h5 class="grey">Other Adventure to do Near</h5>
-                        <h4 class="blue">Nanda Devi, Uttrakhand</h4>
-                        </article>
-
-                        <section class="row-fluid other-adventure">
-
-                            <article class="media">
-                                <div class="media-left">
-                                    <img src="/images/pro-pic.jpg" width="38">
-                                </div>
-                                <div class="media-body">
-                                    <strong>Lorem Ipsum dummy</strong>
-                                    <p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
-                                </div>
-                                <div class="media-right">
-                                    <a href="" class="btn rating-easy btn-sm">EASY</a>
-                                </div>
-                            </article>
-
-                            <article class="media">
-                                <div class="media-left">
-                                    <img src="/images/pro-pic.jpg" width="38">
-                                </div>
-                                <div class="media-body">
-                                    <strong>Lorem Ipsum dummy</strong>
-                                    <p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
-                                </div>
-                                <div class="media-right">
-                                    <a href="" class="btn rating-medium btn-sm">MEDIUM</a>
-                                </div>
-                            </article>
-
-
-                            <article class="media">
-                                <div class="media-left">
-                                    <img src="/images/pro-pic.jpg" width="38">
-                                </div>
-                                <div class="media-body">
-                                    <strong>Lorem Ipsum dummy</strong>
-                                    <p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
-                                </div>
-                                <div class="media-right">
-                                    <a href="" class="btn rating-difficult btn-sm">DIFFICULT</a>
-                                </div>
-                            </article>
-
-                            <article class="media">
-                                <div class="media-left">
-                                    <img src="/images/pro-pic.jpg" width="38">
-                                </div>
-                                <div class="media-body">
-                                    <strong>Lorem Ipsum dummy</strong>
-                                    <p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
-                                </div>
-                                <div class="media-right">
-                                    <a href="" class="btn rating-extreme btn-sm">EXTREME</a>
-                                </div>
-                            </article>
-                        </section>
-
-                        <article class="border-grey-b">
-                        <h5 class="grey">Popular Adventure to do </h5>
-                        <h4 class="blue">Nanda Devi, Uttrakhand</h4>
-                        </article>
-
-                        <section class="row-fluid other-adventure">
-
-                            <article class="media">
-                                <div class="media-left">
-                                    <img src="/images/pro-pic.jpg" width="38">
-                                </div>
-                                <div class="media-body">
-                                    <strong>Lorem Ipsum dummy</strong>
-                                    <p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
-                                </div>
-                                <div class="media-right">
-                                    <a href="" class="btn rating-easy btn-sm">EASY</a>
-                                </div>
-                            </article>
-
-                            <article class="media">
-                                <div class="media-left">
-                                    <img src="/images/pro-pic.jpg" width="38">
-                                </div>
-                                <div class="media-body">
-                                    <strong>Lorem Ipsum dummy</strong>
-                                    <p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
-                                </div>
-                                <div class="media-right">
-                                    <a href="" class="btn rating-medium btn-sm">MEDIUM</a>
-                                </div>
-                            </article>
-
-
-                            <article class="media">
-                                <div class="media-left">
-                                    <img src="/images/pro-pic.jpg" width="38">
-                                </div>
-                                <div class="media-body">
-                                    <strong>Lorem Ipsum dummy</strong>
-                                    <p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
-                                </div>
-                                <div class="media-right">
-                                    <a href="" class="btn rating-difficult btn-sm">DIFFICULT</a>
-                                </div>
-                            </article>
-
-                            <article class="media">
-                                <div class="media-left">
-                                    <img src="/images/pro-pic.jpg" width="38">
-                                </div>
-                                <div class="media-body">
-                                    <strong>Lorem Ipsum dummy</strong>
-                                    <p>Lorem Ipsum dolor sit Lorem Ipsum doloe </p>
-                                </div>
-                                <div class="media-right">
-                                    <a href="" class="btn rating-extreme btn-sm">EXTREME</a>
-                                </div>
-                            </article>
-                        </section>
-                    </div><!--col3 End-->
-
-                  </div><!--Row End-->
-
-                </div><!--Tab Pane End-->
-
-                <div role="tabpanel" class="tab-pane fade" id="how-to-reach" aria-labelledby="how-to-reach">
-
-                <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span> Nanda Devi, Uttarakhand</h4>
-
-                <div class="tab-details">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d440565.0691163623!2d79.93369230694586!3d30.381782752954738!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39a704540ec4d2b1%3A0x38dd8bc49c6b6fab!2sNanda+Devi%2C+Nanda+Devi+National+Park%2C+Chamoli%2C+Uttarakhand+246443!5e0!3m2!1sen!2sin!4v1427481266423" width="100%" height="600" frameborder="0" style="border:0"></iframe>
-                </div>
-
-                <hr class="divider clearfix">
-
-                <div class="container">
-                    <h4>How to Reach</h4>
-                    <strong>By Air : </strong>
-                    <p>Flights are available from Delhi to Dehradun (Jolly Grant Airport) thrice in a week. Regular flights are available to Delhi from
-                        Mumbai and other metro cities.</p>
-
-                    <strong>By Train : </strong>
-                    <p>A range of trains are connected to Dehradun via Delhi.Also many of the rail routes connect Rishikesh and Haridwar via Delhi.</p>
-
-                    <strong>By Road : </strong>
-                    <p>Drive Delhi to Haridwar NH-47 (229kms), from Haridwar to Joshimath (257kms)</p>
-
-                    <strong>Transportation from Airport/Train Station/Bus Stand:</strong>
-                    <p>Taxis & Private Vehicles are available Delhi to Rishikesh / Haridwar / Joshimath</p>
-                </div>
-            </div><!--Tab Pane End-->
-
-            <div role="tabpanel" class="tab-pane fade" id="nearby-offbeat-stays" aria-labelledby="nearby-offbeat-stays">
-
-              <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span> Nearby Offbeat Stays</h4>
-
-              <h4>Near by Facilities</h4>
-              <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
-
-            </div><!--Tab Pane End-->
-
-            <div role="tabpanel" class="tab-pane fade" id="nearby-facilities" aria-labelledby="nearby-facilities">
-
-              <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span> Nearby Facilities</h4>
-
-              <h4>Near by Facilities</h4>
-                <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
-            </div><!--Tab Pane End-->
         </div>
-    </div>
-    </div>
+
+      </div><!--Tab Pane End-->
+
+      <div role="tabpanel" class="tab-pane fade" id="nearby-offbeat-stays" aria-labelledby="nearby-offbeat-stays">
+
+      <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span> Nearby Offbeat Stays</h4>
+
+      <h4>Near by Facilities</h4>
+        <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+      </div><!--Tab Pane End-->
+
+      <div role="tabpanel" class="tab-pane fade" id="nearby-facilities" aria-labelledby="nearby-facilities">
+
+      <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span> Nearby Facilities</h4>
+
+      <h4>Near by Facilities</h4>
+        <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+      </div><!--Tab Pane End-->
+
+
+</div>
+</div>
+
+
+
+
+</div>
 </section>
