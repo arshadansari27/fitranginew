@@ -97,7 +97,6 @@ def static_model_views():
 @app.route("/views/template")
 def template_views():
     model_view = request.args.get('model_view', None)
-    layout = request.args.get('layout', 'empty_layout')
     if not model_view:
         return 'Not Found', 404
     as_list = request.args.get('as_list', False)
@@ -107,7 +106,8 @@ def template_views():
     else:
         collection_view, context = listing_helper()
         view = collection_view.get_card()
-    return render_template("site/layouts/%s.html" % layout, view=view, **context)
+    context["card"] = view
+    return render_template("site/pages/commons/empty_view.html", **context)
 
 @app.route("/listings")
 def paged_list():
