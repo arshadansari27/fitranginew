@@ -36,18 +36,20 @@ class Channel(db.Document):
     def __unicode__(self):
         return self.name
 
-@update_content.apply
-class Content(Node, db.Document):
-    title = db.StringField()
+
+class ContentCommon(Node):
     video_embed = db.ListField(db.StringField())
     image_gallery = db.ListField(db.EmbeddedDocumentField(EmbeddedImageField))
     map_embed = db.DictField()
     content = db.StringField()
     author = db.ReferenceField('Profile')
+
+@update_content.apply
+class Content(ContentCommon, db.Document):
+    title = db.StringField()
     comments = db.ListField(db.ReferenceField('Post'))
     source = db.StringField()
     tags = db.ListField(db.StringField())
-    tag_refs = db.ListField(db.ReferenceField('Tag'))
     channels = db.ListField(db.ReferenceField('Channel'))
     published = db.BooleanField()
     published_timestamp = db.DateTimeField()
@@ -107,10 +109,8 @@ class Content(Node, db.Document):
 
 
 @update_content.apply
-class Post(Node, db.Document):
+class Post(ContentCommon, db.Document):
     parent = db.GenericReferenceField()
-    content = db.StringField()
-    author = db.ReferenceField('Profile')
     comments = db.ListField(db.EmbeddedDocumentField(Comment))
     type = db.StringField(choices=['comment', 'review', 'stream'])
 
