@@ -140,7 +140,7 @@ class TagAdminView(ModelView):
 class LocationAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'address', 'is_city', 'city', 'region', 'zipcode', 'state', 'geo_location', 'cover_image', 'image_gallery']
+    form_columns = ['name', 'address', 'is_city', 'city', 'region', 'zipcode', 'state', 'geo_location', 'cover_image']
     column_list = ('name', 'is_city', 'state')
     column_filters = ['city', 'region']
     column_searchable_list = ('city', 'region')
@@ -154,7 +154,7 @@ class LocationAdminView(ModelView):
 class ActivityAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'icon', 'about', 'dos', 'donts', 'safety_tips', 'tips', 'facts', 'highlights', 'cover_image', 'image_gallery', 'video_embed', 'map_embed']
+    form_columns = ['name', 'description', 'icon', 'about', 'dos', 'donts', 'safety_tips', 'tips', 'facts', 'highlights', 'cover_image']
     column_list = ('name', 'description', 'cover_image')
     column_filters = ['name']
     column_searchable_list = ('name',)
@@ -169,7 +169,7 @@ class ActivityAdminView(ModelView):
 class AdventureAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'about', 'location', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'activities', 'reviews']
+    form_columns = ['name', 'description', 'about', 'location', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image', 'activities', 'reviews']
     column_list = ('name', 'description', 'cover_image')
     column_filters = ['name', FilterLocation('location.id', 'Location'), FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name',)
@@ -183,7 +183,7 @@ class AdventureAdminView(ModelView):
 class EventAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'about', 'scheduled_date', 'location', 'organizer','cover_image','image_gallery', 'video_embed', 'map_embed']
+    form_columns = ['name', 'description', 'about', 'scheduled_date', 'location', 'organizer','cover_image']
     column_list = ('name', 'description', 'organizer', 'cover_image')
     column_filters = ['name', FilterLocation('location', 'Location')]
     column_searchable_list = ('name', )
@@ -196,7 +196,7 @@ class EventAdminView(ModelView):
 
 
 class TripAdminView(ModelView):
-    form_columns = ['name', 'description', 'about', 'adventure', 'starting_from', 'price', 'currency', 'discount_percentage', 'organizer',  'activities', 'difficulty_rating', 'registration', 'start_date', 'end_date', 'schedule', 'things_to_carry', 'inclusive', 'exclusive', 'others', 'comments', 'enquiries', 'announcements', 'cover_image','image_gallery', 'video_embed', 'map_embed']
+    form_columns = ['name', 'description', 'about', 'adventure', 'starting_from', 'price', 'currency', 'discount_percentage', 'organizer',  'activities', 'difficulty_rating', 'registration', 'start_date', 'end_date', 'schedule', 'things_to_carry', 'inclusive', 'exclusive', 'others', 'comments', 'enquiries', 'announcements', 'cover_image']
     column_list = ('name', 'description', 'organizer', 'cover_image')
     column_filters = ['name', FilterAdventure('adventure.id', 'Adventure'), FilterActivities('activities.id', 'Activity'), FilterLocation('starting_from.id', 'Start Location')]
     column_searchable_list = ('name', )
@@ -211,7 +211,7 @@ class TripAdminView(ModelView):
 class ProfileAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'email', 'about', 'location', 'phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image','image_gallery', 'type']
+    form_columns = ['name', 'email', 'about', 'location', 'phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image', 'type']
     column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login', 'type')
     column_filters = ['name', 'email', FilterProfileType('type.id', 'Type')]
     column_searchable_list = ('name', 'email')
@@ -328,7 +328,7 @@ class ApprovalContentAdminView(ModelView):
     can_edit = False
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['title', 'description', 'content', 'author', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'comments', 'source', 'published', 'admin_published', 'tag_refs']
+    form_columns = ['title', 'description', 'content', 'author', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'comments', 'source', 'published', 'admin_published']
     column_list = ('title', 'author', 'published', 'admin_published')
     form_overrides = dict(description=SummernoteTextAreaField, content=SummernoteTextAreaField)
 

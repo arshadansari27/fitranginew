@@ -110,11 +110,18 @@
   	</div>
 
     <div>
-
+        {% for review in model.reviews %}
+            <article class="well well-sm otherpost-profile " data-model-id="{{model.id}}" data-comment="comment">
+            <img src="{{review.author.cover_image_path}}" class="img-circle img-responsive pull-left p-5" width="60" height="100">
+            <h4>{{review.author.name}}</h4>
+            <h5 class="seen-report-like m-0">{{review.since}}<a href="" class="report">Report</a><a href="" class="like">Like</a></h5>
+            <br/>
+            <div class="container">
+                <span>{{review.process_content|safe}}</span>
+            </div>
+        </article>
+        {% endfor %}
     </div>
-    <script>
-
-    </script>
 
 
 
