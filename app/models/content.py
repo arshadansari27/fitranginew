@@ -3,7 +3,7 @@ from app.utils import convertLinks
 
 __author__ = 'arshad'
 
-from app.models import Node, update_content, db
+from app.models import Node, update_content, db, EmbeddedImageField
 from app.models.profile import Profile
 import datetime
 
@@ -36,8 +36,12 @@ class Channel(db.Document):
     def __unicode__(self):
         return self.name
 
-class Content(Node):
+@update_content.apply
+class Content(Node, db.Document):
     title = db.StringField()
+    video_embed = db.ListField(db.StringField())
+    image_gallery = db.ListField(db.EmbeddedDocumentField(EmbeddedImageField))
+    map_embed = db.DictField()
     content = db.StringField()
     author = db.ReferenceField('Profile')
     comments = db.ListField(db.ReferenceField('Post'))
@@ -48,6 +52,14 @@ class Content(Node):
     published = db.BooleanField()
     published_timestamp = db.DateTimeField()
     admin_published = db.BooleanField()
+
+    meta = {
+        'allow_inheritance': True,
+        'indexes': [
+            {'fields': ['-modified_timestamp', '-published_timestamp', 'author'], 'unique': False, 'sparse': False, 'types': False },
+            {'fields': ['-modified_timestamp', '-published_timestamp', 'title'], 'unique': False, 'sparse': False, 'types': False },
+        ],
+    }
 
     @property
     def sorted_comments(self):
@@ -169,30 +181,10 @@ class PostVote(db.Document):
 
 
 @update_content.apply
-class Article(Content, db.Document):
-    meta = {
-        'indexes': [
-            {'fields': ['-modified_timestamp', '-published_timestamp', 'author'], 'unique': False, 'sparse': False, 'types': False },
-            {'fields': ['-modified_timestamp', '-published_timestamp', 'title'], 'unique': False, 'sparse': False, 'types': False },
-        ],
-    }
+class Article(Content):
+    pass
 
 
 @update_content.apply
-class Blog(Content, db.Document):
-    meta = {
-        'indexes': [
-            {'fields': ['-modified_timestamp', '-published_timestamp', 'author'], 'unique': False, 'sparse': False, 'types': False },
-            {'fields': ['-modified_timestamp', '-published_timestamp', 'title'], 'unique': False, 'sparse': False, 'types': False },
-        ],
-    }
-
-
-@update_content.apply
-class Discussion(Content, db.Document):
-    meta = {
-        'indexes': [
-            {'fields': ['-modified_timestamp', '-published_timestamp', 'author'], 'unique': False, 'sparse': False, 'types': False },
-            {'fields': ['-modified_timestamp', '-published_timestamp', 'title'], 'unique': False, 'sparse': False, 'types': False },
-        ],
-    }
+class Discussion(Content):
+    pass

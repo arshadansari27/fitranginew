@@ -4,10 +4,10 @@ __author__ = 'arshad'
 
 
 from bson import ObjectId, json_util
-from app.models import Node, ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, BLOG, POST, DISCUSSION, STREAM
+from app.models import Node, ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST, DISCUSSION, STREAM
 from app.models.activity import Activity
 from app.models.adventure import Adventure
-from app.models.content import Article, Post, Discussion, Blog
+from app.models.content import Article, Post, Discussion
 from app.models.event import Event
 from app.models.profile import Profile
 from flask import render_template, g
@@ -95,8 +95,6 @@ class NodeExtractor(object):
             cls = ProfileExtractor
         elif model_name == ARTICLE:
             cls =ArticleExtractor
-        elif model_name == BLOG:
-            cls = BlogExtractor
         elif model_name == POST:
             cls = PostExtractor
         elif model_name == DISCUSSION:
@@ -116,12 +114,6 @@ class ArticleExtractor(NodeExtractor):
 
     def model_class(self):
         return Article
-
-
-class BlogExtractor(NodeExtractor):
-
-    def model_class(self):
-        return Blog
 
 
 class DiscussionExtractor(NodeExtractor):
