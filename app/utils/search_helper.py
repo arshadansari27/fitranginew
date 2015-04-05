@@ -27,8 +27,8 @@ def node_helper():
     model_view = request.args.get('model_view', None)
     key = request.args.get('key', 'pk')
     value = request.args.get('value', '')
-    node_view = NodeView.factory(model_view)
+    node_view = NodeView.factory(model_view, card_type, id=value, key=key)
     context=dict(card_type=card_type, id=value, key=key)
     context = force_setup_context(context)
-    return node_view(**context), context
+    return node_view, context
 
