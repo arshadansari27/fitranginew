@@ -3,7 +3,7 @@ from app.utils import convert_query_to_filter
 __author__ = 'arshad'
 
 from app.handlers.extractors import NodeExtractor
-from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, BLOG, POST, STREAM
+from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, POST, STREAM
 
 
 class View(object):
@@ -73,9 +73,6 @@ class NodeCollectionView(View):
         elif model_view == ARTICLE:
             return ArticleCollectionView(
                 card_type, query, page, size, is_partial, only_list)
-        elif model_view == BLOG:
-            return BlogCollectionView(
-                card_type, query, page, size, is_partial, only_list)
         elif model_view == DISCUSSION:
             return DiscussionCollectionView(
                 card_type, query, page, size, is_partial, only_list)
@@ -120,7 +117,7 @@ class PostCollectionView(NodeCollectionView):
 
     def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False):
         super(PostCollectionView, self).__init__(POST, card_type, query, page, size, is_partial, only_list)
-        self.model_name = BLOG
+        self.model_name = POST
 
     def get_page_path(self):
         return 'site/pages/searches/posts'
@@ -148,15 +145,6 @@ class ArticleCollectionView(NodeCollectionView):
     def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False):
         super(ArticleCollectionView, self).__init__(ARTICLE, card_type, query, page, size, is_partial, only_list)
         self.model_name = ARTICLE
-
-    def get_page_path(self):
-        return 'site/pages/searches/journals'
-
-class BlogCollectionView(NodeCollectionView):
-
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False):
-        super(BlogCollectionView, self).__init__(BLOG, card_type, query, page, size, is_partial, only_list)
-        self.model_name = BLOG
 
     def get_page_path(self):
         return 'site/pages/searches/journals'
@@ -224,8 +212,6 @@ class NodeView(View):
             return ProfileView(card_type, id, key)
         elif model_view == ARTICLE:
             return ArticleView(card_type, id, key)
-        elif model_view == BLOG:
-            return BlogView(card_type, id, key)
         elif model_view == DISCUSSION:
             return DiscussionView(card_type, id, key)
         elif model_view == POST:
@@ -323,17 +309,6 @@ class ArticleView(NodeView):
 
     def __init__(self, card_type, id, key='pk'):
         super(ArticleView, self).__init__(ARTICLE, card_type, id, key)
-
-    def get_detail_context(self):
-        return {}
-
-    def get_card_context(self):
-        return {}
-
-class BlogView(NodeView):
-
-    def __init__(self, card_type, id, key='pk'):
-        super(BlogView, self).__init__(BLOG, card_type, id, key)
 
     def get_detail_context(self):
         return {}

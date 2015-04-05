@@ -14,7 +14,7 @@ from app.views.forms import ChangePasswordForm, UserPreferenceForm, ProfileForm
 # Define wtforms widget and field
 from app.models.profile import Profile, ProfileType
 from app.models.streams import ActivityStream, Message
-from app.models.content import Content, Channel, Comment, Article, Tag, Post, PostVote, Blog, Discussion
+from app.models.content import Content, Channel, Comment, Article, Tag, Post, PostVote, Discussion
 from app.models.activity import Activity
 from app.models.adventure import Adventure, Location, State
 from app.models.event import Event
@@ -267,8 +267,6 @@ class PostForContentAdminView(PostAdminView):
         content_type = request.args.get('content_type', None)
         if content_type == 'Article':
             cls = Article
-        elif content_type == 'Blog':
-            cls = Blog
         elif content_type == 'Discussion':
             cls = Discussion
         else:
@@ -433,7 +431,7 @@ class RestrictedAdminView(ModelView):
 
 
 admin.add_view(ApprovalContentAdminView(Article, name='Article', endpoint='approval.article', category="Approvals"))
-admin.add_view(ApprovalContentAdminView(Blog, name='Blog', endpoint='approval.blog', category="Approvals"))
+#admin.add_view(ApprovalContentAdminView(Blog, name='Blog', endpoint='approval.blog', category="Approvals"))
 admin.add_view(ApprovalContentAdminView(Discussion, name='Discussion', endpoint='approval.discussion', category="Approvals"))
 admin.add_view(ProfileAdminView(Profile, category="Administration"))
 admin.add_view(ActivityAdminView(Activity, category="Administration"))
@@ -441,7 +439,7 @@ admin.add_view(AdventureAdminView(Adventure, category="Administration"))
 
 
 admin.add_view(ContentAdminView(Article, category="Editorial"))
-admin.add_view(ContentAdminView(Blog, category="Editorial"))
+#admin.add_view(ContentAdminView(Blog, category="Editorial"))
 admin.add_view(ContentAdminView(Discussion, category="Editorial"))
 admin.add_view(PostAdminView(Post, category="Editorial"))
 admin.add_view(PostForContentAdminView(Post, name="Posts on content", endpoint="content_post_admin_view"))

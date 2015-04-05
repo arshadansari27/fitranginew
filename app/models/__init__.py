@@ -16,9 +16,9 @@ db.ListField = ListField
 
 
 (ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, PRODUCT, ARTICLE,
- BLOG, LOCATION, POST, DISCUSSION, CHANNEL, STREAM, MESSAGE) =  (
+ LOCATION, POST, DISCUSSION, CHANNEL, STREAM, MESSAGE) =  (
     "activity", "adventure", "event", "trip", "profile", "product",
-    "article", "blog", "location", "post", "discussion", "channel",
+    "article", "location", "post", "discussion", "channel",
     "stream", "message"
 )
 
@@ -79,10 +79,7 @@ class EmbeddedImageField(db.EmbeddedDocument):
 class Node(object):
 
     description = db.StringField()
-    image_gallery = db.ListField(db.EmbeddedDocumentField(EmbeddedImageField))
     cover_image = db.ImageField(thumbnail_size=(128, 128))
-    video_embed = db.StringField()
-    map_embed = db.DictField()
     created_timestamp = db.DateTimeField(default=datetime.datetime.now)
     modified_timestamp = db.DateTimeField(default=datetime.datetime.now)
     slug = db.StringField()
@@ -190,7 +187,7 @@ class NodeFactory(object):
     def get_by_id(cls, model_class, id):
         from app.models.activity import Activity
         from app.models.adventure import Adventure, Location
-        from app.models.content import Content, Discussion, Channel, Post, Article, Blog
+        from app.models.content import Content, Discussion, Channel, Post, Article
         from app.models.event import Event
         from app.models.store import Product
         from app.models.profile import Profile
@@ -203,7 +200,7 @@ class NodeFactory(object):
     def get_class_by_name(cls, name):
         from app.models.activity import Activity
         from app.models.adventure import Adventure, Location
-        from app.models.content import Content, Discussion, Channel, Post, Article, Blog
+        from app.models.content import Content, Discussion, Channel, Post, Article
         from app.models.event import Event
         from app.models.store import Product
         from app.models.profile import Profile
@@ -218,7 +215,6 @@ class NodeFactory(object):
         elif name == PROFILE: return Profile
         elif name == PRODUCT: return Product
         elif name == ARTICLE: return Article
-        elif name == BLOG: return Blog
         elif name == LOCATION: return Location
         elif name == POST: return Post
         elif name == DISCUSSION: return Discussion
