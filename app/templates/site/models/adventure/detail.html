@@ -1,12 +1,12 @@
 <section class="container-fluid p-0">
-<div class="adventure-banner"  style="background:url({{model.cover_image_path}}) no-repeat ; background-size: 100%;">
+<div class="adventure-banner"  style="background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url({{model.cover_image_path}}) no-repeat ; background-size: 100%; ">
 
 <div class="container">
 
-<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 season text-right">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 season text-right primary">
 {% if model.best_season|length > 0 %}
 <h3>Best Season : </h3>
-    {% for best_season in model.best_seasons %}
+    {% for best_season in model.best_season %}
         <a href="" class="label label-danger">{{best_season}}</a>
     {% endfor %}
 {% endif %}
