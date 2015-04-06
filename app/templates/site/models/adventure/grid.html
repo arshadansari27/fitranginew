@@ -1,19 +1,28 @@
 {# % extends 'site/models/adventure/grid.html' % #}
-<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-    <div class="thumbnail">
-      <a class="text-muted" href="{{model.slug}}"><img src="{{model.cover_image_path}}" alt="..."></a>
-      <div class="caption captop">
-      </div>
 
-      <div class="caption captop">
-       <article>
-              <h4>{{model.reviews|length}} Reviews </h4>
-              <a href="" class="btn rating-{{model.extremity|lower}}">{{model.extremity}}</a>
-       </article>
-      </div>
-      <div class="caption">
-        <h4><a class="text-muted" href="{{model.slug}}">{{model.name}}</a> </h4>
-      </div>
+<section class="container-fluid p-0">
+    <div class="container fitrangi-thumb">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="thumbnail">
+              <a class="text-muted" href="{{model.slug}}"><img src="{{model.cover_image_path}}"  alt="..."></a>
 
+              <div class="caption captop">
+                <article>
+                    <h4>{{model.reviews|length}} Reviews </h4>
+                      <a href="" class="btn rating-{{model.extremity|lower}}">{{model.extremity}}</a>
+                </article>
+              </div>
+              <div class="caption capbottom">
+                <a href="" class="btn btn-default"><span class="fa fa-user"></span></a>
+                <a href="" class="btn btn-default"><span class="fa fa-tags"></span></a>
+              </div>
+              <div class="caption">
+                <h4><a class="text-muted" href="{{model.slug}}">{{model.name}}</a> </h4>
+              </div>
+
+            </div>
+        </div>
     </div>
-</div>
+</section>
+
+
