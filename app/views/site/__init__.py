@@ -78,7 +78,7 @@ def list_adventure():
 
 @app.route("/community")
 def journal():
-    return render_template("/site/features/community/index.html")
+    return render_template("/site/pages/landings/community.html")
 
 @app.route("/views/static")
 def static_model_views():

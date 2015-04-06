@@ -75,6 +75,16 @@ def get_image_temp(id):
     buffer.seek(0)
     return send_file(buffer, mimetype='image/' + f.format, add_etags=False, conditional=True)
 
+@app.route("/media/<model_class>/<id>/icon")
+def get_icon_image(model_class, id, index=0):
+    if (id and model_class) is None:
+        return 'Not found', 404
+    model = NodeFactory.get_by_id(model_class, id)
+    if not model.icon_image_path:
+        return 'Not Found', 404
+    return redirect(model.icon_image_path)
+
+
 @app.route("/media/<model_class>/<id>/gallery")
 @app.route("/media/<model_class>/<id>/gallery/<int:index>")
 def get_gallery_image(model_class, id, index=0):
@@ -86,7 +96,7 @@ def get_gallery_image(model_class, id, index=0):
         return 'Not Found', 404
     if index >= size:
         index = size - 1
-    img, format = model.get_gallery_image(index)
+    img, format = model.get_icon_image()
     return send_file(img, mimetype="image/%s" % format.lower())
 
 @app.route("/media/<model_class>/<id>/cover")

@@ -84,7 +84,6 @@ class Node(object):
     modified_timestamp = db.DateTimeField(default=datetime.datetime.now)
     slug = db.StringField()
 
-
     @property
     def cover_image_path(self):
         return '/media/' + self.__class__.__name__.lower() + '/' + str(self.id) + '/cover'

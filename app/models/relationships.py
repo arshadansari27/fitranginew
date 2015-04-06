@@ -46,7 +46,7 @@ class RelationShips(db.Document):
             relationship.save()
             ActivityStream.push_relationship_to_stream(relationship)
         if RelationShips.objects(subject=object, object=subject, relation=inverse_relation.get(relation)).first() is None:
-            relationship = RelationShips(subject=object, object=subject, relation=inverse_relation(relation))
+            relationship = RelationShips(subject=object, object=subject, relation=inverse_relation.get(relation))
             relationship.save()
 
 

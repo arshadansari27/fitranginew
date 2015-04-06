@@ -1,1 +1,161 @@
-{% extends 'site/models/common/_detail.html' %}
+<section class="container-fluid p-0">
+    <div class="userprofile-banner" style="background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(/images/userprofile-banner.jpg) no-repeat;">
+
+        <div class="container">
+
+            {% if model.favorite_activities|length > 0 %}
+            <div class="col-lg-4 col-md-4 col-sm-4 hidden-xs pull-right user-fav-acti">
+                <h3>Favourites Activities&nbsp;: </h3>
+                <div class="row-fluid">
+                    {% for acti in model.favorite_activities %}
+                    {% if acti.icon_image_path %} <a href=""><img src="{{acti.icon_image_path}}" class="thumbnail"></a>{% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="row">
+
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 user-pro">
+                    <img src="{% if not model.cover_image_path or model.cover_image_path|length == 0%}/img/Profile-Picture.jpg{% else %}{{model.cover_image_path}}{% endif %}" alt="" class="center-block text-center img-thumbnail img-responsive">
+                </div>
+
+                <div class="col-lg-9 col-md-4 col-sm-4 col-xs-12 name-location">
+                    <h2>{{ model.name }}</h2>
+                    {% if model.location %}<h4><i class="fa fa-map-marker"></i> {{model.location.name}}</h4>{% endif %}
+                    <a href="" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">{{ model.followers|length }} Followers</a>
+                    <a href="" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">{{ model.following|length }} Following</a>
+                </div>
+
+            </div>
+            <div class="row">
+
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 user-button">
+
+                    <a href="" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-user"></i> Follow</a>
+                    <a href="" class="btn btn-default col-lg-6 col-xs-12 text-center"><i class="fa fa-envelope-o"></i> Send Message</a>
+                    <!--a href="" class="btn btn-default col-lg-6 col-xs-12 text-center"><i class="fa fa-cog"></i> Settings</a>
+                    <a href="" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-users"></i> Invite</a-->
+                </div>
+                {% if model.description and model.description|length > 0 %}
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 user-desc">
+                    <p>{{model.description}}</p>
+                </div>
+                {% endif %}
+
+            </div>
+
+
+        </div>
+
+    </div>
+</section>
+<section class="container-fluid p-0">
+    <div role="tabpanel" data-example-id="togglable-tabs">
+
+        <div class="border-grey-t border-grey-b h-56">
+            <div class="container text-center">
+                <ul id="myTab" class="nav nav-tabs" role="tablist">
+
+                    <li class="active"><a href="#my-stream"  role="tab" data-toggle="tab" aria-controls="my-stream" aria-expanded="false">
+                        <span class="fa fa-home"></span> <strong>My Stream</strong></a></li>
+
+                    <li class=""><a href="#adventure-done"  role="tab" data-toggle="tab" aria-controls="adventure-done" aria-expanded="false">'
+                        <span class="fa fa-child"></span> <strong>Adventure Done</strong> </a></li>
+
+                    <li class=""><a href="#my-wishlist" role="tab" data-toggle="tab" aria-controls="my-wishlist" aria-expanded="false">
+                        <span class="fa fa-star"></span> <strong>My Wishlist</strong> </a></li>
+
+                    <li class=""><a href="#photos-videos" role="tab" data-toggle="tab" aria-controls="photos-videos" aria-expanded="false">
+                        <span class="fa fa-star"></span> <strong>Photos/Videos</strong> </a></li>
+
+                    <li class=""><a href="#journals" role="tab" data-toggle="tab" aria-controls="journals" aria-expanded="false">
+                        <span class="fa fa-star"></span> <strong>Journals</strong> </a></li>
+
+                    <li class=""><a href="#discussions" role="tab" data-toggle="tab" aria-controls="discussions" aria-expanded="false">
+                        <span class="fa fa-star"></span> <strong>Discussions</strong> </a></li>
+
+                    <li class=""><a href="#bookmarks" role="tab" data-toggle="tab" aria-controls="bookmarks" aria-expanded="false">
+                        <span class="fa fa-star"></span> <strong>Bookmarks</strong> </a></li>
+
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="container">
+            <div id="myTabContent" class="tab-content">
+                <div role="tabpanel" class="tab-pane fade active in" id="my-stream" aria-labelledby="my-stream">
+                    <section class="container-fluid">
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <h4 class="blue pb-5 border-grey-b">Fitrangi.com Popular Stream Feeds</h4>
+
+                        </div>
+                    </section>
+
+
+                </div><!--Tab Pane End-->
+
+                <div role="tabpanel" class="tab-pane fade" id="adventure-done" aria-labelledby="adventure-done">
+
+
+                </div><!--Tab Pane End-->
+
+                <div role="tabpanel" class="tab-pane fade" id="my-wishlist" aria-labelledby="my-wishlist">
+
+
+                </div><!--Tab Pane End-->
+
+                <div role="tabpanel" class="tab-pane fade" id="photos-videos" aria-labelledby="photos-videos">
+                    <h2>Photos / Videos</h2>
+                </div><!--Tab Pane End-->
+
+                <div role="tabpanel" class="tab-pane fade" id="journals" aria-labelledby="journals">
+
+                    <section class="container-fluid border-grey-b mb-10">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h4 class="oswald pl-10 pt-15">Journals</h4>
+                        </div>
+                    </section>
+
+
+                </div><!--Tab Pane End-->
+
+                <div role="tabpanel" class="tab-pane fade" id="discussions" aria-labelledby="discussions">
+
+                    <section class="container-fluid border-grey-b mb-10">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h4 class="oswald pl-10 pt-15">Latest Discussion</h4>
+                        </div>
+                    </section>
+
+                </div><!--Tab Pane End-->
+
+                <div role="tabpanel" class="tab-pane fade" id="bookmarks" aria-labelledby="bookmarks">
+
+                    <section class="container-fluid border-grey-b mb-10">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h4 class="oswald pl-10 pt-15">Bookmarks - Journals <span class="badge blue-bg">10</span></h4>
+                        </div>
+                    </section>
+
+
+                    <hr class="clearfix">
+
+
+                    <section class="container-fluid border-grey-b mb-10">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h4 class="oswald pl-10 pt-15">Bookmarks - Adventure Trips <span class="badge blue-bg">10</span></h4>
+                        </div>
+                    </section>
+
+                </div><!--Tab Pane End-->
+
+            </div>
+        </div>
+    </div>
+</section>
+
+

@@ -35,7 +35,7 @@ def setup_context():
     activity_menu = view_menu()
     return dict(user=user, activity_menu=activity_menu, menu=get_menu_selection(request.path))
 
-@cache.cached(timeout=3600 * 24)
+#@cache.cached(timeout=3600 * 24)
 def get_menu_selection(request_path):
     top, main, inner = None, None, None
     if '/explore' in request_path:

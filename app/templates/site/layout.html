@@ -52,73 +52,37 @@
 
 <body>
 
-<!-- Fixed navbar -->
 <nav class="navbar navbar-default navbar-static-top">
-    <div class="container-fluid">
-
+      <div class="container-fluid">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-
-
-            <a class="navbar-brand" href="/"><!--<img src="images/logo.png" alt="fitrangi_logo">--></a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-8">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"></a>
         </div>
 
-        <div id="navbar" class="navbar-collapse collapse">
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-8">
 
+        <div class="container">
+        	<ul class="nav navbar-nav">
+            <li class="{% if menu.app_name == 'explore'%}active{% endif %}"><a href="/explore">Explore</a></li>
+            <li class="{% if menu.app_name == 'community'%}active{% endif %}"><a href="/community">Community</a></li>
+          </ul>
 
-            <ul class="nav navbar-nav">
-                <li id="dropdown1" class="top-level-dropdown dropdown mega-dropdown {% if menu.app_name == 'explore'%}active{% endif %}">
-                    <a href="#" class="dropdown-toggle" role="button" aria-expanded="false">Explore</a>
-                    <ul id="submenu1" class="dropdown-menu mega-dropdown-menu container" role="menu" aria-labelledby="dropdown1">
+          <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+          	<div class="top-search-form navbar-nav">
+    		<form action="#" method="post">
+        		<input type="text" placeholder="Search ..." class="form-control">
+            	<button type="submit"><i class="fa fa-search"></i></button>
+        	</form>
+			</div>
+          </div>
 
-
-                        <li class="inner-level-dropdown dropdown {% if menu.main_menu == 'activity' %}active{% endif %} col-sm-2">
-		        	        <a id="subdropdown1" href="#" class="dropdown-toggle" >Activities<b class="caret"></b></a>
-		                    <ul class="dropdown-menu multi-column columns-3" aria-labelledby="subdropdown1" role="menu">
-			                    <div class="row">
-                                    {{activity_menu|safe}}
-			                    </div>
-		                    </ul>
-		                </li>
-		                <li class="inner-level-dropdown {% if menu.main_menu == 'adventure' %}active{% endif %} col-sm-2"><a href="/explore/adventure">Adventure</a></li>
-                    </ul>
-                </li>
-                <li id="dropdown2" class="top-level-dropdown dropdown mega-dropdown {% if menu.app_name == 'community'%}active{% endif %}">
-                    <a href="#" class="dropdown-toggle" role="button" aria-expanded="false">Community</a>
-                    <ul class="dropdown-menu mega-dropdown-menu container" role="menu" aria-labelledby="dropdown2">
-                        <li class="inner-level-dropdown {% if menu.main_menu == 'discussion' %}active{% endif %} col-sm-2"><a href="/community/discussions">Discussion</a></li>
-                        <li class="inner-level-dropdown {% if menu.main_menu == 'profile' %}active{% endif %} col-sm-2"><a href="/community/profiles">Profile Finder</a></li>
-                        <li class="inner-level-dropdown {% if menu.main_menu == 'event' %}active{% endif %} col-sm-2"><a href="/community/events">Upcoming Events</a></li>
-                    </ul>
-                </li>
-                <li id="dropdown3" class="top-level-dropdown dropdown mega-dropdown {% if menu.app_name == 'jounal'%}active{% endif %}">
-                    <a href="#" class="dropdown-toggle" role="button" aria-expanded="false">Journal</a>
-                    <ul class="dropdown-menu mega-dropdown-menu container" role="menu" aria-labelledby="dropdown3">
-                        <li class="inner-level-dropdown {% if menu.main_menu == 'trending_content' %}active{% endif %} col-sm-2"><a href="#">Trending Posts</a></li>
-                        <li class="inner-level-dropdown {% if menu.main_menu == 'all_content' %}active{% endif %} col-sm-2"><a href="#">All Posts</a></li>
-                        <li class="inner-level-dropdown {% if menu.main_menu == 'write_content' %}active{% endif %} col-sm-2"><a href="#">Write a blog</a></li>
-                    </ul>
-                </li>
-
-            </ul>
-
-
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                <div class="top-search-form navbar-nav">
-                    <form action="#" method="post">
-                        <input type="text" placeholder="Search ..." class="form-control">
-                        <button type="submit"><i class="fa fa-search"></i></button>
-                    </form>
-                </div>
-            </div>
-
-            <ul class="top-icons nav navbar-nav navbar-right">
+        	<ul class="top-icons nav navbar-nav navbar-right">
                 {% if not (user and user.id) %}
       	        <li><div class="top-icon"><a class="show_login" href="#" title="Login"><i class="fa fa-user"></i></a></div></li>
                 <li><div class="top-icon"><a class="show_signup" href="#" title="Register"><i class="fa fa-key"></i></a></div></li>
@@ -138,17 +102,47 @@
                             </li>
                             <li><a href="#"><i class="fa fa-cog"></i> Account Settings</a></li>
                             <li><a href="#"><i class="fa fa-question"></i> Help</a></li>
-                            <li><a href="signin.html"><i class="fa fa-lock"></i> Log Out</a></li>
+                            <li><a href="/logout"><i class="fa fa-lock"></i> Log Out</a></li>
                         </ul>
                     </div>
                 </li>
                 {% endif %}
             </ul>
+
         </div>
-        <!--/.nav-collapse -->
-    </div>
+
+        <div class="container-fluid border-grey-t">
+        	<ul class="nav navbar-nav nav-down">
+                {% if menu.app_name == 'explore' %}
+                <li class="inner-level-dropdown dropdown {% if menu.main_menu == 'activity' %}active{% endif %}">
+		        	<a id="subdropdown1" href="#" class="dropdown-toggle" >Activities<b class="caret"></b></a>
+		            <ul class="dropdown-menu multi-column columns-3" aria-labelledby="subdropdown1" role="menu">
+			                    <div class="row">
+                                    {{activity_menu|safe}}
+			                    </div>
+		            </ul>
+		        </li>
+                <li class="{% if menu.main_menu == 'adventure' %}active{% endif %}"><a href="/explore/adventure">Adventures</a></li>
+                <li class="{% if menu.main_menu == 'blog' %}active{% endif %}"><a href="/explore/journal">Blogs</a></li>
+                {% elif menu.app_name == 'community' %}
+                <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="/community/my">My Page</a></li>
+                <li class="{% if menu.main_menu == 'discussion' %}active{% endif %}"><a href="/community/discussion">Discussions</a></li>
+                <li class="{% if menu.main_menu == 'profile' %}active{% endif %}"><a href="/community/profile">Finder</a></li>
+                <li class="{% if menu.main_menu == 'profile' %}active{% endif %}"><a href="/community/news">News</a></li>
+                <li class="{% if menu.main_menu == 'profile' %}active{% endif %}"><a href="/community/event">Events</a></li>
+
+                {% endif %}
+            </ul>
+        </div>
+
+
+
+        </div><!-- /.navbar-collapse -->
+      </div>
 </nav>
+
 {% block body %}{% endblock %}
+
 <section class="container-fluid footer">
 
     <div class="col-lg-5 col-md-5 col-sm-6 col-xs-12">
@@ -233,11 +227,6 @@ $(".dropdown").hover(
 
 <script>
     $(function(){
-        $('li.top-level-dropdown>a').on('click', function (event) {
-            event.stopPropagation();
-            $('li.top-level-dropdown').removeClass('open');
-            $(this).parent().toggleClass('open');
-        });
         $('li.inner-level-dropdown>a').on('click', function (event) {
             event.stopPropagation();
             $('li.inner-level-dropdown').removeClass('open');
