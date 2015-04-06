@@ -1,1 +1,169 @@
-{% extends 'site/models/common/_detail.html' %}
+{#% extends 'site/models/common/_detail.html' %#}
+    <section class="container-fluid p-0">
+        <div class="userprofile-banner">
+            <div class="container">
+                <div class="col-lg-4 col-md-4 col-sm-4 hidden-xs pull-right user-fav-acti">
+                    <h3>Favourites Activities&nbsp;: </h3>
+                    <div class="row-fluid">
+                        <a href=""><img src="../images/acitivity-icon.jpg" class="thumbnail"></a>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 user-pro">
+                        <img src="../images/pro3.jpg" alt="" class="center-block text-center img-thumbnail img-responsive">
+                    </div>
+                    <div class="col-lg-9 col-md-4 col-sm-4 col-xs-12 name-location">
+                        <h2>Name Comes Here</h2>
+                        <h4><i class="fa fa-map-marker"></i> Mumbai, Maharashtra</h4>
+                        <a href="" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">200 Followers</a>
+                        <a href="" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">50 Following</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 user-button">
+                        <a href="" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-user"></i> Follow</a>
+                        <a href="" class="btn btn-default col-lg-6 col-xs-12 text-center"><i class="fa fa-envelope-o"></i> Send Message</a>
+                        <!--a href="" class="btn btn-default col-lg-6 col-xs-12 text-center"><i class="fa fa-cog"></i> Settings</a>
+                        <a href="" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-users"></i> Invite</a-->
+                    </div>
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 user-desc">
+                        <h5>User</h5>
+                        <p>Only those who will risk going too far can possibly find out how far one can go.
+                        It is only in adventure that some people succeed in knowing themselves - in finding themselves</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="container-fluid p-0">
+        <div role="tabpanel" data-example-id="togglable-tabs">
+            <div class="border-grey-t border-grey-b h-56">
+                <div class="container text-center">
+                    <ul id="myTab" class="nav nav-tabs" role="tablist">
+                        <li class="active"><a href="#my-stream"  role="tab" data-toggle="tab" aria-controls="my-stream" aria-expanded="false">
+                        <span class="fa fa-home"></span> <strong>My Stream</strong></a></li>
+                        <li class=""><a href="#adventure-done"  role="tab" data-toggle="tab" aria-controls="adventure-done" aria-expanded="false">'
+                        <span class="fa fa-child"></span> <strong>Adventure Done</strong> </a></li>
+                        <li class=""><a href="#my-wishlist" role="tab" data-toggle="tab" aria-controls="my-wishlist" aria-expanded="false">
+                        <span class="fa fa-star"></span> <strong>My Wishlist</strong> </a></li>
+                        <li class=""><a href="#photos-videos" role="tab" data-toggle="tab" aria-controls="photos-videos" aria-expanded="false">
+                        <span class="fa fa-star"></span> <strong>Photos/Videos</strong> </a></li>
+                        <li class=""><a href="#journals" role="tab" data-toggle="tab" aria-controls="journals" aria-expanded="false">
+                        <span class="fa fa-star"></span> <strong>Journals</strong> </a></li>
+                        <li class=""><a href="#discussions" role="tab" data-toggle="tab" aria-controls="discussions" aria-expanded="false">
+                        <span class="fa fa-star"></span> <strong>Discussions</strong> </a></li>
+                        <li class=""><a href="#bookmarks" role="tab" data-toggle="tab" aria-controls="bookmarks" aria-expanded="false">
+                        <span class="fa fa-star"></span> <strong>Bookmarks</strong> </a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="container">
+                <div id="myTabContent" class="tab-content">
+                      <div role="tabpanel" class="tab-pane fade active in" id="my-stream" aria-labelledby="my-stream">
+                            <section class="container-fluid">
+	                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                    <div class="well status">
+                                        <form class="form-horizontal">
+                                            <h5><a href=""><i class="fa fa-pencil"></i> Write Post</a></h5>
+                                            <h5><a href=""><i class="fa fa-image"></i> Photos/Videos</a></h5>
+                                            <h5><a href=""><i class="fa fa-question"></i> Ask Question</a></h5>
+                                            <div class="form-group">
+                                            <textarea class="form-control" placeholder="Write Something on your status"></textarea>
+                                            </div>
+
+                                            <ul class="list-inline">
+                                            <li><a href=""><i class="fa fa-upload"></i></a></li>
+                                            <li><a href=""><i class="fa fa-camera"></i></a></li>
+                                            <li><a href=""><i class="fa fa-map-marker"></i></a></li>
+                                            </ul>
+                                        </form>
+                                    </div>
+                                    <div class="row">
+                                        <section class="col-lg-12 col-xs-12 media user-post">
+                                            <div class="media-left">
+                                                <img src="../images/dominos.png" class="img-rounded" width="48">
+                                            </div>
+                                            <div class="media-body">
+                                                <h3>Name Comes Here</h3>
+                                                <h5><i class="fa fa-map-marker"></i> Bandra, Mumbai</h5>
+                                            </div>
+                                            <div class="post-content">
+                                                <h5><i class="fa fa-download"></i> Check In</h5>
+                                                <div class="container-fluid">
+                                                    <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d7542.667238150956!2d72.8267327647027!3d19.049063941740446!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sdominos+bandra!5e0!3m2!1sen!2sin!4v1428188744301" width="100%" height="250" frameborder="0" style="border:0"></iframe>
+                                                </div>
+                                                <article class="container-fluid">
+                                                    <button class="btn btn-default btn-noti" type="button"><i class="fa fa-heart-o"></i> Like <span class="noti-badge">4</span></button>
+                                                    <button class="btn btn-default btn-noti" type="button"><i class="fa fa-comment-o"></i> <span class="noti-badge">10</span></button>
+                                                    <button class="btn btn-default pull-right" type="button"><i class="fa fa-share-square-o"></i> </button>
+                                                </article>
+                                                <article class="write-comment media box-sizing-content">
+                                                    <img src="../images/pro5.jpg" class="img-circle img-responsive pull-left p-5" width="60" height="100">
+                                                    <div class="media-body">
+                                                            <textarea class="form-control no-radius" rows="1" placeholder="Write Comment.."></textarea>
+                                                    </div>
+                                                </article>
+                                            </div>
+                                            <hr class="user-post-divider clearfix"/>
+                                        </section>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                    <h4 class="blue pb-5 border-grey-b">Fitrangi.com Popular Stream Feeds</h4>
+                                    <section class="row">
+                                        <article class="post-profile lightgrey-bg">
+                                            <img src="../images/pro-pic.jpg" class="img-circle img-responsive pull-left p-5" width="60" height="100">
+                                            <a href="" class="btn btn-default btn-xs mt-10 grey pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-plus"></i></a>
+                                            <h4>User Name Comes Here</h4>
+                                            <h5><span>27Reviews</span>, <span>252Followers</span> </h5>
+                                        </article>
+                                        <h5 class="ago-line">5 days ago via Fitrangi</h5>
+  	                                    <p><strong>Rated</strong> <a href="" class="btn btn-xs rating-extreme">EXTREME</a> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry'essentially unchanged....<a href="" class="red">read more</a></p>
+                                         <div class="row">
+                                              <div class="col-lg-6 col-md-3 col-sm-6 col-xs-6">
+                                                 <a href="../images/img1.jpg" target="_blank"><img src="../images/img1.jpg" class="img-responsive img-thumbnail"></a>
+                                              </div>
+                                              <div class="col-lg-6 col-md-3 col-sm-6 col-xs-6">
+                                                 <a href="../images/img1.jpg" target="_blank"><img src="../images/img1.jpg" class="img-responsive img-thumbnail"></a>
+                                              </div>
+                                              <div class="col-lg-6 col-md-3 col-sm-6 col-xs-6">
+                                                <a href="../images/img1.jpg" target="_blank"><img src="../images/img1.jpg" class="img-responsive img-thumbnail"></a>
+                                              </div>
+                                              <div class="col-lg-6 col-md-3 col-sm-6 col-xs-6">
+                                                <a href="../images/img1.jpg" target="_blank"><img src="../images/img1.jpg" class="img-responsive img-thumbnail"></a>
+                                              </div>
+                                         </div>
+                                         <article class="post-profile">
+                                            <p><strong>User Name</strong> Dear User Lorem Ipsum is simply dummy text of the printing and typesetting industry..</p>
+                                         </article>
+                                         <article>
+                                            <button class="btn btn-default btn-noti" type="button"><i class="fa fa-heart-o"></i> Like <span class="noti-badge">4</span></button>
+                                            <button class="btn btn-default btn-noti" type="button"><i class="fa fa-comment-o"></i> <span class="noti-badge">10</span></button>
+                                            <button class="btn btn-default pull-right" type="button"><i class="fa fa-share-square-o"></i> </button>
+                                         </article>
+                                         <article class="otherpost-profile">
+                                            <img src="../images/pro-pic.jpg" class="img-circle img-responsive pull-left p-5" width="60" height="100">
+                                            <h4>User Name Comes Here</h4>
+                                            <h6>@User Name_S </h6>
+                                            <h6>@User Name24</h6>
+                                            <h5 class="seen-report-like m-0">2 days ago<a href="" class="report">Report</a><a href="" class="like">Like</a></h5>
+                                         </article>
+                                         <article class="write-comment media box-sizing-content">
+                                            <img src="../images/pro-pic.jpg" class="img-circle img-responsive pull-left p-5" width="60" height="100">
+                                            <div class="media-body">
+                                                    <textarea class="form-control no-radius" rows="1" placeholder="Write Comment.."></textarea>
+                                            </div>
+                                         </article>
+                                         <hr class="clearfix">
+                                    </section>
+                                </div>
+                            </section>
+                      </div><!--Tab Pane End-->
+
+
+
+
+
+
+
