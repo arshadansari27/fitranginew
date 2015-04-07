@@ -832,7 +832,7 @@ min-height: 50px;}
   background: #fff;
   height:55px;
   width:382px;
-
+  
   border: 1px solid rgba(0,0,0,.15);
   color: rgba(0,0,0,.8);
   border-radius: .2857rem;
@@ -845,7 +845,7 @@ min-height: 50px;}
 	-moz-appearance:none;
 	-ms-appearance:none;
 	-o-appearance:none;
-
+	
 }
 .search-form .fa {
 	font-size: 1.3em;
@@ -910,7 +910,7 @@ min-height: 50px;}
 	-webkit-text-shadow:0 1px 0 #333;
 	-moz-text-shadow:0 1px 0 #333;
 	-ms-text-shadow:0 1px 0 #333;
-
+	
 	border-bottom:1px solid #eaeaea;
 	padding-bottom:10px;
 }
@@ -931,7 +931,7 @@ min-height: 50px;}
 	-webkit-text-shadow:0 1px 0 #333;
 	-moz-text-shadow:0 1px 0 #333;
 	-ms-text-shadow:0 1px 0 #333;
-
+	
 	border-bottom:1px solid #bababa;
 	padding-bottom:10px;
 }
@@ -970,7 +970,7 @@ min-height: 50px;}
 	-webkit-text-shadow:0 1px 0 #333;
 	-moz-text-shadow:0 1px 0 #333;
 	-ms-text-shadow:0 1px 0 #333;
-
+	
 	border-bottom:1px solid #bababa;
 	padding-bottom:10px;
 }
@@ -983,7 +983,7 @@ min-height: 50px;}
 	-webkit-text-shadow:0 1px 0 #333;
 	-moz-text-shadow:0 1px 0 #333;
 	-ms-text-shadow:0 1px 0 #333;
-
+	
 	border-bottom:1px solid #bababa;
 	padding-bottom:10px;
 }
@@ -1026,12 +1026,12 @@ min-height: 50px;}
 	-webkit-text-shadow:0 1px 0 #333;
 	-moz-text-shadow:0 1px 0 #333;
 	-ms-text-shadow:0 1px 0 #333;
-
+	
 	border-bottom:1px solid #bababa;
 	padding-bottom:10px;
 }
 .discussion .container{
-	margin-top:50px;
+	margin-top:50px; 
 }
 .discussion .media:nth-child(odd) {
     background: #f5f5f5;
@@ -1061,11 +1061,11 @@ min-height: 50px;}
 	width:100px;
 	background:none;
 	padding:2px;
-
+	
 }
 
 .discussion .media .media-right a.last-seen, .discussion .media .media-right a{
-	font-family:'oswald', Arial, Helvetica, sans-serif;
+	font-family:'oswald', Arial, Helvetica, sans-serif; 
 	text-transform:uppercase;
 	color: #aaa;
 	font-size:12px;
@@ -1093,13 +1093,13 @@ min-height: 50px;}
 
 .discussion .media .media-left{
 	float:left;
-}
+} 
 .discussion .media .media-right {
 	float:right;
 	margin-bottom:5px;
 }
 .discussion .media .media-right a{
-	border-right:1px solid #CCC;
+	border-right:1px solid #CCC;	
 	padding:0 10px;
 }
 .discussion .media .media-right .last-seen:before{
@@ -1122,10 +1122,10 @@ min-height: 50px;}
 
 .footer-signup .form-inline{
 	text-align:center;
-	padding:20px 10px;
+	padding:20px 10px; 
 }
 .footer-signup .form-inline label{
-	font-family:'oswald', Arial, Helvetica, sans-serif;
+	font-family:'oswald', Arial, Helvetica, sans-serif; 
 	text-transform:uppercase;
 	color:#aaa;
 	font-size:20px;
@@ -1136,13 +1136,13 @@ min-height: 50px;}
 	background:#0F75BC;
 }
 .footer-signup .modal .modal-content .modal-header .modal-title{
-	font-family:'oswald', Arial, Helvetica, sans-serif;
+	font-family:'oswald', Arial, Helvetica, sans-serif; 
 	color:#FFF;
 	text-transform:uppercase;
 }
 .footer-signup .modal .modal-content .modal-title{
 	text-align:left !important;
-
+	
 }
 .footer-signup .modal .modal-content .modal-body input{
 	border-radius:0px;
@@ -1161,7 +1161,7 @@ min-height: 50px;}
 	text-decoration:none;
 	color:#878787;
 	margin:0 1px;
-
+	
 }
 .footer .social a.fa{
 	font-size:30px;
@@ -1194,7 +1194,7 @@ min-height: 50px;}
 	/*background:url(../images/activity-banner.jpg) no-repeat center center;*/
 	height:488px;
 	width:100%;
-	padding:50px 0;
+	padding:50px 0;	
 }
 .activity-banner h2{
 	font-family:'oswald', Arial, Helvetica, sans-serif;
@@ -1208,14 +1208,14 @@ min-height: 50px;}
 .activity-banner .favourite img{
 	text-align:center;
 	width:100%;
-
+	
 	border: 4px solid #fff;
 	border-radius: 2px;
    -webkit-border-radius: 2px;
    -moz-border-radius: 2px;
    -ms-border-radius: 2px;
    -o-border-radius: 2px;
-   box-shadow:0px 1px 5px 0 #777;
+   box-shadow:0px 1px 5px 0 #777; 
 }
 .activity-banner .favourite a{
 	text-decoration:none;
@@ -1288,13 +1288,9 @@ min-height: 50px;}
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
 	color: #1076BC;
   	background-color: #fff;
-<<<<<<< HEAD
 	border-top:0px;
 	border-right:0px;
 	border-bottom:2px solid #1076BC;
-=======
-
->>>>>>> c9cb900d91e09e960a2f65e145badad1d05db1b3
 }
 .nav-tabs > li.active > a .fa{
 	font-size:18px;
@@ -1332,7 +1328,7 @@ min-height: 50px;}
 	padding:2px 4px;
 }
 .nav-tabs li a strong{
-	display:none;
+	display:none;	
 }
 }
 
@@ -1341,7 +1337,7 @@ min-height: 50px;}
 	  padding: 15px 15px;
 }
 .nav-tabs li a strong{
-	display:none;
+	display:none;	
 }
 .nav-tabs > li a .badge{
 	padding:2px 4px;
@@ -1353,7 +1349,7 @@ min-height: 50px;}
 	  padding: 15px 10px;
 }
 .nav-tabs li a strong{
-	display:none;
+	display:none;	
 }
 
 .nav-tabs > li a .badge{
@@ -1440,7 +1436,7 @@ ul.my-list-right li:before{
 	background:url(../images/adventure-banner.jpg) no-repeat center center;
 	height:488px;
 	width:100%;
-	padding:50px 0;
+	padding:50px 0;	
 }
 
 .adventure-banner .season h3{
@@ -1499,7 +1495,7 @@ ul.my-list-right li:before{
 	text-transform:uppercase;
 	color:#333;
 	margin:5px 7px;
-
+	
 	transition: .2s linear;
 	-webkit-transition:.2s linear;
 	-moz-transition:.2s linear;
@@ -1677,19 +1673,19 @@ ul.my-list-right li:before{
 	font-family:'oswald', Arial, Helvetica, sans-serif;
 	/*color:#fff;*/
 	color:#03E1E1;
-	text-align:center;
+	text-align:center;	
 	text-shadow: 0px 1px 0px #444;
 	-webkit-text-shadow: 0px 1px 0px #444;
 	-moz-text-shadow: 0px 1px 0px #444;
 	-ms-text-shadow: 0px 1px 0px #444;
 	-o-text-shadow: 0px 1px 0px #444;
-
+	
 }
 .filter-adventures-heading h3{
 	font-family:'oswald', Arial, Helvetica, sans-serif;
 	/*color:#fff;*/
 	color:#02CACA;
-	text-align:center;
+	text-align:center;	
 	text-shadow: 0px 1px 0px #444;
 	-webkit-text-shadow: 0px 1px 0px #444;
 	-moz-text-shadow: 0px 1px 0px #444;
@@ -1700,7 +1696,7 @@ ul.my-list-right li:before{
 	/*background:url(../images/adventures-banner.jpg) no-repeat center center;*/
 	height:488px;
 	width:100%;
-	padding:50px 0;
+	padding:50px 0;	
 }
 
 
@@ -1712,9 +1708,9 @@ ul.my-list-right li:before{
 	width:100% ;
 	padding: 2px 10px;
 	text-align:left;
-
-
-
+	
+		
+	
 }
 .fitrangi-select button:hover, .fitrangi-select button:focus{
 	background:#fff;;
@@ -1726,7 +1722,7 @@ ul.my-list-right li:before{
 	background:#fff;
 	-webkit-box-shadow:none;
   	box-shadow: none;
-
+	
 }
 
 .fitrangi-select button .fa{
@@ -1801,9 +1797,9 @@ ul.my-list-right li:before{
 	width:100% ;
 	padding: 1px 10px;
 	text-align:left;
-
-
-
+	
+		
+	
 }
 .fitrangi-select-inline button:hover, .fitrangi-select-inline button:focus{
 	background:#fff;;
@@ -1815,7 +1811,7 @@ ul.my-list-right li:before{
 	background:#fff;
 	-webkit-box-shadow:none;
   	box-shadow: none;
-
+	
 }
 
 .fitrangi-select-inline button .fa{
@@ -1979,16 +1975,15 @@ ul.pagination li a{
 .fitrangi-datalist input::-webkit-calendar-picker-indicator{
   color: #999;
   width: 12px;
-  height: 12px;
+  height: 12px;  
   padding: 12px 15px;
   margin:5px;
-  position:absolute;
+  position:absolute; 
   line-height: 24px;
   border-left: 1px solid #ddd;
 
 }
 
-<<<<<<< HEAD
 .fitrangi-profile{
   border-radius: 7px;
   -webkit-border-radius: 7px;
@@ -2253,19 +2248,13 @@ ul.pagination li a{
 }
 
 
-=======
->>>>>>> c9cb900d91e09e960a2f65e145badad1d05db1b3
 
 .userprofile-banner{
 	background:url(../images/userprofile-banner.jpg) no-repeat center center;
 	background-size:cover;
 	height:488px;
 	width:100%;
-<<<<<<< HEAD
 	padding:50px 0;	
-=======
-	padding:50px 0;
->>>>>>> c9cb900d91e09e960a2f65e145badad1d05db1b3
 }
 
 .user-fav-acti h3{
@@ -2320,21 +2309,13 @@ ul.pagination li a{
 }
 
 .userprofile-banner .user-pro{
-<<<<<<< HEAD
 	
-=======
-
->>>>>>> c9cb900d91e09e960a2f65e145badad1d05db1b3
 }
 @media (max-width: 767px){
 .userprofile-banner .user-pro{
   width: 40%;
   text-align: center;
-<<<<<<< HEAD
   margin: 0px 190px;	
-=======
-  margin: 0px 190px;
->>>>>>> c9cb900d91e09e960a2f65e145badad1d05db1b3
 }
 .userprofile-banner .name-location, .userprofile-banner .name-location h2{
 	text-align:center;
@@ -2522,11 +2503,7 @@ section.user-post{
 	font-family:'oswald', Arial, Helvetica, sans-serif;
 	color:#484848;
 	display:inline-block;
-<<<<<<< HEAD
 	
-=======
-
->>>>>>> c9cb900d91e09e960a2f65e145badad1d05db1b3
 }
 .fitrangi-trips .thumbnail .caption .going h5:after{
 	content:' is going';
@@ -2543,72 +2520,3 @@ section.user-post{
 	top:100px;
 }
 }
-<<<<<<< HEAD
-=======
-
-.fitrangi-profile{
-  border-radius: 7px;
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  -ms-border-radius: 7px;
-  -o-border-radius: 7px;
-  /* background: #f4f4f4; */
-  /* border: 1px solid #e4e4e4; */
-  padding: 7px 10px;
-  margin: 10px 0;
-  text-align:left;
-}
-
-.fitrangi-profile h4 {
-  font-family: 'oswald', Arial, Helvetica, sans-serif;
-  color: #00C4A6;
-}
-.fitrangi-profile h5{
-	color:#898989;
-}
-.fitrangi-profile h5 span{
-	font-size:16px;
-}
-
-.fitrangi-thumb .caption h4{
-	margin:0;
-	color:#767676;
-	font-family:'oswald', Arial, Helvetica, sans-serif;
-}
-
-.fitrangi-thumb .captop{
-	position:absolute;
-	top:0px;
-	right:5px;
-	padding:15px 30px;
-}
-.fitrangi-thumb .capbottom{
-	position:absolute;
-	top:165px;
-	right:10px;
-	padding:0 20px;
-}
-.fitrangi-thumb .capbottom a span{
-	color:#00CACA;
-}
-.fitrangi-thumb .captop article{
-	right:0px;
-}
-.fitrangi-thumb .captop article h4{
-	display:inline-block;
-	color:#FFF;
-	vertical-align:middle;
-}
-
-
-@media (max-width: 1200px) {
-.fitrangi-thumb .capbottom{
-	top:130px;
-}
-}
-@media (max-width: 767px) {
-.fitrangi-thumb .capbottom{
-	top:100px;
-}
-}
->>>>>>> c9cb900d91e09e960a2f65e145badad1d05db1b3
