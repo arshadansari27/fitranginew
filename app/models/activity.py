@@ -59,6 +59,7 @@ class Activity(Entity, db.Document):
 
     @property
     def icon_image_path(self):
-        print "[*] Media Icon: ", self.name, ICONS.get(self.name)
-        return ICONS.get(self.name)
+        path = ICONS.get(self.name.replace(' ', ''))
+        print "[*] Media Icon: ", self.name, path
+        return path
 

@@ -15,6 +15,13 @@ FACETS = get_facets()
 MEMOIZED_FACETS = {}
 
 _link = re.compile(r'(?:(http://)|(www\.))(\S+\b/?)([!"#$%&\'()*+,\-./:;<=>?@[\\\]^_`{|}~]*)(\s|$)', re.I)
+PAGE_LIMIT = 50
+
+def get_start_end(page, size=PAGE_LIMIT):
+    if page < 1: page = 1
+    start = (page - 1) * size
+    end = start + size
+    return start, end
 
 def get_current_user():
     if hasattr(g, 'user')  and g.user is not None:

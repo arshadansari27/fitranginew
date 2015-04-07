@@ -1,31 +1,11 @@
-{#% extends 'site/models/common/_grid.html' %#}
-<section class="container-fluid profiles pb-20">
-    <h2 class="my-h2">Profiles</h2>
-
-    <div class="container">
-        {#% if True %#}
-            <ul class="pp-grid">
-                <li>
-                    <div class="pp-item pp-img-1">
-                        <div class="pp-info">
-                            <h3>Arshad Ansari</h3>
-
-                            <p>Mumbai</p>
+        {% if True %}
+                        <div class="col-sm-3 col-xs-6">
+                            <h3>{{model.name}}</h3>
+                            {% if model.location %} <p>{{model.location.name}}</p> {% endif %}
                         </div>
-                    </div>
-                </li>
-            </ul>
-        {#% else %#}
-            <hr>
-            <ul class="pp-grid">
-                <li>
-                    <div class="pagep-item pp-img-2">
-                        <div class="pagep-info">
-                            <h3>Crazy Sky</h3>
-                            <p>Mumbai</p>
+        {% else %}
+                        <div class="col-sm-3 col-xs-6">
+                            <h3>{{model.name}}</h3>
+                            {% if model.location %} <p>{{model.location.name}}</p> {% endif %}
                         </div>
-                    </div>
-                </li>
-            </ul>
-    </div>
-</section>
+        {% endif %}

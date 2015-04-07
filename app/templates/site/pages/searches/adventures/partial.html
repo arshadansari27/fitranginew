@@ -1,1 +1,43 @@
-{% include 'site/pages/commons/list_page.html' %}
+<section class="container-fluid border-grey-b mb-10">
+    <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+        <h4 class="oswald pl-10 pt-15">{{parent.name}} Adventures in India</h4>
+    </div>
+
+    <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+        <form class="form-inline mb-10 pull-right">
+            <input data-model="adventure" data-filter="activities__activity__name" type="hidden" value="{{parent.name}}">
+            <select  data-model="adventure" data-filter="extremity_level" class="form-control">
+                <option class="" value="">BY RATING</option>
+                <option class="rating-easy" value="easy">EASY</option>
+                <option class="rating-medium" value="medium">MEDIUM</option>
+                <option class="rating-difficult" value="difficult">DIFFICULT</option>
+                <option class="rating-extreme" value="extreme">EXTREME</option>
+            </select>
+            <input  data-model="adventure" class="form-control" data-filter="location__location__name" list="location" placeholder="BY LOCATION">
+            <datalist id="location">
+            </datalist>
+            <button class="btn btn-default oswald">RESET</button>
+        </form>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function(){
+        var filters = 'adventure';
+        window.filters = window.filters || {};
+        window.filters[filters] = window.filters[filters] || [];
+        var filters_list = window.filters[filters];
+        filters_list.push('extremity_level');
+        filters_list.push('activities__activity__name');
+        filters_list.push('location__location__name');
+        $.ajax({
+            url: '/options?model_name=location&attr=name'
+        }).done(function (data) {
+            $('#location').append(data);
+        });
+    });
+</script>
+<div id="models_list" class="container-fluid fitrangi-thumb">
+    {% import 'site/pages/commons/list_page.html' as listing %}
+    {{ listing.list_page('adventure', card_type, last_page, current_page) }}
+</div>

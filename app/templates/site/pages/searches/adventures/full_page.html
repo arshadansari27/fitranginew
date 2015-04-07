@@ -56,7 +56,7 @@
 <hr class="clearfix divider">
 <script>
     $(document).ready(function(){
-        var filters = '{{model_name}}';
+        var filters = 'adventure';
         window.filters = window.filters || {};
         window.filters[filters] = window.filters[filters] || [];
         var filters_list = window.filters[filters];
@@ -66,6 +66,7 @@
 </script>
 <section class="container-fluid p-0">
     <div id="models_list" class="container fitrangi-thumb">
-        {% include 'site/pages/commons/list_page.html' %}
+        {% import 'site/pages/commons/list_page.html' as listing %}
+        {{ listing.list_page('adventure', card_type, last_page, current_page) }}
     </div>
 </section>

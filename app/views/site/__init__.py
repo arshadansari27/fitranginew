@@ -114,7 +114,7 @@ def paged_list():
     collection_view, context = listing_helper()
     context['user'] = g.user if hasattr(g, 'user') and g.user is not None else None
     page = int(context.get('page'))
-    return collection_view.next_page(page)
+    return jsonify(status='success', html=collection_view.next_page(page), last_page=collection_view.get_last_page())
 
 @app.route('/options')
 def ajax_options():

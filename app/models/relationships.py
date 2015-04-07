@@ -1,3 +1,5 @@
+from app.utils import get_start_end, PAGE_LIMIT
+
 __author__ = 'arshad'
 from app.models import db, new_object
 
@@ -18,13 +20,7 @@ inverse_relation = {
     WISHLISTED: WISHLISTED_BY
 }
 
-PAGE_LIMIT = 50
 
-def get_start_end(page):
-    if page < 1: page = 1
-    start = (page - 1) * PAGE_LIMIT
-    end = start + PAGE_LIMIT
-    return start, end
 
 class RelationShips(db.Document):
     subject = db.GenericReferenceField()
@@ -109,60 +105,60 @@ class RelationShips(db.Document):
 
 
     @classmethod
-    def get_by_query(cls, subject, relation, paged=False, page=1):
+    def get_by_query(cls, subject, relation, paged=False, page=1, size=PAGE_LIMIT):
         query = RelationShips.objects(subject=subject, relation=relation)
         if paged:
-            s, e = get_start_end(page)
+            s, e = get_start_end(page, size)
             return (u.object for u in query.all()[s: e])
         else:
             return (u.object for u in query.all())
 
 
     @classmethod
-    def get_following(cls, subject, paged=False, page=1):
+    def get_following(cls, subject, paged=False, page=1, size=PAGE_LIMIT):
         return RelationShips.get_by_query(subject, inverse_relation.get(FOLLOWS), paged=paged, page=page)
 
     @classmethod
-    def get_followed_by(cls, subject, paged=False, page=1):
+    def get_followed_by(cls, subject, paged=False, page=1, size=PAGE_LIMIT):
         return RelationShips.get_by_query(subject, FOLLOWS, paged=paged, page=page)
 
     @classmethod
-    def get_interested(cls, subject, paged=False, page=1):
+    def get_interested(cls, subject, paged=False, page=1, size=PAGE_LIMIT):
         return RelationShips.get_by_query(subject, INTERESTED, paged=paged, page=page)
 
     @classmethod
-    def get_interested_in(cls, subject, paged=False, page=1):
+    def get_interested_in(cls, subject, paged=False, page=1, size=PAGE_LIMIT):
         return RelationShips.get_by_query(subject, inverse_relation.get(INTERESTED), paged=paged, page=page)
 
     @classmethod
-    def get_joined(cls, subject, paged=False, page=1):
+    def get_joined(cls, subject, paged=False, page=1, size=PAGE_LIMIT):
         return RelationShips.get_by_query(subject, JOINED, paged=paged, page=page)
 
     @classmethod
-    def get_joined_in(cls, subject, paged=False, page=1):
+    def get_joined_in(cls, subject, paged=False, page=1, size=PAGE_LIMIT):
         return RelationShips.get_by_query(subject, inverse_relation.get(JOINED), paged=paged, page=page)
 
     @classmethod
-    def get_favorites(cls, subject, paged=False, page=1):
+    def get_favorites(cls, subject, paged=False, page=1, size=PAGE_LIMIT):
         return RelationShips.get_by_query(subject, FAVORITE, paged=paged, page=page)
 
     @classmethod
-    def get_favorited_by(cls, subject, paged=False, page=1):
+    def get_favorited_by(cls, subject, paged=False, page=1, size=PAGE_LIMIT):
         return RelationShips.get_by_query(subject, inverse_relation.get(FAVORITE), paged=paged, page=page)
 
     @classmethod
-    def get_accomplished(cls, subject, paged=False, page=1):
+    def get_accomplished(cls, subject, paged=False, page=1, size=PAGE_LIMIT):
         return RelationShips.get_by_query(subject, ACCOMPLISHED, paged=paged, page=page)
 
     @classmethod
-    def get_accomplished_by(cls, subject, paged=False, page=1):
+    def get_accomplished_by(cls, subject, paged=False, page=1, size=PAGE_LIMIT):
         return RelationShips.get_by_query(subject, inverse_relation.get(ACCOMPLISHED), paged=paged, page=page)
 
     @classmethod
-    def get_wish_listed(cls, subject, paged=False, page=1):
+    def get_wish_listed(cls, subject, paged=False, page=1, size=PAGE_LIMIT):
         return RelationShips.get_by_query(subject, WISHLISTED, paged=paged, page=page)
 
     @classmethod
-    def get_wish_listed_by(cls, subject, paged=False, page=1):
+    def get_wish_listed_by(cls, subject, paged=False, page=1, size=PAGE_LIMIT):
         return RelationShips.get_by_query(subject, inverse_relation.get(WISHLISTED), paged=paged, page=page)
 

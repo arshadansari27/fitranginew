@@ -16,10 +16,10 @@ db.ListField = ListField
 
 
 (ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, PRODUCT, ARTICLE,
- LOCATION, POST, DISCUSSION, CHANNEL, STREAM, MESSAGE) =  (
+ LOCATION, POST, DISCUSSION, CHANNEL, STREAM, MESSAGE, RELATIONSHIPS) =  (
     "activity", "adventure", "event", "trip", "profile", "product",
     "article", "location", "post", "discussion", "channel",
-    "stream", "message"
+    "stream", "message", "relationships"
 )
 
 def handler(event):
@@ -191,6 +191,7 @@ class NodeFactory(object):
         from app.models.store import Product
         from app.models.profile import Profile
         from app.models.trip import Trip
+        from app.models.relationships import RelationShips
         model_class = NodeFactory.get_class_by_name(model_class.lower())
         print '*' * 10, model_class.__name__
         return model_class.get_by_id(id)
@@ -205,6 +206,7 @@ class NodeFactory(object):
         from app.models.profile import Profile
         from app.models.trip import Trip
         from app.models.streams import ActivityStream, Message, UserMessage
+        from app.models.relationships import RelationShips
         name = name.lower()
 
         if name == ACTIVITY: return Activity
@@ -220,6 +222,7 @@ class NodeFactory(object):
         elif name == CHANNEL: return Channel
         elif name == STREAM: return ActivityStream
         elif name == MESSAGE: return  Message
+        elif name == RELATIONSHIPS: return RelationShips
         else: return None
 
 if __name__ == '__main__':

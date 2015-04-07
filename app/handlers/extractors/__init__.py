@@ -4,12 +4,15 @@ __author__ = 'arshad'
 
 
 from bson import ObjectId, json_util
-from app.models import Node, ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST, DISCUSSION, STREAM
+from app.models import Node, ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST, DISCUSSION, STREAM, RELATIONSHIPS
 from app.models.activity import Activity
 from app.models.adventure import Adventure
 from app.models.content import Article, Post, Discussion
 from app.models.event import Event
-from app.models.profile import Profile
+from app.models.profile import Profile, ProfileType
+from app.models.relationships import (RelationShips, FAVORITE, FAVORITED_BY, INTERESTED, INTEREST_SHOWN_BY,
+                                      JOINED, JOINED_BY, ACCOMPLISHED, ACCOMPLISHED_BY, FOLLOWED_BY,
+                                      FOLLOWS, WISHLISTED, WISHLISTED_BY)
 from flask import render_template, g
 from mongoengine import Document
 import simplejson
@@ -35,7 +38,6 @@ class NodeExtractor(object):
         self.filters = filters
 
     def get_list(self, paged, page, size):
-        print '[*]', paged, page, size
         if paged:
             page = int(page)
             start = (page - 1) * size
@@ -49,14 +51,26 @@ class NodeExtractor(object):
 
     def last_page(self, size):
         count = self.get_query().count()
+        print 'Last Page Count', count
         return (count / size) + 1
 
+    def init_filters(self):
+        return {}
+
     def get_query(self):
+        filters = self.init_filters()
         if len(self.filters) > 0:
-            print '[*]', self.filters
             filters = {}
             for k, v in self.filters.iteritems():
-                if '__' in k:
+                if k.startswith('relationship'):
+                    fields = k.split('__')
+                    assert len(fields) >= 3
+                    relationship = fields[1]
+                    from_node_type = fields[2]
+                    from_node = NodeExtractor.factory(from_node_type, dict(pk=v)).get_single()
+                    nodes = RelationShips.get_by_query(from_node, relationship)
+                    filters['id__in'] = [u.id for u in nodes]
+                elif '__' in k:
                     fields = k.split('__')
                     if len(fields) >= 3:
                         __filters = {}
@@ -71,8 +85,7 @@ class NodeExtractor(object):
                         filters[k] = v
                 else:
                     filters[k] = v
-            return self.model_class().objects(**filters)
-        return self.model_class().objects
+        return self.model_class().objects(**filters)
 
     def model_class(self):
         raise Exception("Not implemented")
@@ -101,6 +114,8 @@ class NodeExtractor(object):
             cls = DiscussionExtractor
         elif model_name == STREAM:
             cls = ActivityStreamExtractor
+        elif model_name == RELATIONSHIPS:
+            cls = RelationShipExtractor
         else:
             raise Exception("Invalid model name for extractor")
         return cls(filters)
@@ -155,6 +170,14 @@ class TripExtractor(NodeExtractor):
 
 class ProfileExtractor(NodeExtractor):
 
+    def init_filters(self):
+        return dict(type__ne=ProfileType.objects(name__iexact='Subscription Only').first())
+
     def model_class(self):
         return Profile
 
+
+class RelationShipExtractor(NodeExtractor):
+
+    def model_class(self):
+        return RelationShips

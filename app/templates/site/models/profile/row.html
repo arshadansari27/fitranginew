@@ -1,32 +1,23 @@
-{#% extends 'site/models/common/_row.html' %#}
-
-{# %if True% #}
-    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-        <ul class="media-list">
+{%if True %}
             <li>
                 <article class="fitrangi-profile">
-                    <img src="../images/pro-pic.jpg" class="img-circle img-responsive pull-left p-5" width="60" height="100">
+                    <img src="{{model.cover_image_path}}" class="img-circle img-responsive pull-left p-5" width="60" height="100">
                     <a href="" class="btn btn-default btn-xs mt-10 grey pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-check"></i></a>
                     <a href="" class="btn btn-default btn-xs mt-10 grey pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-plus"></i></a>
-                    <h4>User Name Comes Here</h4>
-                    <h5><span class="fa fa-map-marker"></span> Mumbai, Maharashtra </h5>
+                    <h4>{{model.name}}</h4>
+                    {% if model.location %} <h5><span class="fa fa-map-marker"></span> {{model.location.name }}</h5>{% endif %}
                 </article>
              </li>
-        </ul>
-    </div>
-{# %else% #}
+{% else %}
 
-    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-        <ul class="media-list">
             <li>
                 <article class="fitrangi-profile">
 
-                    <img src="../images/poplr-pro2.jpg" class="media-object img-responsive pull-left p-5" width="60" height="100">
+                    <img src="{{model.cover_image_path}}" class="media-object img-responsive pull-left p-5" width="60" height="100">
                     <a href="" class="btn btn-default btn-xs mt-10 grey pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-check"></i></a>
                     <a href="" class="btn btn-default btn-xs mt-10 grey pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-plus"></i></a>
-                    <h4>User Name Comes Here</h4>
-                    <h5><span class="fa fa-map-marker"></span> Mumbai, Maharashtra </h5>
+                    <h4>{{model.name}}</h4>
+                    {% if model.location %} <h5><span class="fa fa-map-marker"></span> {{model.location.name }}</h5>{% endif %}
                 </article>
             </li>
-        </ul>
-    </div>
+{% endif %}

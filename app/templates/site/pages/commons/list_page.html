@@ -1,3 +1,4 @@
+{% macro list_page(model_name, card_type, last_page, current_page) %}
 {% if card_type == 'grid' %}
 <div  data-model="{{model_name}}" data-card-type="{{card_type}}" data-type="model-container" class="row-fluid">
 </div>
@@ -6,11 +7,13 @@
 </ul>
 {% endif %}
 <br/>
+<script>console.log("{{last_page}}, {{current_page}}");</script>
 {% if last_page >= current_page %}
 <div class="col-sm-offset-2 col-sm-8">
     <button data-model="{{model_name}}" data-card-type="{{card_type}}" data-action="load-more" class="col-sm-12 btn-primary">Load more</button>
 </div>
 {% endif %}
+<br/>
 <br/>
 <script language="JavaScript">
 
@@ -21,6 +24,7 @@
         var key = model_name + '-' + card_type;
         var loadMoreSelector = '[data-model=' + model_name + '][data-card-type=' + card_type + '][data-action=load-more]';
         var container = $('[data-model="' + model_name + '"][data-card-type="' + card_type + '"][data-type="model-container"]');
+        var last_page = 1;
         var load_models = function() {
             window.current_page = window.current_page || {};
             window.current_page[key] = window.current_page[key] || 1;
@@ -30,6 +34,7 @@
 
             var query = "";
             for(var u = 0; u < filters_list.length; u++) {
+                console.log('Filter by: ' + filters_list[u]);
                 var $input = $('[data-model="'+model_name+'"][data-filter="' + filters_list[u] +'"]');
                 var name = filters_list[u];
                 var value = $input.val();
@@ -53,7 +58,15 @@
             $.ajax({
                 url: url
             }).done(function (data) {
-                container.append(data);
+                if (data.status == 'success') {
+                    container.append(data.html);
+                    last_page = data.last_page;
+                    if (last_page <= window.current_page[key]) {
+                       $(loadMoreSelector).hide();
+                    }
+                } else {
+                    container.append('Nothing to load...');
+                }
             });
             window.current_page[key] = parseInt(window.current_page[key]) + 1;
 
@@ -92,3 +105,4 @@
 
     });
 </script>
+{% endmacro %}
