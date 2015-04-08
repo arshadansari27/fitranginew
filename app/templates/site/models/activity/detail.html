@@ -5,7 +5,11 @@
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                 <div class="favourite" style="background: white;">
                     <img src="{{model.icon_image_path}}" class="img-rounded img-responsive">
-                    <a href=""><h3>Add to Favourite</h3></a>
+                    {% if model in user.favorite_activities %}
+                    <a href="" ><h3><i class="fa fa-check"></i>Added to Favourites</h3></a>
+                    {% else %}
+                    <a href="" ><h3>Add to Favourites</h3></a>
+                    {% endif %}
                 </div>
             </div>
             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
@@ -26,13 +30,13 @@
                         <li class=""><a href="#adventures"  role="tab" data-toggle="tab" aria-controls="adventures" aria-expanded="false">'
                         <span class="fa fa-child"></span> <strong>Adventures</strong> </a></li>
                         <li class=""><a href="#favourited" role="tab" data-toggle="tab" aria-controls="favourited" aria-expanded="false">
-                        <span class="fa fa-star"></span> <strong>Favourited By</strong> <span class="badge">15</span></a></li>
+                        <span class="fa fa-star"></span> <strong>Favourited By</strong> </a></li>
                         <li class=""><a href="#photosvideos" role="tab" data-toggle="tab" aria-controls="photosvideos" aria-expanded="false">
-                        <span class="fa fa-image"></span> <strong>Photos/Videos</strong> <span class="badge">22</span></a></li>
+                        <span class="fa fa-image"></span> <strong>Photos/Videos</strong> </a></li>
                         <li class=""><a href="#discussions" role="tab" data-toggle="tab" aria-controls="discussions" aria-expanded="false">
-                        <span class="fa fa-comment"></span> <strong>Discussions</strong> <span class="badge">8</span></a></li>
+                        <span class="fa fa-comment"></span> <strong>Discussions</strong> </a></li>
                         <li class=""><a href="#journals" role="tab" data-toggle="tab" aria-controls="journals" aria-expanded="false">
-                        <span class="fa fa-book"></span> <strong>Journals</strong> <span class="badge">16</span></a></li>
+                        <span class="fa fa-book"></span> <strong>Journals</strong> </a></li>
                     </ul>
                 </div>
             </div>
@@ -132,7 +136,7 @@
                   <div role="tabpanel" class="tab-pane fade" id="journals" aria-labelledby="journals">
                       <section class="container-fluid border-grey-b mb-10">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <h4 class="oswald pl-10 pt-15">Trekking & Hiking:Popular from journal</h4>
+                                <h4 class="oswald pl-10 pt-15">{{model.name}}: Popular from journal</h4>
                                 <div class="pull-right">
                                     <button type="button" class="btn btn-primary">Go to Journal</button>
                                 </div>

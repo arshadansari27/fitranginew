@@ -12,7 +12,7 @@ class State(db.Document):
         return "%s %s" % ("%s -" % self.state if self.state else '', self.country)
 
 @update_content.apply
-class Location(Entity, db.Document):
+class Location(db.Document):
     geo_location = db.PointField()
     address = db.StringField()
     city = db.StringField()
@@ -23,9 +23,19 @@ class Location(Entity, db.Document):
 
     meta = {
         'indexes': [
-            {'fields': ['-modified_timestamp', 'slug', 'name'], 'unique': False, 'sparse': False, 'types': False },
+            {'fields': ['zipcode'], 'unique': True, 'sparse': False, 'types': False },
         ],
     }
+
+    def __repr__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.name
+
+    @property
+    def name(self):
+        return ", ".join([u for u in [self.city if self.is_city else self.region, self.state.state if self.state and self.state.state else None] if u is not None and len(u) > 0])
 
 
 @update_content.apply

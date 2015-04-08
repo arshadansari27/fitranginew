@@ -140,8 +140,8 @@ class TagAdminView(ModelView):
 class LocationAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'address', 'is_city', 'city', 'region', 'zipcode', 'state', 'geo_location', 'cover_image']
-    column_list = ('name', 'is_city', 'state')
+    form_columns = ['is_city', 'city', 'region', 'zipcode', 'state', 'geo_location']
+    column_list = ('is_city', 'state')
     column_filters = ['city', 'region']
     column_searchable_list = ('city', 'region')
 

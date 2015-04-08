@@ -13,10 +13,9 @@ class View(object):
 
 class NodeCollectionView(View):
 
-    def __init__(self, model_name, card_type, query=None, page=1, size=50, is_partial=False, only_list=False, paged=True, parent_model=None):
+    def __init__(self, model_name, card_type, query=None, page=1, size=50, is_partial=False, only_list=False, paged=True, parent_model=None, fixed_size=None):
         self.model_name = model_name
         self.filters = convert_query_to_filter(query)
-        print '[Query Collection]', self.filters, '->', query
         self.paged = paged
         self.page = page
         self.size = size
@@ -24,6 +23,7 @@ class NodeCollectionView(View):
         self.is_partial = is_partial
         self.only_list = only_list
         self.parent = parent_model
+        self.fixed_size = fixed_size
         self.extractor = NodeExtractor.factory(self.model_name, self.filters)
 
     def get_card(self, context=None):
@@ -36,26 +36,37 @@ class NodeCollectionView(View):
         else:
             for k, v in c.iteritems():
                 context[k] = v
-
-        last_page = self.extractor.last_page(self.size)
+        if self.fixed_size:
+            last_page = 1
+        else:
+            last_page = self.extractor.last_page(self.size)
         current_page = self.page
         context['last_page'] = last_page
         context['current_page'] = current_page
         return template.render(**context)
 
     def get_last_page(self):
-        return self.extractor.last_page(self.size)
+        if self.fixed_size:
+            return 1
+        else:
+            return self.extractor.last_page(self.size)
 
     def next_page(self, page):
-        models = self.extractor.get_list(True, page, self.size)
-        return ''.join([NodeView.factory(self.model_name, self.card_type, m.id).get_card() for m in models])
+        try:
+            models = self.extractor.get_list(True, page, self.size)
+        except:
+            models = []
+        if len(models) > 0:
+            return ''.join([NodeView.factory(self.model_name, self.card_type, m.id).get_card() for m in models])
+        else:
+            return '<div class="jumbotron"><h3>Nothing to display here</h3></div>'
 
     def get_page_path(self):
         raise Exception("Not implemented")
 
     def get_template(self):
         if self.only_list:
-            return "site/pages/commons/list_page.html"
+            return "%s/%s" % (self.get_page_path(), "list_only.html")
         elif self.is_partial:
             return "%s/%s" % (self.get_page_path(), "partial.html")
         else:
@@ -75,7 +86,7 @@ class NodeCollectionView(View):
         elif model_view == PROFILE:
             return ProfileCollectionView(
                 card_type, query, page, size, is_partial, only_list, parent=parent)
-        elif model_view == ARTICLE:
+        elif model_view == ARTICLE or model_view == 'journal':
             return ArticleCollectionView(
                 card_type, query, page, size, is_partial, only_list, parent=parent)
         elif model_view == DISCUSSION:
@@ -92,8 +103,8 @@ class NodeCollectionView(View):
 
 class StreamCollectionView(NodeCollectionView):
 
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None):
-        super(StreamCollectionView, self).__init__(STREAM, card_type, query, page, size, is_partial, only_list, parent_model=parent)
+    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None):
+        super(StreamCollectionView, self).__init__(STREAM, card_type, query, page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size)
         self.model_name = STREAM
 
     def get_page_path(self):
@@ -102,8 +113,8 @@ class StreamCollectionView(NodeCollectionView):
 
 class AdventureCollectionView(NodeCollectionView):
 
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None):
-        super(self.__class__, self).__init__(ADVENTURE, card_type, query,  page, size, is_partial, only_list, parent_model=parent)
+    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None):
+        super(self.__class__, self).__init__(ADVENTURE, card_type, query,  page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size)
         self.model_name = ADVENTURE
 
     def get_page_path(self):
@@ -111,8 +122,8 @@ class AdventureCollectionView(NodeCollectionView):
 
 class ProfileCollectionView(NodeCollectionView):
 
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None):
-        super(ProfileCollectionView, self).__init__(PROFILE, card_type, query,  page, size, is_partial, only_list, parent_model=parent)
+    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None):
+        super(ProfileCollectionView, self).__init__(PROFILE, card_type, query,  page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size)
         self.model_name = PROFILE
 
     def get_page_path(self):
@@ -120,8 +131,8 @@ class ProfileCollectionView(NodeCollectionView):
 
 class PostCollectionView(NodeCollectionView):
 
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None):
-        super(PostCollectionView, self).__init__(POST, card_type, query, page, size, is_partial, only_list, parent_model=parent)
+    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None):
+        super(PostCollectionView, self).__init__(POST, card_type, query, page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size)
         self.model_name = POST
 
     def get_page_path(self):
@@ -129,8 +140,8 @@ class PostCollectionView(NodeCollectionView):
 
 class DiscussionCollectionView(NodeCollectionView):
 
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None):
-        super(DiscussionCollectionView, self).__init__(DISCUSSION, card_type, query, page, size, is_partial, only_list, parent_model=parent)
+    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None):
+        super(DiscussionCollectionView, self).__init__(DISCUSSION, card_type, query, page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size)
         self.model_name = DISCUSSION
 
     def get_page_path(self):
@@ -138,8 +149,8 @@ class DiscussionCollectionView(NodeCollectionView):
 
 class EventCollectionView(NodeCollectionView):
 
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None):
-        super(EventCollectionView, self).__init__(EVENT, card_type, query, page, size, is_partial, only_list, parent_model=parent)
+    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None):
+        super(EventCollectionView, self).__init__(EVENT, card_type, query, page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size)
         self.model_name = EVENT
 
     def get_page_path(self):
@@ -147,8 +158,8 @@ class EventCollectionView(NodeCollectionView):
 
 class ArticleCollectionView(NodeCollectionView):
 
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None):
-        super(ArticleCollectionView, self).__init__(ARTICLE, card_type, query, page, size, is_partial, only_list, parent_model=parent)
+    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None):
+        super(ArticleCollectionView, self).__init__(ARTICLE, card_type, query, page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size)
         self.model_name = ARTICLE
 
     def get_page_path(self):
@@ -156,8 +167,8 @@ class ArticleCollectionView(NodeCollectionView):
 
 class TripCollectionView(NodeCollectionView):
 
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None):
-        super(TripCollectionView, self).__init__(TRIP, card_type, query, page, size, is_partial, only_list, parent_model=parent)
+    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None):
+        super(TripCollectionView, self).__init__(TRIP, card_type, query, page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size)
         self.model_name = TRIP
 
     def get_page_path(self):
@@ -252,7 +263,7 @@ class ActivityView(NodeView):
         parent=self.get_model()
         return {
             'adventure_list': AdventureCollectionView("grid", "", is_partial=True, parent=parent).get_card(),
-            "follower_list": ProfileCollectionView("grid", "", is_partial=True, parent=parent).get_card(),
+            "follower_list": ProfileCollectionView("row", "", is_partial=True, parent=parent).get_card(),
             'discussion_list': DiscussionCollectionView("row", "", is_partial=True, parent=parent).get_card(),
             'article_list': ArticleCollectionView("grid", "", is_partial=True, parent=parent).get_card()
         }
@@ -267,7 +278,11 @@ class AdventureView(NodeView):
         super(AdventureView, self).__init__(ADVENTURE, card_type, id, key)
 
     def get_detail_context(self):
-        return {}
+        parent=self.get_model()
+        other_adventure_list = AdventureCollectionView("row", "", only_list=True, parent=parent, fixed_size=True).get_card()
+        return {
+            'other_adventure_list': other_adventure_list
+        }
 
     def get_card_context(self):
         return {}

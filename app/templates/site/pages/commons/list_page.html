@@ -1,24 +1,22 @@
 {% macro list_page(model_name, card_type, last_page, current_page) %}
-{% if card_type == 'grid' %}
+{% if card_type == 'grid' or card_type == 'row' %}
 <div  data-model="{{model_name}}" data-card-type="{{card_type}}" data-type="model-container" class="row-fluid">
 </div>
 {% else %}
-<ul data-model="{{model_name}}" data-card-type="{{card_type}}" data-type="model-container" class="row-fluid">
+<ul data-model="{{model_name}}" data-card-type="{{card_type}}" data-type="model-container" class="row-fluid media-list">
 </ul>
 {% endif %}
 <br/>
-<script>console.log("{{last_page}}, {{current_page}}");</script>
-{% if last_page >= current_page %}
+{% if last_page > current_page %}
 <div class="col-sm-offset-2 col-sm-8">
     <button data-model="{{model_name}}" data-card-type="{{card_type}}" data-action="load-more" class="col-sm-12 btn-primary">Load more</button>
 </div>
 {% endif %}
-<br/>
-<br/>
 <script language="JavaScript">
 
     $(document).ready(function(){
-
+        var _load_more = '{% if last_page > current_page %}1{% else %}0{% endif %}';
+        var show_load_more = (parseInt(_load_more)>0)?true: false;
         var model_name = '{{model_name}}';
         var card_type = '{{card_type}}';
         var key = model_name + '-' + card_type;
@@ -60,8 +58,9 @@
             }).done(function (data) {
                 if (data.status == 'success') {
                     container.append(data.html);
+
                     last_page = data.last_page;
-                    if (last_page <= window.current_page[key]) {
+                    if (!show_load_more || last_page <= window.current_page[key]) {
                        $(loadMoreSelector).hide();
                     }
                 } else {

@@ -38,36 +38,30 @@ def setup_context():
 #@cache.cached(timeout=3600 * 24)
 def get_menu_selection(request_path):
     top, main, inner = None, None, None
-    if '/explore' in request_path:
-        top = 'explore'
-        if '/activity' in request_path:
-            main = 'activity'
-            for k, v in get_activities().iteritems():
-                for i, j in v.iteritems():
-                    if request_path in j or j in request_path:
-                        inner = i
-        elif '/adventure' in request_path:
-            main = 'adventure'
-        else:
-            main = None
-    elif '/community' in request_path:
-        top = 'community'
-        if '/discussion' in request_path:
-            main = 'discussion'
-        elif '/profile' in request_path:
-            main = 'profile'
-        else:
-            main = None
-    elif '/journal' in request_path:
-        top = 'journal'
-        if '/content' in request_path:
-            main = 'content'
-        elif '/write' in request_path:
-            main = 'write'
-        else:
-            main = None
-    else:
-        top = None
+
+    menu_args = [
+        ('/activity', ('explore', 'activity')),
+        ('/adventure', ('explore', 'adventure')),
+        ('/blog', ('explore', 'journal')),
+        ('/profile', ('community', 'profile')),
+        ('/discussion', ('community', 'discussion')),
+        ('/event', ('community', 'event')),
+        ('/trip', ('trip', None)),
+        ('/explore', ('explore', None)),
+        ('/community', ('community', None))
+    ]
+
+    for k, v in menu_args:
+        if k in request.path:
+            top, main = v
+            break
+
+    if '/activity' in request_path:
+        for k, v in get_activities().iteritems():
+            for i, j in v.iteritems():
+                if request_path in j or j in request_path:
+                    inner = i
+
 
     class Menu(object):
         def __init__(self, top, main, inner):
@@ -79,6 +73,7 @@ def get_menu_selection(request_path):
             return "%s -> %s -> %s" % (self.app_name, self.main_menu, self.inner)
 
     menu = Menu(top, main, inner)
+    print menu
     return menu
 
 from .common import *

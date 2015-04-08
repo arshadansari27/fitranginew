@@ -137,7 +137,10 @@ def ajax_options():
 def model_view(slug):
     model_type = [u for u in request.path.split('/') if u and len(u) > 0][0]
     view = NodeView.factory(model_type, MODEL_DETAIL_VIEW, '/%s/%s' % (model_type, slug), key='slug__iexact')
-    return render_template('site/pages/commons/view.html', card=view.get_card())
+    from app.views import force_setup_context
+    context = force_setup_context({})
+    context['card'] = view.get_card()
+    return render_template('site/pages/commons/view.html', **context)
 
 
 @app.route('/sub_comment/<post_id>', methods=['POST'])
