@@ -2,127 +2,64 @@ __author__ = 'arshad'
 
 from flask import request, redirect, flash, g, render_template, jsonify, send_file, url_for
 
-from app.handlers.editors.model_editor import ModelEditor
+#from app.handlers.editors.model_editor import ModelEditor
 from app.handlers.messaging import send_single_email
 from app import app
-from app.handlers import login_required, redirect_url
-from app.models import Profile, Post, Content
+#from app.handlers import login_required, redirect_url
+#from app.models import Profile, Post, Content
 from StringIO import StringIO
 import random, os
 from PIL import Image
 
 
 
-from app.models import PROFILE, ACTIVITY, ADVENTURE, ARTICLE, BLOG, POST, EVENT, TRIP
-from app.views.site.extractors import NodeExtractor
+from app.models import PROFILE, ACTIVITY, ADVENTURE, ARTICLE, POST, EVENT, TRIP
+#from app.views.site.extractors import NodeExtractor
 
 __author__ = 'arshad'
 
 from flask import jsonify
 
 
+def response_handler(success, failure):
+    def wrap(f):
+        def wrapped_f(*kargs, **kwargs):
+            try:
+                node = f(*kargs, **kwargs)
+                return dict(status='success', message=success, node=str(node.id))
+            except Exception, e:
+                return dict(status='error', message=failure, exception=str(e))
+        return wrapped_f
+    return wrap
+
+
 class NodeEditor(object):
 
     def __init__(self, message):
         self.message = message
+        self.command = message['command']
+        self.action = message['action']
+        self.data = message['data']
+        self.node = message['node']
 
     def invoke(self):
-        status, node, message = self.__execute()
-        return jsonify(dict(status=status, node=node, message=message))
+        try:
+            response = self._invoke()
+            return jsonify(response)
+        except Exception, e:
+            return jsonify(dict(status='error', message='Failed to execute the command'))
 
-    def __execute(self):
-        self.node = self.__get_by_id(self.message['node_id'])
-        action = self.message['action']
-        if action == 'upload_cover_image':
-            return self.__upload_cover_image()
-        elif action == 'remove_cover_image':
-            return self.__remove_cover_image()
-        elif action == 'upload_to_image_gallery':
-            return self.__upload_to_image_gallery()
-        elif action == 'remove_from_image_gallery':
-            return self.__remove_from_image_gallery()
-        else:
-            return self.execute()
-
-    def __upload_cover_image(self):
-        pass
-
-    def __remove_cover_image(self):
-        pass
-
-    def __upload_to_image_gallery(self):
-        pass
-
-    def __remove_from_image_gallery(self):
-        pass
-
-    def execute(self):
-        raise Exception("Not Implemented")
-
-    def __get_by_id(self, id):
-        if not (isinstance(id, str) or isinstance(id, unicode)):
-            id = str(id)
-        node = NodeExtractor.factory(self.message['type'])().model_class().objects(pk=id).first()
-        if not node:
-            raise Exception("Node not found")
-        return node
-
+    def _invoke(self):
+        raise Exception("Not implemented")
 
     @classmethod
     def factory(cls, message):
+        from app.handlers.editors.profile import ProfileEditor
         type = message['type']
         if type is None:
             raise Exception("Invalid message")
-        else:
-            if type == PROFILE:
-                return ProfileEditor
-            elif type == ACTIVITY:
-                return ActivityEditor
-            elif type == ADVENTURE:
-                return AdventureEditor
-            elif type == TRIP:
-                return TripEditor
-            elif type == EVENT:
-                return EventEditor
-            elif type in [ARTICLE, BLOG]:
-                return ContentEditor
-            elif type == POST:
-                return PostEditor
-            elif type == 'stream':
-                return StreamEditor
-            else:
-                raise Exception("Not implemented")
-
-
-class ProfileEditor(NodeEditor):
-
-    def execute(self):
-        action = self.message['action']
-        if action == 'change_password':
-            pass
-        elif action == 'edit_model':
-            pass
-
-class ActivityEditor(NodeEditor):
-    pass
-
-class AdventureEditor(NodeEditor):
-    pass
-
-class TripEditor(NodeEditor):
-    pass
-
-class EventEditor(NodeEditor):
-    pass
-
-class ContentEditor(NodeEditor):
-    pass
-
-class StreamEditor(NodeEditor):
-    pass
-
-class PostEditor(NodeEditor):
-    pass
+        elif type == PROFILE:
+            return ProfileEditor(message)
 
 """
 @app.route('/model/<channel>/<key>/edit', methods=['GET', 'POST'])

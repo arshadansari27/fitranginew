@@ -38,7 +38,7 @@ class Profile(Entity, db.Document):
     adventures_done = db.ListField(db.ReferenceField('Adventure'))
     adventures_wishlist = db.ListField(db.ReferenceField('Adventure'))
     favorite_activities = db.ListField(db.ReferenceField('Activity'))
-    bookmarks = db.ListField(db.StringField())
+    bookmarks = db.ListField(db.ReferenceField('Article'))
     is_business_profile = db.BooleanField()
     roles = db.ListField(db.StringField(choices=(('Admin', 'Admin'), ('Content Manager', 'Content Manager'), ('Basic User', 'Basic User'), ('Service Provider', 'Service Provider'))))
     type = db.ListField(db.ReferenceField('ProfileType'))
