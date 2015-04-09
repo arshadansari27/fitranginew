@@ -1,4 +1,4 @@
-from app import Profile, ProfileType, RelationShips, Event, Trip
+from app import Profile, ProfileType, RelationShips, Event, Trip, Activity, Adventure
 from app.handlers.editors import NodeEditor, response_handler
 
 __author__ = 'arshad'
@@ -64,30 +64,52 @@ def edit_cover_image(profile, data):
     node = Profile.objects(pk=profile).first()
     return node
 
+@response_handler('Successfully updated the password', 'Failed to update the password')
 def change_password(profile, data):
     node = Profile.objects(pk=profile).first()
     return node
 
+@response_handler('Successfully updated wish list', 'Failed to update wish list')
 def wish_list_adventure(action, profile, adventure):
     node = Profile.objects(pk=profile).first()
+    adventure = Adventure.objects(pk=adventure).first()
+    if action == 'add':
+        RelationShips.wishlist(node, adventure)
+    else:
+        RelationShips.unwishlist(node, adventure)
     return node
 
+@response_handler('Successfully updated adventure accomplishment', 'Failed to update adventure accomplishment')
 def accomplish_adventure(action, profile, adventure):
     node = Profile.objects(pk=profile).first()
+    adventure = Adventure.objects(pk=adventure).first()
+    if action == 'add':
+        RelationShips.accomplish(node, adventure)
+    else:
+        RelationShips.unaccomplish(node, adventure)
     return node
 
-def favorite_activity(action, profile, adventure):
+@response_handler('Successfully updated favorite activities', 'Failed to update favorite activities')
+def favorite_activity(action, profile, activity):
     node = Profile.objects(pk=profile).first()
+    activity = Activity.objects(pk=activity).first()
+    if (action == 'add'):
+        RelationShips.favorite(node, activity)
+    else:
+        RelationShips.un_favorite(node, activity)
     return node
 
+@response_handler('Successfully updated subscription', 'Failed to update subscription')
 def follow_profile(action, profile, profile2):
     node = Profile.objects(pk=profile).first()
     return node
 
+@response_handler('Successfully updated bookmarks', 'Failed to update bookmarks')
 def bookmark_article(action, profile, article):
     node = Profile.objects(pk=profile).first()
     return node
 
+@response_handler('Successfully updated interests in event', 'Failed to update interests in events')
 def interest_event(action, profile, event):
     node = Profile.objects(pk=profile).first()
     event = Event.objects(pk=event).first()
@@ -101,6 +123,7 @@ def interest_event(action, profile, event):
         raise Exception("Invalid action")
     return node
 
+@response_handler('Successfully updated joining status', 'Failed to update joining status')
 def join_event(action, profile, event):
     node = Profile.objects(pk=profile).first()
     event = Event.objects(pk=event).first()
@@ -114,6 +137,7 @@ def join_event(action, profile, event):
         raise Exception("Invalid action")
     return node
 
+@response_handler('Successfully updated interests in trip', 'Failed to update interests in trip')
 def interest_trip(action, profile, trip):
     node = Profile.objects(pk=profile).first()
     trip = Trip.objects(pk=trip).first()
@@ -127,6 +151,7 @@ def interest_trip(action, profile, trip):
         raise Exception("Invalid action")
     return node
 
+@response_handler('Successfully updated joining status', 'Failed to update joining status')
 def join_trip(action, profile, trip):
     node = Profile.objects(pk=profile).first()
     trip = Trip.objects(pk=trip).first()
@@ -140,28 +165,33 @@ def join_trip(action, profile, trip):
         raise Exception("Invalid action")
     return node
 
+@response_handler('Successfully updated verification', 'Failed to update verification')
 def verify_profile(action, profile):
     node = Profile.objects(pk=profile).first()
     node.is_verified = True if action == 'verify' else False
     node.save()
     return node
 
+@response_handler('Successfully updated preferences', 'Failed to update preferences')
 def edit_profile_preference(profile, data):
     node = Profile.objects(pk=profile).first()
     return node
 
+@response_handler('Successfully registered', 'Failed to register')
 def register_profile(data):
     profile = Profile.create(data['name', data['email']])
     profile.password = data['password']
     profile.save()
     return profile
 
+@response_handler('Successfully updated business status', 'Failed to update business status')
 def business_profile_edit(action, profile):
     node = Profile.objects(pk=profile).first()
     node.is_business_profile = True if action == 'make' else False
     node.save()
     return node
 
+@response_handler('Successfully updated role', 'Failed to update role')
 def edit_role(action, profile, role):
     node = Profile.objects(pk=profile).first()
     if action == 'add':
@@ -173,6 +203,7 @@ def edit_role(action, profile, role):
     node.save()
     return node
 
+@response_handler('Successfully updated profile type', 'Failed to update profile type')
 def edit_type(action, profile, type):
     node = Profile.objects(pk=profile).first()
     type = ProfileType.objects(name__iexact=type).first()
@@ -185,6 +216,7 @@ def edit_type(action, profile, type):
     node.save()
     return node
 
+@response_handler('Successfully updated activation status', 'Failed to update activation status')
 def deactivate_profile(action, profile):
     node = Profile.objects(pk=profile).first()
     node.deactivate = True if action == 'deactivate' else False

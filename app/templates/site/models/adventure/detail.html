@@ -35,16 +35,16 @@
 
                         <li>
                             {% if not model in user.accomplished_adventure %}
-                                <a href="#"><span class="fa fa-exclamation"></span>&nbsp;Remove from Done</a>
+                                <a href="#" id="add-to-done"><span class="fa fa-check"></span>&nbsp;Done this</a>
                             {% else %}
-                                <a href="#"><span class="fa fa-check"></span>&nbsp;Done This</a>
+                                <a href="#" id="remove-from-done"><span class="fa fa-check green"></span>&nbsp;Undo this</a>
                             {% endif %}
                         </li>
                         <li>
                             {% if not model in user.wish_list_adventure %}
-                            <a href="#"><span class="fa fa-star"></span> Add to Wishlist</a>
+                            <a href="#" id="add-to-wish-list"><span class="fa fa-star"></span> Add to Wishlist</a>
                             {% else %}
-                            <a href="#"><span class="fa fa-star yellow"></span> Remove from Wishlist</a>
+                            <a href="#" id="remove-from-wish-list"><span class="fa fa-star yellow"></span> Wishlisted </a>
                             {% endif %}
                         </li>
                         <li><a href="#review_post"><span class="fa fa-edit"></span> Write Review</a></li>
@@ -352,3 +352,26 @@
 </div>
 </div>
 </section>
+        <script>
+        $(document).ready(function(){
+            var user = '{{user.id}}';
+            var adventure = '{{model.id}}'
+            var profile_editor = window.App.profile;
+            $("#add-to-wish-list").click(function(e){
+                e.stopPropagation();
+                profile_editor.add_adventure_to_wish_list(user, adventure);
+            });
+            $('#remove-from-wish-list').click(function(e){
+                e.stopPropagation();
+                profile_editor.remove_adventure_from_wish_list(user, adventure);
+            });
+            $("#add-to-done").click(function(e){
+                e.stopPropagation();
+                profile_editor.add_adventure_to_done(user, adventure);
+            });
+            $('#remove-from-done').click(function(e){
+                e.stopPropagation();
+                profile_editor.remove_adventure_from_done(user, adventure);
+            });
+        });
+    </script>

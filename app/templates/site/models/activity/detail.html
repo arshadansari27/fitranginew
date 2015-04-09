@@ -6,9 +6,9 @@
                 <div class="favourite" style="background: white;">
                     <img src="{{model.icon_image_path}}" class="img-rounded img-responsive">
                     {% if model in user.favorite_activities %}
-                    <a href="" ><h3><i class="fa fa-check"></i>Added to Favourites</h3></a>
+                    <a id="remove-from-favorite" href="#"><h3><i class="fa fa-check"></i>Added to Favourites</h3></a>
                     {% else %}
-                    <a href="" ><h3>Add to Favourites</h3></a>
+                    <a id="add-to-favorite" href="#"><h3>Add to Favourites</h3></a>
                     {% endif %}
                 </div>
             </div>
@@ -70,22 +70,14 @@
                   </div>
                     <!--------------ADVENTURE TAB DATA--------->
                   <div role="tabpanel" class="tab-pane fade" id="adventures" aria-labelledby="adventures">
+                      <input id="adventure-filter" data-category="all" data-model="adventure" data-filter="activities" type="hidden" value="{{model.id}}">
                      {{ adventure_list|safe }}
                   </div>
                     <!-----------FAVOURITED TAB DATA------->
                   <div role="tabpanel" class="tab-pane fade" id="favourited" aria-labelledby="favourited">
                       <h4>Favourited</h4>
 
-                      <input data-model="profile" data-filter="relationship__favorited_by__activity" type="hidden" value="{{model.id}}">
-                      <script>
-                        $(document).ready(function(){
-                            var filters = 'profile';
-                            window.filters = window.filters || {};
-                            window.filters[filters] = window.filters[filters] || [];
-                            var filters_list = window.filters[filters];
-                            filters_list.push('relationship__favorited_by__activity');
-                        });
-                        </script>
+                      <input id="favorite-profile-filter" data-category="all" data-model="profile" data-filter="relationship__favorited_by__activity" type="hidden" value="{{model.id}}">
                       {{ follower_list |safe }}
                   </div>
                      <!-----------PHOTO/VIDEO GALLARY TAB DATA------->
@@ -117,16 +109,7 @@
                             </div>
                         </section>
 
-                        <input data-model="discussion" data-filter="tags" type="hidden" value="{{model.name}}">
-                        <script>
-                        $(document).ready(function(){
-                            var filters = 'discussion';
-                            window.filters = window.filters || {};
-                            window.filters[filters] = window.filters[filters] || [];
-                            var filters_list = window.filters[filters];
-                            filters_list.push('tags');
-                        });
-                        </script>
+                        <input id="discussion-filter" data-category="all" data-model="discussion" data-filter="tags" type="hidden" value="{{model.name}}">
                         <div class="container-fluid discussion">
                             {{ discussion_list | safe }}
                         </div>
@@ -143,16 +126,7 @@
                                 <br/>
                             </div>
                         </section>
-                       <input data-model="article" data-filter="tags" type="hidden" value="{{model.name}}">
-                        <script>
-                        $(document).ready(function(){
-                            var filters = 'article';
-                            window.filters = window.filters || {};
-                            window.filters[filters] = window.filters[filters] || [];
-                            var filters_list = window.filters[filters];
-                            filters_list.push('tags');
-                        });
-                        </script>
+                       <input id="article-filter" data-category="all" data-model="article" data-filter="tags" type="hidden" value="{{model.name}}">
                         <div class="container-fluid discussion">
                             {{ article_list | safe }}
                         </div>
@@ -162,4 +136,31 @@
         </div>
     </section>
 
+    <script>
+        $(document).ready(function(){
 
+            var App = window.App;
+            App.filter('adventure-filter');
+            App.filter('favorite-profile-filter');
+            App.filter('discussion-filter');
+            App.filter('article-filter');
+
+            for(var i = 0; i < window.App.doFilter.length; i++) {
+                window.App.doFilter[i]();
+            }
+
+            var user = '{{user.id}}';
+            var activity = '{{model.id}}'
+            var profile_editor = window.App.profile;
+            $("#add-to-favorite").click(function(e){
+                e.stopPropagation();
+                console.log('adding to favorites');
+                profile_editor.add_activity_to_favorite(user, activity);
+            });
+            $('#remove-from-favorite').click(function(e){
+                e.stopPropagation();
+                console.log('removing from favorites');
+                profile_editor.remove_activity_from_favorite(user, activity);
+            });
+        });
+    </script>

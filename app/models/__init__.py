@@ -100,7 +100,7 @@ class Node(object):
             return None, None
         img = Image.open(self.cover_image)
         format = img.format
-        img.save(img_io, "JPEG", quality=70)
+        img.save(img_io, format, quality=70)
         img_io.seek(0)
         return img_io, format
 

@@ -122,7 +122,7 @@ class Profile(Entity, db.Document):
         return [u for u in RelationShips.get_wish_listed(self) if isinstance(u, Adventure)]
 
     @property
-    def wish_list_adventure(self):
+    def wish_list_product(self):
         from app.models.store import Product
         return [u for u in RelationShips.get_wish_listed(self) if isinstance(u, Product)]
 

@@ -37,14 +37,15 @@ class NodeEditor(object):
 
     def __init__(self, message):
         self.message = message
-        self.command = message['command']
-        self.action = message['action']
-        self.data = message['data']
-        self.node = message['node']
+        self.command = message.get('command', None)
+        self.action = message.get('action', None)
+        self.data = message.get('data', None)
+        self.node = message.get('node', None)
 
     def invoke(self):
         try:
             response = self._invoke()
+            print 'Invoke Response>', response
             return jsonify(response)
         except Exception, e:
             return jsonify(dict(status='error', message='Failed to execute the command'))

@@ -162,17 +162,3 @@
 	opacity: 1;
 }
 
-
-
-.pp-img-1 { 
-	background:url(../images/pro.jpg);
-	background-size:cover;
-}
-.pp-img-2 { 
-	background:url(../images/poplr-pro2.jpg);
-	background-size:100% 100%;
-}
-.pp-img-3 { 
-	background:url(../images/poplr-pro1.jpg);
-	background-size:100% 100%;
-}

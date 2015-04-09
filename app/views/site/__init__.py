@@ -1,13 +1,16 @@
 import os
 from jinja2 import Template
+import simplejson as json
 from PIL import Image
 from app import app
 from flask import render_template, request, g, redirect, jsonify
+from app.handlers.editors import NodeEditor
 from app.models import Node, NodeFactory
 from app.models.content import Content, Post, Comment
 from app.utils.search_helper import listing_helper, node_helper
 from app.utils import login_required
-from app.handlers import ActivityView, NodeView, NodeCollectionView, AdventureCollectionView, NodeExtractor
+from app.handlers import ActivityView, NodeView, NodeCollectionView, AdventureCollectionView, NodeExtractor, \
+    ArticleCollectionView, CompositeNodeCollectionView
 from app.views.site.menus import view_menu
 
 (MODEL_DETAIL_VIEW, MODEL_LIST_ROW_VIEW, MODEL_LIST_GRID_VIEW, MODEL_LIST_POD_VIEW) = ('detail', 'row', 'grid', 'pod')
@@ -76,6 +79,18 @@ def list_adventure():
     context['card'] = card
     return render_template('site/pages/commons/view.html', **context)
 
+@app.route('/explore/journal')
+def list_journal():
+    from app.views import force_setup_context
+    query = request.args.get('query', '')
+    page = int(request.args.get('page', 1))
+    if not query or len(query) is 0:
+        query = None
+    context = force_setup_context({})
+    view = CompositeNodeCollectionView('article', parent_model=None, configs=dict(all=dict(query=query, page=page, card_type='grid', is_partial=True), top=dict(query=query, page=page, card_type='row', is_partial=True), my=dict(query=query, page=page, card_type='row', is_partial=True))).get_card(context)
+    context['card'] = view
+    return render_template('site/pages/commons/view.html', **context)
+
 @app.route("/community")
 def journal():
     return render_template("/site/pages/landings/community.html")
@@ -124,6 +139,17 @@ def ajax_options():
     results = ('<option value="%s">' % u for u in options)
     return ''.join(results)
 
+@app.route('/buttons')
+def ajax_buttons():
+    model_name = request.args.get('model_name', '')
+    attr = request.args.get('attr', None)
+    if model_name == 'tag':
+        options = []
+    else:
+        options = (getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all())
+    results = ('<a href="#"> %s </a>' % u for u in options)
+    return ''.join(results)
+
 
 @app.route('/activity/<slug>')
 @app.route('/adventure/<slug>')
@@ -163,3 +189,13 @@ def post_sub_comment(post_id):
     context['comment'] = comment
     template = Template(comment_template)
     return template.render(**context)
+
+
+@app.route('/editors/invoke', methods=['POST'])
+def edit_invoke():
+    try:
+        message = request.get_json(force=True)
+        editor = NodeEditor.factory(message)
+        return editor.invoke()
+    except Exception, e:
+        return jsonify(dict(status='error', message='Something went wrong', exception=str(e)))

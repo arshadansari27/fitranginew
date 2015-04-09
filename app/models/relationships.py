@@ -40,10 +40,13 @@ class RelationShips(db.Document):
         if RelationShips.objects(subject=subject, object=object, relation=relation).first() is None:
             relationship = RelationShips(subject=subject, object=object, relation=relation)
             relationship.save()
+            print relationship.id
             ActivityStream.push_relationship_to_stream(relationship)
         if RelationShips.objects(subject=object, object=subject, relation=inverse_relation.get(relation)).first() is None:
             relationship = RelationShips(subject=object, object=subject, relation=inverse_relation.get(relation))
             relationship.save()
+            print relationship.id
+
 
 
     @classmethod
@@ -51,7 +54,7 @@ class RelationShips(db.Document):
         relation = RelationShips.objects(subject=subject, object=object, relation=relation).first()
         if relation is not None:
             relation.delete()
-        relation = RelationShips.objects(subject=object, object=subject, relation=inverse_relation(relation)).first()
+        relation = RelationShips.objects(subject=object, object=subject, relation=inverse_relation.get(relation)).first()
         if relation is not None:
             relation.delete()
 

@@ -8,7 +8,7 @@
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
 
-                <input data-model="adventure" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
+                <input id="activity-filter" data-category="all" data-model="adventure" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
                 <datalist id="activity">
                     <option value="">
                 </datalist>
@@ -25,7 +25,7 @@
 
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
 
-                <input data-model="adventure" data-filter="location__location__name" list="location" placeholder="FILTER BY LOCATION">
+                <input id="location-filter" data-category="all" data-model="adventure" data-filter="location__location__name" list="location" placeholder="FILTER BY LOCATION">
                 <datalist id="location">
                     <option value="">
                 </datalist>
@@ -42,10 +42,10 @@
 
             <div class="col-lg-offset-4 col-md-offset-4">
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a data-filter-submit="search" href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">GO</a>
+                    <a data-category="all" data-model="adventure" data-filter-submit="search" href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">GO</a>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a data-filter-submit="reset"  href="" class="btn btn-info blue-bg no-radius w-100 mt-15">RESET</a>
+                    <a data-category="all" data-model="adventure" data-filter-submit="reset"  href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">RESET</a>
                 </div>
             </div>
 
@@ -54,19 +54,20 @@
 </section>
 
 <hr class="clearfix divider">
-<script>
-    $(document).ready(function(){
-        var filters = 'adventure';
-        window.filters = window.filters || {};
-        window.filters[filters] = window.filters[filters] || [];
-        var filters_list = window.filters[filters];
-        filters_list.push('location_location__name');
-        filters_list.push('activities__activity__name');
-    });
-</script>
+
 <section class="container-fluid p-0">
     <div id="models_list" class="container fitrangi-thumb">
         {% import 'site/pages/commons/list_page.html' as listing %}
         {{ listing.list_page('adventure', card_type, last_page, current_page) }}
     </div>
 </section>
+ <script>
+    $(document).ready(function(){
+        window.App.filter('activity-filter');
+        window.App.filter('location-filter');
+        for(var i in window.App.doFilter) {
+            window.App.doFilter[i]();
+        }
+
+    });
+</script>
