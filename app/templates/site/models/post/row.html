@@ -1,6 +1,6 @@
- <section class="row">
+ <section class="row-fluid" style="border: solid; border-radius: 10px; border-color: lightgrey;border-width: 1px;">
 
-	<article class="post-profile lightgrey-bg">
+	<article class="post-profile lightgrey-bg" style="margin-top: 0px;">
         <img src="{{model.author.cover_image_path}}" class="img-circle img-responsive pull-left p-5" width="60" height="100">
         <a href="" class="btn btn-default btn-xs mt-10 grey pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-plus"></i></a>
         <h4>{{model.author.name}}</h4>
@@ -8,6 +8,7 @@
         <h5 class="ago-line">{{model.since}}</h5>
     </article>
 
+    <div class="container-fluid">
 
   	    <!--p><a href="" class="red">read more</a></p-->
     {% if model.video_embed and model.video_embed|length > 0 %}
@@ -18,13 +19,12 @@
     {% endif %}
     {% if model.content and model.content|length > 0 %}
         <article data-content-view="partial" data-model-id="{{model.id}}">
-            {{ model.partial_content|safe }}>...<br/><a href="#" data-read-more="{{model.id}}">Read more</a>
+            {{ model.partial_content|safe }}...<br/><a href="#" data-read-more="{{model.id}}">Read more</a>
         </article>
         <article data-content-view="complete" data-model-id="{{model.id}}">
-            {{ model.process_content|safe }}>
+            {{ model.process_content|safe }}
         </article>
 
-        <hr/>
     {% endif %}
 
     {% if model.gallery_size > 0 %}
@@ -38,20 +38,21 @@
             {% endfor %}
         </div>
     {% endif %}
-
+    <br/>
     <article>
             <button class="btn btn-default btn-noti" type="button"><i class="fa fa-thumbs-o-up"></i> <span class="noti-badge">{{model.up_votes}}</span></button>
             <button class="btn btn-default btn-noti" type="button"><i class="fa fa-thumbs-o-down"></i> <span class="noti-badge">{{model.down_votes}}</span></button>
 	        <button class="btn btn-default btn-noti" type="button"><i class="fa fa-comment-o"></i> <span class="noti-badge">{{model.comments|length}}</span></button>
             <button class="btn btn-default pull-right" type="button"><i class="fa fa-share-square-o"></i> </button>
     </article>
+    </div>
     <hr/>
     {% if model.comments|length > 0 %}
     <button data-model-id="{{model.id}}" data-button-show="1" class="col-sm-12 col-md-12 col-xs-12 btn btn-link pull-left">Show All</button><br/>
     {% endif %}
     <div data-model-id="{{model.id}}" data-comments="comment-list">
     {% for comment in model.sorted_comments %}
-        <article class="well well-sm otherpost-profile " data-model-id="{{model.id}}" data-comment="comment">
+        <article class="well well-sm otherpost-profile " data-model-id="{{model.id}}" data-comment="comment" data-comment-number="{{loop.index}}">
             <img src="{{comment.author.cover_image_path}}" class="img-circle img-responsive pull-left p-5" width="60" height="100">
             <h4>{{comment.author.name}}</h4>
             <h5 class="seen-report-like m-0">{{comment.since}}<a href="" class="report">Report</a><a href="" class="like">Like</a></h5>
@@ -98,13 +99,24 @@ $(document).ready(function(){
         });
     });
 
-    $comments_list = $('[data-model-id="' + model_id +'"][data-comments="comment-list"]');
-    $comments_list.hide();
-    $btn = $('[data-model-id="' + model_id + '"][data-button-show="1"]');
+    var comments = $('[data-model-id="'+ model_id + '"][data-comment-number]');
+    console.log('[*] array: ' + comments.length);
+    for(var i = 0; i < comments.length; i++) {
+        var val = $(comments[i]).attr('data-comment-number');
+        if (parseInt(val) == 1) continue;
+        $(comments[i]).hide();
+    }
+    var $btn = $('[data-model-id="' + model_id + '"][data-button-show="1"]');
     $btn.click(function(){
-        $comments_list.show();
+        $('[data-model-id="'+ model_id + '"][data-comment-number]').show();
         $btn.hide();
     });
+
+    /*
+    $comments_list = $('[data-model-id="' + model_id +'"][data-comment="comment"]');
+    $comments_list.hide();
+
+    */
 });
 </script>
 </section>

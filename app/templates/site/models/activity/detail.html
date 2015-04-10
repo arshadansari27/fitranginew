@@ -145,10 +145,6 @@
             App.filter('discussion-filter');
             App.filter('article-filter');
 
-            for(var i = 0; i < window.App.doFilter.length; i++) {
-                window.App.doFilter[i]();
-            }
-
             var user = '{{user.id}}';
             var activity = '{{model.id}}'
             var profile_editor = window.App.profile;

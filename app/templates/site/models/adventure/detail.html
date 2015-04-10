@@ -333,15 +333,21 @@
         </div>
         </section>
         !-->
-        {% if model.location %}
         <article class="border-grey-b">
+            {% if not model.location %}
+            <h5 class="grey">Other Adventures</h5>
+            {% else %}
             <h5 class="grey">Other Adventure to do Near</h5>
             <h4 class="blue">{{model.location.name}}</h4>
+            {% endif %}
         </article>
         <div class="adventure fitrangi-thumb">
+            <input id="adventure-not-same-filter" type="hidden" data-category="all" data-model="adventure" data-filter="id__ne" value="{{model.id}}"/>
+            {% if model.location %}
+            <input id="adventure-location-filter" type="hidden" data-category="all" data-model="adventure" data-filter="location__location__id" value="{{model.location.id}}"/>
+            {% endif %}
             {{other_adventure_list|safe}}
         </div>
-        {% endif %}
 
 
     </div>
@@ -352,11 +358,17 @@
 </div>
 </div>
 </section>
-        <script>
-        $(document).ready(function(){
+<script>
+    $(document).ready(function(){
             var user = '{{user.id}}';
-            var adventure = '{{model.id}}'
-            var profile_editor = window.App.profile;
+            var adventure = '{{model.id}}';
+            var App = window.App;
+            if ($('#adventure-location-filter') != undefined)  {
+                App.filter('adventure-location-filter');
+            }
+            App.filter('adventure-not-same-filter');
+
+            var profile_editor = App.profile;
             $("#add-to-wish-list").click(function(e){
                 e.stopPropagation();
                 profile_editor.add_adventure_to_wish_list(user, adventure);
@@ -373,5 +385,5 @@
                 e.stopPropagation();
                 profile_editor.remove_adventure_from_done(user, adventure);
             });
-        });
-    </script>
+    });
+</script>

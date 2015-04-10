@@ -1,6 +1,5 @@
-{#% extends 'site/models/common/_grid.html' %#}
-    <div class="container">
-        <a href="" class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-            <img src="../images/in-events1.jpg" class="img-responsive">
-        </a>
-    </div>
+<div class="container">
+    <a href="{{model.slug}}" class="{{grid_size}}">
+        <img src="{{model.cover_image_path}}" class="img-responsive">
+    </a>
+</div>

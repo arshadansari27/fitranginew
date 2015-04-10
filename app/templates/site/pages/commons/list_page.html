@@ -39,10 +39,10 @@
 
             var query = basic_query;
             for(var u = 0; u < filters_list.length; u++) {
-                console.log('Filter by: ' + filters_list[u]);
                 var $input = $('#' + filters_list[u]);
                 var name = $input.attr('data-filter');
                 var value = $input.val();
+                console.log('Filter by: ' + filters_list[u] + " -> " + name + ": " + value);
 
                 if (value == undefined ||value == null || value.length == 0 || value == '--') {
                     continue;

@@ -4,9 +4,10 @@ __author__ = 'arshad'
 
 
 from bson import ObjectId, json_util
-from app.models import Node, ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST, DISCUSSION, STREAM, RELATIONSHIPS
+from app.models import Node, ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST, DISCUSSION, STREAM, RELATIONSHIPS, \
+    LOCATION
 from app.models.activity import Activity
-from app.models.adventure import Adventure
+from app.models.adventure import Adventure, Location
 from app.models.content import Article, Post, Discussion
 from app.models.event import Event
 from app.models.profile import Profile, ProfileType
@@ -84,6 +85,7 @@ class NodeExtractor(object):
                         filters[k] = v
                 else:
                     filters[k] = v
+        print 'Query for this [', self.model_class().__name__ , "] =>", filters
         return self.model_class().objects(**filters)
 
     def model_class(self):
@@ -115,9 +117,16 @@ class NodeExtractor(object):
             cls = ActivityStreamExtractor
         elif model_name == RELATIONSHIPS:
             cls = RelationShipExtractor
+        elif model_name == LOCATION:
+            cls = LocationExtractor
         else:
             raise Exception("Invalid model name for extractor")
         return cls(filters)
+
+class LocationExtractor(NodeExtractor):
+
+    def model_class(self):
+        return Location
 
 class ActivityStreamExtractor(NodeExtractor):
 

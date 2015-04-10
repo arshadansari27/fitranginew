@@ -22,6 +22,8 @@ def setup_user():
 
 def force_setup_context(context={}):
     user = g.user if hasattr(g, 'user') and g.user is not None else None
+    if user:
+        print 'Setting Context for User', user.name
     activity_menu = view_menu()
     d = dict(user=user, activity_menu=activity_menu, menu=get_menu_selection(request.path))
     for k, v in d.iteritems():
@@ -42,6 +44,7 @@ def get_menu_selection(request_path):
     menu_args = [
         ('/activity', ('explore', 'activity')),
         ('/adventure', ('explore', 'adventure')),
+        ('/article', ('explore', 'journal')),
         ('/blog', ('explore', 'journal')),
         ('/profile', ('community', 'profile')),
         ('/discussion', ('community', 'discussion')),

@@ -19,12 +19,15 @@ class CompositeNodeCollectionView(View):
         for k, v in configs.iteritems():
             self.collections[k] = NodeCollectionView.factory(model_name, v['card_type'], v.get('query', None), v.get('page', 1), v.get('size', 25), True, v.get('only_list', False), parent_model, category=k)
 
-    def get_card(self, context=None):
+    def get_card(self, context={}):
         from app.views import env
         template_path = self.get_template()
         template = env.get_template(template_path)
         cards = dict((c, v.get_card()) for c, v in self.collections.iteritems())
-        return template.render(**cards)
+        from app.views import force_setup_context
+        context = force_setup_context(context)
+        context['cards'] = cards
+        return template.render(**context)
 
     def get_page_path(self):
         return self.collections[self.collections.keys()[0]].get_page_path()
@@ -85,7 +88,7 @@ class NodeCollectionView(View):
         if len(models) > 0:
             return ''.join([NodeView.factory(self.model_name, self.card_type, m.id).get_card() for m in models])
         else:
-            return '<div class="jumbotron"><h3>Nothing to display here</h3></div>'
+            return '<div class="jumbotron"><h6>No data available for this category</h6></div>'
 
     def get_page_path(self):
         raise Exception("Not implemented")
@@ -213,12 +216,17 @@ class NodeView(View):
     def get_card(self):
         from app.views import env
         from app.views import force_setup_context
-        template_path = self.get_template_folder() + '/' + self.card_type + ".html"
+        if self.card_type == 'grid-row':
+            file_name = 'grid'
+        else:
+            file_name = self.card_type
+        template_path = self.get_template_folder() + '/' + file_name + ".html"
         template = env.get_template(template_path)
         context = self.get_context()
 
         context = force_setup_context(context)
         context['model'] = self.get_model()
+        context['grid_size'] = 'col-lg-4 col-md-4 col-sm-6 col-xs-12' if self.card_type != 'grid-row' else 'col-sm-12 col-xs-12'
         return template.render(**context)
 
     def get_template_folder(self):
@@ -305,7 +313,7 @@ class AdventureView(NodeView):
 
     def get_detail_context(self):
         parent=self.get_model()
-        other_adventure_list = AdventureCollectionView("row", "", only_list=True, parent=parent, fixed_size=True).get_card()
+        other_adventure_list = AdventureCollectionView("grid-row", "", only_list=True, parent=parent, fixed_size=True).get_card()
         return {
             'other_adventure_list': other_adventure_list
         }
@@ -364,7 +372,13 @@ class ArticleView(NodeView):
         super(ArticleView, self).__init__(ARTICLE, card_type, id, key)
 
     def get_detail_context(self):
-        return {}
+        parent=self.get_model()
+        posts = PostCollectionView("row", "", is_partial=True, parent=parent).get_card(dict(post_type='comment'))
+        related = ArticleCollectionView("grid-row", "", only_list=True, is_partial=True, fixed_size=True).get_card()
+        return {
+            'comments': posts,
+            'related': related
+        }
 
     def get_card_context(self):
         return {}

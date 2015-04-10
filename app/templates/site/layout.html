@@ -125,7 +125,7 @@
 		            </ul>
 		        </li>
                 <li class="{% if menu.main_menu == 'adventure' %}active{% endif %}"><a href="/explore/adventure">Adventures</a></li>
-                <li class="{% if menu.main_menu == 'blog' %}active{% endif %}"><a href="/explore/journal">Blogs</a></li>
+                <li class="{% if menu.main_menu == 'journal' %}active{% endif %}"><a href="/explore/journal">Blogs</a></li>
                 {% elif menu.app_name == 'community' %}
                 <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="/community/my">My Page</a></li>
                 <li class="{% if menu.main_menu == 'discussion' %}active{% endif %}"><a href="/community/discussion">Discussions</a></li>
@@ -326,5 +326,13 @@ $(".dropdown").hover(
     ga('send', 'pageview');
 </script>
 {% block footer_scripts %}{% endblock %}
+<script>
+    $(document).ready(function(){
+        var App = window.App;
+        for(var i = 0; i < window.App.doFilter.length; i++) {
+            window.App.doFilter[i]();
+        }
+    });
+</script>
 </body>
 </html>

@@ -83,7 +83,7 @@
 <div role="tabpanel" class="tab-pane fade" id="home" aria-labelledby="home">
 
     <section class="container-fluid fitrangi-blog-thumb">
-        {{all|safe}}
+        {{cards['all']|safe}}
     </section>
 
 </div>
@@ -93,10 +93,9 @@
     <section class="container-fluid mb-10">
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
             <h4 class="border-grey-b pb-5 oswald"> Top Blogs</h4>
-
             <ul class="blogs-list">
 
-                {{top|safe}}
+                {{cards['top']|safe}}
 
             </ul>
 
@@ -147,10 +146,10 @@
 
     <section class="container-fluid mb-10">
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+            <input id="my-blog-filter" type="hidden" data-category="my" data-filter="author" data-model="article" value="{{user.id}}"/>
             <h4 class="border-grey-b pb-5 oswald"> My Blogs</h4>
-
             <ul class="blogs-list">
-                {{my|safe}}
+                {{cards['my']|safe}}
             </ul>
 
         </div>
@@ -259,3 +258,9 @@
 
 </div>
 </section>
+<script>
+    $(document).ready(function(){
+        var App = window.App;
+        App.filter('my-blog-filter');
+    });
+</script>
