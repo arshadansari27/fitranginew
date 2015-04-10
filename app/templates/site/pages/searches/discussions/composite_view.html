@@ -1,0 +1,86 @@
+<section class="container-fluid p-0">
+    <div class="discussion-banner"
+         style="background: url(/images/discussion-banner.jpg) no-repeat center center;background-size: cover;">
+
+        <section class="container discussion-heading">
+
+
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-3">
+                <button class="btn btn-primary btn-block btn-lg" style="margin-top: 150px;">Add Discussion</button>
+                <h4>“Knowledge cannot be gained if it is not been shared” is what every fitrangi believes. So put your
+                    quries related to Adventure Sports/Tourism in India</h4>
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 fitrangi-tags-list">
+                <h2>Featured Tags</h2>
+                <article class="text-center" id="channel-list">
+                    <a href="#">All</a>
+                </article>
+                <script>
+                    $(document).ready(function () {
+                        $.ajax({
+                            url: '/buttons?model_name=channel&attr=name'
+                        }).done(function (data) {
+                            $('#channel-list').append(data);
+                        });
+                    });
+                </script>
+
+                <hr class="divider">
+
+                <article class="text-center" id="tag-list">
+                    <button class="btn btn-xs btn-info">See More..</button>
+                </article>
+                <script>
+                    $(document).ready(function () {
+                        $.ajax({
+                            url: '/buttons?model_name=tag&attr=name'
+                        }).done(function (data) {
+                            $('#tag-list').prepend(data);
+                        });
+                    });
+                </script>
+
+            </div>
+
+
+        </section>
+
+
+    </div>
+</section>
+
+<hr class="clearfix divider">
+<section class="container-fluid p-0">
+    <div role="tabpanel" data-example-id="togglable-tabs">
+
+        <div class="border-grey-t border-grey-b h-56">
+            <div class="container text-center">
+                <ul id="myTab" class="nav nav-tabs" role="tablist">
+                    <li class="active"><a href="#latest" role="tab" data-toggle="tab" aria-controls="top-blogs" aria-expanded="false"><span class="fa fa-home"></span> <strong>Latest</strong> </a></li>
+                    <li><a href="#featured" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="false"> <span class="fa fa-star"></span> <strong>Featured</strong></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container">
+            <div id="myTabContent" class="tab-content">
+                <div role="tabpanel" class="tab-pane fade" id="featured" aria-labelledby="featured">
+                    <section class="container-fluid discussion">
+                            {{cards['featured']|safe}}
+                    </section>
+                </div>
+                <div role="tabpanel" class="tab-pane fade active in" id="latest" aria-labelledby="latest">
+                    <section class="container-fluid mb-10 discussion">
+                            {{cards['latest']|safe}}
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function(){
+        var App = window.App;
+        App.filter('my-blog-filter');
+    });
+</script>

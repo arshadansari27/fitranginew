@@ -115,7 +115,7 @@ class NodeCollectionView(View):
         elif model_view == PROFILE:
             return ProfileCollectionView(
                 card_type, query, page, size, is_partial, only_list, parent=parent, category=category)
-        elif model_view == ARTICLE or model_view == 'journal':
+        elif model_view == ARTICLE:
             return ArticleCollectionView(
                 card_type, query, page, size, is_partial, only_list, parent=parent, category=category)
         elif model_view == DISCUSSION:
@@ -192,7 +192,7 @@ class ArticleCollectionView(NodeCollectionView):
         self.model_name = ARTICLE
 
     def get_page_path(self):
-        return 'site/pages/searches/contents'
+        return 'site/pages/searches/articles'
 
 class TripCollectionView(NodeCollectionView):
 
@@ -230,11 +230,7 @@ class NodeView(View):
         return template.render(**context)
 
     def get_template_folder(self):
-        if self.model_name in ['article', 'blog']:
-            model_name = 'content'
-        else:
-            model_name = self.model_name
-        return 'site/models/%s' % model_name
+        return 'site/models/%s' % self.model_name
 
     def get_context(self):
         if self.card_type == 'detail':
@@ -361,7 +357,13 @@ class DiscussionView(NodeView):
         super(DiscussionView, self).__init__(DISCUSSION, card_type, id, key)
 
     def get_detail_context(self):
-        return {}
+        parent = self.get_model()
+        posts = PostCollectionView("row", "", is_partial=True, parent=parent).get_card(dict(post_type='comment'))
+        featured = DiscussionCollectionView("grid-row", "", only_list=True, is_partial=True, fixed_size=True).get_card()
+        return {
+            'comments': posts,
+            'featured': featured
+        }
 
     def get_card_context(self):
         return {}

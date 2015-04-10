@@ -1,24 +1,16 @@
-from app.models.streams import ActivityStream
 
 __author__ = 'arshad'
 
 
-from bson import ObjectId, json_util
-from app.models import Node, ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST, DISCUSSION, STREAM, RELATIONSHIPS, \
-    LOCATION
+from bson import ObjectId
+from app.models import ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST, DISCUSSION, STREAM, RELATIONSHIPS, LOCATION
+from app.models.streams import ActivityStream
 from app.models.activity import Activity
 from app.models.adventure import Adventure, Location
 from app.models.content import Article, Post, Discussion
 from app.models.event import Event
 from app.models.profile import Profile, ProfileType
-from app.models.relationships import (RelationShips, FAVORITE, FAVORITED_BY, INTERESTED, INTEREST_SHOWN_BY,
-                                      JOINED, JOINED_BY, ACCOMPLISHED, ACCOMPLISHED_BY, FOLLOWED_BY,
-                                      FOLLOWS, WISHLISTED, WISHLISTED_BY)
-from flask import render_template, g
-from mongoengine import Document
-import simplejson
-from bson.json_util import dumps
-from bson import Binary, Code
+from app.models.relationships import RelationShips
 from app.models.trip import Trip
 
 
@@ -85,7 +77,6 @@ class NodeExtractor(object):
                         filters[k] = v
                 else:
                     filters[k] = v
-        print 'Query for this [', self.model_class().__name__ , "] =>", filters
         return self.model_class().objects(**filters)
 
     def model_class(self):

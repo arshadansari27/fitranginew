@@ -58,7 +58,7 @@
 <div class="border-grey-t border-grey-b h-56">
     <div class="container text-center">
         <ul id="myTab" class="nav nav-tabs" role="tablist">
-            <li><a href="#home" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="false">
+            <li class="active"><a href="#home" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="false">
                 <span class="fa fa-home"></span> <strong>Home</strong></a></li>
 
             <li class=""><a href="#top-blogs" role="tab" data-toggle="tab" aria-controls="top-blogs"
@@ -80,7 +80,7 @@
 <div id="myTabContent" class="tab-content">
 
 
-<div role="tabpanel" class="tab-pane fade" id="home" aria-labelledby="home">
+<div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home">
 
     <section class="container-fluid fitrangi-blog-thumb">
         {{cards['all']|safe}}
@@ -194,64 +194,6 @@
     </section>
 
 </div>
-<!--Tab Pane End-->
-
-<!--div role="tabpanel" class="tab-pane fade active in" id="bookmarks" aria-labelledby="bookmarks">
-
-    <section class="container-fluid mb-10">
-        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-            <h4 class="border-grey-b pb-5 oswald">Bookmarks - Blogs </h4>
-
-            <ul class="blogs-list">
-
-
-            </ul>
-
-        </div>
-
-        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-            <h4 class="lightgrey border-grey-b pb-5 ">Sponsored</h4>
-            <section class="row sponsored-thumb">
-                <div class="col-md-12 col-xs-12">
-                    <div class="thumbnail">
-                        <img src="images/slider-3.jpg" alt="...">
-
-                        <div class="overlay-caption">Lorem Ipsum Dolor Sit</div>
-                        <div class="caption">
-                            <h4>Thumbnail label</h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12 col-xs-12">
-                    <div class="thumbnail">
-                        <img src="images/slider-3.jpg" alt="...">
-
-                        <div class="overlay-caption">Lorem Ipsum Dolor Sit</div>
-                        <div class="caption">
-                            <h4>Thumbnail label</h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12 col-xs-12">
-                    <div class="thumbnail">
-                        <img src="images/slider-3.jpg" alt="...">
-
-                        <div class="overlay-caption">Lorem Ipsum Dolor Sit</div>
-                        <div class="caption">
-                            <h4>Thumbnail label</h4>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </section>
-
-</div-->
-<!--Tab Pane End-->
-
-
 </div>
 </div>
 

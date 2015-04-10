@@ -7,11 +7,6 @@ from app.models import Node, update_content, db, EmbeddedImageField
 from app.models.profile import Profile
 import datetime
 
-class Tag(db.Document):
-    name = db.StringField()
-
-    def __unicode__(self): return self.name
-
 class Comment(db.EmbeddedDocument):
     author = db.ReferenceField('Profile')
     content = db.StringField()

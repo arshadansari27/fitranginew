@@ -8,7 +8,7 @@ from app.handlers.editors import NodeEditor
 from app.models import Node, NodeFactory
 from app.models.content import Content, Post, Comment
 from app.utils.search_helper import listing_helper, node_helper
-from app.utils import login_required
+from app.utils import login_required, all_tags
 from app.handlers import ActivityView, NodeView, NodeCollectionView, AdventureCollectionView, NodeExtractor, \
     ArticleCollectionView, CompositeNodeCollectionView
 from app.views.site.menus import view_menu
@@ -91,6 +91,18 @@ def list_journal():
     context['card'] = view
     return render_template('site/pages/commons/view.html', **context)
 
+@app.route('/community/discussion')
+def list_discussion():
+    from app.views import force_setup_context
+    query = request.args.get('query', '')
+    page = int(request.args.get('page', 1))
+    if not query or len(query) is 0:
+        query = None
+    context = force_setup_context({})
+    view = CompositeNodeCollectionView('discussion', parent_model=None, configs=dict(featured=dict(card_type='row', query=query, page=page, is_partial=True), latest=dict(card_type='row', query=query, page=page, is_partial=True))).get_card(context)
+    context['card'] = view
+    return render_template('site/pages/commons/view.html', **context)
+
 @app.route("/community")
 def journal():
     return render_template("/site/pages/landings/community.html")
@@ -144,7 +156,7 @@ def ajax_buttons():
     model_name = request.args.get('model_name', '')
     attr = request.args.get('attr', None)
     if model_name == 'tag':
-        options = []
+        options = [u[0] for u in all_tags()][:30]
     else:
         options = (getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     results = ('<a href="#"> %s </a>' % u for u in options)

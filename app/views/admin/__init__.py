@@ -14,7 +14,7 @@ from app.views.forms import ChangePasswordForm, UserPreferenceForm, ProfileForm
 # Define wtforms widget and field
 from app.models.profile import Profile, ProfileType
 from app.models.streams import ActivityStream, Message
-from app.models.content import Content, Channel, Comment, Article, Tag, Post, PostVote, Discussion
+from app.models.content import Content, Channel, Comment, Article, Post, PostVote, Discussion
 from app.models.activity import Activity
 from app.models.adventure import Adventure, Location, State
 from app.models.event import Event
@@ -451,7 +451,6 @@ admin.add_view(RestrictedAdminView(State, category="Tools"))
 admin.add_view(RestrictedAdminView(ProfileType, category="Tools"))
 admin.add_view(LocationAdminView(Location, category="Tools"))
 admin.add_view(ChannelAdminView(Channel, category="Tools"))
-admin.add_view(TagAdminView(Tag, category="Tools"))
 admin.add_view(PreferenceView(name='Preference', endpoint='settings.preference', category="Settings"))
 admin.add_view(ChangePasswordView(name='Change Password', endpoint='settings.password', category="Settings"))
 admin.add_view(ProfileSettingAdminView(name='My Profile', endpoint='settings.my_profile', category="Settings"))

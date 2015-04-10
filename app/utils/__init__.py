@@ -7,7 +7,8 @@ from rake import extract_keywords
 from app.utils.general import get_facets
 from PIL import Image
 import os, datetime, random
-
+from app import cache
+from bson.son import SON
 
 TAG_RE = re.compile(r'<[^>]+>')
 
@@ -88,3 +89,9 @@ def convertLinks(text):
 def tag_remove(text):
     return TAG_RE.sub('', text)
 
+@cache.cached(60)
+def all_tags(type=None):
+    from app.models.content import Content, Article, Discussion
+    col = Content._get_collection()
+    pipeline = [{"$unwind": "$tags"}, {"$group": {"_id": "$tags", "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}]
+    return [(u['_id'], u['count']) for u in col.aggregate(pipeline)['result']]

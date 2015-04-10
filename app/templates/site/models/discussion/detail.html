@@ -1,1 +1,68 @@
-{% extends 'site/models/common/_detail.html' %}
+<section class="container-fluid p-0">
+    <div class="blogs-banner" style="background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url({{model.cover_image_path}}) no-repeat center center;background-size: cover;">
+        <section class="container  blogs-heading">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h2>{{model.title}} </h2>
+	            <div class="media">
+    	            <center><img src="{{model.author.cover_image_path}}" class="img-circle text-center" width="48"></center>
+                    <br/>
+                    <h4>by {{model.author.name}}</h4>&nbsp;|&nbsp;
+    	            <h4>{{model.since}}</h4>
+	            </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-3">
+
+                <div class="share-blog-bg text-center">
+                    <button class="btn btn-default btn-facebook mb-10" type="button"><i class="fa fa-facebook"></i> <strong>Share</strong></button>
+                    <button class="btn btn-default btn-google-plus mb-10" type="button"><i class="fa fa-google-plus"></i> <strong>Share+</strong></button>
+                    <button class="btn btn-default btn-twitter mb-10" type="button"><i class="fa fa-twitter"></i> <strong>Tweet</strong></button>
+                    <button class="btn btn-default btn-pinterest mb-10" type="button"><i class="fa fa-pinterest"></i> <strong>Pin it</strong></button>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+<hr class="clearfix divider"/>
+<section class="container">
+    <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 blogs-content">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 fitrangi-tags-list">
+            <article class="text-left">
+                <span class="fs-20 pr-20 oswald middle">Posted in (Channels and Tags): </span>
+                {% for channel in model.channels %}
+                <a href="#">{{channel.name}}</a>
+                {% endfor %}
+                {% for tag in model.tags %}
+                    <a href="#">{{tag}}</a>
+                {% endfor %}
+            </article>
+        </div>
+        <hr class="clearfix divider"/>
+        {{model.process_content|safe}}
+        <hr/>
+
+        <input id="post-filter" type="hidden" data-model="post" data-category="all" data-filter="parent__discussion__pk" value="{{model.id}}"/>
+        <div class="">{{ comments|safe }}</div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-3">
+        <div class="discussion-bg text-center">
+            <h3>Start a Discussion</h3>
+            <h4>Connect | Share | Inspire</h4>
+            <button class="btn btn-primary btn-block btn-lg">Add Discussion</button>
+        </div>
+        <div class="discussion-bg text-center">
+            <h3>Featured Discussions</h3>
+            <div class="row discussion pl-5 pr-5">
+                 <input id="discussion-not-same-filter" type="hidden" data-category="all" data-model="discussion" data-filter="id__ne" value="{{model.id}}"/>
+
+                 {{ featured| safe }}
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function(){
+        window.App.filter('post-filter');
+        window.App.filter('discussion-not-same-filter');
+    });
+
+</script>

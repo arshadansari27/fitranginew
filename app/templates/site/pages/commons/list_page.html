@@ -1,9 +1,9 @@
 {% macro list_page(model_name, card_type, last_page, current_page, category='all', query='') %}
-{% if card_type == 'grid' or card_type == 'row' %}
+{% if card_type == 'grid' or card_type == 'grid-row' %}
 <div  data-model="{{model_name}}" data-card-type="{{card_type}}" data-category="{{category}}" data-type="model-container" class="row-fluid">
 </div>
 {% else %}
-<ul data-model="{{model_name}}" data-card-type="{{card_type}}" data-category="{{category}}" data-type="model-container" class="row-fluid media-list">
+<ul class="media-list" data-model="{{model_name}}" data-card-type="{{card_type}}" data-category="{{category}}" data-type="model-container" class="row-fluid media-list">
 </ul>
 {% endif %}
 <br/>

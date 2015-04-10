@@ -1,1 +1,13 @@
-{% extends 'site/models/common/_grid.html' %}
+<div class="{{grid_size}}">
+  <div class="thumbnail">
+    <img src="{{model.cover_image_path}}" alt="...">
+    <div class="caption">
+    	<h4>{{model.title}}</h4>
+    	<div class="media">
+    		<img src="{{model.author.cover_image_path}}" class="img-circle img-responsive pull-left p-5 media-object" width="64">
+    		<h5>by {{model.author.name}}</h5>
+    		<h6>{{model.since}}</h6>
+		</div>
+    </div>
+  </div>
+</div>

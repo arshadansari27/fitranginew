@@ -179,7 +179,6 @@ class Charge(object):
     def actual_price(self):
         return self.amount - (self.amount * (self.discount_percentage / 100.0))
 
-
 class NodeFactory(object):
 
     @classmethod

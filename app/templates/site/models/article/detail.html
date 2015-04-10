@@ -55,6 +55,7 @@
     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-3">
         <h4 class="lightgrey border-grey-b pb-5 ">Related</h4>
         <section class="row sponsored-thumb">
+            <input id="article-not-same-filter" type="hidden" data-category="all" data-model="article" data-filter="id__ne" value="{{model.id}}"/>
             {{ related|safe }}
         </section>
     </div>
@@ -62,6 +63,7 @@
 <script>
     $(document).ready(function(){
         window.App.filter('post-filter');
+        window.App.filter('article-not-same-filter');
     });
 
 </script>
