@@ -1,8 +1,8 @@
 <li class="nav col-sm-6 col-xs-12">
     <article class="fitrangi-profile">
         <img src="{{model.cover_image_path}}" class="{% if not model.is_business_profile %}img-circle{% endif %} img-responsive pull-left p-5" width="60" height="100">
-        <a href="" class="btn btn-default btn-xs mt-10 grey pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-check"></i></a>
-        <a href="" class="btn btn-default btn-xs mt-10 grey pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-plus"></i></a>
+        <a href="" title="Unfollow" class="btn btn-default btn-xs mt-10 blue pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-check"></i></a>
+        <a href="" title="follow" class="btn btn-default btn-xs mt-10 grey pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-plus"></i></a>
         <h4>{{model.name}}</h4>
         {% if model.location %} <h5><span class="fa fa-map-marker"></span> {{model.location.name }}</h5>{% endif %}
     </article>
