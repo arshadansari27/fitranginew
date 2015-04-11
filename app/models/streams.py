@@ -25,9 +25,37 @@ class ActivityStream(db.Document):
 
     def __unicode__(self): return "%s -> %s: %s" % (self.profile, self.object, self.action)
 
+    @property
+    def action_display(self):
+        if self.action is None:
+            action = 'responded'
+        else:
+            if self.action.endswith('e'):
+                action = self.action + 'd'
+            elif self.action.endswith('ed'):
+                action = self.action
+            else:
+                action = self.action + 'ed'
+        return action
+
+    @property
+    def is_post_activity(self):
+        from app.models.content import Post
+        return isinstance(self.object, Post) and self.action == 'stream'
+
+    @property
+    def is_content_activity(self):
+        from app.models.content import Content
+        return isinstance(self.object, Content) or (hasattr(self.object, 'parent') and self.object.parent is not None and isinstance(self.object.parent, Content))
+
+    @property
+    def is_entity_activity(self):
+        from app.models import Entity
+        return isinstance(self.object, Entity)
+
     @classmethod
     def push_comment_to_stream(cls, post):
-        activity = ActivityStream(profile=post.author, action='comment', object=post, view_html='', view_text='', view_json='')
+        activity = ActivityStream(profile=post.author, action=post.type, object=post, view_html='', view_text='', view_json='')
         activity.save()
         return activity
 

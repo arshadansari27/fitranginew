@@ -3,6 +3,7 @@ __author__ = 'arshad'
 
 
 from bson import ObjectId
+from mongoengine import Q
 from app.models import ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST, DISCUSSION, STREAM, RELATIONSHIPS, LOCATION
 from app.models.streams import ActivityStream
 from app.models.activity import Activity
@@ -27,6 +28,8 @@ class JSONEncoder(json.JSONEncoder):
 
 class NodeExtractor(object):
 
+    init_filters = {}
+
     def __init__(self, filters):
         self.filters = filters
 
@@ -43,14 +46,12 @@ class NodeExtractor(object):
         return self.get_query().first()
 
     def last_page(self, size):
-        count = self.get_query().count()
+        query = self.get_query()
+        count = query.count()
         return (count / size) + 1
 
-    def init_filters(self):
-        return {}
-
     def get_query(self):
-        filters = self.init_filters()
+        filters = self.init_filters
         if len(self.filters) > 0:
             filters = {}
             for k, v in self.filters.iteritems():
@@ -77,7 +78,7 @@ class NodeExtractor(object):
                         filters[k] = v
                 else:
                     filters[k] = v
-        return self.model_class().objects(**filters)
+        return self.model_class().objects(**filters).order_by('-created_timestamp')
 
     def model_class(self):
         raise Exception("Not implemented")
@@ -169,8 +170,7 @@ class TripExtractor(NodeExtractor):
 
 class ProfileExtractor(NodeExtractor):
 
-    def init_filters(self):
-        return dict(type__ne=ProfileType.objects(name__iexact='Subscription Only').first())
+    init_filters = dict(type__ne=ProfileType.objects(name__iexact='Subscription Only').first())
 
     def model_class(self):
         return Profile

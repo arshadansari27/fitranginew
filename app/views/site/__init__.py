@@ -7,6 +7,7 @@ from flask import render_template, request, g, redirect, jsonify
 from app.handlers.editors import NodeEditor
 from app.models import Node, NodeFactory
 from app.models.content import Content, Post, Comment
+from app.models.streams import ActivityStream
 from app.utils.search_helper import listing_helper, node_helper
 from app.utils import login_required, all_tags
 from app.handlers import ActivityView, NodeView, NodeCollectionView, AdventureCollectionView, NodeExtractor, \
@@ -46,6 +47,7 @@ def add_post():
     if image:
         post.cover_image.put(open(path, 'rb'))
     post.save()
+    ActivityStream.push_comment_to_stream(post)
     return jsonify(dict(status='success', post=str(post.id)))
 
 

@@ -49,6 +49,13 @@
 
     <script src="/appjs/editors/main.js"></script>
     <script src="/appjs/editors/profile-edit.js"></script>
+    <style>
+        /* TODO: Remove Later in case it is fixed in my-style css */
+        .blogs-content img{
+              padding: 0px 0px;
+        }
+    </style>
+
 
 <body>
     <div class="container">
@@ -60,6 +67,15 @@
     <script src="/js/modernizr.custom.85647.js"></script>
     <script src="/js/css3-mediaqueries.js"></script>
     <script src="/js/bootstrap-dialog.min.js"></script>
-
+<script>
+    $(document).ready(function(){
+        var App = window.App;
+        if (window.App.doFilter !=undefined && window.App.doFilter.length != undefined) {
+            for (var i = 0; i < window.App.doFilter.length; i++) {
+                window.App.doFilter[i]();
+            }
+        }
+    });
+</script>
 </body>
 </html>

@@ -15,7 +15,7 @@ def listing_helper():
     search_query = request.args.get('query', None)
     context = dict(model_name=model_view, card_type=card_type, page=page, size=size, search_query=search_query)
     context = force_setup_context(context)
-    collection_view = NodeCollectionView.factory(model_view, card_type, query=search_query, page=page, size=size, is_partial=False, only_list=False)
+    collection_view = NodeCollectionView.factory(model_view, card_type, query=search_query, page=page, size=size, is_partial=True, only_list=False, category='all')
     return collection_view, context
 
 

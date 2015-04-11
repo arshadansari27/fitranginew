@@ -3390,3 +3390,27 @@ section.user-post{
 .events-box-bg h4 .fa:after{
 	content:' : ';
 }
+
+
+.inner-comment{
+	margin: 0 0 5px 70px;
+}
+.inner-comment .media-left{
+	
+}
+.inner-comment .media-body{
+	
+}
+.inner-comment .media-body .username{
+	color:#1076BD;
+	text-align:left;
+	margin:7px 3px;
+}
+.inner-comment .media-body p{
+	margin:0;
+	color:#969696;
+}
+.inner-comment .media-body .btn-link{
+	float:left;
+	
+}

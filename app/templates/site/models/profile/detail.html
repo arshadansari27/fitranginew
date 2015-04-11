@@ -92,10 +92,14 @@
                 <div role="tabpanel" class="tab-pane fade active in" id="my-stream" aria-labelledby="my-stream">
                     <section class="container-fluid">
                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <input type="hidden" id="my-stream-filter" data-model="stream" data-filter="profile" data-category="my" value="{{model.id}}"/>
+                            {{ my_stream_list|safe }}
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <h4 class="blue pb-5 border-grey-b">Fitrangi.com Popular Stream Feeds</h4>
-
+                            <input type="hidden" id="fitrangi-stream-type-filter" data-model="post" data-filter="type" data-category="fitrangi" value="stream"/>
+                            <input type="hidden" id="fitrangi-stream-profile-filter" data-model="post" data-filter="author__profile__email" data-category="fitrangi" value="arshadansari27@gmail.com"/>
+                            {{ fitrangi_posts|safe}}
                         </div>
                     </section>
 
@@ -176,5 +180,7 @@
         App.filter('accomplished-adventure-filter');
         App.filter('profile-follower-filter');
         App.filter('profile-following-filter');
+        App.filter('fitrangi-stream-type-filter');
+        App.filter('fitrangi-stream-profile-filter');
     });
 </script>

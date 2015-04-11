@@ -1,0 +1,44 @@
+
+<section class="col-lg-12 col-xs-12 media user-post">
+    <div class="container">
+
+    <div class="media-left">
+        <img src="{{model.profile.cover_image_path}}" class="img-circle" width="48">
+    </div>
+    <div class="media-body">
+        <h3>{{model.profile.name}}</h3>
+        <h5><i class="fa fa-map-marker"></i> {% if model.profile.location.name %}{{model.profile.location.name}}{% else %}Unknown{% endif %}</h5>
+    </div>
+
+    <div class="post-content">
+        <h5><i class="fa fa-user"></i> has {{ model.action_display }} {% if model.is_content_activity %} on {% endif %}</h5>
+
+        <div class="container-fluid fitrangi-blog-thumb">
+            {% if model.is_content_activity %}
+            <ul class="blogs-list">
+                <li style="border: 0;">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                            <a href="#"><img class="img-responsive img-thumbnail" src="{{model.object.parent.cover_image_path}}" alt=""></a>
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                            <h3 class="title"><a href="{{model.object.parent.slug}}">{{ model.object.parent.title }}</a></h3>
+                            <h4 class="sub-title">
+                                {% if model.object.parent.description and model.object.parent.description|length > 0 %}
+                                {{ model.object.parent.description|safe }}
+                                {% else %}
+                                {% if model.object.parent.content and model.object.parent.content|length > 0 %}{{ model.object.parent.process_content[0:100]|safe }}... <a href="{{model.object.parent.slug}}" class="red">read more</a>{% endif %}
+                                {% endif %}
+                            </h4>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            {% else %}
+                {{ entity_view|safe }}
+            {% endif %}
+        </div>
+    </div>
+    </div>
+    <hr class="clearfix user-post-divider"/>
+</section>

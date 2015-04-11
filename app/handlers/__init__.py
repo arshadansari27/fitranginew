@@ -2,9 +2,11 @@ from app.utils import convert_query_to_filter
 
 __author__ = 'arshad'
 
+from flask import g
 from app.handlers.extractors import NodeExtractor
 from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, POST, STREAM, Node
-
+from app.models.streams import ActivityStream
+from app.models.content import Content, Post
 
 class View(object):
 
@@ -67,12 +69,13 @@ class NodeCollectionView(View):
         if self.fixed_size:
             last_page = 1
         else:
-            last_page = self.extractor.last_page(self.size)
+            last_page = 1#self.extractor.last_page(self.size)
         current_page = self.page
         context['last_page'] = last_page
         context['current_page'] = current_page
         context['category'] = self.category
-        return template.render(**context)
+        html = template.render(**context)
+        return html
 
     def get_last_page(self):
         if self.fixed_size:
@@ -132,9 +135,18 @@ class NodeCollectionView(View):
 
 class StreamCollectionView(NodeCollectionView):
 
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None, category='all'):
+    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None, category='all', stream_owner=None, logged_in_user=None):
         super(StreamCollectionView, self).__init__(STREAM, card_type, query, page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size, category=category)
         self.model_name = STREAM
+        if stream_owner and hasattr(stream_owner, 'id'):
+            if logged_in_user and hasattr(logged_in_user, 'id') and logged_in_user.id == stream_owner:
+                profiles = stream_owner.following
+                profiles.append(stream_owner)
+                print 'Stream from ', profiles
+                self.extractor.init_filters = dict(profile__in=profiles)
+            else:
+                print 'Stream from ', stream_owner
+                self.extractor.init_filters = dict(profile=stream_owner)
 
     def get_page_path(self):
         return 'site/pages/searches/streams'
@@ -209,11 +221,12 @@ class NodeView(View):
     def __init__(self, model_name, card_type, id, key='pk'):
         self.model_name = model_name
         self.card_type = card_type
-        if (isinstance(id, Node)):
+        if (isinstance(id, Node)) or isinstance(id, ActivityStream):
             self.model = id
-        filters = {}
-        filters[key] = str(id)
-        self.extractor = NodeExtractor.factory(self.model_name, filters)
+        else:
+            filters = {}
+            filters[key] = str(id)
+            self.extractor = NodeExtractor.factory(self.model_name, filters)
 
     def get_card(self):
         from app.views import env
@@ -286,6 +299,25 @@ class StreamView(NodeView):
     def get_card_context(self):
         return {}
 
+
+    def get_card(self):
+        from app.views import env
+        from app.views import force_setup_context
+        assert self.card_type == 'row'
+        context = self.get_context()
+        context = force_setup_context(context)
+        if self.get_model().is_post_activity:
+            template_path = 'site/models/post/row.html'
+            context['model'] = self.get_model().object
+        else:
+            context['model'] = self.get_model()
+            if self.get_model().is_entity_activity:
+                context['entity_view'] = NodeView.factory(self.get_model().object.__class__.__name__.lower(), "grid", self.get_model().object).get_card()
+            template_path = 'site/models/stream/row.html'
+        template = env.get_template(template_path)
+        return template.render(**context)
+
+
 class ActivityView(NodeView):
 
     def __init__(self, card_type, id, key='pk'):
@@ -349,13 +381,18 @@ class ProfileView(NodeView):
 
     def get_detail_context(self):
         parent=self.get_model()
+        logged_in_user = g.user if hasattr(g, 'user') and g.user is not None else None
+        model = self.get_model()
+        is_same = True if logged_in_user and logged_in_user.id == model.id else False
         return {
             'wish_listed_adventure_list': AdventureCollectionView("grid", "", is_partial=True, category="wishlisted").get_card(),
             'accomplished_adventure_list': AdventureCollectionView("grid", "", is_partial=True, category="accomplished").get_card(),
             "follower_list": ProfileCollectionView("row", "", is_partial=True, category="follower").get_card(),
             "following_list": ProfileCollectionView("row", "", is_partial=True, category="following").get_card(),
             'discussion_list': DiscussionCollectionView("row", "", is_partial=True, category="all").get_card(),
-            'article_list': ArticleCollectionView("grid", "", is_partial=True, category="all").get_card()
+            'article_list': ArticleCollectionView("grid", "", is_partial=True, category="all").get_card(),
+            'my_stream_list': StreamCollectionView("row", "", is_partial=(not is_same), category="my", stream_owner=model, logged_in_user=logged_in_user).get_card(),
+            'fitrangi_posts': PostCollectionView("grid", "", is_partial=True, only_list=True, fixed_size=True, category="fitrangi").get_card(),
         }
 
     def get_card_context(self):

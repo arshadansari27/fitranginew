@@ -7,11 +7,9 @@
 </ul>
 {% endif %}
 <br/>
-{% if last_page > current_page %}
 <div class="col-sm-offset-2 col-sm-8">
     <button data-model="{{model_name}}" data-card-type="{{card_type}}" data-category="{{category}}" data-action="load-more" class="col-sm-12 btn-primary">Load more</button>
 </div>
-{% endif %}
 <script language="JavaScript">
 
     $(document).ready(function(){
@@ -68,7 +66,7 @@
                     container.append(data.html);
 
                     last_page = data.last_page;
-                    if (!show_load_more || last_page <= window.current_page[page_key]) {
+                    if (!show_load_more || last_page < window.current_page[page_key]) {
                        $(loadMoreSelector).hide();
                     }
                 } else {
