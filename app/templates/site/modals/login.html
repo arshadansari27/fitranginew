@@ -36,15 +36,39 @@
         window.fbAsyncInit = function() {
             FB.init({
                 appId      : '526533334116117',
+                oauth      : true,
                 cookie     : true,  // enable cookies to allow the server to access
-                xfbml      : true,  // parse social plugins on this page
-                version    : 'v2.1' // use version 2.1
+                xfbml      : true  // parse social plugins on this page
+                //version    : 'v2.1' // use version 2.1
             });
-            FB.getLoginStatus(function(response) {
+            /*FB.getLoginStatus(function(response) {
                 //statusChangeCallback(response);
-            });
+            });*/
         };
 
+        function fb_login(){
+            FB.login(function(response) {
+
+                if (response.authResponse) {
+                    console.log('Welcome!  Fetching your information.... ');
+                    access_token = response.authResponse.accessToken; //get access token
+                    user_id = response.authResponse.userID; //get FB UID
+                    FB.api('/me',
+                            function(response) {
+                                var profile_image= "https://graph.facebook.com/"+ response.id +"/picture?type=large";
+                                _login_with_data(profile_image, {name: response.name, email: response.email});
+                            },
+                            {scope: 'email, user_likes'}
+                    );
+                } else {
+                    console.log('User cancelled login or did not fully authorize.');
+                }
+            }, {
+                scope: 'publish_stream,email'
+            });
+        }
+
+        /*
         (function(d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) return;
@@ -52,6 +76,13 @@
             js.src = "http://connect.facebook.net/en_US/sdk.js";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
+        */
+        (function() {
+            var e = document.createElement('script');
+            e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+            e.async = true;
+            document.getElementById('fb-root').appendChild(e);
+        }());
 
         var _login_with_data = function(profile_image, response) {
             convertImgToBase64(profile_image, function(base64Img) {
@@ -82,10 +113,7 @@
         }
 
         function testAPI() {
-            FB.api('/me', function(response) {
-                var profile_image= "https://graph.facebook.com/"+ response.id +"/picture?type=large";
-                _login_with_data(profile_image, {name: response.name, email: response.email});
-            }, {scope: 'email, user_likes'});
+
         }
 
         function make_base_auth(data) {
@@ -144,20 +172,9 @@
                     <button id="btn-login1" type="button" style="width: 100px;" class="btn btn-info"><b> Login </b></button> &nbsp;
                 </div>
                 <div class="col-sm-4 pull-right">
-                    <!--fb:login-button data-max-rows="0"  data-size="large" scope="public_profile,email" onlogin="checkLoginState();">Login with Facebook</fb:login-button>
-                    <br/>
-                    <br/>
-                    <span id="signinButton">
-                        <span
-                            class="g-signin"
-                            data-callback="onSignInCallback"
-                            data-clientid="445628400297-si4iclsg5i2imd3parigb643lep5iis7.apps.googleusercontent.com"
-                            data-cookiepolicy="single_host_origin"
-                            data-scope="email profile openid https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.profile">
-                            <img src="https://developers.google.com/accounts/images/sign-in-with-google.png">
-                        </span>
-                    </span-->
-                    <button class="btn btn-default btn-facebook mb-10" type="button" scope="public_profile,email" onlogin="checkLoginState();"><i class="fa fa-facebook"></i> Sign in with <strong>Facebook</strong></button>
+                    <!--fb:login-button data-max-rows="0"  data-size="large" scope="public_profile,email" onlogin="checkLoginState();">Login with Facebook</fb:login-button-->
+                    <div id="fb-root" class="hide"></div>
+                    <button type="button" class="btn btn-default btn-facebook mb-10" onclick="fb_login();"><i class="fa fa-facebook"></i>Sign in with <strong>Facebook</strong></button>
                     <button class="btn btn-default btn-google-plus mb-10 g-signin" id="signinButton" type="button" data-callback="onSignInCallback"
                     data-clientid="445628400297-si4iclsg5i2imd3parigb643lep5iis7.apps.googleusercontent.com"
                     data-cookiepolicy="single_host_origin"

@@ -328,8 +328,10 @@ $(".dropdown").hover(
 <script>
     $(document).ready(function(){
         var App = window.App;
-        for(var i = 0; i < window.App.doFilter.length; i++) {
-            window.App.doFilter[i]();
+        if (window.App.doFilter !=undefined && window.App.doFilter.length != undefined) {
+            for (var i = 0; i < window.App.doFilter.length; i++) {
+                window.App.doFilter[i]();
+            }
         }
     });
 </script>
