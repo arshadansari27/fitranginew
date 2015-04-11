@@ -1,21 +1,22 @@
 <li class="media panel panel-default">
+<section class="container fitrangi-event mt-10">
     <div class="row text-center">
         <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 left">
             <i class="fa fa-calendar"></i>
-            <h4>17th - 18th Feb, 2015</h4>
+            <h4>{{model.scheduled_date}}</h4>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-4 col-xs-12">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                <button class="btn btn-primary"><h3>Adventure Tourism Conclave<br>2016</h3></button>
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne-{{model.id}}">
+                <button class="btn btn-primary"><h3>{{model.name}}</h3></button>
             </a>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 right">
             <i class="fa fa-map-marker"></i>
-            <h4>Nerul, Navi Mumbai</h4>
+            <h4>{{model.location.name}}</h4>
         </div>
     </div>
 
-     <div id="collapseOne" class="panel-collapse collapse">
+     <div id="collapseOne-{{model.id}}" class="panel-collapse collapse">
      <div class="panel-body">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -27,13 +28,12 @@
             </div>
         </div>
         <section class="container-fluid lightgrey-bg">
-            <div class="container">
 
 
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
                     <div class="events-box-bg">
 
-                        <h3>For Partnership Opportunities &amp; Stall Space</h3>
+                        <h3>For Registration &amp; general enquiries, or for Partnership Opportunities &amp; Stall Space</h3>
                         <address>
                             <h4><i class="fa fa-user"></i>User Name Comes Here</h4>
                             <h4><i class="fa fa-at"></i><a href="mailto:mail@domain.com">mail@domain.com</a></h4>
@@ -47,22 +47,8 @@
 
                     </div>
                 </div>
-
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center">
-                    <div class="events-box-bg" style="min-height:328px;">
-
-                        <h3>For Registration &amp; general enquiries</h3>
-                        <address>
-                            <h4><i class="fa fa-user"></i>User Name Comes Here</h4>
-                            <h4><i class="fa fa-at"></i><a href="mailto:mail@domain.com">mail@domain.com</a></h4>
-                            <h4><i class="fa fa-phone"></i>+91 9999999999</h4>
-                        </address>
-
-                    </div>
-                </div>
-
-            </div>
         </section>
      </div>
      </div>
+</section>
 </li>

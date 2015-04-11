@@ -10,7 +10,7 @@ from app.models.content import Content, Post, Comment
 from app.utils.search_helper import listing_helper, node_helper
 from app.utils import login_required, all_tags
 from app.handlers import ActivityView, NodeView, NodeCollectionView, AdventureCollectionView, NodeExtractor, \
-    ArticleCollectionView, CompositeNodeCollectionView
+    ArticleCollectionView, CompositeNodeCollectionView, EventCollectionView
 from app.views.site.menus import view_menu
 
 (MODEL_DETAIL_VIEW, MODEL_LIST_ROW_VIEW, MODEL_LIST_GRID_VIEW, MODEL_LIST_POD_VIEW) = ('detail', 'row', 'grid', 'pod')
@@ -101,6 +101,18 @@ def list_discussion():
     context = force_setup_context({})
     view = CompositeNodeCollectionView('discussion', parent_model=None, configs=dict(featured=dict(card_type='row', query=query, page=page, is_partial=True), latest=dict(card_type='row', query=query, page=page, is_partial=True))).get_card(context)
     context['card'] = view
+    return render_template('site/pages/commons/view.html', **context)
+
+@app.route("/community/event")
+def list_event():
+    from app.views import force_setup_context
+    query = request.args.get('query', '')
+    page = int(request.args.get('page', 1))
+    if not query or len(query) is 0:
+        query = None
+    context = force_setup_context({})
+    card = EventCollectionView(card_type="row", query=query, size=20, page=page, is_partial=False).get_card(context)
+    context['card'] = card
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/community")

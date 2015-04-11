@@ -1,4 +1,10 @@
-<div class="{{grid_size}}">
-    <h3>{{model.name}}</h3>
-    {% if model.location %} <p>{{model.location.name}}</p> {% endif %}
-</div>
+<ul class="pp-grid {{grid_size}}">
+<li>
+	<div class="pp-item" style="background:url({{model.cover_image_path}}); background-size:cover;">
+		<div class="pp-info">
+            <h3>{{model.name}}</h3>
+            {% if model.location %} <p>{{model.location.name}}</p> {% endif %}
+		</div>
+	</div>
+</li>
+</ul>

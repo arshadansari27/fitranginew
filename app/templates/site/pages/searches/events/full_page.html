@@ -1,1 +1,68 @@
-{% extends 'site/pages/commons/list_page.html' %}
+<section class="container-fluid p-0">
+    <div class="events-banner"
+         style="background: url(/images/events-banner.jpg) no-repeat center center; background-size: cover;">
+        <div class="container">
+
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 heading">
+
+                <h2>Fitrangi Event Calender</h2>
+
+                <h3>India unearths this wonderful opportunity to feature itself in world records for Sky-diving and
+                    Scuba-diving.
+                    Don't miss this historic opportunity to associate yourself with this exciting and daring
+                    adventure!</h3>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+{% import 'site/pages/commons/list_page.html' as listing %}
+{{ listing.list_page('event', card_type, last_page, current_page, container_id='accordion') }}
+
+<!-- TODO: Testimonials for events -->
+<!--section class="container fitrangi-testimonial text-center">
+
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <h4><i class="fa fa-quote-left"></i>
+            India unearths this wonderful opportunity to feature itself
+            in world records for Sky-diving and Scuba-diving.
+            Don't miss this historic opportunity to associate yourself
+            with this exciting and daring adventure! <i class="fa fa-quote-right"></i>
+        </h4>
+        <article class="media">
+            <img src="/images/pro1.jpg" class="img-circle img-responsive pull-left p-5" width="90">
+
+            <h3>User Name Comes Here</h3>
+            <h5><span class="fa fa-map-marker"></span> Mumbai, Maharashtra </h5>
+        </article>
+    </div>
+
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+        <h4><i class="fa fa-quote-left"></i>
+            India unearths this wonderful opportunity to feature itself
+            in world records for Sky-diving and Scuba-diving.
+            Don't miss this historic opportunity to associate yourself
+            with this exciting and daring adventure! <i class="fa fa-quote-right"></i>
+        </h4>
+
+        <article class="media">
+            <img src="/images/pro7.jpg" class="media-object img-responsive pull-left p-5" width="90">
+
+            <h3>User Name Comes Here</h3>
+            <h5><span class="fa fa-map-marker"></span> Mumbai, Maharashtra </h5>
+        </article>
+    </div>
+
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-20 mb-20 pt-10 border-grey-t">
+        <button class="btn btn-primary pull-right">View all Testimonials</button>
+    </div>
+
+</section-->
+
