@@ -39,6 +39,7 @@
 
             var query = basic_query;
             for(var u = 0; u < filters_list.length; u++) {
+                console.log('Pre: ' + filters_list[u]);
                 var $input = $('#' + filters_list[u]);
                 var name = $input.attr('data-filter');
                 var value = $input.val();

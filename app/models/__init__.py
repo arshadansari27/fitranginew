@@ -192,7 +192,6 @@ class NodeFactory(object):
         from app.models.trip import Trip
         from app.models.relationships import RelationShips
         model_class = NodeFactory.get_class_by_name(model_class.lower())
-        print '*' * 10, model_class.__name__
         return model_class.get_by_id(id)
 
     @classmethod

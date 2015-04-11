@@ -3,7 +3,7 @@ from app.utils import convert_query_to_filter
 __author__ = 'arshad'
 
 from app.handlers.extractors import NodeExtractor
-from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, POST, STREAM
+from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, POST, STREAM, Node
 
 
 class View(object):
@@ -86,7 +86,7 @@ class NodeCollectionView(View):
         except:
             models = []
         if len(models) > 0:
-            return ''.join([NodeView.factory(self.model_name, self.card_type, m.id).get_card() for m in models])
+            return ''.join([NodeView.factory(self.model_name, self.card_type, m).get_card() for m in models])
         else:
             return '<div class="jumbotron"><h6>No data available for this category</h6></div>'
 
@@ -209,6 +209,8 @@ class NodeView(View):
     def __init__(self, model_name, card_type, id, key='pk'):
         self.model_name = model_name
         self.card_type = card_type
+        if (isinstance(id, Node)):
+            self.model = id
         filters = {}
         filters[key] = str(id)
         self.extractor = NodeExtractor.factory(self.model_name, filters)
@@ -348,7 +350,7 @@ class ProfileView(NodeView):
     def get_detail_context(self):
         parent=self.get_model()
         return {
-            'wish_listed_adventure_list': AdventureCollectionView("grid", "", is_partial=True, category="wish_listed").get_card(),
+            'wish_listed_adventure_list': AdventureCollectionView("grid", "", is_partial=True, category="wishlisted").get_card(),
             'accomplished_adventure_list': AdventureCollectionView("grid", "", is_partial=True, category="accomplished").get_card(),
             "follower_list": ProfileCollectionView("row", "", is_partial=True, category="follower").get_card(),
             "following_list": ProfileCollectionView("row", "", is_partial=True, category="following").get_card(),

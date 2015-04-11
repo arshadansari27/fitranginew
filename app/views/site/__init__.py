@@ -42,7 +42,6 @@ def add_post():
         path = os.getcwd() + '/tmp/' + image
     else:
         path = None
-    print '[*]', path
     post = Post(content=content, author=author, type=post_type, parent=parent)
     if image:
         post.cover_image.put(open(path, 'rb'))

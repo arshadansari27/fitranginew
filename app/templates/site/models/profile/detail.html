@@ -66,8 +66,12 @@
                     <li class=""><a href="#my-wishlist" role="tab" data-toggle="tab" aria-controls="my-wishlist" aria-expanded="false">
                         <span class="fa fa-star"></span> <strong>My Wishlist</strong> </a></li>
 
-                    <li class=""><a href="#photos-videos" role="tab" data-toggle="tab" aria-controls="photos-videos" aria-expanded="false">
-                        <span class="fa fa-star"></span> <strong>Photos/Videos</strong> </a></li>
+                    <!--li class=""><a href="#photos-videos" role="tab" data-toggle="tab" aria-controls="photos-videos" aria-expanded="false">
+                        <span class="fa fa-star"></span> <strong>Photos/Videos</strong> </a></li-->
+                    <li class=""><a href="#following" role="tab" data-toggle="tab" aria-controls="following" aria-expanded="false">
+                        <span class="fa fa-star"></span> <strong>Following</strong> </a></li>
+                    <li class=""><a href="#follower" role="tab" data-toggle="tab" aria-controls="follower" aria-expanded="false">
+                        <span class="fa fa-star"></span> <strong>Followers</strong> </a></li>
 
                     <li class=""><a href="#journals" role="tab" data-toggle="tab" aria-controls="journals" aria-expanded="false">
                         <span class="fa fa-star"></span> <strong>Journals</strong> </a></li>
@@ -75,8 +79,8 @@
                     <li class=""><a href="#discussions" role="tab" data-toggle="tab" aria-controls="discussions" aria-expanded="false">
                         <span class="fa fa-star"></span> <strong>Discussions</strong> </a></li>
 
-                    <li class=""><a href="#bookmarks" role="tab" data-toggle="tab" aria-controls="bookmarks" aria-expanded="false">
-                        <span class="fa fa-star"></span> <strong>Bookmarks</strong> </a></li>
+                    <!--li class=""><a href="#bookmarks" role="tab" data-toggle="tab" aria-controls="bookmarks" aria-expanded="false">
+                        <span class="fa fa-star"></span> <strong>Bookmarks</strong> </a></li-->
 
 
                 </ul>
@@ -99,13 +103,26 @@
                 </div><!--Tab Pane End-->
 
                 <div role="tabpanel" class="tab-pane fade" id="adventure-done" aria-labelledby="adventure-done">
+                    <input id="accomplished-adventure-filter" data-category="accomplished" data-model="adventure" data-filter="relationship__accomplished__profile" type="hidden" value="{{model.id}}">
 
+                    {{accomplished_adventure_list|safe}}
 
                 </div><!--Tab Pane End-->
 
                 <div role="tabpanel" class="tab-pane fade" id="my-wishlist" aria-labelledby="my-wishlist">
+                    <input id="wish-list-adventure-filter" data-category="wishlisted" data-model="adventure" data-filter="relationship__wishlisted__profile" type="hidden" value="{{model.id}}">
+                    {{wish_listed_adventure_list|safe}}
 
+                </div><!--Tab Pane End-->
 
+                <div role="tabpanel" class="tab-pane fade" id="following" aria-labelledby="following">
+                    <input id="profile-following-filter" data-category="following" data-model="profile" data-filter="relationship__follows__profile" type="hidden" value="{{model.id}}">
+                    {{following_list|safe}}
+                </div><!--Tab Pane End-->
+
+                <div role="tabpanel" class="tab-pane fade" id="followers" aria-labelledby="followers">
+                    <input id="profile-follower-filter" data-category="follower" data-model="profile" data-filter="relationship__followed_by__profile" type="hidden" value="{{model.id}}">
+                    {{follower_list|safe}}
                 </div><!--Tab Pane End-->
 
                 <div role="tabpanel" class="tab-pane fade" id="photos-videos" aria-labelledby="photos-videos">
@@ -113,27 +130,19 @@
                 </div><!--Tab Pane End-->
 
                 <div role="tabpanel" class="tab-pane fade" id="journals" aria-labelledby="journals">
+                    <input id="article-filter" data-category="all" data-model="article" data-filter="author" type="hidden" value="{{model.id}}">
+                    {{article_list|safe}}
+                </div><!--Tab Pane End-->
 
-                    <section class="container-fluid border-grey-b mb-10">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <h4 class="oswald pl-10 pt-15">Journals</h4>
-                        </div>
-                    </section>
 
+                <div role="tabpanel" class="tab-pane fade discussion" id="discussions" aria-labelledby="discussions">
+                    <input id="discussion-filter" data-category="all" data-model="discussion" data-filter="author" type="hidden" value="{{model.id}}">
+
+                    {{discussion_list|safe}}
 
                 </div><!--Tab Pane End-->
 
-                <div role="tabpanel" class="tab-pane fade" id="discussions" aria-labelledby="discussions">
-
-                    <section class="container-fluid border-grey-b mb-10">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <h4 class="oswald pl-10 pt-15">Latest Discussion</h4>
-                        </div>
-                    </section>
-
-                </div><!--Tab Pane End-->
-
-                <div role="tabpanel" class="tab-pane fade" id="bookmarks" aria-labelledby="bookmarks">
+                <!--div role="tabpanel" class="tab-pane fade" id="bookmarks" aria-labelledby="bookmarks">
 
                     <section class="container-fluid border-grey-b mb-10">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -151,11 +160,21 @@
                         </div>
                     </section>
 
-                </div><!--Tab Pane End-->
+                </div--><!--Tab Pane End-->
 
             </div>
         </div>
     </div>
 </section>
 
-
+<script>
+    $(document).ready(function(){
+        var App = window.App;
+        App.filter('article-filter');
+        App.filter('discussion-filter');
+        App.filter('wish-list-adventure-filter');
+        App.filter('accomplished-adventure-filter');
+        App.filter('profile-follower-filter');
+        App.filter('profile-following-filter');
+    });
+</script>

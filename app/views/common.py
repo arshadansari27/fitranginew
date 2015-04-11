@@ -19,7 +19,6 @@ def image_uploader_dialog():
     try:
         f = request.files['file-0']
         path = os.getcwd() + '/tmp/' + _id
-        print path
         f.save(path)
         i = Image.open(path)
         originalImgWidth , originalImgHeight = i.size
