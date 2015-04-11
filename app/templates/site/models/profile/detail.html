@@ -1,5 +1,5 @@
 <section class="container-fluid p-0">
-    <div class="userprofile-banner" style="background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(/images/userprofile-banner.jpg) no-repeat;">
+    <div class="userprofile-banner" style="background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(/images/userprofile-banner.jpg) no-repeat center center; background-size: cover;">
 
         <div class="container">
 
@@ -7,7 +7,7 @@
             <div class="col-lg-4 col-md-4 col-sm-4 hidden-xs pull-right user-fav-acti">
                 <h3>Favourites Activities&nbsp;: </h3>
                 <div class="row-fluid">
-                    {% for acti in model.favorite_activities %}
+                    {% for acti in model.favorite_activities[0:10] %}
                     {% if acti.icon_image_path %} <a href=""><img src="{{acti.icon_image_path}}" class="thumbnail"></a>{% endif %}
                     {% endfor %}
                 </div>
