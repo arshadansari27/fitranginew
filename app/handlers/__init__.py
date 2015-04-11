@@ -348,12 +348,12 @@ class ProfileView(NodeView):
     def get_detail_context(self):
         parent=self.get_model()
         return {
-            'wish_listed_adventure_list': AdventureCollectionView("grid", "", is_partial=True, parent=parent, category="wish_listed").get_card(),
-            'wish_listed_adventure_list': AdventureCollectionView("grid", "", is_partial=True, parent=parent, category="accomplished").get_card(),
-            "follower_list": ProfileCollectionView("row", "", is_partial=True, parent=parent, category="follower").get_card(),
-            "following_list": ProfileCollectionView("row", "", is_partial=True, parent=parent, category="following").get_card(),
-            'discussion_list': DiscussionCollectionView("row", "", is_partial=True, parent=parent, category="all").get_card(),
-            'article_list': ArticleCollectionView("grid", "", is_partial=True, parent=parent, category="all").get_card()
+            'wish_listed_adventure_list': AdventureCollectionView("grid", "", is_partial=True, category="wish_listed").get_card(),
+            'accomplished_adventure_list': AdventureCollectionView("grid", "", is_partial=True, category="accomplished").get_card(),
+            "follower_list": ProfileCollectionView("row", "", is_partial=True, category="follower").get_card(),
+            "following_list": ProfileCollectionView("row", "", is_partial=True, category="following").get_card(),
+            'discussion_list': DiscussionCollectionView("row", "", is_partial=True, category="all").get_card(),
+            'article_list': ArticleCollectionView("grid", "", is_partial=True, category="all").get_card()
         }
 
     def get_card_context(self):

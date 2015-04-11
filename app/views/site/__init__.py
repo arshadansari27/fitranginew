@@ -20,7 +20,7 @@ from app.views.site.menus import view_menu
 def post_box():
     from app.models.adventure import Adventure
     model = Adventure.objects.first()
-    return render_template('site/pages/commons/empty_view.html', model=model, user=g.user, post_type='review')
+    return render_template('site/pages/commons/empty_view2.html', model=model, user=g.user, post_type='review')
 
 @app.route('/post/add', methods=['POST'])
 @login_required
