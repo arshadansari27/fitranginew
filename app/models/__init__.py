@@ -16,10 +16,10 @@ db.ListField = ListField
 
 
 (ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, PRODUCT, ARTICLE,
- LOCATION, POST, DISCUSSION, CHANNEL, STREAM, MESSAGE, RELATIONSHIPS) =  (
+ LOCATION, POST, DISCUSSION, CHANNEL, STREAM, MESSAGE, RELATIONSHIPS, PROFILE_TYPE) =  (
     "activity", "adventure", "event", "trip", "profile", "product",
     "article", "location", "post", "discussion", "channel",
-    "stream", "message", "relationships"
+    "stream", "message", "relationships", "profile_type"
 )
 
 def handler(event):
@@ -183,14 +183,16 @@ class NodeFactory(object):
 
     @classmethod
     def get_by_id(cls, model_class, id):
+        """
         from app.models.activity import Activity
         from app.models.adventure import Adventure, Location
         from app.models.content import Content, Discussion, Channel, Post, Article
         from app.models.event import Event
         from app.models.store import Product
-        from app.models.profile import Profile
+        from app.models.profile import Profile, ProfileType
         from app.models.trip import Trip
         from app.models.relationships import RelationShips
+        """
         model_class = NodeFactory.get_class_by_name(model_class.lower())
         return model_class.get_by_id(id)
 
@@ -201,7 +203,7 @@ class NodeFactory(object):
         from app.models.content import Content, Discussion, Channel, Post, Article
         from app.models.event import Event
         from app.models.store import Product
-        from app.models.profile import Profile
+        from app.models.profile import Profile, ProfileType
         from app.models.trip import Trip
         from app.models.streams import ActivityStream, Message, UserMessage
         from app.models.relationships import RelationShips
@@ -221,6 +223,7 @@ class NodeFactory(object):
         elif name == STREAM: return ActivityStream
         elif name == MESSAGE: return  Message
         elif name == RELATIONSHIPS: return RelationShips
+        elif name == PROFILE_TYPE: return ProfileType
         else: return None
 
 if __name__ == '__main__':

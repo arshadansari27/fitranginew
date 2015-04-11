@@ -4,7 +4,8 @@ __author__ = 'arshad'
 
 from bson import ObjectId
 from mongoengine import Q
-from app.models import ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST, DISCUSSION, STREAM, RELATIONSHIPS, LOCATION
+from app.models import ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST, DISCUSSION, STREAM, RELATIONSHIPS, LOCATION, \
+    PROFILE_TYPE
 from app.models.streams import ActivityStream
 from app.models.activity import Activity
 from app.models.adventure import Adventure, Location
@@ -111,9 +112,16 @@ class NodeExtractor(object):
             cls = RelationShipExtractor
         elif model_name == LOCATION:
             cls = LocationExtractor
+        elif model_name == PROFILE_TYPE:
+            cls = ProfileTypeExtractor
         else:
             raise Exception("Invalid model name for extractor")
         return cls(filters)
+
+class ProfileTypeExtractor(NodeExtractor):
+
+    def model_class(self):
+        return ProfileType
 
 class LocationExtractor(NodeExtractor):
 

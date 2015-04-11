@@ -3395,12 +3395,6 @@ section.user-post{
 .inner-comment{
 	margin: 0 0 5px 70px;
 }
-.inner-comment .media-left{
-	
-}
-.inner-comment .media-body{
-	
-}
 .inner-comment .media-body .username{
 	color:#1076BD;
 	text-align:left;
@@ -3413,4 +3407,27 @@ section.user-post{
 .inner-comment .media-body .btn-link{
 	float:left;
 	
+}
+
+.finder-banner{
+  height: 488px;
+  width: 100%;
+  padding: 50px 0;
+}
+@media(max-width:767px){
+.finder-banner{
+	height:auto;
+}	
+}
+.finder-banner .finder-heading{
+}
+.finder-banner .finder-heading h2, .finder-banner .finder-heading h3{
+  font-family: 'oswald', Arial, Helvetica, sans-serif;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0px 1px 0px #444;
+  -webkit-text-shadow: 0px 1px 0px #444;
+  -moz-text-shadow: 0px 1px 0px #444;
+  -ms-text-shadow: 0px 1px 0px #444;
+  -o-text-shadow: 0px 1px 0px #444;
 }

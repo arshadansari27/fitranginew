@@ -1,0 +1,90 @@
+<section class="container-fluid p-0">
+    <div class="finder-banner" style="background: url(/images/userprofile-banner.jpg) no-repeat center center;">
+
+        <section class="container">
+
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 finder-heading">
+                <h2>Send and Connect with adventures around</h2>
+
+                <h3>10000+ Users profiles and 2000+ business profiles</h3>
+            </div>
+
+
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 fitrangi-datalist">
+                <input id="profile-category-filter" data-category="all" data-model="profile" data-filter="type__profile_type__name" list="category" placeholder="SELECT CATEGORY" value="">
+                <datalist id="category">
+                    <option value="Organizer">
+                    <option value="Enthusiast">
+                </datalist>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 fitrangi-datalist">
+                <input  id="profile-activity-filter" data-category="all" data-model="profile" data-filter="relationship__favorite__profile" list="activity" placeholder="FILTER BY ACTIVITY" value="">
+                <datalist id="activity">
+
+                </datalist>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 fitrangi-datalist">
+
+                <input  id="profile-location-filter" data-category="all" data-model="profile" data-filter="location__location__name" list="location" placeholder="FILTER BY LOCATION" value="">
+                <datalist id="location">
+                </datalist>
+            </div>
+
+
+            <div class="col-lg-offset-4 col-md-offset-4">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <a href="" class="btn btn-info blue-bg no-radius w-100 mt-15">GO</a>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <a href="" class="btn btn-info blue-bg no-radius w-100 mt-15">RESET</a>
+                </div>
+            </div>
+
+
+        </section>
+
+
+    </div>
+</section>
+
+<section class="container border-grey-b text-right p-10 mb-20">
+
+    <h2 class="inline oswald pull-left m-0 pl-10">Users</h2>
+
+    <button type="button" class="btn btn-default"><i class="fa fa-plus"></i> Be Fitrangi</button>
+    <button type="button" class="btn btn-default"><i class="fa fa-building"></i> Add new Organisation</button>
+    <button type="button" class="btn btn-default"><i class="fa fa-users"></i> Invite Friends</button>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 pull-right">
+        <div class="input-group">
+            <input type="text" class="form-control input-md no-radius p-20" placeholder="Search by Name">
+            <span class="input-group-btn no-radius"><button class="btn btn-default btn-md" type="button"><i
+                    class="fa fa-search"></i></button></span>
+        </div>
+    </div>
+
+</section>
+
+
+<section class="container-fluid p-0">
+    <div class="container">
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <ul class="media-list">
+                {% import 'site/pages/commons/list_page.html' as listing %}
+                {{ listing.list_page('profile', card_type, last_page, current_page, category=category) }}
+            </ul>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function(){
+        var App = window.App;
+        App.filter('profile-category-filter');
+    });
+</script>
+
