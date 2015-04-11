@@ -82,6 +82,17 @@ $(document).ready(function() {
         }
         App.editor(options);
     };
+        //Armash Work Starts Here
+    App.profile.add_other_profile_to_follow= function(node, other_profile) {
+        options = {
+            node: node,
+            adventure: other_profile,
+            type: 'profile',
+            command: 'follow-profile',
+            action: 'add'
+        }
+        App.editor(options);
+    };
 
 
 });
