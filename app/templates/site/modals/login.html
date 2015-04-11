@@ -144,7 +144,7 @@
                     <button id="btn-login1" type="button" style="width: 100px;" class="btn btn-info"><b> Login </b></button> &nbsp;
                 </div>
                 <div class="col-sm-4 pull-right">
-                    <fb:login-button data-max-rows="0"  data-size="large" scope="public_profile,email" onlogin="checkLoginState();">Login with Facebook</fb:login-button>
+                    <!--fb:login-button data-max-rows="0"  data-size="large" scope="public_profile,email" onlogin="checkLoginState();">Login with Facebook</fb:login-button>
                     <br/>
                     <br/>
                     <span id="signinButton">
@@ -156,7 +156,14 @@
                             data-scope="email profile openid https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.profile">
                             <img src="https://developers.google.com/accounts/images/sign-in-with-google.png">
                         </span>
-                    </span>
+                    </span-->
+                    <button class="btn btn-default btn-facebook mb-10" type="button" scope="public_profile,email" onlogin="checkLoginState();"><i class="fa fa-facebook"></i> Sign in with <strong>Facebook</strong></button>
+                    <button class="btn btn-default btn-google-plus mb-10 g-signin" id="signinButton" type="button" data-callback="onSignInCallback"
+                    data-clientid="445628400297-si4iclsg5i2imd3parigb643lep5iis7.apps.googleusercontent.com"
+                    data-cookiepolicy="single_host_origin"
+                    data-scope="email profile openid https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.profile">
+                    <i class="fa fa-google-plus"></i> Sign in with <strong>Google+</strong></button>
+
                 </div>
             </div>
         </div>
