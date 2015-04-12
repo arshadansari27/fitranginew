@@ -12,17 +12,21 @@ from app.utils.search_helper import listing_helper, node_helper
 from app.utils import login_required, all_tags
 from app.handlers import ActivityView, NodeView, NodeCollectionView, AdventureCollectionView, NodeExtractor, \
     ArticleCollectionView, CompositeNodeCollectionView, EventCollectionView, ProfileCollectionView, ExploreLandingView, \
-    CommunityLandingView
+    CommunityLandingView, EditorView
 from app.views.site.menus import view_menu
 
 (MODEL_DETAIL_VIEW, MODEL_LIST_ROW_VIEW, MODEL_LIST_GRID_VIEW, MODEL_LIST_POD_VIEW) = ('detail', 'row', 'grid', 'pod')
 
 
-@app.route('/test/post')
-def post_box():
-    from app.models.adventure import Adventure
-    model = Adventure.objects.first()
-    return render_template('site/pages/commons/empty_view2.html', model=model, user=g.user, post_type='review')
+@app.route('/write/<model_name>')
+@app.route('/write/<model_name>/<model_id>')
+def editor(model_name, model_id=None):
+    from app.views import force_setup_context
+    context = force_setup_context({})
+    card = EditorView(model_name, model_id).get_card()
+    context['card'] = card
+    return render_template('site/pages/commons/view.html', **context)
+
 
 @app.route('/post/add', methods=['POST'])
 @login_required
@@ -183,8 +187,16 @@ def paged_list():
 def ajax_options():
     model_name = request.args.get('model_name', '')
     attr = request.args.get('attr', None)
-    options = (getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all())
-    results = ('<option value="%s">' % u for u in options)
+    select = request.args.get('select', 0)
+    if model_name == 'tag':
+        options = [(u[0], u[0]) for u in all_tags()]
+    else:
+        options = ((str(getattr(u, 'id')), getattr(u, attr)) for u in NodeFactory.get_class_by_name(model_name).objects.all())
+    if not select:
+        str_to_use = '<option id="%s" value="%s">'
+    else:
+        str_to_use = '<option value="%s">%s</option>'
+    results = (str_to_use % u for u in options)
     return ''.join(results)
 
 @app.route('/buttons')

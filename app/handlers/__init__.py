@@ -14,6 +14,30 @@ class View(object):
         raise Exception('Not Implemented')
 
 
+class EditorView(View):
+
+    def __init__(self, model_name, id=None):
+        self.model_name = model_name
+        self.id = id
+
+    def get_card(self):
+        if self.id:
+            extractor = NodeExtractor.factory(self.model_name, dict(pk=self.id))
+            model = extractor.get_single()
+        else:
+            model = None
+
+        from app.views import env
+        template_path = 'site/includes/content-editor.html'
+        template = env.get_template(template_path)
+        from app.views import force_setup_context
+        context = force_setup_context({})
+        context['model'] = model
+        context['model_name'] = self.model_name
+        context['is_edit'] = True if model else False
+        return template.render(**context)
+
+
 class LandingView(View):
 
     def __init__(self):

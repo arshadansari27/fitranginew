@@ -14,6 +14,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/bootstrap-tagsinput.css" rel="stylesheet">
 
     <!-- Fontawesome Icon CSS -->
     <link href="/css/font-awesome.min.css" rel="stylesheet">
@@ -36,6 +37,9 @@
     <script src="/js/fotorama.js"></script>
 
     <link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+    <link href="/css/summernote.css" rel="stylesheet" type="text/css" />
+    <link href="/css/summernote-bs3.css" rel="stylesheet" type="text/css" />
+    <script src="/js/summernote.js"></script>
 
 
     {% block header_scripts %}{% endblock %}
@@ -238,6 +242,7 @@
 <script src="/js/modernizr.custom.85647.js"></script>
 <script src="/js/css3-mediaqueries.js"></script>
 <script src="/js/bootstrap-dialog.min.js"></script>
+<script src="/js/bootstrap-tagsinput.js"></script>
 
 <!--<script>
 $(function(){
@@ -360,7 +365,9 @@ $(".dropdown").hover(
 {% block footer_scripts %}{% endblock %}
 <script>
     $(document).ready(function(){
-
+        if($('.summernote')!=undefined) {
+            $('.summernote').summernote({height: 400});
+        }
         function postToFeed(title, desc, url, image){
             var obj = {method: 'feed',link: 'http://www.fitrangi.com' + url, picture: 'http://www.fitrangi.com/'+image,name: title,description: desc};
             function callback(response){}

@@ -56,6 +56,7 @@ class NodeExtractor(object):
         if len(self.filters) > 0:
             filters = {}
             for k, v in self.filters.iteritems():
+                print k, v
                 if '|' in v:
                     u = v.split('|')
                     if u[0] == 'bool':
