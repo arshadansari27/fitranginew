@@ -94,5 +94,28 @@ $(document).ready(function() {
         App.editor(options);
     };
 
+    App.profile.remove_profile_from_follow= function(node, other_profile) {
+        options = {
+            node: node,
+            adventure: other_profile,
+            type: 'profile',
+            command: 'follow-profile',
+            action: 'remove'
+        }
+        App.editor(options);
+    };
+
+    App.profile.add_bookmark_to_article= function(node, article) {
+        options = {
+            node: node,
+            adventure: article,
+            type: 'profile',
+            command: 'bookmark-article',
+            action: 'add'
+        }
+        App.editor(options);
+    };
+
+
 
 });
