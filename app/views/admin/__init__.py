@@ -140,10 +140,10 @@ class TagAdminView(ModelView):
 class LocationAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['is_city', 'city', 'region', 'zipcode', 'state', 'geo_location']
-    column_list = ('is_city', 'state')
-    column_filters = ['city', 'region']
-    column_searchable_list = ('city', 'region')
+    form_columns = ['name', 'zipcode', 'state']
+    column_list = ('name', 'state')
+    column_filters = ['name']
+    column_searchable_list = ('name', 'zipcode')
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
@@ -211,8 +211,8 @@ class TripAdminView(ModelView):
 class ProfileAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'email', 'about', 'location', 'phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image', 'type']
-    column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login', 'type')
+    form_columns = ['name', 'email', 'featured', 'about', 'location', 'phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image', 'type']
+    column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login', 'type', 'featured')
     column_filters = ['name', 'email', FilterProfileType('type.id', 'Type')]
     column_searchable_list = ('name', 'email')
     form_overrides = dict(about=SummernoteTextAreaField)

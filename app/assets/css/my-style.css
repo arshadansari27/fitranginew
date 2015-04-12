@@ -1,6 +1,6 @@
 
 body{
-	font-family: 'Roboto', Arial, Helvetica, sans-serif;
+	font-family: 'lato', Arial, Helvetica, sans-serif;
 }
 
 .w-100{width:100%}
@@ -420,7 +420,42 @@ min-height: 50px;}
 .my-btn a{
 	text-decoration:none;
 }
-
+.fitrangi-btn{
+  display: inline-block;
+  position: relative;
+  height: 38px;
+  padding: 0 16px;
+  outline: 0;
+  color: rgba(0,0,0,0.44);
+  background: rgba(0,0,0,0);
+  font-size: 14px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,0.15) ;
+  vertical-align: bottom;
+  white-space: nowrap;
+  text-rendering: auto;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  box-sizing: border-box;
+  border-radius: 999em;
+  transition: 100ms background-color,100ms border-color,100ms color;
+  font-family: "lato",Geneva,Verdana,sans-serif;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -moz-font-feature-settings: "liga" on;	
+}
+.fitrangi-btn:hover, .fitrangi-btn:focus{
+	color: #0F75BC;
+	border:1px solid rgba(15, 117, 188, 0.55);
+}
 .btn-lay{
 	color: #fff;
 	background-color: #1a7798;
@@ -1235,7 +1270,7 @@ min-height: 50px;}
 }
 .footer{
 	padding:10px;
-	background:#2D2D2D;
+	background:#3D3C3A;
 	color:#FFF;
 }
 .footer h3{
@@ -2642,9 +2677,6 @@ section.user-post{
 }
 
 
-
-
-
 .fitrangi-range h3{
 	font-family:'oswald', Arial, Helvetica, sans-serif;
 	color:#fff;
@@ -3431,3 +3463,103 @@ section.user-post{
   -ms-text-shadow: 0px 1px 0px #444;
   -o-text-shadow: 0px 1px 0px #444;
 }
+
+.write-blog{
+	
+}
+
+.write-blog .heading h2{
+	 font-family: 'oswald', Arial, Helvetica, sans-serif;
+	 color:#848484;
+	 padding:5px;
+	 border-bottom:1px solid #eaeaea;
+}
+
+.blog-form {
+	margin:50px 0;
+}
+
+.blog-form .form-group label{
+	text-transform:uppercase;
+	font-family: 'lato', Arial, Helvetica, sans-serif;
+	color:#0F75BC;
+	padding:0 20px;
+}
+.blog-form input{
+	height:50px;
+	border:none;
+	border-radius: 0px;
+	-webkit-box-shadow: none;
+  	box-shadow: none;
+	border-bottom:3px solid #F2F2F2;
+	padding:13px 20px; 
+}
+.blog-form textarea{
+	height:auto;
+	border:none;
+	border-radius: 0px;
+	-webkit-box-shadow: none;
+  	box-shadow: none;
+	border-bottom:3px solid #F2F2F2;
+	padding:13px 20px; 
+}
+.blog-form input:focus, .blog-form input:active, .blog-form textarea:focus, .blog-form textarea:active{
+	box-shadow:none;
+	-webkit-box-shadow:none;
+	border-bottom:3px solid #dadada; 
+}
+
+
+
+
+
+/*--------------------- FITRANGI PROFILE START------------------------------*/
+/*fitrangi-profile replaced by fitrangi-pro remove fitrangi-profile on the end*/
+
+.fitrangi-pro{
+  width: 100%;
+  position: relative;
+  margin: 0 0 20px 0;
+  padding:0px;
+  border-radius: 0px;
+  border: 0;
+  background-color: #F9F9F9;
+  box-shadow: 0 1px 2px -1px rgba(0, 0, 0, 0.26);
+  overflow: hidden;
+}
+.fitrangi-pro:before, .fitrangi-pro:after {
+  content: " ";
+  display: table;
+}
+.fitrangi-profile .user-photo {
+  border-radius: 0;
+}
+.fitrangi-pro .user-photo {
+  float: left;
+  width: 100px;
+  height: 100px;
+  border-radius: 3px 0 0 3px;
+}
+.fitrangi-pro .friend-content {
+  margin-left: 120px;
+}
+.fitrangi-pro .title {
+  font-size: 18px;
+  margin-top: 10px;
+  text-align:left;
+}
+.fitrangi-pro p {
+  font-size: 14px;
+  margin: 0;
+  color:#898989;
+}
+.fitrangi-pro p span{
+	font-size:18px;
+	color:#eaeaeae;
+}
+.fitrangi-pro .btn {
+	padding:0;
+	font-size:16px;
+}
+
+/*--------------------- FITRANGI PROFILE END------------------------------*/

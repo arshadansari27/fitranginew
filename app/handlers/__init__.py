@@ -45,8 +45,8 @@ class ExploreLandingView(LandingView):
 
     def get_context(self, context={}):
         context['journal'] = ArticleCollectionView("grid", "", is_partial=True, only_list=True, page=1, size=6, fixed_size=True).get_card(context)
-        context['enthusiast_profile'] = ProfileCollectionView("grid", "type__profile_type__name:Enthusiast;", is_partial=True, only_list=True, page=1, size=3, fixed_size=True, category='enthusiast').get_card(context)
-        context['organizer_profile'] = ProfileCollectionView("grid", "type__profile_type__name:Organizer;", is_partial=True, only_list=True, page=1, size=3, fixed_size=True, category='organizer').get_card(context)
+        context['enthusiast_profile'] = ProfileCollectionView("grid", "type__profile_type__name:Enthusiast;", is_partial=True, only_list=True, page=1, size=4, fixed_size=True, category='enthusiast').get_card(context)
+        context['organizer_profile'] = ProfileCollectionView("grid", "type__profile_type__name:Organizer;", is_partial=True, only_list=True, page=1, size=4, fixed_size=True, category='organizer').get_card(context)
         context['event'] = EventCollectionView("grid", "", is_partial=True, only_list=True, page=1, size=6, fixed_size=True).get_card(context)
         context['discussion'] = DiscussionCollectionView("row", "", is_partial=True, only_list=True, page=1, size=6, fixed_size=True).get_card(context)
         return context
@@ -60,6 +60,9 @@ class CommunityLandingView(LandingView):
         return "site/pages/landings/community.html"
 
     def get_context(self, context={}):
+        context['profile'] = ProfileCollectionView("icon", "", is_partial=True, only_list=True, page=1, size=18, fixed_size=True).get_card(context)
+        context['event'] = EventCollectionView("row", "", is_partial=True, only_list=True, page=1, size=2, fixed_size=True).get_card(context)
+        context['discussion'] = DiscussionCollectionView("row", "", is_partial=True, only_list=True, page=1, size=6, fixed_size=True).get_card(context)
         return context
 
 
@@ -125,6 +128,7 @@ class NodeCollectionView(View):
         context['last_page'] = last_page
         context['current_page'] = current_page
         context['category'] = self.category
+        context['size'] = self.size
         html = template.render(**context)
         return html
 
@@ -156,7 +160,7 @@ class NodeCollectionView(View):
             return "%s/%s" % (self.get_page_path(), "full_page.html")
 
     @classmethod
-    def factory(cls, model_view, card_type, query=None, page=1, size=10, is_partial=False, only_list=False, parent=None, category='all'):
+    def factory(cls, model_view, card_type, query=None, page=1, size=6, is_partial=False, only_list=False, parent=None, category='all'):
         if model_view == ADVENTURE:
             return AdventureCollectionView(
                 card_type, query, page, size, is_partial, only_list, parent=parent, category=category)

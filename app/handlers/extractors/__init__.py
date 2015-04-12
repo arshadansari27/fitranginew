@@ -56,6 +56,16 @@ class NodeExtractor(object):
         if len(self.filters) > 0:
             filters = {}
             for k, v in self.filters.iteritems():
+                if '|' in v:
+                    u = v.split('|')
+                    if u[0] == 'bool':
+                        v = bool(u[1])
+                    elif u[0] == 'int':
+                        v = int(u[1])
+                    elif u[0] == 'float':
+                        v = float(u[1])
+                    else:
+                        v = str(u[1])
                 if k.startswith('relationship'):
                     fields = k.split('__')
                     assert len(fields) >= 3

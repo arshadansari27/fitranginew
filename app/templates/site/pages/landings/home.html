@@ -6,18 +6,43 @@
               action="#" method="get">
             <div class="form-group">
                 <span class="fa fa-map-marker"></span>
-                <select class="form-control" data-placeholder="Choose a Country...">
-                    <option>Choose a Country...</option>
-                    <option>Mumbai</option>
-                    <option>Kolkatta</option>
-                    <option>Chennai</option>
-                    <option>Delhi</option>
-                </select>
+                <input id="location-filter" data-category="all" data-model="adventure" data-filter="location__location__name" list="location" placeholder="FILTER BY LOCATION">
+                <datalist id="location">
+                    <option value="">
+                </datalist>
+                <script>
+                    $(document).ready(function(){
+                        $.ajax({
+                            url: '/options?model_name=location&attr=name'
+                        }).done(function (data) {
+                            $('#location').append(data);
+                        });
+                    });
+                </script>
+                <!--select class="form-control" data-placeholder="Choose a Country...">
+                    <datalist id="location-list">
+
+                    </datalist>
+                </select-->
 
             </div>
             <div class="form-group">
                 <span class="fa fa-search"></span>
-                <input type="text" name="search-text" class="form-control" placeholder="Select Activity">
+                <!--input type="text" name="search-text" class="form-control" placeholder="Select Activity"-->
+
+                <input id="activity-filter" data-category="all" data-model="adventure" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
+                <datalist id="activity">
+                    <option value="">
+                </datalist>
+                <script>
+                    $(document).ready(function(){
+                        $.ajax({
+                            url: '/options?model_name=activity&attr=name'
+                        }).done(function (data) {
+                            $('#activity').append(data);
+                        });
+                    });
+                </script>
             </div>
             <div class="form-group">
                 <button class="btn btn-primary search-btn no-radius">Submit</button>
@@ -166,7 +191,11 @@
 
     <div class="container">
         {{ enthusiast_profile|safe}}
+        <input id="enthusiast-filter" data-category="enthusiast" data-model="profile" data-filter="type__profile_type__name" type="hidden" value="Enthusiast">
+        <input id="enthusiast-featured-filter" data-category="enthusiast" data-model="profile" data-filter="featured" type="hidden" value="bool|1">
         <hr>
+        <input id="organizer-filter" data-category="organizer" data-model="profile" data-filter="type__profile_type__name__ne" type="hidden" value="Enthusiast">
+        <input id="organizer-featured-filter" data-category="organizer" data-model="profile" data-filter="featured" type="hidden" value="bool|1">
         {{ organizer_profile|safe}}
 
         <div class="pull-right">
@@ -228,6 +257,11 @@
 
 <script language="JavaScript">
         $(document).ready(function(){
+            var App = window.App;
+            App.filter('enthusiast-filter');
+            App.filter('organizer-filter');
+            App.filter('enthusiast-featured-filter');
+            App.filter('organizer-featured-filter');
             $('.show_subscribe').click(function(){
                 subscription_modal_text = '<div><div id="subscribe-form"><input type="text" id="subscription-name" class="form-control" placeholder="Name" required="Please Enter Your Name"><br/><input type="email" id="subscription-email" class="form-control" placeholder="email" required="Please Enter Your Email">' +'</div>' + '<div id="subscribe-message"></div>' + '</div>';
                 console.log(subscription_modal_text);

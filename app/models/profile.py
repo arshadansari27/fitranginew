@@ -18,6 +18,7 @@ class ProfileType(db.Document):
 @new_object.apply
 @update_content.apply
 class Profile(Entity, db.Document):
+    featured = db.BooleanField(default=False)
     is_subscription_only = db.BooleanField(default=False)
     subscription_date = db.DateTimeField(default=datetime.datetime.now)
     email = db.StringField(unique=True)
