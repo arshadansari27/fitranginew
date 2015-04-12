@@ -105,7 +105,7 @@ $(document).ready(function() {
         App.editor(options);
     };
 
-    App.profile.add_bookmark_to_article= function(node, article) {
+    App.profile.add_article_to_bookmark= function(node, article) {
         options = {
             node: node,
             adventure: article,
@@ -116,6 +116,194 @@ $(document).ready(function() {
         App.editor(options);
     };
 
+    App.profile.remove_article_from_bookmark= function(node, article) {
+        options = {
+            node: node,
+            adventure: article,
+            type: 'profile',
+            command: 'bookmark-article',
+            action: 'remove'
+        }
+        App.editor(options);
+    };
+
+    App.profile.add_event_to_interest= function(node, event) {
+        options = {
+            node: node,
+            adventure: event,
+            type: 'profile',
+            command: 'interest-event',
+            action: 'add'
+        }
+        App.editor(options);
+    };
+
+    App.profile.remove_event_from_interest= function(node, event) {
+        options = {
+            node: node,
+            adventure: event,
+            type: 'profile',
+            command: 'interest-event',
+            action: 'remove'
+        }
+        App.editor(options);
+    };
+
+    App.profile.add_event_to_join= function(node, event) {
+        options = {
+            node: node,
+            adventure: event,
+            type: 'profile',
+            command: 'join-event',
+            action: 'add'
+        }
+        App.editor(options);
+    };
+
+    App.profile.remove_event_from_join= function(node, event) {
+        options = {
+            node: node,
+            adventure: event,
+            type: 'profile',
+            command: 'join-event',
+            action: 'remove'
+        }
+        App.editor(options);
+    };
+
+    App.profile.add_trip_to_interest= function(node, trip) {
+        options = {
+            node: node,
+            adventure: trip,
+            type: 'profile',
+            command: 'interest-trip',
+            action: 'add'
+        }
+        App.editor(options);
+    };
+
+    App.profile.remove_trip_from_interest= function(node, trip) {
+        options = {
+            node: node,
+            adventure: trip,
+            type: 'profile',
+            command: 'interest-trip',
+            action: 'remove'
+        }
+        App.editor(options);
+    };
+
+    App.profile.add_trip_to_join= function(node, trip) {
+        options = {
+            node: node,
+            adventure: trip,
+            type: 'profile',
+            command: 'join-trip',
+            action: 'add'
+        }
+        App.editor(options);
+    };
+
+    App.profile.remove_trip_from_join= function(node, trip) {
+        options = {
+            node: node,
+            adventure: trip,
+            type: 'profile',
+            command: 'join-trip',
+            action: 'remove'
+        }
+        App.editor(options);
+    };
+
+    App.profile.verify_profile= function(node, data) {
+        options = {
+            node: node,
+            adventure: data,
+            type: 'profile',
+            command: 'verify-profile'
+        }
+        App.editor(options);
+    };
+
+    App.profile.edit_profile_preference= function(node, data) {
+        options = {
+            node: node,
+            adventure: data,
+            type: 'profile',
+            command: 'preference-edit'
+        }
+        App.editor(options);
+    };
+
+    App.profile.edit_type= function(node, type) {
+        options = {
+            node: node,
+            adventure: type,
+            type: 'profile',
+            command: 'profile-type-edit'
+        }
+        App.editor(options);
+    };
+
+    App.profile.register_profile= function(node, data) {
+        options = {
+            node: node,
+            adventure: data,
+            type: 'profile',
+            command: 'register-profile'
+        }
+        App.editor(options);
+    };
+
+    App.profile.business_profile_edit= function(node, data) {
+        options = {
+            node: node,
+            adventure: data,
+            type: 'profile',
+            command: 'business-profile-edit'
+        }
+        App.editor(options);
+    };
+
+    App.profile.edit_role= function(node, role) {
+        options = {
+            node: node,
+            adventure: role,
+            type: 'profile',
+            command: 'role-edit'
+        }
+        App.editor(options);
+    };
+
+    App.profile.deactivate_profile= function(node, data) {
+        options = {
+            node: node,
+            adventure: data,
+            type: 'profile',
+            command: 'deactivate-profile'
+        }
+        App.editor(options);
+    };
+
+    App.profile.edit_cover_image= function(node, data) {
+        options = {
+            node: node,
+            adventure: data,
+            type: 'profile',
+            command: 'cover-image-edit'
+        }
+        App.editor(options);
+    };
+
+    App.profile.change_password= function(node, data) {
+        options = {
+            node: node,
+            adventure: data,
+            type: 'profile',
+            command: 'change-password'
+        }
+        App.editor(options);
+    };
 
 
 });
