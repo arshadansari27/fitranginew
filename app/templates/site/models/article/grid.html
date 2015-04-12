@@ -1,13 +1,26 @@
-<div class="{{grid_size}}">
-  <div class="thumbnail">
-    <img src="{{model.cover_image_path}}" alt="...">
-    <div class="caption">
-    	<h4>{{model.title}}</h4>
-    	<div class="media">
-    		<img src="{{model.author.cover_image_path}}" class="img-circle img-responsive pull-left p-5 media-object" width="64">
-    		<h5>by {{model.author.name}}</h5>
-    		<h6>{{model.since}}</h6>
-		</div>
-    </div>
+<!--div class="{{grid_size}}">
+  <div class="thumbnail" style="background:url({{model.cover_image_path}}) no-repeat center center;background-size: cover; height: 209px;">
+    <a href="{{model.slug}}">
+        <div class="caption pull-bottom">
+    	    <h4>{{model.title}}</h4>
+    	    <div class="media center">
+    		    <img src="{{model.author.cover_image_path}}" class="img-circle img-responsive pull-left p-5 media-object" width="64">
+    		    <h5>by {{model.author.name}}</h5>
+    		    <h6>{{model.since}}</h6>
+		    </div>
+        </div>
+    </a>
   </div>
+</div-->
+<div class="{{grid_size}} thumbnail" data-model="{{model.id}}">
+    <a href="{{model.slug}}">
+        <img src="{{model.cover_image_path}}" class="img-responsive" style="height: 209px;">
+    	<div class="media">
+            <h4>{{model.title}}</h4>
+            <img src="{{model.author.cover_image_path}}" class="img-circle img-responsive pull-left p-5" width="48px;">
+            <h5>by {{model.author.name}}</h5>
+            <h6>{{model.since}}</h6>
+            </div>
+		</div>
+    </a>
 </div>

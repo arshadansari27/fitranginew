@@ -14,7 +14,7 @@ from app.views.forms import ChangePasswordForm, UserPreferenceForm, ProfileForm
 # Define wtforms widget and field
 from app.models.profile import Profile, ProfileType
 from app.models.streams import ActivityStream, Message
-from app.models.content import Content, Channel, Comment, Article, Post, PostVote, Discussion
+from app.models.content import Content, Channel, Comment, Article, Post, PostVote, Discussion, Advertisement
 from app.models.activity import Activity
 from app.models.adventure import Adventure, Location, State
 from app.models.event import Event
@@ -436,6 +436,7 @@ admin.add_view(ApprovalContentAdminView(Discussion, name='Discussion', endpoint=
 admin.add_view(ProfileAdminView(Profile, category="Administration"))
 admin.add_view(ActivityAdminView(Activity, category="Administration"))
 admin.add_view(AdventureAdminView(Adventure, category="Administration"))
+admin.add_view(RestrictedAdminView(Advertisement, category="Administration"))
 
 
 admin.add_view(ContentAdminView(Article, category="Editorial"))
