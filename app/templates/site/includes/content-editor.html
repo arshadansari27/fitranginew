@@ -7,10 +7,10 @@
 
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <form class="blog-form">
-            <input type="hidden" value="{{model.id}}">
+            <input data-name="id" type="hidden" value="{{model.id}}">
             <div class="form-group">
                 <label for="heading">Title</label>
-                <input type="text" data-name="title" class="form-control" placeholder="Enter blog heading" value="{{model.title}}">
+                <input data-name="title" type="text" data-name="title" class="form-control" placeholder="Enter blog heading" value="{{model.title}}">
             </div>
 
             <div class="form-group">
@@ -38,7 +38,7 @@
             {% if user and 'Admin' in user.roles %}
             <div class="form-group">
                 <label for="channel">Channels</label>
-                <select multiple class="form-control" data-name="channels">
+                <select class="form-control" data-name="channels">
                 </select>
                 <script>
                     $(document).ready(function(){
@@ -65,18 +65,12 @@
                     <div id="tags_list" class="fitrangi-tags-list">
                     </div>
                 </div>
-                <script>
-                    $(document).ready(function(){
-
-                    });
-
-                </script>
             </div>
 
 
-            <button class="btn fitrangi-btn">Save as draft</button>
-            <button class="btn fitrangi-btn">Preview</button>
-            <button class="btn fitrangi-btn">Publish</button>
+            <button type="button" data-action="go-back" class="btn fitrangi-btn">Back</button>
+            <button type="button" data-action="save" class="btn fitrangi-btn">Save as draft</button>
+            <button type="button" data-action="publish" class="btn fitrangi-btn">Publish</button>
         </form>
     </div>
 </section>
@@ -86,16 +80,66 @@
 <script>
     $(document).ready(function(){
 
+        var save_content = function(publish){
+            var tags = [];
+
+            var $tags = $('[data-tag]');
+            if ($tags != undefined && $tags.length > 0) {
+                for (var j = 0; j < $tags.length; j++) {
+                    tags.push($($tags[j]).attr('data-tag'));
+                }
+            }
+
+            var channels = null;
+            if ($('[data-name="channels"]')){
+                channels = $('[data-name="channels"]').val();
+            }
+            var options = {
+                publish: publish,
+                id: $('[data-name="id"]').val(),
+                title: $('[data-name="title"]').val(),
+                description: $('[data-name="description"]').val(),
+                content: $('[data-name="content"]').val(),
+                cover_image: $('[data-name="cover-image"]').val(),
+                channels: channels,
+                tags: tags
+            };
+
+            console.log(options);
+        };
+
+
+        $('[data-action="publish"]').click(function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            save_content(true);
+        });
+        $('[data-action="save"]').click(function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            save_content(false);
+        });
+        $('[data-action="go-back"]').click(function(){
+            window.history.back();
+        });
+
         $.ajax({
             url: '/options?model_name=tag&attr=name'
         }).done(function (data) {
             $('#tag-list').append(data);
         });
 
-        var tags = '{% for c in model.tags %}{{c}}{% if not loop.last %},{% endif %}{% endfor %}'.split(',');
+        var _tags = '{% for c in model.tags %}{{c}}{% if not loop.last %},{% endif %}{% endfor %}';
+        var tags = null;
+        if (_tags.length > 0) {
+           tags = _tags.split(',');
+        } else {
+           tags = []
+        }
+
         for(var i = 0; i < tags.length; i++)  {
             var tag = tags[i];
-            $("#tags_list").append('<a class="remove-tag" href="#">'+tag+'&nbsp;|&nbsp;X</a></span>');
+            $("#tags_list").append('<a data-tag="'+tag+'" class="remove-tag" href="#">'+tag+'&nbsp;|&nbsp;X</a></span>');
         }
 
         $('#tags_list').on('click', '.remove-tag', function(e){
@@ -108,7 +152,7 @@
             var code = (e.keyCode ? e.keyCode : e.which);
             if(code == 13 || code == 188) { //Enter keycode
                 var tag = $('[data-name="tags"]').val();
-                $("#tags_list").append('<a class="remove-tag" href="#">'+tag+'&nbsp;|&nbsp;X</a></span>');
+                $("#tags_list").append('<a  data-tag="'+tag+'" class="remove-tag" href="#">'+tag+'&nbsp;|&nbsp;X</a></span>');
                 $('[data-name="tags"]').val('');
                 e.preventDefault();
                 e.stopPropagation();
@@ -164,5 +208,5 @@
                 ]
             });
         });
-    })
+    });
 </script>
