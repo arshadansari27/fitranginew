@@ -1,4 +1,4 @@
-.pp-grid {
+/*.pp-grid {
 	margin: 20px 0 0 0;
 	padding: 0;
 	list-style: none;
@@ -15,13 +15,19 @@
 
 .pp-grid:after {
 	clear: both;
-}
+}*/
 
-.pp-grid li {
+/*.pp-grid li {
 	width: 220px;
 	height: 220px;
-	/*width:18%;
-	height:230px*/;
+	display: inline-block;
+	margin: 20px;
+}
+*/
+
+.pp-grid .pro-hover {
+	width: 220px;
+	height: 220px;
 	display: inline-block;
 	margin: 20px;
 }
@@ -32,12 +38,10 @@
 
 
 
-
-
-
 .pp-item {
-	width: 100%;
-	height: 100%;
+	margin: 20px;
+	width: 220px;
+	height: 220px;
 	border-radius: 50%;
 	position: relative;
 	cursor: default;
@@ -49,8 +53,8 @@
 	transition: all 0.4s ease-in-out;
 }
 .pagep-item {
-	width: 100%;
-	height: 100%;
+	width: 255px;
+	height: 220px;
 	border-radius: 0px;
 	position: relative;
 	cursor: default;
@@ -66,8 +70,8 @@
 	position: absolute;
 	/*background: rgba(63,147,147, 0.8);*/
 	background:rgba(15, 117, 188, 0.7);
-	width: inherit;
-	height: inherit;
+	width:100%;
+	height: 100%;
 	border-radius: 50%;
 	opacity: 0;
 	
@@ -112,6 +116,7 @@
 }
 
 .pp-info h3, .pagep-info h3 {
+	text-align:center;
 	color: #fff;
 	text-transform: uppercase;
 	letter-spacing: 2px;
@@ -124,6 +129,7 @@
 }
 
 .pp-info p, .pagep-info p {
+	text-align:center;
 	color: #fff;
 	padding: 10px 5px;
 	font-style: italic;

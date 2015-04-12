@@ -1,10 +1,8 @@
-<ul class="pp-grid {{grid_size}}">
-<li>
-	<div class="pp-item" style="background:url({{model.cover_image_path}}); background-size:cover;">
+<div class="pro-hover col-lg-3 col-md-3 col-sm-6 col-xs-12">
+	<div class="{% if model.type[0].name == 'Enthusiast' %}pp-item{% else %}pagep-item{% endif %}" style="background:url({{model.cover_image_path}}); background-size:cover;">
 		<div class="pp-info">
             <h3>{{model.name}}</h3>
             {% if model.location %} <p>{{model.location.name}}</p> {% endif %}
 		</div>
 	</div>
-</li>
-</ul>
+</div>

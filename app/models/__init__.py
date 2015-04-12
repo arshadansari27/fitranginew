@@ -16,10 +16,11 @@ db.ListField = ListField
 
 
 (ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, PRODUCT, ARTICLE,
- LOCATION, POST, DISCUSSION, CHANNEL, STREAM, MESSAGE, RELATIONSHIPS, PROFILE_TYPE) =  (
+ LOCATION, POST, DISCUSSION, CHANNEL, STREAM, MESSAGE,
+ RELATIONSHIPS, PROFILE_TYPE, ADVERTISEMENT) =  (
     "activity", "adventure", "event", "trip", "profile", "product",
     "article", "location", "post", "discussion", "channel",
-    "stream", "message", "relationships", "profile_type"
+    "stream", "message", "relationships", "profile_type", "advertisement"
 )
 
 def handler(event):
@@ -200,7 +201,7 @@ class NodeFactory(object):
     def get_class_by_name(cls, name):
         from app.models.activity import Activity
         from app.models.adventure import Adventure, Location
-        from app.models.content import Content, Discussion, Channel, Post, Article
+        from app.models.content import Content, Discussion, Channel, Post, Article, Advertisement
         from app.models.event import Event
         from app.models.store import Product
         from app.models.profile import Profile, ProfileType
@@ -224,6 +225,7 @@ class NodeFactory(object):
         elif name == MESSAGE: return  Message
         elif name == RELATIONSHIPS: return RelationShips
         elif name == PROFILE_TYPE: return ProfileType
+        elif name == ADVERTISEMENT: return Advertisement
         else: return None
 
 if __name__ == '__main__':

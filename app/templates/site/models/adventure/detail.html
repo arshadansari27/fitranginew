@@ -35,23 +35,19 @@
 
                         <li>
                             {% if not model in user.accomplished_adventure %}
-                                <a href="#" id="add-to-done"><span class="fa fa-check"></span>&nbsp;Done this</a>
+                                <a href="#" data-type="adventure" data-action="add-accomplished" data-model="{{model.id}}" data-user="{{user.id}}"><span class="fa fa-check"></span>&nbsp;Done this</a>
                             {% else %}
-                                <a href="#" id="remove-from-done"><span class="fa fa-check green"></span>&nbsp;Undo this</a>
+                                <a href="#" data-type="adventure" data-action="remove-accomplished" data-model="{{model.id}}" data-user="{{user.id}}"><span class="fa fa-check green"></span>&nbsp;Undo this</a>
                             {% endif %}
                         </li>
                         <li>
                             {% if not model in user.wish_list_adventure %}
-                            <a href="#" id="add-to-wish-list"><span class="fa fa-star"></span> Add to Wishlist</a>
+                            <a href="#" data-type="adventure" data-action="add-wishlist" data-model="{{model.id}}" data-user="{{user.id}}"><span class="fa fa-star"></span> Add to Wishlist</a>
                             {% else %}
-                            <a href="#" id="remove-from-wish-list"><span class="fa fa-star yellow"></span> Wishlisted </a>
+                            <a href="#" data-type="adventure" data-action="remove-wishlist" data-model="{{model.id}}" data-user="{{user.id}}"><span class="fa fa-star yellow"></span> Wishlisted </a>
                             {% endif %}
                         </li>
                         <li><a href="#review_post"><span class="fa fa-edit"></span> Write Review</a></li>
-
-                        <li><a href="#"><span class="fa fa-edit"></span> Send Enquiry</a></li>
-
-
                     </ul>
 
                 </div>
@@ -271,25 +267,11 @@
     <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
         <div id="review_post" class="form-group">
             <label>Reviews</label>
-            <textarea class="form-control radius-5" rows="5" placeholder="Write a Review"></textarea>
         </div>
 
         <div>
-            {% for review in model.reviews %}
-            <article class="well well-sm otherpost-profile " data-model-id="{{model.id}}" data-comment="comment">
-                <img src="{{review.author.cover_image_path}}" class="img-circle img-responsive pull-left p-5" width="60"
-                     height="100">
-                <h4>{{review.author.name}}</h4>
-                <h5 class="seen-report-like m-0">{{review.since}}<a href="" class="report">Report</a><a href=""
-                                                                                                        class="like">Like</a>
-                </h5>
-                <br/>
-
-                <div class="container">
-                    <span>{{review.process_content|safe}}</span>
-                </div>
-            </article>
-            {% endfor %}
+            <input type="hidden" id="review-filter" data-category="all" data-filter="parent__adventure__pk" data-model="post" value="{{model.id}}"/>
+            {{ reviews|safe }}
         </div>
 
 
@@ -297,42 +279,14 @@
     <!--col9 End-->
 
     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-        <!--
         <h4 class="lightgrey">Sponsored</h4>
 
 
         <section class="row sponsored-thumb">
-        <div class="col-md-12 col-xs-12">
-            <div class="thumbnail">
-              <img src="/images/slider-3.jpg" alt="...">
-              <div class="overlay-caption">Lorem Ipsum Dolor Sit</div>
-              <div class="caption">
-                <h4>Thumbnail label</h4>
-              </div>
-            </div>
-        </div>
+            {{ advertisement_list|safe}}
 
-        <div class="col-md-12 col-xs-12">
-            <div class="thumbnail">
-              <img src="/images/slider-3.jpg" alt="...">
-              <div class="overlay-caption">Lorem Ipsum Dolor Sit</div>
-              <div class="caption">
-                <h4>Thumbnail label</h4>
-              </div>
-            </div>
-        </div>
-
-        <div class="col-md-12 col-xs-12">
-            <div class="thumbnail">
-              <img src="/images/slider-3.jpg" alt="...">
-              <div class="overlay-caption">Lorem Ipsum Dolor Sit</div>
-              <div class="caption">
-                <h4>Thumbnail label</h4>
-              </div>
-            </div>
-        </div>
         </section>
-        !-->
+
         <article class="border-grey-b">
             {% if not model.location %}
             <h5 class="grey">Other Adventures</h5>
@@ -366,6 +320,7 @@
             if ($('#adventure-location-filter') != undefined)  {
                 App.filter('adventure-location-filter');
             }
+            App.filter('review-filter');
             App.filter('adventure-not-same-filter');
 
             var profile_editor = App.profile;

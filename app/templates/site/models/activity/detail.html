@@ -6,9 +6,9 @@
                 <div class="favourite" style="background: white;">
                     <img src="{{model.icon_image_path}}" class="img-rounded img-responsive">
                     {% if model in user.favorite_activities %}
-                    <a id="remove-from-favorite" href="#"><h3><i class="fa fa-check"></i>Added to Favourites</h3></a>
+                    <a href="#" data-type="activity" data-action="add-favorite" data-model="{{model.id}}" data-user="{{user.id}}"><h3><i class="fa fa-check"></i>Added to Favourites</h3></a>
                     {% else %}
-                    <a id="add-to-favorite" href="#"><h3>Add to Favourites</h3></a>
+                    <a href="#" data-type="activity" data-action="remove-favorite" data-model="{{model.id}}" data-user="{{user.id}}"><h3>Add to Favourites</h3></a>
                     {% endif %}
                 </div>
             </div>
@@ -148,12 +148,12 @@
             var user = '{{user.id}}';
             var activity = '{{model.id}}'
             var profile_editor = window.App.profile;
-            $("#add-to-favorite").click(function(e){
+            $(".add-to-favorite").click(function(e){
                 e.stopPropagation();
                 console.log('adding to favorites');
                 profile_editor.add_activity_to_favorite(user, activity);
             });
-            $('#remove-from-favorite').click(function(e){
+            $('.remove-from-favorite').click(function(e){
                 e.stopPropagation();
                 console.log('removing from favorites');
                 profile_editor.remove_activity_from_favorite(user, activity);

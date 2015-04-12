@@ -11,7 +11,7 @@ def listing_helper():
     card_type = request.args.get('card_type', MODEL_DETAIL_VIEW)
     model_view = request.args.get('model_view', None)
     page = int(request.args.get('page', 1))
-    size = int(request.args.get('size', 10))
+    size = int(request.args.get('size', 6))
     search_query = request.args.get('query', None)
     context = dict(model_name=model_view, card_type=card_type, page=page, size=size, search_query=search_query)
     context = force_setup_context(context)

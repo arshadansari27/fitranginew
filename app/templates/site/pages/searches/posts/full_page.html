@@ -1,4 +1,4 @@
 {% import 'site/includes/post_box.html' as post %}
 {{ post.show_post_form(parent, post_type) }}
 {% import 'site/pages/commons/list_page.html' as listing %}
-{{ listing.list_page('post', card_type, last_page, current_page, category=category) }}
+{{ listing.list_page('post', card_type, last_page, current_page, category=category, size=size) }}

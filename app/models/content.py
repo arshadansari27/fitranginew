@@ -183,3 +183,7 @@ class Article(Content):
 @update_content.apply
 class Discussion(Content):
     pass
+
+class Advertisement(Node, db.Document):
+    title = db.StringField()
+    link = db.StringField()

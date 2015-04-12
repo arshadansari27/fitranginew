@@ -11,7 +11,8 @@ from app.models.streams import ActivityStream
 from app.utils.search_helper import listing_helper, node_helper
 from app.utils import login_required, all_tags
 from app.handlers import ActivityView, NodeView, NodeCollectionView, AdventureCollectionView, NodeExtractor, \
-    ArticleCollectionView, CompositeNodeCollectionView, EventCollectionView, ProfileCollectionView
+    ArticleCollectionView, CompositeNodeCollectionView, EventCollectionView, ProfileCollectionView, ExploreLandingView, \
+    CommunityLandingView
 from app.views.site.menus import view_menu
 
 (MODEL_DETAIL_VIEW, MODEL_LIST_ROW_VIEW, MODEL_LIST_GRID_VIEW, MODEL_LIST_POD_VIEW) = ('detail', 'row', 'grid', 'pod')
@@ -57,7 +58,11 @@ def act_home():
 
 @app.route("/explore")
 def home():
-    return render_template("/site/pages/landings/home.html")
+    from app.views import force_setup_context
+    context = force_setup_context({})
+    card = ExploreLandingView().get_card()
+    context['card'] = card
+    return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/explore/activity")
 def activity_view():
@@ -130,8 +135,13 @@ def list_event():
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/community")
-def journal():
-    return render_template("/site/pages/landings/community.html")
+def community_mail():
+    from app.views import force_setup_context
+    context = force_setup_context({})
+    card = CommunityLandingView().get_card(context)
+
+    context['card'] = card
+    return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/views/static")
 def static_model_views():

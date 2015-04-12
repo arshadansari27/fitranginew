@@ -1,4 +1,4 @@
-{% macro list_page(model_name, card_type, last_page, current_page, category='all', query='', container_id=None) %}
+{% macro list_page(model_name, card_type, last_page, current_page, category='all', query='', container_id=None, size=6) %}
 {% if card_type == 'grid' or card_type == 'grid-row' %}
 <div {% if container_id %}id="{{container_id}}"{% endif %} data-model="{{model_name}}" data-card-type="{{card_type}}" data-category="{{category}}" data-type="model-container" class="row-fluid">
 </div>
@@ -20,6 +20,7 @@
         var card_type = '{{card_type}}';
         var category = '{{category}}';
         var last_page = 1;
+        var size = '{{size}}';
 
         var page_key = model_name + '-' + card_type + '-' + category;
         var filter_key = model_name+"-"+category;
@@ -54,7 +55,7 @@
             }
 
 
-            var url = '/listings?model_view=' + model_name + '&card_type=' + card_type + '&page=' + (window.current_page[page_key]) + '&query=' + query;
+            var url = '/listings?model_view=' + model_name + '&card_type=' + card_type + '&page=' + (window.current_page[page_key]) + '&query=' + query + '&size=' + size;
             console.log(url);
 
             var filters_list = window.filters[filter_key];

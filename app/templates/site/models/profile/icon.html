@@ -1,9 +1,5 @@
-{#% extends 'site/models/common/_icon.html' %#}
-
-<div class="row">
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <a href="#" class="thumbnail">
-                <img src="{{model.cover_image_path}}" class="{% if not model.is_business_profile %}{% endif %} alt="125x125">
-            </a>
-        </div>
+<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+    <a href="#" class="thumbnail" style="height: 90px; width: 90px; overflow: hidden;">
+        <img src="{% if not model.cover_image_path or model.cover_image_path|length == 0%}/img/Profile-Picture.jpg{% else %}{{model.cover_image_path}}{% endif %}" alt="{{model.name}}">
+    </a>
 </div>

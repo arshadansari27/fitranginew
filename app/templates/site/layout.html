@@ -55,12 +55,34 @@
         .blogs-content img{
               padding: 0px 0px;
         }
+
+        #share-buttons img {
+            width: 35px;
+            padding: 5px;
+            border: 0;
+            box-shadow: 0;
+            display: inline;
+        }
+
     </style>
 
 </head>
 
 <body>
+<div id="fb-root"></div>
+<script>
 
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3&appId=526533334116117";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    window.twttr=(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return t;js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);t._e=[];t.ready=function(f){t._e.push(f);};return t;}(document,"script","twitter-wjs"));
+
+</script>
 <nav class="navbar navbar-default navbar-static-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -253,72 +275,74 @@ $(".dropdown").hover(
 </script>
 
 <script language="JavaScript">
+    $(document).ready(function() {
 
 
-
-    $(".show_login").click(function(e) {
-        e.stopPropagation();
-        window.$loginDialog = new BootstrapDialog({
-            title: "Sign in",
-            message: $('<div></div>').load('/login-modal'),
-            buttons: [
-                {
-                    label: 'Close',
-                    action: function (dialogItself) {
-                        dialogItself.close();
+        $(".show_login").click(function (e) {
+            e.stopPropagation();
+            window.$loginDialog = new BootstrapDialog({
+                title: "Sign in",
+                message: $('<div></div>').load('/login-modal'),
+                buttons: [
+                    {
+                        label: 'Close',
+                        action: function (dialogItself) {
+                            dialogItself.close();
+                        }
                     }
-                }
-            ]
+                ]
+            });
+            window.$loginDialog.realize();
+            window.$loginDialog.open();
         });
-        window.$loginDialog.realize();
-        window.$loginDialog.open();
-    });
-    $(".show_signup").click(function(e) {
-        e.stopPropagation();
-        window.$signupDialog = new BootstrapDialog({
-            title: "Registration",
-            message: $('<div></div>').load('/registration-modal'),
-            buttons: [
-                {
-                    label: 'Register',
-                    cssClass: 'btn-primary',
-                    action: function (dialogItself) {
-                        var name = $('#signup-name').val();
-                        var email = $('#signup-email').val();
-                        var password = $("#signup-password").val();
-                        var confirm = $("#signup-confirm").val();
-                        console.log("Registering with: " +name + ", " + email + ", " + password + ", " + confirm);
-                        $.ajax({
-                            type: 'POST',
-                            url: '/register',
-                            data: {
-                                name: name,
-                                email: email,
-                                password: password,
-                                confirm: confirm
-                            }
-                        }).done(function (msg) {
-                            if (msg.status == 'success') {
-                                dialogItself.close();
-                                window.location.reload();
-                            } else {
-                                $("#message").html(msg.message);
-                                $("#error").show();
-                            }
-                        });
+        $(".show_signup").click(function (e) {
+            e.stopPropagation();
+            window.$signupDialog = new BootstrapDialog({
+                title: "Registration",
+                message: $('<div></div>').load('/registration-modal'),
+                buttons: [
+                    {
+                        label: 'Register',
+                        cssClass: 'btn-primary',
+                        action: function (dialogItself) {
+                            var name = $('#signup-name').val();
+                            var email = $('#signup-email').val();
+                            var password = $("#signup-password").val();
+                            var confirm = $("#signup-confirm").val();
+                            console.log("Registering with: " + name + ", " + email + ", " + password + ", " + confirm);
+                            $.ajax({
+                                type: 'POST',
+                                url: '/register',
+                                data: {
+                                    name: name,
+                                    email: email,
+                                    password: password,
+                                    confirm: confirm
+                                }
+                            }).done(function (msg) {
+                                if (msg.status == 'success') {
+                                    dialogItself.close();
+                                    window.location.reload();
+                                } else {
+                                    $("#message").html(msg.message);
+                                    $("#error").show();
+                                }
+                            });
+                        }
+                    },
+                    {
+                        label: 'Close',
+                        action: function (dialogItself) {
+                            dialogItself.close();
+                        }
                     }
-                },
-                {
-                    label: 'Close',
-                    action: function (dialogItself) {
-                        dialogItself.close();
-                    }
-                }
-            ]
+                ]
+            });
+
+            window.$signupDialog.realize();
+            window.$signupDialog.open();
         });
 
-        window.$signupDialog.realize();
-        window.$signupDialog.open();
     });
 
 </script>
@@ -330,10 +354,27 @@ $(".dropdown").hover(
 
     ga('create', 'UA-59043882-1', 'auto');
     ga('send', 'pageview');
+
+
 </script>
 {% block footer_scripts %}{% endblock %}
 <script>
     $(document).ready(function(){
+
+        function postToFeed(title, desc, url, image){
+            var obj = {method: 'feed',link: 'http://www.fitrangi.com' + url, picture: 'http://www.fitrangi.com/'+image,name: title,description: desc};
+            function callback(response){}
+            FB.ui(obj, callback);
+        }
+
+        $('.btnFbShare').click(function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            elem = $(this);
+            postToFeed(elem.data('title'), elem.data('desc'), elem.data('href'), elem.data('image'));
+            return false;
+        });
+
         var App = window.App;
         if (window.App.doFilter !=undefined && window.App.doFilter.length != undefined) {
             for (var i = 0; i < window.App.doFilter.length; i++) {

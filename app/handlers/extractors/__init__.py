@@ -5,11 +5,11 @@ __author__ = 'arshad'
 from bson import ObjectId
 from mongoengine import Q
 from app.models import ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST, DISCUSSION, STREAM, RELATIONSHIPS, LOCATION, \
-    PROFILE_TYPE
+    PROFILE_TYPE, ADVERTISEMENT
 from app.models.streams import ActivityStream
 from app.models.activity import Activity
 from app.models.adventure import Adventure, Location
-from app.models.content import Article, Post, Discussion
+from app.models.content import Article, Post, Discussion, Advertisement
 from app.models.event import Event
 from app.models.profile import Profile, ProfileType
 from app.models.relationships import RelationShips
@@ -56,6 +56,16 @@ class NodeExtractor(object):
         if len(self.filters) > 0:
             filters = {}
             for k, v in self.filters.iteritems():
+                if '|' in v:
+                    u = v.split('|')
+                    if u[0] == 'bool':
+                        v = bool(u[1])
+                    elif u[0] == 'int':
+                        v = int(u[1])
+                    elif u[0] == 'float':
+                        v = float(u[1])
+                    else:
+                        v = str(u[1])
                 if k.startswith('relationship'):
                     fields = k.split('__')
                     assert len(fields) >= 3
@@ -114,9 +124,16 @@ class NodeExtractor(object):
             cls = LocationExtractor
         elif model_name == PROFILE_TYPE:
             cls = ProfileTypeExtractor
+        elif model_name == ADVERTISEMENT:
+            cls = AdvertisementExtractor
         else:
             raise Exception("Invalid model name for extractor")
         return cls(filters)
+
+class AdvertisementExtractor(NodeExtractor):
+
+    def model_class(self):
+        return Advertisement
 
 class ProfileTypeExtractor(NodeExtractor):
 

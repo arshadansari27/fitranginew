@@ -13,10 +13,8 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-3">
 
                 <div class="share-blog-bg text-center">
-                    <button class="btn btn-default btn-facebook mb-10" type="button"><i class="fa fa-facebook"></i> <strong>Share</strong></button>
-                    <button class="btn btn-default btn-google-plus mb-10" type="button"><i class="fa fa-google-plus"></i> <strong>Share+</strong></button>
-                    <button class="btn btn-default btn-twitter mb-10" type="button"><i class="fa fa-twitter"></i> <strong>Tweet</strong></button>
-                    <button class="btn btn-default btn-pinterest mb-10" type="button"><i class="fa fa-pinterest"></i> <strong>Pin it</strong></button>
+                    {% import 'site/includes/share-button.html' as share %}
+                    {{ share.show(model.title, model.description, model.slug) }}
                 </div>
             </div>
         </section>
