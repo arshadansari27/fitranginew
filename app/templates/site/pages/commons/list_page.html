@@ -1,4 +1,4 @@
-{% macro list_page(model_name, card_type, last_page, current_page, category='all', query='', container_id=None, size=6) %}
+{% macro list_page(model_name, card_type, fixed_size, current_page, category='all', query='', container_id=None, size=6) %}
 {% if card_type == 'grid' or card_type == 'grid-row' %}
 <div {% if container_id %}id="{{container_id}}"{% endif %} data-model="{{model_name}}" data-card-type="{{card_type}}" data-category="{{category}}" data-type="model-container" class="row-fluid">
 </div>
@@ -14,7 +14,8 @@
 
     $(document).ready(function(){
         var basic_query = '{{query}}';
-        var _load_more = '{% if last_page > current_page %}1{% else %}0{% endif %}';
+        /* CURRENT: {{ current_page }}, LAST PAGE: {{last_page}} */
+        var _load_more = '{% if fixed_size %}0{% else %}1{% endif %}';
         var show_load_more = (parseInt(_load_more)>0)?true: false;
         var model_name = '{{model_name}}';
         var card_type = '{{card_type}}';

@@ -49,7 +49,9 @@ class NodeExtractor(object):
     def last_page(self, size):
         query = self.get_query()
         count = query.count()
-        return (count / size) + 1
+        page = (count / size) + 1
+        print self.__class__.__name__, page
+        return page
 
     def get_query(self):
         filters = self.init_filters

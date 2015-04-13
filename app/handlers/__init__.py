@@ -134,6 +134,7 @@ class CompositeNodeCollectionView(View):
         from app.views import force_setup_context
         context = force_setup_context(context)
         context['cards'] = cards
+        context['advertisement_list'] = AdvertisementCollectionView("grid-row", "", only_list=True, size=3, fixed_size=True).get_card()
         return template.render(**context)
 
     def get_page_path(self):
@@ -174,9 +175,10 @@ class NodeCollectionView(View):
         if self.fixed_size:
             last_page = 1
         else:
-            last_page = 1#self.extractor.last_page(self.size)
+            last_page = self.extractor.last_page(self.size)
         current_page = self.page
-        context['last_page'] = last_page
+        context['last_page'] = 1
+        context['fixed_size'] = self.fixed_size
         context['current_page'] = current_page
         context['category'] = self.category
         context['size'] = self.size
@@ -548,9 +550,11 @@ class DiscussionView(NodeView):
         parent = self.get_model()
         posts = PostCollectionView("row", "", is_partial=False, parent=parent).get_card(dict(post_type='comment'))
         featured = DiscussionCollectionView("grid-row", "", only_list=True, is_partial=True, fixed_size=True).get_card()
+        advertisement_list = AdvertisementCollectionView("grid-row", "", only_list=True, size=3, fixed_size=True).get_card()
         return {
             'comments': posts,
-            'featured': featured
+            'featured': featured,
+            'advertisement_list': advertisement_list
         }
 
     def get_card_context(self):
@@ -568,9 +572,11 @@ class ArticleView(NodeView):
         parent=self.get_model()
         posts = PostCollectionView("row", "", is_partial=False, parent=parent).get_card(dict(post_type='comment'))
         related = ArticleCollectionView("grid-row", "", only_list=True, is_partial=True, fixed_size=True).get_card()
+        advertisement_list = AdvertisementCollectionView("grid-row", "", only_list=True, size=3, fixed_size=True).get_card()
         return {
             'comments': posts,
-            'related': related
+            'related': related,
+            'advertisement_list': advertisement_list
         }
 
     def get_card_context(self):

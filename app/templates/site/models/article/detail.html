@@ -34,12 +34,6 @@
                 {% import 'site/includes/share-button.html' as share %}
                 <div class="share-blog-bg text-center">
                     {{ share.show(model.title, model.description, model.slug) }}
-                    <!--
-                    <a href="#" class="btnFbShare btn btn-default btn-facebook mb-10" data-href="{{model.slug}}" data-image="{{model.cover_image_path}}" data-title="{{model.title}}" data-desc="{{model.description}}"><i class="fa fa-facebook"></i> <strong>Share</strong></a>
-                    <button class="btn btn-default btn-google-plus mb-10" type="button"><i class="fa fa-google-plus"></i> <strong>Share+</strong></button>
-                    <a href="https://twitter.com/share" class="twitter-share-button btn btn-default btn-twitter mb-10" type="button"><i class="fa fa-twitter"></i> <strong>Tweet</strong></a>
-                    <button class="btn btn-default btn-pinterest mb-10" type="button"><i class="fa fa-pinterest"></i> <strong>Pin it</strong></button>
-                    -->
                 </div>
             </div>
         </section>
@@ -56,6 +50,13 @@
         <div class="">{{ comments|safe }}</div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-3">
+        <h4 class="lightgrey">Sponsored</h4>
+
+
+        <section class="row sponsored-thumb">
+            {{ advertisement_list|safe}}
+
+        </section>
         <h4 class="lightgrey border-grey-b pb-5 ">Related</h4>
         <section class="row sponsored-thumb">
             <input id="article-not-same-filter" type="hidden" data-category="all" data-model="article" data-filter="id__ne" value="{{model.id}}"/>
