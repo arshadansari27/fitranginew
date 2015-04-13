@@ -19,15 +19,20 @@
                 <li style="border: 0;">
                     <div class="row">
                         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                            <a href="#"><img class="img-responsive img-thumbnail" src="{{model.object.parent.cover_image_path}}" alt=""></a>
+                            {% if model.object.parent %}
+                            {% set object = model.object.parent %}
+                            {% else %}
+                            {% set object = model.object %}
+                            {% endif %}
+                            <a href="#"><img class="img-responsive img-thumbnail" src="{{object.cover_image_path}}" alt=""></a>
                         </div>
                         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-                            <h3 class="title"><a href="{{model.object.parent.slug}}">{{ model.object.parent.title }}</a></h3>
+                            <h3 class="title"><a href="{{object.slug}}">{{ object.title }}</a></h3>
                             <h4 class="sub-title">
-                                {% if model.object.parent.description and model.object.parent.description|length > 0 %}
-                                {{ model.object.parent.description|safe }}
+                                {% if object.description and object.description|length > 0 %}
+                                {{ object.description|safe }}
                                 {% else %}
-                                {% if model.object.parent.content and model.object.parent.content|length > 0 %}{{ model.object.parent.process_content[0:100]|safe }}... <a href="{{model.object.parent.slug}}" class="red">read more</a>{% endif %}
+                                {% if object.content and object.content|length > 0 %}{{ object.process_content[0:100]|safe }}... <a href="{{object.slug}}" class="red">read more</a>{% endif %}
                                 {% endif %}
                             </h4>
                         </div>

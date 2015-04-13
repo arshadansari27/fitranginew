@@ -1,5 +1,8 @@
-
 <section class="container write-blog">
+    <div class="alert alert-info fade in">
+        <a class="close" data-dismiss="alert" href="#">&times;</a>
+        <p class="alert-message"></p>
+    </div>
     <div class="heading text-center">
         <h2>{% if model_name == 'article' %}Write an artile or blog{% else %}Start a discussion {% endif %}</h2>
     </div>
@@ -19,43 +22,18 @@
             </div>
 
             <div class="form-group">
-                {% if model.cover_image %}
                 <div class="thumbnail">
-                    <a href="#" data-action="write-content-image-upload" title="Click to change"><img data-name="cover-image-display" src="{{model.cover_image_path}}" width="40%"/></a>
+                    <a href="#" data-action="write-content-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/800x400{% endif %}" width="40%"/></a>
                     <div class="caption text-center">Click to change</div>
                 </div>
-                {% else %}
-                <button data-action="write-content-image-upload" class="btn btn-link btn-primary">Upload Cover Image</button>
-                {% endif %}
                 <input type="hidden" data-name="cover-image" value=""/>
+                <input type="hidden" data-name="cover-image-necessary" value="{% if not model.cover_image %}1{% endif %}"/>
             </div>
 
             <div class="form-group">
                 <label for="content">Content</label>
                 <textarea class="form-control summernote" data-name="content" placeholder="Enter blog description" rows="10" >{{model.content}}</textarea>
             </div>
-
-            {% if user and 'Admin' in user.roles %}
-            <div class="form-group">
-                <label for="channel">Channels</label>
-                <select class="form-control" data-name="channels">
-                </select>
-                <script>
-                    $(document).ready(function(){
-                        var _channels = '{% for c in model.channels %}{{c.id}}{% if not loop.last %},{% endif %}{% endfor %}';
-                        var channels = _channels.split(',');
-                        $.ajax({
-                            url: '/options?model_name=channel&attr=name&select=1'
-                        }).done(function (data) {
-                            $('[data-name="channels"]').append(data);
-                            for(var i = 0; i < channels.length; i++) {
-                                $('[data-name="channels"] option[value="' + channels[i] + '"]').prop('selected', true);
-                            }
-                        });
-                    });
-                </script>
-            </div>
-            {% endif %}
 
             <div class="form-group">
                 <label for="tags">Tags</label>
@@ -66,11 +44,42 @@
                     </div>
                 </div>
             </div>
+            {% if model and model_name == 'article' %}
+            <div class="form-group">
+                <label for="published">Published</label>
+                {% if model.published %}
+                <i class="fa fa-check-circle-o fa-2x green"></i>
+                {% else %}
+                <i class="fa fa-times-circle-o fa-2x blue"></i>
+                {% endif %}
+            </div>
+            {% endif %}
 
+            {% if model %}
+            <div class="form-group">
+                <label for="published">Published by Admin</label>
+                {% if model.admin_published %}
+                <i class="fa fa-check-circle-o fa-2x green"></i>
+                {% else %}
+                <i class="fa fa-times-circle-o fa-2x blue"></i>
+                {% endif %}
+            </div>
+            {% endif %}
 
-            <button type="button" data-action="go-back" class="btn fitrangi-btn">Back</button>
-            <button type="button" data-action="save" class="btn fitrangi-btn">Save as draft</button>
-            <button type="button" data-action="publish" class="btn fitrangi-btn">Publish</button>
+            <br/>
+            <br/>
+            <div class="form-action-control">
+                <button type="button" data-action="go-back" class="btn fitrangi-btn">Back</button>
+                <button type="button" data-action="save" class="btn fitrangi-btn blue">Save</button>
+                {% if model and model_name == 'article'%}
+                    {% if model.published %}
+                        <button type="button" data-action="unpublish-article" data-model-id="{{model.id}}" class="btn fitrangi-btn red">Unpublish</button>
+                    {% else %}
+                        <button type="button" data-action="publish-article"  data-model-id="{{model.id}}" class="btn fitrangi-btn green">Publish</button>
+                    {% endif %}
+                    <button type="button" data-action="delete-article" data-model-id="{{model.id}}"  class="btn fitrangi-btn red">Delete</button>
+                {% endif %}
+            </div>
         </form>
     </div>
 </section>
@@ -80,7 +89,21 @@
 <script>
     $(document).ready(function(){
 
-        var save_content = function(publish){
+        var model = '{{model.id}}';
+        var type = '{{model_name}}';
+        $('.alert').hide();
+
+        var App = window.App;
+        var editor = App.content;
+
+        var save_content = function(){
+
+
+            if($('[data-name="cover-image-necessary"]').val().length > 0) {
+                alert('Please upload cover image before saving');
+                return;
+            }
+
             var tags = [];
 
             var $tags = $('[data-tag]');
@@ -94,30 +117,37 @@
             if ($('[data-name="channels"]')){
                 channels = $('[data-name="channels"]').val();
             }
-            var options = {
-                publish: publish,
-                id: $('[data-name="id"]').val(),
-                title: $('[data-name="title"]').val(),
-                description: $('[data-name="description"]').val(),
-                content: $('[data-name="content"]').val(),
-                cover_image: $('[data-name="cover-image"]').val(),
-                channels: channels,
-                tags: tags
-            };
-
-            console.log(options);
+            var id = $('[data-name="id"]').val();
+            var title = $('[data-name="title"]').val();
+            var description = $('[data-name="description"]').val();
+            var content = $('.summernote').code();
+            var cover_image = $('[data-name="cover-image"]').val();
+            var tags = tags;
+            if (id != undefined && id.length > 0) {
+                console.log('Edit content: ' + id + "->");
+                editor.edit(id, type, title, description, cover_image, channels, tags, content, function(data){
+                    $('.alert').show();
+                    $('.alert-message').html(data.message);
+                })
+            } else {
+                console.log('Add content: ->');
+                editor.add(type, title, description, cover_image, channels, tags, content, function(data){
+                    $('.alert').show();
+                    $('.alert-message').html(data.message);
+                    if (data.status == 'success') {
+                        window.location.href = '/write/' + type + '/' + data.node;
+                    }
+                });
+            }
         };
 
 
-        $('[data-action="publish"]').click(function(e){
-            e.stopPropagation();
-            e.preventDefault();
-            save_content(true);
-        });
+
+
         $('[data-action="save"]').click(function(e){
             e.stopPropagation();
             e.preventDefault();
-            save_content(false);
+            save_content();
         });
         $('[data-action="go-back"]').click(function(){
             window.history.back();
@@ -196,6 +226,7 @@
                                 success: function(data){
                                     $('[data-name="cover-image-display"]').attr('src', data.url);
                                     $('[data-name="cover-image"]').val(data.url);
+                                    $('[data-name="cover-image-necessary"]').val('');
                                     dialogRef.close();
                                 },
                                 error: function(data) {

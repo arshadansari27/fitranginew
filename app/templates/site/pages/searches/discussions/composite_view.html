@@ -6,7 +6,7 @@
 
 
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-3">
-                <button class="btn btn-primary btn-block btn-lg">Add Discussion</button>
+                <button data-user-id="{{user.id}}" data-action="add-discussion" class="btn btn-primary btn-block btn-lg">Add Discussion</button>
                 <h4>“Knowledge cannot be gained if it is not been shared” is what every fitrangi believes. So put your
                     quries related to Adventure Sports/Tourism in India</h4>
             </div>
@@ -82,5 +82,7 @@
     $(document).ready(function(){
         var App = window.App;
         App.filter('my-blog-filter');
+
+
     });
 </script>

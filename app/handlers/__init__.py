@@ -24,6 +24,12 @@ class EditorView(View):
         if self.id:
             extractor = NodeExtractor.factory(self.model_name, dict(pk=self.id))
             model = extractor.get_single()
+            if not g.user:
+                print 'User not logged in'
+                raise Exception("where is the user")
+            if model and model.author.id != g.user.id or 'Admin' not in g.user.roles:
+                print 'not the same user'
+                raise Exception("Invalid User")
         else:
             model = None
 
@@ -473,7 +479,6 @@ class ProfileView(NodeView):
         super(ProfileView, self).__init__(PROFILE, card_type, id, key)
 
     def get_detail_context(self):
-        parent=self.get_model()
         logged_in_user = g.user if hasattr(g, 'user') and g.user is not None else None
         model = self.get_model()
         is_same = True if logged_in_user and logged_in_user.id == model.id else False
@@ -484,7 +489,7 @@ class ProfileView(NodeView):
             "following_list": ProfileCollectionView("row", "", is_partial=True, category="following").get_card(),
             'discussion_list': DiscussionCollectionView("row", "", is_partial=True, category="all").get_card(),
             'article_list': ArticleCollectionView("grid", "", is_partial=True, category="all").get_card(),
-            'my_stream_list': StreamCollectionView("row", "", is_partial=(not is_same), category="my", stream_owner=model, logged_in_user=logged_in_user).get_card(),
+            'my_stream_list': StreamCollectionView("row", "", is_partial=(not is_same), category="my", stream_owner=model, logged_in_user=logged_in_user, parent=logged_in_user).get_card(),
             'fitrangi_posts': PostCollectionView("grid", "", is_partial=True, only_list=True, fixed_size=True, category="fitrangi").get_card(),
         }
 

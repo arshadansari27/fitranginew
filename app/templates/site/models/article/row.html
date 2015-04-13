@@ -8,9 +8,9 @@
             <h3 class="title"><a href="{{model.slug}}">{{model.title}}</a></h3>
             <h4 class="sub-title">{% if model.description %}{{model.description|safe}}{% endif %}</h4>
     <article>
-    <button class="btn btn-default btn-edi" type="button"><i class="fa fa-edit"></i> Edit </button>
-	<button class="btn btn-default btn-edi" type="button"><i class="fa fa-remove"></i> Delete </button>
-    <button class="btn btn-default btn-pub" type="button"><i class="fa fa-newspaper-o"></i> Published </button>
+    <button data-user-id="{{user.id}}" data-action="edit-article" data-model-id="{{model.id}}" class="btn btn-default btn-edi" type="button"><i class="fa fa-edit"></i> Edit </button>
+	<button data-user-id="{{user.id}}" data-action="delete-article" data-model-id="{{model.id}}" class="btn btn-default btn-edi" type="button"><i class="fa fa-remove"></i> Delete </button>
+    <button data-user-id="{{user.id}}" data-action="publish-article" data-model-id="{{model.id}}" class="btn btn-default btn-pub" type="button"><i class="fa fa-newspaper-o"></i> Published </button>
     </article>
     </div>
 </div>

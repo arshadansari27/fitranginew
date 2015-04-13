@@ -54,6 +54,7 @@
     <script src="/appjs/editors/main.js"></script>
     <script src="/appjs/editors/profile-edit.js"></script>
     <script src="/appjs/editors/post-edit.js"></script>
+    <script src="/appjs/editors/content-edit.js"></script>
 
     <style>
         /* TODO: Remove Later in case it is fixed in my-style css */
@@ -283,70 +284,83 @@ $(".dropdown").hover(
 <script language="JavaScript">
     $(document).ready(function() {
 
-
+        var App = window.App;
         $(".show_login").click(function (e) {
             e.stopPropagation();
-            window.$loginDialog = new BootstrapDialog({
-                title: "Sign in",
-                message: $('<div></div>').load('/login-modal'),
-                buttons: [
-                    {
-                        label: 'Close',
-                        action: function (dialogItself) {
-                            dialogItself.close();
-                        }
-                    }
-                ]
-            });
-            window.$loginDialog.realize();
-            window.$loginDialog.open();
+            App.show_login();
         });
         $(".show_signup").click(function (e) {
             e.stopPropagation();
-            window.$signupDialog = new BootstrapDialog({
-                title: "Registration",
-                message: $('<div></div>').load('/registration-modal'),
-                buttons: [
-                    {
-                        label: 'Register',
-                        cssClass: 'btn-primary',
-                        action: function (dialogItself) {
-                            var name = $('#signup-name').val();
-                            var email = $('#signup-email').val();
-                            var password = $("#signup-password").val();
-                            var confirm = $("#signup-confirm").val();
-                            console.log("Registering with: " + name + ", " + email + ", " + password + ", " + confirm);
-                            $.ajax({
-                                type: 'POST',
-                                url: '/register',
-                                data: {
-                                    name: name,
-                                    email: email,
-                                    password: password,
-                                    confirm: confirm
-                                }
-                            }).done(function (msg) {
-                                if (msg.status == 'success') {
-                                    dialogItself.close();
-                                    window.location.reload();
-                                } else {
-                                    $("#message").html(msg.message);
-                                    $("#error").show();
-                                }
-                            });
-                        }
-                    },
-                    {
-                        label: 'Close',
-                        action: function (dialogItself) {
-                            dialogItself.close();
-                        }
-                    }
-                ]
-            });
+            App.show_registration();
+        });
 
-            window.$signupDialog.realize();
-            window.$signupDialog.open();
+        $('body').on('click', '[data-action="add-discussion"]', function(e) {
+            e.stopPropagation();
+            if($(e.target).attr('data-user-id').length > 0){
+                window.location.href="/write/discussion";
+            } else {
+                App.show_login();
+            }
+        });
+        $('body').on('click', '[data-action="add-article"]', function(e) {
+            e.stopPropagation();
+            if($(e.target).attr('data-user-id').length > 0){
+                window.location.href="/write/article";
+            } else {
+                App.show_login();
+            }
+        });
+        $('body').on('click', '[data-action="edit-discussion"]', function(e) {
+            e.stopPropagation();
+            if($(e.target).attr('data-user-id').length > 0){
+                window.location.href="/write/discussion/" + $(e.target).attr('data-model-id');
+            } else {
+                App.show_login();
+            }
+        });
+        $('body').on('click', '[data-action="edit-article"]', function(e) {
+            e.stopPropagation();
+            if($(e.target).attr('data-user-id').length > 0){
+                window.location.href="/write/article/" + $(e.target).attr('data-model-id');
+            } else {
+                App.show_login();
+            }
+        });
+        $('body').on('click', '[data-action="publish-article"]', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            App.content.publish($(e.target).attr('data-model-id'), 'article', function(data){
+                BootstrapDialog.alert(data.message);
+                if (data.status == 'success') {
+                    window.location.reload();
+                }
+            });
+        });
+
+        $('body').on('click', '[data-action="unpublish-article"]', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            App.content.unpublish($(e.target).attr('data-model-id'), 'article', function(data){
+                BootstrapDialog.alert(data.message);
+                if (data.status == 'success') {
+                    window.location.reload();
+                }
+            });
+        });
+
+        $('body').on('click', '[data-action="delete-article"]', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            App.content.unpublish($(e.target).attr('data-model-id'), 'article', function(data){
+                BootstrapDialog.alert(data.message);
+                if (data.status == 'success') {
+                    if(window.location.href.search('write/') == 0){
+                        window.history.back();
+                    } else {
+                        window.location.reload();
+                    }
+                }
+            });
         });
 
     });

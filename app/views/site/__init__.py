@@ -12,7 +12,7 @@ from app.utils.search_helper import listing_helper, node_helper
 from app.utils import login_required, all_tags
 from app.handlers import ActivityView, NodeView, NodeCollectionView, AdventureCollectionView, NodeExtractor, \
     ArticleCollectionView, CompositeNodeCollectionView, EventCollectionView, ProfileCollectionView, ExploreLandingView, \
-    CommunityLandingView, EditorView
+    CommunityLandingView, EditorView, ProfileView
 from app.views.site.menus import view_menu
 
 (MODEL_DETAIL_VIEW, MODEL_LIST_ROW_VIEW, MODEL_LIST_GRID_VIEW, MODEL_LIST_POD_VIEW) = ('detail', 'row', 'grid', 'pod')
@@ -20,41 +20,20 @@ from app.views.site.menus import view_menu
 
 @app.route('/write/<model_name>')
 @app.route('/write/<model_name>/<model_id>')
+@login_required
 def editor(model_name, model_id=None):
+
     from app.views import force_setup_context
     context = force_setup_context({})
-    card = EditorView(model_name, model_id).get_card()
-    context['card'] = card
+    try:
+        card = EditorView(model_name, model_id).get_card()
+        context['card'] = card
+    except Exception, e:
+        if e.message == 'Invalid User':
+            return 'Not Authorise', 403
+        else:
+            raise e
     return render_template('site/pages/commons/view.html', **context)
-
-
-@app.route('/post/add', methods=['POST'])
-@login_required
-def add_post():
-    content = request.form['content']
-    author = g.user
-    post_type = request.form.get('post_type', None)
-    assert post_type is not None
-    parent = request.form.get('parent', None)
-    if parent:
-        parent_type = request.form.get('parent_type', None)
-        extractor = NodeExtractor.factory(parent_type.lower(), {'pk': parent})
-        parent = extractor.get_single()
-    else:
-        parent = None
-    image = request.form.get('image')
-    if image and len(image) > 0:
-        image = image.split('/')[-1]
-        path = os.getcwd() + '/tmp/' + image
-    else:
-        path = None
-    post = Post(content=content, author=author, type=post_type, parent=parent)
-    if image:
-        post.cover_image.put(open(path, 'rb'))
-    post.save()
-    ActivityStream.push_comment_to_stream(post)
-    return jsonify(dict(status='success', post=str(post.id)))
-
 
 @app.route("/")
 def act_home():
@@ -122,6 +101,14 @@ def list_profile():
         query = None
     context = force_setup_context({})
     card = ProfileCollectionView(card_type="row", query=query, size=20, page=page, is_partial=False).get_card(context)
+    context['card'] = card
+    return render_template('site/pages/commons/view.html', **context)
+
+@app.route("/community/my")
+def my_profile():
+    from app.views import force_setup_context
+    context = force_setup_context({})
+    card = ProfileView(MODEL_DETAIL_VIEW, str(g.user.id)).get_card()
     context['card'] = card
     return render_template('site/pages/commons/view.html', **context)
 
@@ -227,28 +214,6 @@ def model_view(slug):
     context = force_setup_context({})
     context['card'] = view.get_card()
     return render_template('site/pages/commons/view.html', **context)
-
-
-@app.route('/sub_comment/<post_id>', methods=['POST'])
-def post_sub_comment(post_id):
-    post = Post.objects(pk=post_id).first()
-    content = request.form.get('content', '')
-    comment = Comment(author=g.user.id, content=content)
-    post.comments.append(comment)
-    post.save()
-    comment_template = """
-    <article class="well well-sm otherpost-profile">
-        <img src="{{comment.author.cover_image_path}}" class="img-circle img-responsive pull-left p-5" width="60" height="100">
-        <h4>{{comment.author.name}}</h4><br/>
-        <div class="container">
-            <span>{{comment.process_content|safe}}</span>
-        </div>
-    </article>
-    """
-    context = {}
-    context['comment'] = comment
-    template = Template(comment_template)
-    return template.render(**context)
 
 
 @app.route('/editors/invoke', methods=['POST'])

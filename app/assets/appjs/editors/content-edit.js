@@ -7,54 +7,66 @@ $(document).ready(function() {
     App.content = App.content || {};
 
 
-    App.content.add = function(node, type, data) {
-        options = {
-            node: node,
-            data: data,
+    App.content.add = function(type, title, description, image, channels, tags, content, callback) {
+        var data = {
+            title: title,
+            description: description,
+            image: image,
+            channels: channels,
+            tags: tags,
+            content: content
+        }
+        var options = {
+            command: 'add',
             type: type,
-            command: 'edit-profile'
+            data: data
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.content.edit = function(node, type) {
-        options = {
+    App.content.edit = function(node, type, title, description, image, channels, tags, content, callback) {
+        var data = {
+            title: title,
+            description: description,
+            image: image,
+            channels: channels,
+            tags: tags,
+            content: content
+        }
+        var options = {
             node: node,
             type: type,
-            command: 'favorite-activity',
-            action: 'add'
+            command: 'edit',
+            data: data
         }
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.content.publish= function(node, type) {
-        options = {
+    App.content.publish= function(node, type, callback) {
+        var options = {
             node: node,
             type: type,
-            command: 'favorite-activity',
-            action: 'remove'
+            command: 'publish'
         }
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.content.unpublish = function(node, type) {
-        options = {
+    App.content.unpublish = function(node, type, callback) {
+        var options = {
             node: node,
             type: type,
-            command: 'wish-list-adventure',
-            action: 'add'
+            command: 'unpublish'
         }
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.content.delete = function(node, type) {
-        options = {
+    App.content.delete = function(node, type, callback) {
+        var options = {
             node: node,
-            type: type,
-            command: 'wish-list-adventure',
-            action: 'remove'
+            command: 'delete',
+            type: type
         }
-        App.editor(options);
+        App.editor(options, callback);
     };
 
 

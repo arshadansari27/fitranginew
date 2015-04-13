@@ -237,7 +237,7 @@ def registration():
         if Profile.objects(email__iexact=email, type__nin=[str(type.id)]).first():
             flash('Email already exists, have you forgotten your password?', category='danger')
             return redirect(url_for('registration'))
-        type = ProfileType.objects(name__icontains='enthusiast')
+        type = ProfileType.objects(name__iexact='Enthusiast').first()
         profile = Profile(name=name, email=email, type=[type], roles=['Basic User'])
         profile.password  = password
         profile.save()
