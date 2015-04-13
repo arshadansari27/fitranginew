@@ -37,7 +37,6 @@ def get_or_create_post(id=None):
     else:
         post = Post()
         post.save()
-        post = NodeExtractor.factory(POST, dict(pk=post.id)).get_single()
         return post
 
 

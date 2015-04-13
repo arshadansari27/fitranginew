@@ -498,8 +498,8 @@ class DiscussionView(NodeView):
 
     def get_detail_context(self):
         parent = self.get_model()
-        posts = PostCollectionView("row", "", is_partial=True, parent=parent).get_card(dict(post_type='comment'))
-        featured = DiscussionCollectionView("grid-row", "", only_list=True, is_partial=False, fixed_size=True).get_card()
+        posts = PostCollectionView("row", "", is_partial=False, parent=parent).get_card(dict(post_type='comment'))
+        featured = DiscussionCollectionView("grid-row", "", only_list=True, is_partial=True, fixed_size=True).get_card()
         return {
             'comments': posts,
             'featured': featured
@@ -515,8 +515,8 @@ class ArticleView(NodeView):
 
     def get_detail_context(self):
         parent=self.get_model()
-        posts = PostCollectionView("row", "", is_partial=True, parent=parent).get_card(dict(post_type='comment'))
-        related = ArticleCollectionView("grid-row", "", only_list=True, is_partial=False, fixed_size=True).get_card()
+        posts = PostCollectionView("row", "", is_partial=False, parent=parent).get_card(dict(post_type='comment'))
+        related = ArticleCollectionView("grid-row", "", only_list=True, is_partial=True, fixed_size=True).get_card()
         return {
             'comments': posts,
             'related': related

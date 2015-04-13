@@ -23,6 +23,9 @@
 <script>
     $(document).ready(function(){
 
+        var App = window.App;
+        var editor = App.post;
+
         $(".upload-image-view").hide();
         $("#post-alert").hide();
 
@@ -44,36 +47,32 @@
         };
 
         $('#btn-post-add').click(function(e){
-            e.stopPropagation(); e.preventDefault();
-            jQuery.ajax({
-                url: '/post/add',
-                data: {
-                    image: $('#post_image_id').val(),
-                    post_type: $("#post_type").val(),
-                    parent_type: $('#parent_type').val(),
-                    parent: $('#parent_id').val(),
-                    content: $('#post_content').val()
-                },
-                type: 'POST',
-                success: function(data){
-                    if (data.status == 'success') {
-                        $('#post-alert').html('Successfully posted');
-                        $('#post-alert').addClass('alert-success');
-                        $('#post-alert').show();
-                        $('#post-alert').fadeOut(2000, function(){
-                            $('#post-alert').html('');
-                            $('#post-alert').removeClass('alert-success');
-                        });
-                        clear();
-                    } else {
-                        show_error(data.message);
+            e.stopPropagation();
+            e.preventDefault();
+            var image =  $('#post_image_id').val();
+            var post_type = $("#post_type").val();
+            var parent_type =  $('#parent_type').val();
+            var parent =  $('#parent_id').val();
+            var content =  $('#post_content').val();
+            editor.add(image, post_type, parent_type, parent, content, function(data){
+                if (data.status == 'success') {
+                    $('#post-alert').html('Successfully posted');
+                    $('#post-alert').addClass('alert-success');
+                    $('#post-alert').show();
+                    $('#post-alert').fadeOut(2000, function(){
+                        $('#post-alert').html('');
+                        $('#post-alert').removeClass('alert-success');
+                    });
+                    clear();
+                    for (key in window.App.resetFilter) {
+                        if (key.search('post') == 0) {
+                            window.App.resetFilter[key]();
+                        }
                     }
-                },
-                error: function(data) {
-                    show_error(data);
+                } else {
+                    show_error(data.message);
                 }
             });
-
         });
 
         $(".upload-image-button").click(function(e){

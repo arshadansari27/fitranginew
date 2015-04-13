@@ -8,7 +8,7 @@ $(document).ready(function() {
 
 
     App.profile.edit_profile = function(node, data) {
-        options = {
+        var options = {
             node: node,
             data: data,
             type: 'profile',
@@ -18,7 +18,7 @@ $(document).ready(function() {
     };
 
     App.profile.add_activity_to_favorite = function(node, activity) {
-        options = {
+        var options = {
             node: node,
             activity: activity,
             type: 'profile',
@@ -29,7 +29,7 @@ $(document).ready(function() {
     };
 
     App.profile.remove_activity_from_favorite = function(node, activity) {
-        options = {
+        var options = {
             node: node,
             activity: activity,
             type: 'profile',
@@ -40,7 +40,7 @@ $(document).ready(function() {
     };
 
     App.profile.add_adventure_to_wish_list= function(node, adventure) {
-        options = {
+        var options = {
             node: node,
             adventure: adventure,
             type: 'profile',
@@ -51,7 +51,7 @@ $(document).ready(function() {
     };
 
     App.profile.remove_adventure_from_wish_list = function(node, adventure) {
-        options = {
+        var options = {
             node: node,
             adventure: adventure,
             type: 'profile',
@@ -62,7 +62,7 @@ $(document).ready(function() {
     };
 
     App.profile.add_adventure_to_done = function(node, adventure) {
-        options = {
+        var options = {
             node: node,
             adventure: adventure,
             type: 'profile',
@@ -73,7 +73,7 @@ $(document).ready(function() {
     };
 
     App.profile.remove_adventure_from_done = function(node, adventure) {
-        options = {
+        var options = {
             node: node,
             adventure: adventure,
             type: 'profile',
@@ -84,7 +84,7 @@ $(document).ready(function() {
     };
         //Armash Work Starts Here
     App.profile.add_profile_to_follow= function(node, other_profile) {
-        options = {
+        var options = {
             node: node,
             other_profile: other_profile,
             type: 'profile',
@@ -95,7 +95,7 @@ $(document).ready(function() {
     };
 
     App.profile.remove_profile_from_follow= function(node, other_profile) {
-        options = {
+        var options = {
             node: node,
             other_profile: other_profile,
             type: 'profile',
@@ -106,7 +106,7 @@ $(document).ready(function() {
     };
 
     App.profile.add_article_to_bookmark= function(node, article) {
-        options = {
+        var options = {
             node: node,
             article: article,
             type: 'profile',
@@ -117,7 +117,7 @@ $(document).ready(function() {
     };
 
     App.profile.remove_article_from_bookmark= function(node, article) {
-        options = {
+        var options = {
             node: node,
             article: article,
             type: 'profile',
@@ -128,7 +128,7 @@ $(document).ready(function() {
     };
 
     App.profile.add_event_to_interest= function(node, event) {
-        options = {
+        var options = {
             node: node,
             event: event,
             type: 'profile',
@@ -139,7 +139,7 @@ $(document).ready(function() {
     };
 
     App.profile.remove_event_from_interest= function(node, event) {
-        options = {
+        var options = {
             node: node,
             event: event,
             type: 'profile',
@@ -150,7 +150,7 @@ $(document).ready(function() {
     };
 
     App.profile.add_event_to_join= function(node, event) {
-        options = {
+        var options = {
             node: node,
             event: event,
             type: 'profile',
@@ -161,7 +161,7 @@ $(document).ready(function() {
     };
 
     App.profile.remove_event_from_join= function(node, event) {
-        options = {
+        var options = {
             node: node,
             event: event,
             type: 'profile',
@@ -172,7 +172,7 @@ $(document).ready(function() {
     };
 
     App.profile.add_trip_to_interest= function(node, trip) {
-        options = {
+        var options = {
             node: node,
             trip: trip,
             type: 'profile',
@@ -183,7 +183,7 @@ $(document).ready(function() {
     };
 
     App.profile.remove_trip_from_interest= function(node, trip) {
-        options = {
+        var options = {
             node: node,
             trip: trip,
             type: 'profile',
@@ -194,7 +194,7 @@ $(document).ready(function() {
     };
 
     App.profile.add_trip_to_join= function(node, trip) {
-        options = {
+        var options = {
             node: node,
             trip: trip,
             type: 'profile',
@@ -205,7 +205,7 @@ $(document).ready(function() {
     };
 
     App.profile.remove_trip_from_join= function(node, trip) {
-        options = {
+        var options = {
             node: node,
             trip: trip,
             type: 'profile',
@@ -216,7 +216,7 @@ $(document).ready(function() {
     };
 
     App.profile.verify_profile= function(node, data) {
-        options = {
+        var options = {
             node: node,
             data: data,
             type: 'profile',
@@ -226,7 +226,7 @@ $(document).ready(function() {
     };
 
     App.profile.edit_profile_preference= function(node, data) {
-        options = {
+        var options = {
             node: node,
             data: data,
             type: 'profile',
@@ -236,7 +236,7 @@ $(document).ready(function() {
     };
 
     App.profile.edit_type= function(node, type) {
-        options = {
+        var options = {
             node: node,
             type: type,
             type: 'profile',
@@ -246,7 +246,7 @@ $(document).ready(function() {
     };
 
     App.profile.register_profile= function(data) {
-        options = {
+        var options = {
             data: data,
             type: 'profile',
             command: 'register-profile'
@@ -255,7 +255,7 @@ $(document).ready(function() {
     };
 
     App.profile.business_profile_edit= function(node, data) {
-        options = {
+        var options = {
             node: node,
             data: data,
             type: 'profile',
@@ -265,7 +265,7 @@ $(document).ready(function() {
     };
 
     App.profile.edit_role= function(node, role) {
-        options = {
+        var options = {
             node: node,
             role: role,
             type: 'profile',
@@ -275,7 +275,7 @@ $(document).ready(function() {
     };
 
     App.profile.deactivate_profile= function(node) {
-        options = {
+        var options = {
             node: node,
             type: 'profile',
             command: 'deactivate-profile'
@@ -284,7 +284,7 @@ $(document).ready(function() {
     };
 
     App.profile.edit_cover_image= function(node, image_url) {
-        options = {
+        var options = {
             node: node,
             image_url: image_url,
             type: 'profile',
@@ -294,7 +294,7 @@ $(document).ready(function() {
     };
 
     App.profile.change_password= function(node, current_password, new_password, confirm_password) {
-        options = {
+        var options = {
             node: node,
             current_password: current_password,
             new_password: new_password,

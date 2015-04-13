@@ -7,16 +7,15 @@ $(document).ready(function() {
     App.post = App.post || {};
 
 
-    App.post.add = function(node, image, post_type, parent_type, parent, content, callback) {
-        data = {
+    App.post.add = function(image, post_type, parent_type, parent, content, callback) {
+        var data = {
             image: image,
             post_type: post_type,
             parent_type: parent_type,
             parent: parent,
             content: content
         };
-        options = {
-            node: node,
+        var options = {
             data: data,
             type: 'post',
             command: 'add'
@@ -25,7 +24,7 @@ $(document).ready(function() {
     };
 
     App.post.delete = function(node, callback) {
-        options = {
+        var options = {
             node: node,
             type: 'post',
             command: 'delete'
@@ -34,10 +33,10 @@ $(document).ready(function() {
     };
 
     App.post.comment = function(node, content, callback) {
-        data = {
+        var data = {
             content: content
         }
-        options = {
+        var options = {
             node: node,
             type: 'post',
             command: 'comment',
@@ -47,10 +46,10 @@ $(document).ready(function() {
     };
 
     App.post.vote = function(node, up, callback) {
-        data = {
+        var data = {
             up: up
         }
-        options = {
+        var options = {
             node: node,
             type: 'post',
             command: 'vote',

@@ -5,7 +5,10 @@
         </div>
         <div class="media-body">
             <h3>{{model.author.name}}</h3>
-            <h5><i class="fa fa-map-marker"></i> {% if model.author.location.name %}{{model.author.location.name}}{% else %}Unknown{% endif %}</h5>
+            <h5>
+                <i class="fa fa-map-marker"></i> {% if model.author.location.name %}{{model.author.location.name}}{% else %}Unknown{% endif %}
+                <small class="pull-right">Posted {{model.since}}</small>
+            </h5>
         </div>
 
     </div>
@@ -35,12 +38,9 @@
         </article>
         {% endif %}
         <article class="">
-            <button class="btn btn-default btn-noti" type="button"><i class="fa fa-thumbs-o-up"></i> <span
-                    class="noti-badge">{{model.up_votes}}</span></button>
-            <button class="btn btn-default btn-noti" type="button"><i class="fa fa-thumbs-o-down"></i> <span
-                    class="noti-badge">{{model.down_votes}}</span></button>
-            <button class="btn btn-default btn-noti" type="button"><i class="fa fa-comment-o"></i> <span
-                    class="noti-badge">{{model.comments|length}}</span></button>
+            <button data-model-id="{{model.id}}" data-action="vote_up" class="btn btn-default btn-noti" type="button"><i class="fa fa-thumbs-o-up"></i> <span class="noti-badge">{{model.up_votes}}</span></button>
+            <button data-model-id="{{model.id}}" data-action="vote_down" class="btn btn-default btn-noti" type="button"><i class="fa fa-thumbs-o-down"></i> <span class="noti-badge">{{model.down_votes}}</span></button>
+            <button class="btn btn-default btn-noti" type="button"><i class="fa fa-comment-o"></i> <span class="noti-badge">{{model.comments|length}}</span></button>
             <button class="btn btn-default pull-right" type="button"><i class="fa fa-share-square-o"></i></button>
         </article>
         {% if user %}
@@ -60,13 +60,13 @@
                     <img src="{{comment.author.cover_image_path}}" class="img-circle" width="48" height="48">
                 </div>
                 <div class="media-body">
-                    <h5 class="username">{{comment.author.name}}</h5>
+                    <h5 class="username">{{comment.author.name}}<small class="pull-right"> Replied {{comment.since}}</small></h5>
 
                     <p>{{comment.process_content|safe}}</p>
 
                     <div class="container-fluid">
-                        <a href="" class="btn btn-link"><i class="fa fa-heart-o"></i> Like </a>
-                        <a href="" class="btn btn-link"><i class="fa fa-comment-o"></i> Reply </a>
+                        <!--a href="" class="btn btn-link"><i class="fa fa-heart-o"></i> Like </a>
+                        <a href="" class="btn btn-link"><i class="fa fa-comment-o"></i> Reply </a-->
                     </div>
                 </div>
             </article>
@@ -81,6 +81,42 @@
 
 
             var model = '{{model.id}}';
+
+
+
+            $('[data-model-id="' + model + '"][data-action="vote_up"]').on('click', function(event){
+                event.stopPropagation();
+                var target = $(event.target);
+                var model_id = target.attr('data-model-id');
+                if (!model_id == model) {
+                    return;
+                }
+                editor.vote(model_id, true, function(e){
+                    for (key in window.App.resetFilter) {
+                        if (key.search('post') == 0) {
+                            window.App.resetFilter[key]();
+                        }
+                    }
+                });
+            });
+
+            $('[data-model-id="' + model + '"][data-action="vote_down"]').on('click', function(event){
+                event.stopPropagation();
+                var target = $(event.target);
+                var model_id = target.attr('data-model-id');
+                if (!model_id == model) {
+                    return;
+                }
+                editor.vote(model_id, false, function(e){
+                    for (key in window.App.resetFilter) {
+                        if (key.search('post') == 0) {
+                            window.App.resetFilter[key]();
+                        }
+                    }
+                });
+            });
+
+
 
             $('[data-model-id="'+model+'"][data-comment-text="1"]').on('keypress', function (event) {
                 if (event.which != 13) {
@@ -114,9 +150,7 @@
                 editor.comment(model_id, content, function(data){
                     target.val('');
                     if (data.status == 'success') {
-                        var comments = $('[data-model-id="' + model_id + '"][data-container="comments"]');
-                        console.log(comments);
-                        comments.append(comment_view);
+                        $('[data-model-id="' + model_id + '"][data-container="comments"]').append(comment_view);
                     }
                 });
             });

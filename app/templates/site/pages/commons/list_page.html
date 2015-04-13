@@ -78,6 +78,18 @@
 
         };
 
+        var reset = function() {
+            window.filters = window.filters || {};
+            window.filters[filter_key] = window.filters[filter_key] || [];
+            var filters_list = window.filters[filter_key];
+            window.current_page[page_key] = 1;
+            for(var u = 0; u < filters_list.length; u++) {
+                var $input = $('[data-filter="' + filters_list[u] +'"]');
+                $input.val('');
+            }
+            container.html('');
+            load_models();
+        }
 
 
         $(loadMoreSelector).on('click', function(e){
@@ -96,20 +108,13 @@
         var resetSearch = '[data-model="'+model_name+ '"][data-filter-submit="reset"]';
         $(resetSearch).on('click', function(e){
             e.stopPropagation();
-            window.filters = window.filters || {};
-            window.filters[filter_key] = window.filters[filter_key] || [];
-            var filters_list = window.filters[filter_key];
-            window.current_page[page_key] = 1;
-            for(var u = 0; u < filters_list.length; u++) {
-                var $input = $('[data-filter="' + filters_list[u] +'"]');
-                $input.val('');
-            }
-            container.html('');
-            load_models();
+            reset();
         });
 
         window.App.doFilter = window.App.doFilter || [];
         window.App.doFilter.push(load_models);
+        window.App.resetFilter = window.App.resetFilter || {};
+        window.App.resetFilter[filter_key] = reset;
 
     });
 </script>
