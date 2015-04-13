@@ -11,6 +11,11 @@ jQuery(document).ready(function($){
 	};
 
 	App.editor = function(options) {
+
+        var callback = null;
+        if (arguments.length > 1) {
+            callback = arguments[1]
+        }
         $('#loadingImage').show();
 		$.ajax({
     		type: 'POST',
@@ -18,23 +23,11 @@ jQuery(document).ready(function($){
     		data: JSON.stringify(options),
     		success: function(data) {
                 console.log(data);
-    			var message = data.message;
-    			var node = data.node;
-    			var status = data.status;
-    			var cls = null;
-    			if (status == 'success') {
-    				cls = 'success';
-				}
-				else {
-    				cls = 'danger';
-				}
-			    /*
-                $('.ajax-message').addClass('alert-' + cls);
-				$('.ajax-message').removeClass('hide');
-				$('.ajax-message').append('<div id="alert-message">' + message + "</div>");
-                $('#loadingImage').hide();
-                 */
-                //window.location.reload();
+    		    if (callback != null){
+                    callback(data);
+                } else {
+                    window.location.reload();
+                }
     		},
     		contentType: "application/json",
     		dataType: 'json'

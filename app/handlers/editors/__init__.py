@@ -1,3 +1,4 @@
+
 __author__ = 'arshad'
 
 from flask import request, redirect, flash, g, render_template, jsonify, send_file, url_for
@@ -56,11 +57,14 @@ class NodeEditor(object):
     @classmethod
     def factory(cls, message):
         from app.handlers.editors.profile import ProfileEditor
+        from app.handlers.editors.post import PostEditor
         type = message['type']
         if type is None:
             raise Exception("Invalid message")
         elif type == PROFILE:
             return ProfileEditor(message)
+        elif type == POST:
+            return PostEditor(message)
 
 """
 @app.route('/model/<channel>/<key>/edit', methods=['GET', 'POST'])

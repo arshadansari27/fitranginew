@@ -13,9 +13,9 @@ $(document).ready(function() {
             data: data,
             type: 'profile',
             command: 'edit-profile'
-        }
+        };
         App.editor(options);
-    }
+    };
 
     App.profile.add_activity_to_favorite = function(node, activity) {
         options = {
@@ -24,7 +24,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'favorite-activity',
             action: 'add'
-        }
+        };
         App.editor(options);
     };
 
@@ -35,7 +35,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'favorite-activity',
             action: 'remove'
-        }
+        };
         App.editor(options);
     };
 
@@ -46,7 +46,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'wish-list-adventure',
             action: 'add'
-        }
+        };
         App.editor(options);
     };
 
@@ -57,7 +57,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'wish-list-adventure',
             action: 'remove'
-        }
+        };
         App.editor(options);
     };
 
@@ -68,7 +68,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'accomplish-adventure',
             action: 'add'
-        }
+        };
         App.editor(options);
     };
 
@@ -90,7 +90,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'follow-profile',
             action: 'add'
-        }
+        };
         App.editor(options);
     };
 
@@ -101,7 +101,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'follow-profile',
             action: 'remove'
-        }
+        };
         App.editor(options);
     };
 
@@ -112,7 +112,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'bookmark-article',
             action: 'add'
-        }
+        };
         App.editor(options);
     };
 
@@ -123,7 +123,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'bookmark-article',
             action: 'remove'
-        }
+        };
         App.editor(options);
     };
 
@@ -145,7 +145,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'interest-event',
             action: 'remove'
-        }
+        };
         App.editor(options);
     };
 
@@ -156,7 +156,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'join-event',
             action: 'add'
-        }
+        };
         App.editor(options);
     };
 
@@ -167,7 +167,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'join-event',
             action: 'remove'
-        }
+        };
         App.editor(options);
     };
 
@@ -178,7 +178,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'interest-trip',
             action: 'add'
-        }
+        };
         App.editor(options);
     };
 
@@ -189,7 +189,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'interest-trip',
             action: 'remove'
-        }
+        };
         App.editor(options);
     };
 
@@ -200,7 +200,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'join-trip',
             action: 'add'
-        }
+        };
         App.editor(options);
     };
 
@@ -211,7 +211,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'join-trip',
             action: 'remove'
-        }
+        };
         App.editor(options);
     };
 
@@ -221,7 +221,7 @@ $(document).ready(function() {
             data: data,
             type: 'profile',
             command: 'verify-profile'
-        }
+        };
         App.editor(options);
     };
 
@@ -231,7 +231,7 @@ $(document).ready(function() {
             data: data,
             type: 'profile',
             command: 'preference-edit'
-        }
+        };
         App.editor(options);
     };
 
@@ -241,7 +241,7 @@ $(document).ready(function() {
             type: type,
             type: 'profile',
             command: 'profile-type-edit'
-        }
+        };
         App.editor(options);
     };
 
@@ -250,7 +250,7 @@ $(document).ready(function() {
             data: data,
             type: 'profile',
             command: 'register-profile'
-        }
+        };
         App.editor(options);
     };
 
@@ -260,7 +260,7 @@ $(document).ready(function() {
             data: data,
             type: 'profile',
             command: 'business-profile-edit'
-        }
+        };
         App.editor(options);
     };
 
@@ -270,7 +270,7 @@ $(document).ready(function() {
             role: role,
             type: 'profile',
             command: 'role-edit'
-        }
+        };
         App.editor(options);
     };
 
@@ -279,7 +279,7 @@ $(document).ready(function() {
             node: node,
             type: 'profile',
             command: 'deactivate-profile'
-        }
+        };
         App.editor(options);
     };
 
@@ -289,7 +289,7 @@ $(document).ready(function() {
             image_url: image_url,
             type: 'profile',
             command: 'cover-image-edit'
-        }
+        };
         App.editor(options);
     };
 
@@ -301,7 +301,7 @@ $(document).ready(function() {
             confirm_password: confirm_password,
             type: 'profile',
             command: 'change-password'
-        }
+        };
         App.editor(options);
     };
 

@@ -9,7 +9,7 @@
         </div>
 
     </div>
-    <div class="post-content container-fluid">
+    <div data-model-id="{{model.id}}" data-container="comments" class="post-content container-fluid">
         {% if model.video_embed and model.video_embed|length > 0 %}
         <article>{{model.video_embed}}</article>
         <hr/>
@@ -48,13 +48,13 @@
             <img src="{{user.cover_image_path}}" class="img-circle img-responsive pull-left p-5" width="60" height="100">
 
             <div class="media-body">
-                <textarea data-model-id="{{model.id}}" data-comment-text="1" class="form-control no-radius" rows="1" placeholder="Write Comment.."></textarea>
+                <textarea data-model-id="{{model.id}}" data-user-name="{{user.name}}" data-user-id="{{user.id}}" data-user-slug="{{user.slug}}" data-user-cover="{{user.cover_image_path}}" data-comment-text="1" class="form-control no-radius" rows="1" placeholder="Write Comment.."></textarea>
             </div>
         </article>
         {% else %}
         <hr class="user-post-divider clearfix"/>
         {% endif %}
-        {% for comment in model.sorted_comments %}
+        {% for comment in model.comments %}
             <article class="media inner-comment" data-model-id="{{model.id}}" data-comment="comment" data-comment-number="{{loop.index}}">
                 <div class="media-left">
                     <img src="{{comment.author.cover_image_path}}" class="img-circle" width="48" height="48">
@@ -71,24 +71,53 @@
                 </div>
             </article>
         {% endfor %}
-
+        <div data-model-id="{{model.id}}" data-separator="1"></div>
     </div>
     <script>
         $(document).ready(function () {
-            var model_id = "{{model.id}}";
 
-            $('[data-model-id="' + model_id + '"][data-comment-text="1"]').on('keypress', function (event) {
-                event.stopPropagation();
+            var App = window.App;
+            var editor = App.post;
+
+
+            var model = '{{model.id}}';
+
+            $('[data-model-id="'+model+'"][data-comment-text="1"]').on('keypress', function (event) {
                 if (event.which != 13) {
                     return;
                 }
-                $.ajax({
-                    type: 'post',
-                    url: '/sub_comment/{{model.id}}',
-                    data: {content: $('[data-model-id=' + model_id + '][data-comment-text=1]').val()}
-                }).done(function (data) {
-                    $('[data-model-id="' + model_id + '"][data-comments="comment-list"]').prepend(data);
-                    $('[data-model-id="' + model_id + '"][data-comment-text="1"]').val('');
+                event.stopPropagation();
+                var target = $(event.target);
+                var model_id = target.attr('data-model-id');
+                if (!model_id == model) {
+                    return;
+                }
+                var user_id = target.attr('data-user-id');
+                var user_slug = target.attr('data-user-slug');
+                var user_pic = target.attr('data-user-cover');
+                var author_name = target.attr('data-user-name');
+                var content = target.val();
+                var comment_view = '<article class="media inner-comment" data-model-id="'+model_id+'" data-comment="comment" data-comment-number="0">'
+                +' <div class="media-left">'
+                + '<img src="' +user_pic + '" class="img-circle" width="48" height="48">'
+                + '</div>'
+                + '<div class="media-body">'
+                + '<h5 class="username">'+author_name+'</h5>'
+                + '<p>'+ content +'</p>'
+                + '<div class="container-fluid">'
+                + '<a href="" class="btn btn-link"><i class="fa fa-heart-o"></i> Like </a>'
+                + '<a href="" class="btn btn-link"><i class="fa fa-comment-o"></i> Reply </a>'
+                + '</div>'
+                + '</div>'
+                + '</article>';
+
+                editor.comment(model_id, content, function(data){
+                    target.val('');
+                    if (data.status == 'success') {
+                        var comments = $('[data-model-id="' + model_id + '"][data-container="comments"]');
+                        console.log(comments);
+                        comments.append(comment_view);
+                    }
                 });
             });
 
