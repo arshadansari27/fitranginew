@@ -86,7 +86,7 @@ $(document).ready(function() {
     App.profile.add_profile_to_follow= function(node, other_profile) {
         options = {
             node: node,
-            adventure: other_profile,
+            other_profile: other_profile,
             type: 'profile',
             command: 'follow-profile',
             action: 'add'
@@ -97,7 +97,7 @@ $(document).ready(function() {
     App.profile.remove_profile_from_follow= function(node, other_profile) {
         options = {
             node: node,
-            adventure: other_profile,
+            other_profile: other_profile,
             type: 'profile',
             command: 'follow-profile',
             action: 'remove'
@@ -108,7 +108,7 @@ $(document).ready(function() {
     App.profile.add_article_to_bookmark= function(node, article) {
         options = {
             node: node,
-            adventure: article,
+            article: article,
             type: 'profile',
             command: 'bookmark-article',
             action: 'add'
@@ -119,7 +119,7 @@ $(document).ready(function() {
     App.profile.remove_article_from_bookmark= function(node, article) {
         options = {
             node: node,
-            adventure: article,
+            article: article,
             type: 'profile',
             command: 'bookmark-article',
             action: 'remove'
@@ -130,7 +130,7 @@ $(document).ready(function() {
     App.profile.add_event_to_interest= function(node, event) {
         options = {
             node: node,
-            adventure: event,
+            event: event,
             type: 'profile',
             command: 'interest-event',
             action: 'add'
@@ -141,7 +141,7 @@ $(document).ready(function() {
     App.profile.remove_event_from_interest= function(node, event) {
         options = {
             node: node,
-            adventure: event,
+            event: event,
             type: 'profile',
             command: 'interest-event',
             action: 'remove'
@@ -152,7 +152,7 @@ $(document).ready(function() {
     App.profile.add_event_to_join= function(node, event) {
         options = {
             node: node,
-            adventure: event,
+            event: event,
             type: 'profile',
             command: 'join-event',
             action: 'add'
@@ -163,7 +163,7 @@ $(document).ready(function() {
     App.profile.remove_event_from_join= function(node, event) {
         options = {
             node: node,
-            adventure: event,
+            event: event,
             type: 'profile',
             command: 'join-event',
             action: 'remove'
@@ -174,7 +174,7 @@ $(document).ready(function() {
     App.profile.add_trip_to_interest= function(node, trip) {
         options = {
             node: node,
-            adventure: trip,
+            trip: trip,
             type: 'profile',
             command: 'interest-trip',
             action: 'add'
@@ -185,7 +185,7 @@ $(document).ready(function() {
     App.profile.remove_trip_from_interest= function(node, trip) {
         options = {
             node: node,
-            adventure: trip,
+            trip: trip,
             type: 'profile',
             command: 'interest-trip',
             action: 'remove'
@@ -196,7 +196,7 @@ $(document).ready(function() {
     App.profile.add_trip_to_join= function(node, trip) {
         options = {
             node: node,
-            adventure: trip,
+            trip: trip,
             type: 'profile',
             command: 'join-trip',
             action: 'add'
@@ -207,7 +207,7 @@ $(document).ready(function() {
     App.profile.remove_trip_from_join= function(node, trip) {
         options = {
             node: node,
-            adventure: trip,
+            trip: trip,
             type: 'profile',
             command: 'join-trip',
             action: 'remove'
@@ -218,7 +218,7 @@ $(document).ready(function() {
     App.profile.verify_profile= function(node, data) {
         options = {
             node: node,
-            adventure: data,
+            data: data,
             type: 'profile',
             command: 'verify-profile'
         }
@@ -228,7 +228,7 @@ $(document).ready(function() {
     App.profile.edit_profile_preference= function(node, data) {
         options = {
             node: node,
-            adventure: data,
+            data: data,
             type: 'profile',
             command: 'preference-edit'
         }
@@ -238,17 +238,16 @@ $(document).ready(function() {
     App.profile.edit_type= function(node, type) {
         options = {
             node: node,
-            adventure: type,
+            type: type,
             type: 'profile',
             command: 'profile-type-edit'
         }
         App.editor(options);
     };
 
-    App.profile.register_profile= function(node, data) {
+    App.profile.register_profile= function(data) {
         options = {
-            node: node,
-            adventure: data,
+            data: data,
             type: 'profile',
             command: 'register-profile'
         }
@@ -258,7 +257,7 @@ $(document).ready(function() {
     App.profile.business_profile_edit= function(node, data) {
         options = {
             node: node,
-            adventure: data,
+            data: data,
             type: 'profile',
             command: 'business-profile-edit'
         }
@@ -268,37 +267,38 @@ $(document).ready(function() {
     App.profile.edit_role= function(node, role) {
         options = {
             node: node,
-            adventure: role,
+            role: role,
             type: 'profile',
             command: 'role-edit'
         }
         App.editor(options);
     };
 
-    App.profile.deactivate_profile= function(node, data) {
+    App.profile.deactivate_profile= function(node) {
         options = {
             node: node,
-            adventure: data,
             type: 'profile',
             command: 'deactivate-profile'
         }
         App.editor(options);
     };
 
-    App.profile.edit_cover_image= function(node, data) {
+    App.profile.edit_cover_image= function(node, image_url) {
         options = {
             node: node,
-            adventure: data,
+            image_url: image_url,
             type: 'profile',
             command: 'cover-image-edit'
         }
         App.editor(options);
     };
 
-    App.profile.change_password= function(node, data) {
+    App.profile.change_password= function(node, current_password, new_password, confirm_password) {
         options = {
             node: node,
-            adventure: data,
+            current_password: current_password,
+            new_password: new_password,
+            confirm_password: confirm_password,
             type: 'profile',
             command: 'change-password'
         }
