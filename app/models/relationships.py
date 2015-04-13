@@ -117,11 +117,11 @@ class RelationShips(db.Document):
 
     @classmethod
     def get_following(cls, subject, paged=False, page=1, size=PAGE_LIMIT):
-        return RelationShips.get_by_query(subject, inverse_relation.get(FOLLOWS), paged=paged, page=page)
+        return RelationShips.get_by_query(subject, FOLLOWS, paged=paged, page=page)
 
     @classmethod
     def get_followed_by(cls, subject, paged=False, page=1, size=PAGE_LIMIT):
-        return RelationShips.get_by_query(subject, FOLLOWS, paged=paged, page=page)
+        return RelationShips.get_by_query(subject, inverse_relation.get(FOLLOWS), paged=paged, page=page)
 
     @classmethod
     def get_interested(cls, subject, paged=False, page=1, size=PAGE_LIMIT):

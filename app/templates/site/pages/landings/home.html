@@ -58,31 +58,31 @@
             <h3 class="light my-h3" >Fitrangi Counter</h3>
 
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
-                <h4>1200</h4>
+                <h4>{{counters['profile']}}</h4>
 
                 <p>Members</p>
             </div>
 
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
-                <h4>1200</h4>
+                <h4>{{counters['adventure']}}</h4>
 
                 <p>Adventure</p>
             </div>
 
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
-                <h4>1200</h4>
+                <h4>{{counters['discussion']}}</h4>
 
                 <p>Discussion</p>
             </div>
 
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
-                <h4>1200</h4>
+                <h4>{{counters['article']}}</h4>
 
                 <p>Journals</p>
             </div>
 
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
-                <h4>1200</h4>
+                <h4>{{counters['profile']}}</h4>
 
                 <p>Registered</p>
             </div>
@@ -236,24 +236,6 @@
 
 </section>
 
-{% if not user %}
-<section class="container-fluid footer-signup lightgrey-bg">
-    <div class="container">
-        <form class="form-inline">
-            <div class="form-group">
-                <label class="my-h3">Be Adventureous. Be Fitrangi! Join us by Registering right now.</label>
-                <!--<button class="btn btn-primary" data-toggle="modal" data-target="#signup-modal">Register</button>-->
-                <button type="button" class="btn btn-primary show_signup">Register
-                </button>
-                <button type="button" class="btn btn-primary show_subscribe">Subscribe
-                </button>
-            </div>
-        </form>
-    </div>
-</section>
-{% endif %}
-<!-----------------------Bootstrap MODAL For Subscribe---------------------->
-
 
 <script language="JavaScript">
         $(document).ready(function(){
@@ -262,50 +244,6 @@
             App.filter('organizer-filter');
             App.filter('enthusiast-featured-filter');
             App.filter('organizer-featured-filter');
-            $('.show_subscribe').click(function(){
-                subscription_modal_text = '<div><div id="subscribe-form"><input type="text" id="subscription-name" class="form-control" placeholder="Name" required="Please Enter Your Name"><br/><input type="email" id="subscription-email" class="form-control" placeholder="email" required="Please Enter Your Email">' +'</div>' + '<div id="subscribe-message"></div>' + '</div>';
-                console.log(subscription_modal_text);
-                BootstrapDialog.show({
-                    title: 'Subscribe For Latest Fitrangi Updates!',
-                    message: subscription_modal_text,
-                    buttons: [
-                        {
-                            label: 'Close',
-                            action: function(dialogRef) {
-                                dialogRef.close()
-                            }
-                        },
-                        {
-                            label: 'Subscribe',
-                            cssClass: 'btn-primary',
-                            action: function(dialogRef){
-                                var subscription_name = $('#subscription-name').val();
-                                var subscription_email = $('#subscription-email').val();
-                                console.log('Subscribing: '+ subscription_name + ", " + subscription_email);
-                                $.ajax({
-                                    type: 'POST',
-                                    url: '/subscribe',
-                                    data: {
-                                        name: subscription_name,
-                                        email:subscription_email
-                                    }
-                                }).done(function (msg) {
-                                    $('#subscribe-message').html(msg.message);
-                                    $('#subscribe-message').addClass('alert');
-                                    if (msg.status == 'success') {
-                                        $('#subscribe-form').hide();
-                                        $('#subscribe-message').addClass('alert-success');
-                                        $('#subscribe-message').show();
 
-                                    } else {
-                                        $('#subscribe-message').addClass('alert-error');
-                                        $('#subscribe-message').show();
-                                    }
-                                });
-                            }
-                        }
-                    ]
-                });
-            });
         });
 </script>

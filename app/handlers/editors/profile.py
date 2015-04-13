@@ -20,7 +20,7 @@ class ProfileEditor(NodeEditor):
         elif self.command == 'favorite-activity':
             return favorite_activity(self.action, self.node, self.message['activity'])
         elif self.command == 'follow-profile':
-            return follow_profile(self.action, self.node, self.message['other-profile'])
+            return follow_profile(self.action, self.node, self.message['other_profile'])
         elif self.command == 'bookmark-article':
             return bookmark_article(self.action, self.node, self.message['article'])
         elif self.command == 'interest-event':
@@ -102,6 +102,14 @@ def favorite_activity(action, profile, activity):
 @response_handler('Successfully updated subscription', 'Failed to update subscription')
 def follow_profile(action, profile, profile2):
     node = Profile.objects(pk=profile).first()
+    other = Profile.objects(pk=profile2).first()
+    print '[*] Follow command', node, other
+    if not node or not other:
+        raise Exception("Invalid id")
+    if action == 'follow':
+        RelationShips.follow(node, other)
+    else:
+        RelationShips.un_follow(node, other)
     return node
 
 @response_handler('Successfully updated bookmarks', 'Failed to update bookmarks')

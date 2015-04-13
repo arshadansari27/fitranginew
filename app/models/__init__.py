@@ -87,7 +87,10 @@ class Node(object):
 
     @property
     def cover_image_path(self):
-        return '/media/' + self.__class__.__name__.lower() + '/' + str(self.id) + '/cover'
+        if self.cover_image and self.cover_image.size:
+            return '/media/' + self.__class__.__name__.lower() + '/' + str(self.id) + '/cover'
+        else:
+            return '/img/Profile-Picture.jpg'
 
     @property
     def gallery_image_path(self):

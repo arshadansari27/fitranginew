@@ -25,10 +25,13 @@ jQuery(document).ready(function($){
                 if (data.status=='error' && data.message == 'Please login before making requests'){
                     App.show_login();
                 }
+                console.log(data);
     		    if (callback != null){
                     callback(data);
                 } else {
-                    window.location.reload();
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000);
                 }
     		},
     		contentType: "application/json",

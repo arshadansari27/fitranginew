@@ -89,7 +89,7 @@ $(document).ready(function() {
             other_profile: other_profile,
             type: 'profile',
             command: 'follow-profile',
-            action: 'add'
+            action: 'follow'
         };
         App.editor(options);
     };
@@ -100,7 +100,7 @@ $(document).ready(function() {
             other_profile: other_profile,
             type: 'profile',
             command: 'follow-profile',
-            action: 'remove'
+            action: 'unfollow'
         };
         App.editor(options);
     };

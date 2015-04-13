@@ -1,14 +1,16 @@
 <li class="nav col-sm-6 col-xs-12">
+    <a href="{{model.slug}}">
     <article class="fitrangi-profile">
         <img src="{{model.cover_image_path}}" class="{% if not model.is_business_profile %}img-circle p-5{% endif %} img-responsive pull-left" width="60" height="100">
         {% if user %}
             {% if model.id != user.id and model in user.following %}
-                <a href="" title="Unfollow" class="btn btn-default btn-xs mt-10 blue pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-check"></i></a>
+                <a data-action="unfollow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" title="Unfollow" class="btn btn-default btn-xs mt-10 blue pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-check"></i></a>
             {% else %}
-                <a href="" title="follow" class="btn btn-default btn-xs mt-10 grey pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-plus"></i></a>
+                <a  data-action="follow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" title="follow" class="btn btn-default btn-xs mt-10 grey pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-plus"></i></a>
             {% endif %}
         {% endif %}
         <h4>{% if model.name|length > 35 %}{{model.name[0:35]}}...{% else %}{{model.name}}{% endif %}</h4>
         <h5><span class="fa fa-map-marker"></span> {% if model.location %} {{model.location.name }}{% else %} Unknown{% endif %}</h5>
     </article>
+    </a>
 </li>

@@ -10,7 +10,7 @@
 
     <link rel="icon" href="/images/favicon.ico">
 
-    <title>Fitrangi</title>
+    <title>{% if title %}{{title}}{% else %}Fitrangi: India's complete adventure portal{% endif %}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.css" rel="stylesheet">
@@ -110,14 +110,14 @@
             <li class="{% if menu.app_name == 'community'%}active{% endif %}"><a href="/community">Community</a></li>
           </ul>
 
-          <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+          <!--div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
           	<div class="top-search-form navbar-nav">
     		<form action="#" method="post">
         		<input type="text" placeholder="Search ..." class="form-control">
             	<button type="submit"><i class="fa fa-search"></i></button>
         	</form>
 			</div>
-          </div>
+          </div-->
 
         	<ul class="top-icons nav navbar-nav navbar-right pull-right">
                 {% if not (user and user.id) %}
@@ -141,7 +141,7 @@
                         </ul>
                     </div>
                 </li>
-                <li><div class="top-icon"><a href="" title="Notifications"><i class="fa fa-bell"></i></a><span>12</span></div></li>
+                <!--li><div class="top-icon"><a href="" title="Notifications"><i class="fa fa-bell"></i></a><span>12</span></div></li-->
                 <li><div class="top-icon"><a href="" title="Messages"><i class="fa fa-envelope"></i></a></div></li>
                 {% endif %}
             </ul>
@@ -178,8 +178,20 @@
 </nav>
 
 {% block body %}{% endblock %}
-
-<section class="container-fluid footer" style="margin-top: 100px;">
+{% if not user %}
+<section class="container-fluid footer-signup lightgrey-bg">
+    <div class="container">
+        <form class="form-inline">
+            <div class="form-group">
+                <label class="my-h3">Be Adventureous. Be Fitrangi! Join us by Registering right now.</label>
+                <button type="button" class="btn btn-primary show_signup">Register</button>
+                <button type="button" class="btn btn-primary show_subscribe">Subscribe</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endif %}
+<section class="container-fluid footer">
 
     <div class="col-lg-5 col-md-5 col-sm-6 col-xs-12">
         <h3>About Fitrangi.com</h3>
@@ -245,23 +257,7 @@
 <script src="/js/css3-mediaqueries.js"></script>
 <script src="/js/bootstrap-dialog.min.js"></script>
 <script src="/js/bootstrap-tagsinput.js"></script>
-
-<!--<script>
-$(function(){
-$(".dropdown").hover(
-        function() {
-            $('.dropdown-menu', this).stop( true, true ).fadeIn("fast");
-            $(this).toggleClass('open');
-            $('b', this).toggleClass("caret caret-up");
-        },
-        function() {
-            $('.dropdown-menu', this).stop( true, true ).fadeOut("fast");
-            $(this).toggleClass('open');
-            $('b', this).toggleClass("caret caret-up");
-        });
-});
-</script>-->
-
+<script src="/appjs/handler.js"></script>
 <script>
     $(function(){
         $('li.inner-level-dropdown>a').on('click', function (event) {
@@ -279,94 +275,7 @@ $(".dropdown").hover(
         });
 
     });
-</script>
 
-<script language="JavaScript">
-    $(document).ready(function() {
-
-        var App = window.App;
-        $(".show_login").click(function (e) {
-            e.stopPropagation();
-            App.show_login();
-        });
-        $(".show_signup").click(function (e) {
-            e.stopPropagation();
-            App.show_registration();
-        });
-
-        $('body').on('click', '[data-action="add-discussion"]', function(e) {
-            e.stopPropagation();
-            if($(e.target).attr('data-user-id').length > 0){
-                window.location.href="/write/discussion";
-            } else {
-                App.show_login();
-            }
-        });
-        $('body').on('click', '[data-action="add-article"]', function(e) {
-            e.stopPropagation();
-            if($(e.target).attr('data-user-id').length > 0){
-                window.location.href="/write/article";
-            } else {
-                App.show_login();
-            }
-        });
-        $('body').on('click', '[data-action="edit-discussion"]', function(e) {
-            e.stopPropagation();
-            if($(e.target).attr('data-user-id').length > 0){
-                window.location.href="/write/discussion/" + $(e.target).attr('data-model-id');
-            } else {
-                App.show_login();
-            }
-        });
-        $('body').on('click', '[data-action="edit-article"]', function(e) {
-            e.stopPropagation();
-            if($(e.target).attr('data-user-id').length > 0){
-                window.location.href="/write/article/" + $(e.target).attr('data-model-id');
-            } else {
-                App.show_login();
-            }
-        });
-        $('body').on('click', '[data-action="publish-article"]', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            App.content.publish($(e.target).attr('data-model-id'), 'article', function(data){
-                BootstrapDialog.alert(data.message);
-                if (data.status == 'success') {
-                    window.location.reload();
-                }
-            });
-        });
-
-        $('body').on('click', '[data-action="unpublish-article"]', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            App.content.unpublish($(e.target).attr('data-model-id'), 'article', function(data){
-                BootstrapDialog.alert(data.message);
-                if (data.status == 'success') {
-                    window.location.reload();
-                }
-            });
-        });
-
-        $('body').on('click', '[data-action="delete-article"]', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            App.content.unpublish($(e.target).attr('data-model-id'), 'article', function(data){
-                BootstrapDialog.alert(data.message);
-                if (data.status == 'success') {
-                    if(window.location.href.search('write/') == 0){
-                        window.history.back();
-                    } else {
-                        window.location.reload();
-                    }
-                }
-            });
-        });
-
-    });
-
-</script>
-<script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -378,32 +287,5 @@ $(".dropdown").hover(
 
 </script>
 {% block footer_scripts %}{% endblock %}
-<script>
-    $(document).ready(function(){
-        if($('.summernote')!=undefined) {
-            $('.summernote').summernote({height: 400});
-        }
-        function postToFeed(title, desc, url, image){
-            var obj = {method: 'feed',link: 'http://www.fitrangi.com' + url, picture: 'http://www.fitrangi.com/'+image,name: title,description: desc};
-            function callback(response){}
-            FB.ui(obj, callback);
-        }
-
-        $('.btnFbShare').click(function(e){
-            e.stopPropagation();
-            e.preventDefault();
-            elem = $(this);
-            postToFeed(elem.data('title'), elem.data('desc'), elem.data('href'), elem.data('image'));
-            return false;
-        });
-
-        var App = window.App;
-        if (window.App.doFilter !=undefined && window.App.doFilter.length != undefined) {
-            for (var i = 0; i < window.App.doFilter.length; i++) {
-                window.App.doFilter[i]();
-            }
-        }
-    });
-</script>
 </body>
 </html>

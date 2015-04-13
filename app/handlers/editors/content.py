@@ -29,8 +29,8 @@ class ContentEditor(NodeEditor):
             raise Exception('Invalid command')
 
 @response_handler('Successfully deleted the post', 'Failed to remove the post')
-def delete(node):
-    node = get_or_create_content(node)
+def delete(node, type):
+    node = get_or_create_content(type, node)
     node.delete()
     return node
 

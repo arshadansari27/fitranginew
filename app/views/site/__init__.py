@@ -3,7 +3,7 @@ from jinja2 import Template
 import simplejson as json
 from PIL import Image
 from app import app
-from flask import render_template, request, g, redirect, jsonify
+from flask import render_template, request, g, redirect, jsonify, url_for
 from app.handlers.editors import NodeEditor
 from app.models import Node, NodeFactory
 from app.models.content import Content, Post, Comment
@@ -43,15 +43,17 @@ def act_home():
 def home():
     from app.views import force_setup_context
     context = force_setup_context({})
-    card = ExploreLandingView().get_card()
-    context['card'] = card
+    view = ExploreLandingView()
+    context['card'] = view.get_card()
+    context['title'] = view.get_title()
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/explore/activity")
 def activity_view():
     name = request.args.get('name')
     if name:
-        return render_template('site/pages/commons/view.html', card=ActivityView(MODEL_DETAIL_VIEW, name, key='name__iexact').get_card())
+        view = ActivityView(MODEL_DETAIL_VIEW, name, key='name__iexact')
+        return render_template('site/pages/commons/view.html', card=view.get_card(), title=view.get_title())
     else:
         return 'Not found', 404
 
@@ -66,6 +68,7 @@ def list_adventure():
     context = force_setup_context({})
     card = AdventureCollectionView(card_type="grid", query=query, size=20, page=page).get_card(context)
     context['card'] = card
+    context['title'] = 'Adventures @ Fitrangi'
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/explore/journal')
@@ -78,6 +81,7 @@ def list_journal():
     context = force_setup_context({})
     view = CompositeNodeCollectionView('article', parent_model=None, configs=dict(all=dict(query=query, page=page, card_type='grid', is_partial=True), top=dict(query=query, page=page, card_type='row', is_partial=True), my=dict(query=query, page=page, card_type='row', is_partial=True))).get_card(context)
     context['card'] = view
+    context['title'] = 'Articles and Blogs @ Fitrangi'
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/community/discussion')
@@ -90,6 +94,7 @@ def list_discussion():
     context = force_setup_context({})
     view = CompositeNodeCollectionView('discussion', parent_model=None, configs=dict(featured=dict(card_type='row', query=query, page=page, is_partial=True), latest=dict(card_type='row', query=query, page=page, is_partial=True))).get_card(context)
     context['card'] = view
+    context['title'] = 'Discussion @ Fitrangi'
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/community/profile")
@@ -102,14 +107,19 @@ def list_profile():
     context = force_setup_context({})
     card = ProfileCollectionView(card_type="row", query=query, size=20, page=page, is_partial=False).get_card(context)
     context['card'] = card
+    context['title'] = 'Profile Finder'
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/community/my")
 def my_profile():
     from app.views import force_setup_context
+    if not hasattr(g, 'user') or g.user is None:
+        return redirect(url_for('community_mail'))
     context = force_setup_context({})
-    card = ProfileView(MODEL_DETAIL_VIEW, str(g.user.id)).get_card()
-    context['card'] = card
+    view = ProfileView(MODEL_DETAIL_VIEW, str(g.user.id))
+    context['card'] = view.get_card()
+    title = view.get_title()
+    context['title'] = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
     return render_template('site/pages/commons/view.html', **context)
 
 
@@ -213,6 +223,8 @@ def model_view(slug):
     from app.views import force_setup_context
     context = force_setup_context({})
     context['card'] = view.get_card()
+    title = view.get_title()
+    context['title'] = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
     return render_template('site/pages/commons/view.html', **context)
 
 

@@ -30,7 +30,11 @@
 
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 user-button">
                     {% if user.id != model.id %}
-                    <a id="profile-follow-editor" href="" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-user"></i> Follow</a>
+                    {% if model.id != user.id and model in user.following %}
+                    <a  data-action="unfollow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-user"></i> Unfollow</a>
+                    {% else %}
+                    <a  data-action="follow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-user"></i> Follow</a>
+                    {% endif %}
                     <a href="" class="btn btn-default col-lg-6 col-xs-12 text-center"><i class="fa fa-envelope-o"></i> Send Message</a>
                     {% else %}
                     <a href="" class="btn btn-default col-lg-6 col-xs-12 text-center"><i class="fa fa-cog"></i> Preferences</a>
@@ -124,7 +128,7 @@
                     {{following_list|safe}}
                 </div><!--Tab Pane End-->
 
-                <div role="tabpanel" class="tab-pane fade" id="followers" aria-labelledby="followers">
+                <div role="tabpanel" class="tab-pane fade" id="follower" aria-labelledby="follower">
                     <input id="profile-follower-filter" data-category="follower" data-model="profile" data-filter="relationship__followed_by__profile" type="hidden" value="{{model.id}}">
                     {{follower_list|safe}}
                 </div><!--Tab Pane End-->

@@ -35,16 +35,16 @@
 
                         <li>
                             {% if not model in user.accomplished_adventure %}
-                                <a href="#" data-type="adventure" data-action="add-accomplished" data-model="{{model.id}}" data-user="{{user.id}}"><span class="fa fa-check"></span>&nbsp;Done this</a>
+                                <a href="#" data-action="add-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-check"></span>&nbsp;Done this</a>
                             {% else %}
-                                <a href="#" data-type="adventure" data-action="remove-accomplished" data-model="{{model.id}}" data-user="{{user.id}}"><span class="fa fa-check green"></span>&nbsp;Undo this</a>
+                                <a href="#" data-action="remove-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-check green"></span>&nbsp;Undo this</a>
                             {% endif %}
                         </li>
                         <li>
                             {% if not model in user.wish_list_adventure %}
-                            <a href="#" data-type="adventure" data-action="add-wishlist" data-model="{{model.id}}" data-user="{{user.id}}"><span class="fa fa-star"></span> Add to Wishlist</a>
+                            <a href="#" data-action="add-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-star"></span> Add to Wishlist</a>
                             {% else %}
-                            <a href="#" data-type="adventure" data-action="remove-wishlist" data-model="{{model.id}}" data-user="{{user.id}}"><span class="fa fa-star yellow"></span> Wishlisted </a>
+                            <a href="#" data-action="remove-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-star yellow"></span> Wishlisted </a>
                             {% endif %}
                         </li>
                         <li><a href="#review_post"><span class="fa fa-edit"></span> Write Review</a></li>

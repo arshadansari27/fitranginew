@@ -6,11 +6,19 @@ from flask import g
 from app.handlers.extractors import NodeExtractor
 from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, POST, STREAM, Node, ADVERTISEMENT
 from app.models.streams import ActivityStream
-from app.models.content import Content, Post
+from app.models.content import Content, Post, Article, Discussion
+from app.models.adventure import Adventure, Location
+from app.models.activity import Activity
+from app.models.event import Event
+from app.models.trip import Trip
+from app.models.profile import Profile, ProfileType
 
 class View(object):
 
     def get_card(self):
+        raise Exception('Not Implemented')
+
+    def get_title(self):
         raise Exception('Not Implemented')
 
 
@@ -19,6 +27,9 @@ class EditorView(View):
     def __init__(self, model_name, id=None):
         self.model_name = model_name
         self.id = id
+
+    def get_title(self):
+        return 'Fitrangi: Edit' + self.model_name
 
     def get_card(self):
         if self.id:
@@ -49,6 +60,9 @@ class LandingView(View):
     def __init__(self):
         pass
 
+    def get_title(self):
+        return "Fitrangi: India's complete adventure portal"
+
     def get_card(self, context={}):
         from app.views import env
         template_path = self.get_template()
@@ -70,10 +84,14 @@ class ExploreLandingView(LandingView):
     def __init__(self):
         super(ExploreLandingView, self).__init__()
 
+    def get_title(self):
+        return "Explore Fitrangi"
+
     def get_template(self):
         return "site/pages/landings/home.html"
 
     def get_context(self, context={}):
+        context['counters'] = dict(adventure=Adventure.objects.count(), profile=Profile.objects(type__ne=ProfileType.objects(name__iexact='subscription only').first()).count(), discussion=Discussion.objects.count(), article=Article.objects.count())
         context['journal'] = ArticleCollectionView("grid", "", is_partial=True, only_list=True, page=1, size=6, fixed_size=True).get_card(context)
         context['enthusiast_profile'] = ProfileCollectionView("grid", "type__profile_type__name:Enthusiast;", is_partial=True, only_list=True, page=1, size=4, fixed_size=True, category='enthusiast').get_card(context)
         context['organizer_profile'] = ProfileCollectionView("grid", "type__profile_type__name:Organizer;", is_partial=True, only_list=True, page=1, size=4, fixed_size=True, category='organizer').get_card(context)
@@ -85,6 +103,9 @@ class CommunityLandingView(LandingView):
 
     def __init__(self):
         super(CommunityLandingView, self).__init__()
+
+    def get_title(self):
+        return "Community at Fitrangi"
 
     def get_template(self):
         return "site/pages/landings/community.html"
@@ -325,6 +346,9 @@ class NodeView(View):
             filters[key] = str(id)
             self.extractor = NodeExtractor.factory(self.model_name, filters)
 
+    def get_title(self):
+        return "Fitrangi: India's complete adventure portal"
+
     def get_card(self):
         from app.views import env
         from app.views import force_setup_context
@@ -422,6 +446,10 @@ class ActivityView(NodeView):
     def __init__(self, card_type, id, key='pk'):
         super(ActivityView, self).__init__(ACTIVITY, card_type, id, key)
 
+
+    def get_title(self):
+        return self.get_model().name
+
     def get_detail_context(self):
         parent=self.get_model()
         return {
@@ -440,9 +468,12 @@ class AdventureView(NodeView):
     def __init__(self, card_type, id, key='pk'):
         super(AdventureView, self).__init__(ADVENTURE, card_type, id, key)
 
+    def get_title(self):
+        return self.get_model().name
+
     def get_detail_context(self):
         parent=self.get_model()
-        other_adventure_list = AdventureCollectionView("grid-row", "", only_list=True, parent=parent, fixed_size=True).get_card()
+        other_adventure_list = AdventureCollectionView("grid-row", "", only_list=True, parent=parent, size=3, fixed_size=True).get_card()
         advertisement_list = AdvertisementCollectionView("grid-row", "", only_list=True, size=3, fixed_size=True).get_card()
         reviews = PostCollectionView("row", "", is_partial=False, parent=parent).get_card(dict(post_type='review'))
         return dict(other_adventure_list=other_adventure_list, advertisement_list=advertisement_list, reviews=reviews)
@@ -456,6 +487,9 @@ class EventView(NodeView):
     def __init__(self, card_type, id, key='pk'):
         super(EventView, self).__init__(EVENT, card_type, id, key)
 
+    def get_title(self):
+        return self.get_model().name
+
     def get_detail_context(self):
         return {}
 
@@ -466,6 +500,9 @@ class TripView(NodeView):
 
     def __init__(self, card_type, id, key='pk'):
         super(TripView, self).__init__(TRIP, card_type, id, key)
+
+    def get_title(self):
+        return self.get_model().name
 
     def get_detail_context(self):
         return {}
@@ -478,6 +515,9 @@ class ProfileView(NodeView):
     def __init__(self, card_type, id, key='pk'):
         super(ProfileView, self).__init__(PROFILE, card_type, id, key)
 
+    def get_title(self):
+        return self.get_model().name
+
     def get_detail_context(self):
         logged_in_user = g.user if hasattr(g, 'user') and g.user is not None else None
         model = self.get_model()
@@ -489,7 +529,7 @@ class ProfileView(NodeView):
             "following_list": ProfileCollectionView("row", "", is_partial=True, category="following").get_card(),
             'discussion_list': DiscussionCollectionView("row", "", is_partial=True, category="all").get_card(),
             'article_list': ArticleCollectionView("grid", "", is_partial=True, category="all").get_card(),
-            'my_stream_list': StreamCollectionView("row", "", is_partial=(not is_same), category="my", stream_owner=model, logged_in_user=logged_in_user, parent=logged_in_user).get_card(),
+            'my_stream_list': StreamCollectionView("row", "", is_partial=(not is_same), category="my", fixed_size=False, stream_owner=model, logged_in_user=logged_in_user, parent=logged_in_user).get_card(),
             'fitrangi_posts': PostCollectionView("grid", "", is_partial=True, only_list=True, fixed_size=True, category="fitrangi").get_card(),
         }
 
@@ -500,6 +540,9 @@ class DiscussionView(NodeView):
 
     def __init__(self, card_type, id, key='pk'):
         super(DiscussionView, self).__init__(DISCUSSION, card_type, id, key)
+
+    def get_title(self):
+        return self.get_model().title
 
     def get_detail_context(self):
         parent = self.get_model()
@@ -517,6 +560,9 @@ class ArticleView(NodeView):
 
     def __init__(self, card_type, id, key='pk'):
         super(ArticleView, self).__init__(ARTICLE, card_type, id, key)
+
+    def get_title(self):
+        return self.get_model().title
 
     def get_detail_context(self):
         parent=self.get_model()

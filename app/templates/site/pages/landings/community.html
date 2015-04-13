@@ -32,8 +32,8 @@
     <div class="container-fluid">
 
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <button type="button" class="btn btn-primary">Add a Discussion</button>
-            <button type="button" class="btn btn-primary">View all</button>
+            <button data-action="add-discussion" data-user-id="{{user.id}}" type="button" class="btn btn-primary">Add a Discussion</button>
+            <a href="/community/discussion" class="btn btn-primary">View all</a>
         </div>
 
 
@@ -54,7 +54,7 @@
                             frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
-
+            {% if not user %}
             <button class="btn btn-default btn-facebook mb-10" type="button"><i class="fa fa-facebook"></i> Sign in with
                 <strong>Facebook</strong></button>
             <button class="btn btn-default btn-google-plus mb-10" type="button"><i class="fa fa-google-plus"></i> Sign
@@ -62,7 +62,7 @@
 
             <strong>&nbsp;&nbsp;&nbsp;OR&nbsp;&nbsp;&nbsp;</strong>
             <button class="btn btn-primary mb-10" type="button">Sign up</button>
-
+            {% endif %}
         </div>
 
 
@@ -72,99 +72,9 @@
 
             <div class="row">
                 {{profile|safe}}
-                <!--div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro1.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro3.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro2.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro5.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro4.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro6.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro1.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro3.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro2.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro5.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro4.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro6.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro1.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro3.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro2.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro5.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro4.jpg" alt="125x125">
-                    </a>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                    <a href="#" class="thumbnail">
-                        <img src="images/pro6.jpg" alt="125x125">
-                    </a>
-                </div-->
             </div>
 
-            <button class="btn btn-primary mb-10 pull-right" type="button">View all</button>
+            <a href="/community/profile" class="btn btn-primary mb-10 pull-right">View all</a>
         </div>
 
     </div>
@@ -175,50 +85,14 @@
     <h2>Fitrangi event calender</h2>
     <h4>India unearths this wonderful opportunity to feature itself in world records for Sky-diving and Scuba-diving.
         Don't miss this historic opportunity to associate yourself with this exciting and daring adventure!</h4>
-
-
-    <!--div class="row text-center">
-        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 left">
-            <i class="fa fa-calendar"></i>
-            <h4>17th - 18th Feb, 2015</h4>
-        </div>
-
-        <div class="col-lg-6 col-md-6 col-sm-4 col-xs-12">
-            <button class="btn btn-primary"><h3>Adventure Tourism Conclave<br>2016</h3></button>
-        </div>
-
-        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 right">
-            <i class="fa fa-map-marker"></i>
-            <h4>Nerul, Navi Mumbai</h4>
-        </div>
-    </div>
-
-
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="fotorama"
-                 data-stopautoplayontouch="false"
-                 data-nav="false"
-                 data-loop="true"
-                 data-autoplay="true"
-                 data-width="100%"
-                 data-minwidth="400"
-                 data-maxwidth="1366"
-                 data-minheight="200"
-                 data-maxheight="100%">
-
-                <img src="images/img2.jpg">
-                <img src="images/adventure-banner.jpg">
-            </div>
-        </div>
-    </div-->
     {{event|safe}}
 
+    <a href="/community/event" class="btn btn-primary mb-10 pull-right">View all</a>
 </section>
 
 <hr class="clearfix divider">
 
-<section class="container fitrangi-testimonial text-center">
+<!--section class="container fitrangi-testimonial text-center">
 
     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
         <h4><i class="fa fa-quote-left"></i>
@@ -257,4 +131,4 @@
         <button class="btn btn-primary pull-right">View all Testimonials</button>
     </div>
 
-</section>
+</section-->
