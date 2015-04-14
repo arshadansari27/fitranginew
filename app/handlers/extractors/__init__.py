@@ -93,7 +93,6 @@ class NodeExtractor(object):
                         filters[k] = v
                 else:
                     filters[k] = v
-        print '[*]', filters
         return self.model_class().objects(**filters).order_by('-created_timestamp')
 
     def model_class(self):

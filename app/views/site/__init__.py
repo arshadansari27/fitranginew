@@ -9,7 +9,7 @@ from app.models import Node, NodeFactory
 from app.models.content import Content, Post, Comment
 from app.models.streams import ActivityStream
 from app.utils.search_helper import listing_helper, node_helper
-from app.utils import login_required, all_tags
+from app.utils import login_required, all_tags, convert_query_to_filter
 from app.handlers import ActivityView, NodeView, NodeCollectionView, AdventureCollectionView, NodeExtractor, \
     ArticleCollectionView, CompositeNodeCollectionView, EventCollectionView, ProfileCollectionView, ExploreLandingView, \
     CommunityLandingView, EditorView, ProfileView
@@ -78,7 +78,11 @@ def list_journal():
     page = int(request.args.get('page', 1))
     if not query or len(query) is 0:
         query = None
+        filters = {}
+    else:
+        filters = convert_query_to_filter(query)
     context = force_setup_context({})
+    context['filters'] = filters
     view = CompositeNodeCollectionView('article', parent_model=None, configs=dict(all=dict(query=query, page=page, card_type='grid', is_partial=True), top=dict(query=query, page=page, card_type='row', is_partial=True), my=dict(query=query, page=page, card_type='row', is_partial=True))).get_card(context)
     context['card'] = view
     context['title'] = 'Articles and Blogs @ Fitrangi'
@@ -91,7 +95,11 @@ def list_discussion():
     page = int(request.args.get('page', 1))
     if not query or len(query) is 0:
         query = None
+        filters = {}
+    else:
+        filters = convert_query_to_filter(query)
     context = force_setup_context({})
+    context['filters'] = filters
     view = CompositeNodeCollectionView('discussion', parent_model=None, configs=dict(featured=dict(card_type='row', query=query, page=page, is_partial=True), latest=dict(card_type='row', query=query, page=page, is_partial=True))).get_card(context)
     context['card'] = view
     context['title'] = 'Discussion @ Fitrangi'
@@ -187,6 +195,8 @@ def ajax_options():
     select = request.args.get('select', 0)
     if model_name == 'tag':
         options = [(u[0], u[0]) for u in all_tags()]
+    elif model_name == 'location' and attr == 'name':
+        options = ((str(getattr(u, 'id')), u.full_name) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     else:
         options = ((str(getattr(u, 'id')), getattr(u, attr)) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     if not select:
@@ -195,6 +205,20 @@ def ajax_options():
         str_to_use = '<option value="%s">%s</option>'
     results = (str_to_use % u for u in options)
     return ''.join(results)
+
+
+@app.route('/names')
+def ajax_names():
+    model_name = request.args.get('model_name', '')
+    attr = request.args.get('attr', None)
+    if model_name == 'tag':
+        options = [u[0] for u in all_tags()][:30]
+    else:
+        options = (getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all())
+    results = (u for u in options)
+    return ','.join(results)
+
+
 
 @app.route('/buttons')
 def ajax_buttons():

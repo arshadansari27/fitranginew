@@ -8,7 +8,7 @@ from activity import Activity
 from adventure import Adventure
 from streams import Message
 import datetime, hashlib
-
+from ago import human
 
 class ProfileType(db.Document):
     name = db.StringField()
@@ -24,6 +24,7 @@ class Profile(Entity, db.Document):
     email = db.StringField(unique=True)
     passwd = db.StringField()
     location = db.ReferenceField('Location')
+    location_typed = db.StringField()
     phone = db.StringField()
     website = db.StringField()
     facebook = db.StringField()
@@ -52,6 +53,12 @@ class Profile(Entity, db.Document):
             {'fields': ['email', 'slug', 'name'], 'unique': False, 'sparse': False, 'types': False },
         ],
     }
+
+    @property
+    def since(self):
+        return human(self.user_since, precision=1)
+
+
 
     def __unicode__(self):
         return self.name if self.name else (self.email if self.email else 'No name or email')

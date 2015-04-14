@@ -7,14 +7,14 @@ $(document).ready(function() {
     App.profile = App.profile || {};
 
 
-    App.profile.edit_profile = function(node, data) {
+    App.profile.edit_profile = function(node, data, calllback) {
         var options = {
             node: node,
             data: data,
             type: 'profile',
             command: 'edit-profile'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
     App.profile.add_activity_to_favorite = function(node, activity) {
@@ -225,14 +225,14 @@ $(document).ready(function() {
         App.editor(options);
     };
 
-    App.profile.edit_profile_preference= function(node, data) {
+    App.profile.edit_profile_preference= function(node, data, callback) {
         var options = {
             node: node,
             data: data,
             type: 'profile',
             command: 'preference-edit'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
     App.profile.edit_type= function(node, type) {
@@ -293,16 +293,17 @@ $(document).ready(function() {
         App.editor(options);
     };
 
-    App.profile.change_password= function(node, current_password, new_password, confirm_password) {
+    App.profile.change_password= function(node, current_password, new_password, callback) {
         var options = {
             node: node,
-            current_password: current_password,
-            new_password: new_password,
-            confirm_password: confirm_password,
+            data: {
+                old: current_password,
+                new: new_password
+            },
             type: 'profile',
             command: 'change-password'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
 

@@ -20,13 +20,15 @@
 
                 <div class="col-lg-9 col-md-4 col-sm-4 col-xs-12 name-location">
                     <h2>{{ model.name }}</h2>
-                    {% if model.location %}<h4><i class="fa fa-map-marker"></i> {{model.location.name}}</h4>{% endif %}
+                    <h4><i class="fa fa-map-marker"></i>&nbsp;{% if model.location %} {{model.location.name}}{% elif model.location_typed %}{{model.location_typed}}{% else %}{% if model.id == user.id %}<a href="#" data-action="edit-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" >Change location</a>{% else %}Location not known{% endif %}{% endif %}</h4>
                     <a href="" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">{{ model.followers|length }} Followers</a>
                     <a href="" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">{{ model.following|length }} Following</a>
                 </div>
 
             </div>
+            <br/>
             <div class="row">
+
 
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 user-button">
                     {% if user.id != model.id %}
@@ -35,17 +37,26 @@
                     {% else %}
                     <a  data-action="follow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-user"></i> Follow</a>
                     {% endif %}
-                    <a href="" class="btn btn-default col-lg-6 col-xs-12 text-center"><i class="fa fa-envelope-o"></i> Send Message</a>
+                    <a href="#" class="btn btn-default col-lg-6 col-xs-12 text-center"><i class="fa fa-envelope-o"></i> Send Message</a>
                     {% else %}
-                    <a href="" class="btn btn-default col-lg-6 col-xs-12 text-center"><i class="fa fa-cog"></i> Preferences</a>
-                    <a href="" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-users"></i> Edit Profile</a>
+                    <a data-action="edit-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-users"></i> Edit</a>
+                    <div class="btn-group block">
+                        <a  href="#" class="btn btn-default col-lg-6 col-xs-12 text-center dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-cog"></i> Settings</a>
+                         <ul class="dropdown-menu setting-drop" role="menu">
+                            <li><a style="width: 90%" data-action="edit-profile-password" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#">Change password</a></li>
+                            <li><a style="width: 90%" data-action="edit-profile-preferences" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#">Preferences</a></li>
+                        </ul>
+                    </div>
+
                     {% endif %}
                 </div>
-                {% if model.description and model.description|length > 0 %}
                 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 user-desc">
-                    <p>{{model.description}}</p>
-                </div>
+                {% if model.description and model.description|length > 0 %}
+                    <p>{{user.description}}</p>
+                {% else %}
+                    <p>On fitrangi since {{user.since}}</p>
                 {% endif %}
+                </div>
 
             </div>
 

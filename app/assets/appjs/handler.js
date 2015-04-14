@@ -13,6 +13,19 @@ jQuery(document).ready(function ($) {
         App.show_registration();
     });
 
+    var show_dialog_message = function(dialogRef, status, message) {
+
+        var box = '<div class="alert alert-'+ ((status=='success')?status: 'danger') +' fade in">'
+            + '<a class="close" data-dismiss="alert" href="#">&times;</a>'
+            + '<p class="alert-message">' + message + '</p>'
+            + '</div>';
+        dialogRef.getModalBody().prepend(box);
+        if (status == 'success') {
+            setTimeout(function(){
+                window.location.reload();
+            }, 1000);
+        }
+    };
 
     var filterSearch = '[data-filter-submit="search"]';
     $('body').on('click', filterSearch, function (e) {
@@ -163,6 +176,148 @@ jQuery(document).ready(function ($) {
             }
         });
     });
+
+    $('body').on('click', '[data-action="edit-profile"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        BootstrapDialog.show({
+            title: 'Edit Profile',
+            message: $('<div></div>').load('/edit-profile-modal'),
+            buttons: [
+                {
+                    label: 'Close',
+                    action: function(dialog) {
+                        dialog.close();
+                    }
+                },
+                {
+                    label: 'Save',
+                    cssClass: 'btn-primary',
+                    action: function(dialog){
+                        dialog.getModalBody().find('.alert').remove();
+                        var id, name, phone, location, website, facebook, google_plus, linked_in, youtube_channel, blog_channel;
+                        id              = $('#profile-id').val();
+                        name            = $('#name-edit').val();
+                        phone           = $('#phone-edit').val();
+                        location        = $('#location-edit').val();
+                        website         = $('#website-edit').val();
+                        facebook        = $('#facebook-edit').val();
+                        google_plus     = $('#google-plus-edit').val();
+                        linked_in       = $('#linked-in-edit').val();
+                        youtube_channel = $('#youtube-channel-edit').val();
+                        blog_channel    = $('#blog-channel-edit').val();
+                        App.profile.edit_profile(id, {
+                            name: name,
+                            phone: phone,
+                            location: location,
+                            website:website,
+                            facebook: facebook,
+                            google_plus: google_plus,
+                            linked_in: linked_in,
+                            youtube_channel: youtube_channel,
+                            blog_channel: blog_channel
+                        }, function(data){
+                            show_dialog_message(dialog, data.status, data.message);
+                            if (data.status == 'success') {
+                                setTimeout(function(){dialog.close();}, 1000);
+                            }
+                        });
+                    }
+                }
+            ]
+        });
+    });
+
+    $('body').on('click', '[data-action="edit-profile-preferences"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        BootstrapDialog.show({
+            title: 'Edit Profile Preferences',
+            message: $('<div></div>').load('/edit-profile-preferences-modal'),
+            buttons: [
+                {
+                    label: 'Close',
+                    action: function(dialog) {
+                        dialog.close();
+                    }
+                },
+                {
+                    label: 'Save',
+                    cssClass: 'btn-primary',
+                    action: function(dialog){
+                        dialog.getModalBody().find('.alert').remove();
+                        var id, email_enabled, email_frequency;
+                        id              = $('#profile-id').val();
+                        email_enabled   = ($('#email-enabled-edit').is(':checked'))?true: false;
+                        email_frequency = $('#email-frequency-edit').val();
+                        console.log('[*] email enabled ' + email_enabled);
+                        App.profile.edit_profile_preference(id, {
+                            email_enabled: email_enabled,
+                            email_frequency: email_frequency
+                        }, function(data){
+                            show_dialog_message(dialog, data.status, data.message);
+                            if (data.status == 'success') {
+                                setTimeout(function(){dialog.close();}, 1000);
+                            }
+                        });
+                    }
+                }
+            ]
+        });
+    });
+
+    $('body').on('click', '[data-action="edit-profile-password"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        BootstrapDialog.show({
+            title: 'Change Password',
+            message: $('<div></div>').load('/change-password-modal'),
+            buttons: [
+                {
+                    label: 'Close',
+                    action: function(dialog) {
+                        dialog.close();
+                    }
+                },
+                {
+                    label: 'Save',
+                    cssClass: 'btn-primary',
+                    action: function(dialog){
+
+                        dialog.getModalBody().find('.alert').remove();
+                        var id, old_passwd, new_passwd, confirm_passwd;
+                        id              = $('#profile-id').val();
+                        old_passwd      = $('#old-edit').val();
+                        new_passwd      = $('#new-edit').val();
+                        confirm_passwd  = $('#confirm-edit').val();
+                        if (old_passwd == undefined || old_passwd.length == 0) {
+                            show_dialog_message(dialog, 'error', 'Enter correct password');
+                            return;
+                        }
+                        if (new_passwd == undefined || new_passwd.length < 4) {
+                            show_dialog_message(dialog, 'error', 'Password must atleast be 4 characters');
+                            return;
+                        }
+                        if (new_passwd != confirm_passwd) {
+                            show_dialog_message(dialog, 'error', 'Passwords do no match');
+                            return;
+                        }
+                        App.profile.change_password(id, old_passwd, new_passwd, function(data){
+                            show_dialog_message(dialog, data.status, data.message);
+                            if (data.status == 'success') {
+                                setTimeout(function(){dialog.close();}, 1000);
+                            }
+                        })
+                    }
+                }
+            ]
+        });
+    });
+
+
     $('.show_subscribe').click(function () {
         subscription_modal_text = '<div><div id="subscribe-form"><input type="text" id="subscription-name" class="form-control" placeholder="Name" required="Please Enter Your Name"><br/><input type="email" id="subscription-email" class="form-control" placeholder="email" required="Please Enter Your Email">' + '</div>' + '<div id="subscribe-message"></div>' + '</div>';
         console.log(subscription_modal_text);

@@ -23,14 +23,20 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 fitrangi-tags-list">
                 <h2>Featured Tags</h2>
                 <article class="text-center" id="channel-list">
-                    <a href="#">All</a>
+                    <a href="/community/discussion">All</a>
                 </article>
+                <input id="channel-filter" type="hidden" data-model="discussion" data-filter="channels__channel__name"/>
                 <script>
                     $(document).ready(function () {
                         $.ajax({
-                            url: '/buttons?model_name=channel&attr=name'
+                            url: '/names?model_name=channel&attr=name'
                         }).done(function (data) {
-                            $('#channel-list').append(data);
+                            var channel_list = data.split(',');
+                            var channels = '';
+                            for(var i = 0; i < channel_list.length; i++) {
+                                if (channel_list[i] != null && channel_list[i].length > 0) channels += '<a href="/community/discussion?query=channels__channel__name:'+ channel_list[i]+ ';" >'+ channel_list[i]+ '</a>';
+                            }
+                            $('#channel-list').append(channels);
                         });
                     });
                 </script>
@@ -38,14 +44,20 @@
                 <hr class="divider">
 
                 <article class="text-center" id="tag-list">
-                    <button class="btn btn-xs btn-info">See More..</button>
+                    <a href="/community/discussion">All</a>
                 </article>
+                <input id="tag-filter" type="hidden" data-model="discussion" data-filter="tags"/>
                 <script>
                     $(document).ready(function () {
                         $.ajax({
-                            url: '/buttons?model_name=tag&attr=name'
+                            url: '/names?model_name=tag&attr=name'
                         }).done(function (data) {
-                            $('#tag-list').prepend(data);
+                            var tag_list = data.split(',');
+                            var tags = '';
+                            for(var i = 0; i < tag_list.length; i++) {
+                                if (tag_list[i] != null && tag_list[i].length > 0) tags += '<a href="/community/discussion?query=tags:'+ tag_list[i]+ ';" >'+ tag_list[i]+ '</a>';
+                            }
+                            $('#tag-list').append(tags);
                         });
                     });
                 </script>
@@ -59,7 +71,6 @@
     </div>
 </section>
 
-<hr class="clearfix divider">
 <section class="container-fluid p-0">
     <div role="tabpanel" data-example-id="togglable-tabs">
 
@@ -90,9 +101,24 @@
 <script>
     $(document).ready(function(){
         var App = window.App;
-        App.filter('my-blog-filter');
         App.filter('name-filter');
+        App.filter('channel-filter');
+        App.filter('tag-filter');
 
 
     });
 </script>
+{% if filters.get('channels__channel__name') %}
+  <script>
+    $(document).ready(function(){
+        $('#channel-filter').val('{{filters.get("channels__channel__name")}}');
+    });
+</script>
+{% endif %}
+ {% if filters.get('tags') %}
+  <script>
+    $(document).ready(function(){
+        $('#tag-filter').val('{{filters.get("tags")}}');
+    });
+</script>
+{% endif %}

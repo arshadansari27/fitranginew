@@ -16,35 +16,45 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 fitrangi-tags-list">
                 <h2>Featured Tags</h2>
                 <article class="text-center" id="channel-list">
-                    <a href="#">All</a>
+                    <a href="/explore/journal">All</a>
                 </article>
+                <input id="channel-filter" type="hidden" data-model="article" data-filter="channels__channel__name"/>
                 <script>
-                    $(document).ready(function(){
-                         $.ajax({
-                            url: '/buttons?model_name=channel&attr=name'
-                            }).done(function (data) {
-                                $('#channel-list').append(data);
-                            });
+                    $(document).ready(function () {
+                        $.ajax({
+                            url: '/names?model_name=channel&attr=name'
+                        }).done(function (data) {
+                            var channel_list = data.split(',');
+                            var channels = '';
+                            for(var i = 0; i < channel_list.length; i++) {
+                                if (channel_list[i] != null && channel_list[i].length > 0) channels += '<a href="/explore/journal?query=channels__channel__name:'+ channel_list[i]+ ';" >'+ channel_list[i]+ '</a>';
+                            }
+                            $('#channel-list').append(channels);
+                        });
                     });
                 </script>
 
                 <hr class="divider">
 
                 <article class="text-center" id="tag-list">
-                    <button class="btn btn-xs btn-info">See More..</button>
+                    <a href="/explore/journal">All</a>
                 </article>
+                <input id="tag-filter" type="hidden" data-model="article" data-filter="tags"/>
                 <script>
-                    $(document).ready(function(){
-                         $.ajax({
-                            url: '/buttons?model_name=tag&attr=name'
-                            }).done(function (data) {
-                                $('#tag-list').prepend(data);
-                            });
+                    $(document).ready(function () {
+                        $.ajax({
+                            url: '/names?model_name=tag&attr=name'
+                        }).done(function (data) {
+                            var tag_list = data.split(',');
+                            var tags = '';
+                            for(var i = 0; i < tag_list.length; i++) {
+                                if (tag_list[i] != null && tag_list[i].length > 0) tags += '<a href="/explore/journal?query=tags:'+ tag_list[i]+ ';" >'+ tag_list[i]+ '</a>';
+                            }
+                            $('#tag-list').append(tags);
+                        });
                     });
                 </script>
-
             </div>
-
         </div>
     </div>
 </section>
@@ -112,7 +122,7 @@
     <section class="container-fluid mb-10">
         {% if user %}
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-            <input id="my-blog-filter" type="hidden" data-category="my" data-filter="author__id" data-model="article" value="{{user.id}}"/>
+            <input id="my-blog-filter" type="hidden" data-category="my" data-filter="author" data-model="article" value="{{user.id}}"/>
             <h4 class="border-grey-b pb-5 oswald"> My Blogs</h4>
             <ul class="blogs-list">
                 {{cards['my']|safe}}
@@ -145,5 +155,23 @@
         var App = window.App;
         App.filter('my-blog-filter');
         App.filter('name-filter');
+        App.filter('channel-filter');
+        App.filter('tag-filter');
+
+
     });
 </script>
+{% if filters.get('channels__channel__name') %}
+  <script>
+    $(document).ready(function(){
+        $('#channel-filter').val('{{filters.get("channels__channel__name")}}');
+    });
+</script>
+{% endif %}
+ {% if filters.get('tags') %}
+  <script>
+    $(document).ready(function(){
+        $('#tag-filter').val('{{filters.get("tags")}}');
+    });
+</script>
+{% endif %}

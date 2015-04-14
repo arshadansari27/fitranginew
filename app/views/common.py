@@ -189,6 +189,21 @@ def registration_modal():
 def forgot_password_modal():
     return render_template('site/modals/forgot-password.html')
 
+@app.route('/change-password-modal', methods=['GET'])
+@login_required
+def change_password_modal():
+    return render_template('site/modals/change-password.html', user=g.user)
+
+@app.route('/edit-profile-modal', methods=['GET'])
+@login_required
+def edit_profile_modal():
+    return render_template('site/modals/profile-edit.html', user=g.user)
+
+@app.route('/edit-profile-preferences-modal', methods=['GET'])
+@login_required
+def edit_profile_preferences_modal():
+    return render_template('site/modals/profile-preferences-edit.html', user=g.user)
+
 @app.route('/subscribe', methods=['POST'])
 def subscribe():
     if request.method == 'POST':

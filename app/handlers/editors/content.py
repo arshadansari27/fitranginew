@@ -63,7 +63,10 @@ def __edit(node, type, data):
     content         = data.get('content', '')
     author          = g.user
     tags = data.get('tags', None)
-    channels = NodeExtractor.factory(CHANNEL, dict(name='Journal')).get_list(True, 1, 1)
+    if type == 'article':
+        channels = NodeExtractor.factory(CHANNEL, dict(name='Journal')).get_list(True, 1, 1)
+    else:
+        channels = []
     assert len(channels) > 0
 
     image = data.get('image')

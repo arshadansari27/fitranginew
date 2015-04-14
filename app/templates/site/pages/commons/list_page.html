@@ -51,6 +51,10 @@
                 var $input = $('#' + filters_list[u]);
                 var name = $input.attr('data-filter');
                 var value = $input.val();
+                var filter_category= $input.attr('data-category');
+                if (filter_category != undefined && filter_category != null && filter_category.length > 0 &&  filter_category != category) {
+                    continue;
+                }
                 console.log('Filter by: ' + filters_list[u] + " -> " + name + ": " + value);
 
                 if (value == undefined ||value == null || value.length == 0 || value == '--') {

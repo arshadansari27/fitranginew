@@ -1,5 +1,12 @@
-from app import Profile, ProfileType, RelationShips, Event, Trip, Activity, Adventure
+from app.models.profile import Profile, ProfileType
+from app.models.relationships import RelationShips
+from app.models.event import Event
+from app.models.trip import Trip
+from app.models.activity import Activity
+from app.models.adventure import Adventure
+from app.models import Node, NodeFactory, LOCATION
 from app.handlers.editors import NodeEditor, response_handler
+import hashlib
 
 __author__ = 'arshad'
 
@@ -7,7 +14,7 @@ __author__ = 'arshad'
 class ProfileEditor(NodeEditor):
 
     def _invoke(self):
-        if   self.command == 'edit':
+        if   self.command == 'edit-profile':
             return edit_profile(self.node, self.data)
         elif self.command == 'cover-image-edit':
             return edit_cover_image(self.node, self.data)
@@ -53,9 +60,19 @@ class ProfileEditor(NodeEditor):
 def edit_profile(profile, data):
     node = Profile.objects(pk=profile).first()
     for k, v in data.iteritems():
-        if not hasattr(node, k):
+        if not hasattr(node, k) or k == 'email' or k == 'location':
             continue
         setattr(node, k, v)
+
+    location = data.get('location', None)
+    if location is not None and len(location) > 0:
+        options = dict((u.full_name, str(getattr(u, 'id'))) for u in NodeFactory.get_class_by_name(LOCATION).objects.all())
+        if options.has_key(location):
+            node.location = NodeFactory.get_class_by_name(LOCATION).objects(pk=options.get(location)).first()
+            node.location_typed = None
+        else:
+            node.location_typed = location
+            node.location = None
     node.save()
     return node
 
@@ -67,6 +84,12 @@ def edit_cover_image(profile, data):
 @response_handler('Successfully updated the password', 'Failed to update the password')
 def change_password(profile, data):
     node = Profile.objects(pk=profile).first()
+    old = hashlib.md5(data.get('old')).hexdigest()
+    new = data.get('new')
+    if (old != node.passwd):
+        raise Exception("Invalid Password")
+    node.password = new
+    node.save()
     return node
 
 @response_handler('Successfully updated wish list', 'Failed to update wish list')
@@ -183,6 +206,11 @@ def verify_profile(action, profile):
 @response_handler('Successfully updated preferences', 'Failed to update preferences')
 def edit_profile_preference(profile, data):
     node = Profile.objects(pk=profile).first()
+    email_enabled = data.get('email_enabled', True)
+    email_frequency = data.get('email_frequency', 'daily')
+    node.email_enabled = email_enabled
+    node.email_frequency = email_frequency
+    node.save()
     return node
 
 @response_handler('Successfully registered', 'Failed to register')

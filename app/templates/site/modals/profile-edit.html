@@ -1,0 +1,61 @@
+<section class="container-fluid change-password">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <input type="hidden" id="profile-id" value="{{user.id}}"/>
+        <form class="fitrangi-form">
+            <div class="form-group">
+                <label for="heading">Name</label>
+                <input id="name-edit" type="text" class="form-control" placeholder="Enter name" value="{{user.name}}">
+            </div>
+            <div class="form-group">
+                <label for="heading">Phone</label>
+                <input id="phone-edit" type="text" class="form-control" placeholder="Enter name" value="{{user.phone}}">
+            </div>
+            <div class="form-group">
+                <label for="heading">Email</label>
+                <input id="email-edit" type="email" disabled class="form-control" placeholder="Enter name" value="{{user.email}}">
+            </div>
+            <div class="form-group">
+                <label for="heading">Location</label>
+                <input id="location-edit" type="text" list="location-data" class="form-control" placeholder="Location (city or region, state, country)" value="{% if user.location %}{{user.location.display_name}}{% endif %}">
+                <datalist id="location-data">
+                    <option value="">
+                </datalist>
+                <script>
+                    $(document).ready(function(){
+                        $.ajax({
+                            url: '/options?model_name=location&attr=name'
+                        }).done(function (data) {
+                            $('#location-data').append(data);
+                        });
+                    });
+                </script>
+            </div>
+            <div class="form-group">
+                <label for="heading">Website</label>
+                <input id="website-edit" type="text" class="form-control" placeholder="Enter website link" value="{{user.website}}">
+            </div>
+            <div class="form-group">
+                <label for="heading">Facebook Profile Link</label>
+                <input id="facebook-edit" type="text" class="form-control" placeholder="Enter facebook profile link" value="{{user.facebook}}">
+            </div>
+            <div class="form-group">
+                <label for="heading">Google+ Profile Link</label>
+                <input id="google-plus-edit" type="text" class="form-control" placeholder="Enter G+ profile link" value="{{user.google_plus}}">
+            </div>
+            <div class="form-group">
+                <label for="heading">Linked In Profile Link</label>
+                <input id="linked-in-edit" type="text" class="form-control" placeholder="Enter LinkedIn profile link" value="{{user.linked_in}}">
+            </div>
+            <div class="form-group">
+                <label for="heading">Own a blog?</label>
+                <input id="blog-channel-edit" type="text" class="form-control" placeholder="Share the link with us" value="{{user.blog_channel}}">
+            </div>
+            <div class="form-group">
+                <label for="heading">Own a youtube channel?</label>
+                <input id="youtube-channel-edit" type="text" class="form-control" placeholder="Share the channel link with us" value="{{user.youtube_channel}}">
+            </div>
+        </form>
+    </div>
+</section>
+
+
