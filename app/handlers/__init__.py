@@ -152,6 +152,7 @@ class NodeCollectionView(View):
         self.model_name = model_name
         self.category = category
         self.filters = convert_query_to_filter(query)
+        self.query = query
         self.paged = paged
         self.page = page
         self.size = size
@@ -166,22 +167,15 @@ class NodeCollectionView(View):
         from app.views import env
         template_path = self.get_template()
         template = env.get_template(template_path)
-        c = dict(model_name=self.model_name, card_type=self.card_type, filters=self.filters, parent=self.parent)
+        c = dict(model_name=self.model_name, card_type=self.card_type, filters=self.filters,
+                 parent=self.parent, category=self.category, size=self.size, fixed_size=self.fixed_size,
+                 current_page=self.page)
         if not context:
             context = c
         else:
             for k, v in c.iteritems():
                 context[k] = v
-        if self.fixed_size:
-            last_page = 1
-        else:
-            last_page = self.extractor.last_page(self.size)
-        current_page = self.page
-        context['last_page'] = 1
-        context['fixed_size'] = self.fixed_size
-        context['current_page'] = current_page
-        context['category'] = self.category
-        context['size'] = self.size
+
         html = template.render(**context)
         return html
 

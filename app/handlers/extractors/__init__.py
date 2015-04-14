@@ -39,6 +39,7 @@ class NodeExtractor(object):
             page = int(page)
             start = (page - 1) * size
             end = start + size
+            print start, end
             return self.get_query().all()[start: end]
         else:
             return self.get_query().all()
@@ -92,6 +93,7 @@ class NodeExtractor(object):
                         filters[k] = v
                 else:
                     filters[k] = v
+        print '[*]', filters
         return self.model_class().objects(**filters).order_by('-created_timestamp')
 
     def model_class(self):

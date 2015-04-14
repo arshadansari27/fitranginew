@@ -4,17 +4,13 @@
         <div class="container">
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <a href="#search" class="btn btn-primary btn-lg pull-right m-5"><i class="fa fa-search"></i></a>
-                <a data-user-id="{{user.id}}" data-action="add-article" href="#" class="btn btn-primary btn-lg pull-right m-5">Write Blog</a>
-
-                <div id="search">
-                    <button type="button" class="close">×</button>
-                    <form action="">
-                        <input type="search" value="" placeholder="Search Blog here">
-                        <button type="submit" class="btn btn-lg btn-lay">Search</button>
-                    </form>
+                <a data-user-id="{{user.id}}" data-action="add-article" href="#" class="btn btn-primary btn-lg  m-5">Write Blog</a>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 pull-right">
+                    <div class="input-group">
+                        <input id="name-filter" data-filter="title__icontains" data-model="article" type="text" class="form-control input-md no-radius p-20" placeholder="Search by Name">
+                        <span class="input-group-btn no-radius"><button data-model="article" data-filter-submit="search" class="btn btn-default btn-md" type="button"><i class="fa fa-search"></i></button></span>
+                    </div>
                 </div>
-
             </div>
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 fitrangi-tags-list">
@@ -114,8 +110,9 @@
 <div role="tabpanel" class="tab-pane fade" id="my-blogs" aria-labelledby="my-blogs">
 
     <section class="container-fluid mb-10">
+        {% if user %}
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-            <input id="my-blog-filter" type="hidden" data-category="my" data-filter="author" data-model="article" value="{{user.id}}"/>
+            <input id="my-blog-filter" type="hidden" data-category="my" data-filter="author__id" data-model="article" value="{{user.id}}"/>
             <h4 class="border-grey-b pb-5 oswald"> My Blogs</h4>
             <ul class="blogs-list">
                 {{cards['my']|safe}}
@@ -131,6 +128,9 @@
                 {{ advertisement_list|safe}}
             </section>
         </div>
+        {% else %}
+        <div class="jumbotron"><p>You must login first and add some blogs to see anything here.</p></div>
+        {% endif %}
     </section>
 
 </div>
@@ -144,5 +144,6 @@
     $(document).ready(function(){
         var App = window.App;
         App.filter('my-blog-filter');
+        App.filter('name-filter');
     });
 </script>

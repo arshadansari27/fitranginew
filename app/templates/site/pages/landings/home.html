@@ -3,7 +3,7 @@
         <h2 class="my-h2">Discover nearest adventures</h2>
 
         <form class="form-inline search-form text-center col-lg-8 col-md-8 col-xs-10 col-xs-offset-1 col-md-offset-2"
-              action="#" method="get">
+              action="#" method="get" onsubmit="return false;">
             <div class="form-group">
                 <span class="fa fa-map-marker"></span>
                 <input id="location-filter" data-category="all" data-model="adventure" data-filter="location__location__name" list="location" placeholder="FILTER BY LOCATION">
@@ -245,5 +245,16 @@
             App.filter('enthusiast-featured-filter');
             App.filter('organizer-featured-filter');
 
+
+            $('.search-btn').click(function(e){
+                var activity_key = $('#activity-filter').attr('data-filter');
+                var activity_value = $('#activity-filter').val();
+                var location_key = $('#location-filter').attr('data-filter');
+                var location_value= $('#location-filter').val();
+                var location = '/explore/adventure?query=' + activity_key + ":" + activity_value + ";" + location_key + ":" + location_value + ";";
+                console.log(location)
+                window.location.href = location;
+                return false;
+            });
         });
 </script>

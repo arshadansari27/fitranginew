@@ -44,7 +44,8 @@ jQuery(document).ready(function($){
         var category = input.attr('data-category');
         if (category == null || category == undefined || category.length == 0) category = 'all';
         var model = input.attr('data-model');
-        var filters = model + '-' + category;
+        //var filters = model + '-' + category;
+        var filters = model;
 
         window.filters = window.filters || {};
         window.filters[filters] = window.filters[filters] || [];

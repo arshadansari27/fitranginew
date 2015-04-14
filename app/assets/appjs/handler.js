@@ -13,6 +13,25 @@ jQuery(document).ready(function ($) {
         App.show_registration();
     });
 
+
+    var filterSearch = '[data-filter-submit="search"]';
+    $('body').on('click', filterSearch, function (e) {
+        e.stopPropagation();
+        if (App.doFilter != undefined && App.doFilter.length != undefined) {
+            for (var i = 0; i < App.doFilter.length; i++) {
+                App.doFilter[i]();
+            }
+        }
+    });
+
+   var resetSearch = '[data-filter-submit="reset"]';
+   $(resetSearch).on('click', function(e){
+        e.stopPropagation();
+        for(k in App.resetFilter) {
+            App.resetFilter[k]();
+        }
+   });
+
     $('body').on('click', '[data-action="add-discussion"]', function (e) {
         e.stopPropagation();
         if ($(this).attr('data-user-id').length > 0) {

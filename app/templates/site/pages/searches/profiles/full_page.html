@@ -12,7 +12,7 @@
 
 
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 fitrangi-datalist">
-                <input id="profile-category-filter" data-category="all" data-model="profile" data-filter="type__profile_type__name" list="category" placeholder="SELECT CATEGORY" value="">
+                <input id="category-filter" data-category="all" data-model="profile" data-filter="type__profile_type__name" list="category" placeholder="SELECT CATEGORY" value="">
                 <datalist id="category">
                     <option value="Organizer">
                     <option value="Enthusiast">
@@ -20,17 +20,37 @@
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 fitrangi-datalist">
-                <input  id="profile-activity-filter" data-category="all" data-model="profile" data-filter="relationship__favorite__profile" list="activity" placeholder="FILTER BY ACTIVITY" value="">
+                 <input id="activity-filter" data-category="all" data-model="profile" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
                 <datalist id="activity">
-
+                    <option value="">
                 </datalist>
+                <script>
+                    $(document).ready(function(){
+                        $.ajax({
+                            url: '/options?model_name=activity&attr=name'
+                        }).done(function (data) {
+                            $('#activity').append(data);
+
+                        });
+                    });
+                </script>
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 fitrangi-datalist">
 
-                <input  id="profile-location-filter" data-category="all" data-model="profile" data-filter="location__location__name" list="location" placeholder="FILTER BY LOCATION" value="">
+                <input id="location-filter" data-category="all" data-model="profile" data-filter="location__location__name" list="location" placeholder="FILTER BY LOCATION">
                 <datalist id="location">
+                    <option value="">
                 </datalist>
+                <script>
+                    $(document).ready(function(){
+                        $.ajax({
+                            url: '/options?model_name=location&attr=name'
+                        }).done(function (data) {
+                            $('#location').append(data);
+                        });
+                    });
+                </script>
             </div>
 
 
@@ -55,14 +75,14 @@
 
     <h2 class="inline oswald pull-left m-0 pl-10">Users</h2>
 
-    <button type="button" class="btn btn-default"><i class="fa fa-plus"></i> Be Fitrangi</button>
+    <!--button type="button" class="btn btn-default"><i class="fa fa-plus"></i> Be Fitrangi</button>
     <button type="button" class="btn btn-default"><i class="fa fa-building"></i> Add new Organisation</button>
-    <button type="button" class="btn btn-default"><i class="fa fa-users"></i> Invite Friends</button>
+    <button type="button" class="btn btn-default"><i class="fa fa-users"></i> Invite Friends</button-->
 
     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 pull-right">
         <div class="input-group">
-            <input type="text" class="form-control input-md no-radius p-20" placeholder="Search by Name">
-            <span class="input-group-btn no-radius"><button class="btn btn-default btn-md" type="button"><i
+            <input id="name-filter" data-filter="name__icontains" data-model="profile" type="text" class="form-control input-md no-radius p-20" placeholder="Search by Name">
+            <span class="input-group-btn no-radius"><button data-category="all" data-model="profile" data-filter-submit="search"  class="btn btn-default btn-md" type="button"><i
                     class="fa fa-search"></i></button></span>
         </div>
     </div>
@@ -84,7 +104,10 @@
 <script>
     $(document).ready(function(){
         var App = window.App;
-        App.filter('profile-category-filter');
+        App.filter('category-filter');
+        App.filter('location-filter');
+        App.filter('activity-filter');
+        App.filter('name-filter');
     });
 </script>
 

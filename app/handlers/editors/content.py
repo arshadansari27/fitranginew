@@ -82,6 +82,8 @@ def __edit(node, type, data):
         obj.channels = channels
     if path:
         obj.cover_image.put(open(path, 'rb'))
+    if type == 'discussion':
+        obj.published = True
     obj.save()
     return obj
 

@@ -24,15 +24,23 @@
         var size = '{{size}}';
 
         var page_key = model_name + '-' + card_type + '-' + category;
-        var filter_key = model_name+"-"+category;
+        //var filter_key = model_name+"-"+category;
+        var filter_key = model_name;
 
         var loadMoreSelector = '[data-model=' + model_name + '][data-card-type=' + card_type + '][data-action=load-more][data-category=' + category + ']';
         var container = $('[data-model="' + model_name + '"][data-card-type="' + card_type + '"][data-type="model-container"][data-category=' + category + ']');
 
 
         var load_models = function() {
+            var start_over = false;
+            if (arguments.length == 0) {
+                start_over = true;
+            }
             window.current_page = window.current_page || {};
             window.current_page[page_key] = window.current_page[page_key] || 1;
+            if (start_over) {
+                window.current_page[page_key] = 1
+            }
             window.filters = window.filters || {};
             window.filters[filter_key] = window.filters[filter_key] || [];
             var filters_list = window.filters[filter_key];
@@ -64,18 +72,22 @@
             $.ajax({
                 url: url
             }).done(function (data) {
+                container.html('');
                 if (data.status == 'success') {
                     container.append(data.html);
 
                     last_page = data.last_page;
-                    if (!show_load_more || last_page < window.current_page[page_key]) {
+                    if (!show_load_more || last_page <= window.current_page[page_key]) {
                        $(loadMoreSelector).hide();
                     }
                 } else {
                     container.append('Nothing to load...');
                 }
+                if (!start_over) {
+                    window.current_page[page_key] += 1
+                }
             });
-            window.current_page[page_key] = parseInt(window.current_page[page_key]) + 1;
+
 
         };
 
@@ -95,22 +107,10 @@
 
         $(loadMoreSelector).on('click', function(e){
             e.stopPropagation();
-            load_models();
+            load_models(true);
         });
 
-        var filterSearch = '[data-model="'+model_name+ '"][data-filter-submit="search"]';
-        $(filterSearch).on('click', function(e){
-            e.stopPropagation();
-            window.current_page[page_key] = 1;
-            container.html('');
-            load_models();
-        });
 
-        var resetSearch = '[data-model="'+model_name+ '"][data-filter-submit="reset"]';
-        $(resetSearch).on('click', function(e){
-            e.stopPropagation();
-            reset();
-        });
 
         window.App.doFilter = window.App.doFilter || [];
         window.App.doFilter.push(load_models);

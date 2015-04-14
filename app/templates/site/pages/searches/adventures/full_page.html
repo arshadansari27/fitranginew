@@ -18,6 +18,7 @@
                             url: '/options?model_name=activity&attr=name'
                         }).done(function (data) {
                             $('#activity').append(data);
+
                         });
                     });
                 </script>
@@ -67,3 +68,17 @@
         window.App.filter('location-filter');
     });
 </script>
+{% if filters.get('activities__activity__name') %}
+  <script>
+    $(document).ready(function(){
+        $('#activity-filter').val('{{filters.get("activities__activity__name")}}');
+    });
+</script>
+{% endif %}
+ {% if filters.get('location__location__name') %}
+  <script>
+    $(document).ready(function(){
+        $('#location-filter').val('{{filters.get("location__location__name")}}');
+    });
+</script>
+{% endif %}
