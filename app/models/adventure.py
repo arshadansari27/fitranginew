@@ -48,7 +48,6 @@ class Adventure(Entity, db.Document):
     reach_by_train = db.ListField(db.StringField())
     reach_by_road = db.ListField(db.StringField())
     reach_by_sea = db.ListField(db.StringField())
-    reviews = db.ListField(db.EmbeddedDocumentField('Comment'))
 
     meta = {
         'indexes': [
