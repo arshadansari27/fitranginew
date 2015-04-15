@@ -2,15 +2,19 @@ __author__ = 'arshad'
 
 from app import app
 from app.utils import login_required
-from flask import render_template, g, request
-from app.models.streams import ChatMessage, UserMessage
+from flask import render_template, g, request, jsonify
+from app.models.streams import ChatMessage
 from app.models.profile import Profile
 
 @app.route("/messaging")
 @login_required
 def messaging():
+    load_user = request.args.get('load-user', None)
+    if load_user:
+        load_user = Profile.objects(pk=load_user).first()
     from app.views import force_setup_context
     context = force_setup_context({})
+    context['initial'] = load_user
     from app.views import env
     template_path = 'site/layouts/chat.html'
     template = env.get_template(template_path)
@@ -19,117 +23,53 @@ def messaging():
     context['title'] = 'Fitrangi - Messaging'
     return render_template('site/pages/commons/view.html', **context)
 
+@app.route('/messaging/create-message', methods=['POST'])
+def create_message():
+    logged_in_user = g.user
+    user = Profile.objects(pk=request.form.get('user', None)).first()
+    _message = request.form.get('message', '')
+    ChatMessage.create_message(logged_in_user, user, _message)
+    return messages_list(False)
 
 @app.route('/messaging/user-list')
 @login_required
 def user_list():
     user = g.user
-    messages = ChatMessage.objects(profiles=user).all()
-    template = """
-    <a href="#">
-    <div data-user-id="%s"class="contact-list load-chat-messaging">
-        <div class="contact">
-            <a class="pull-left">
-                <figure>
-                    <img class="img-circle img-responsive" alt="" src="%s">
-                </figure>
-            </a>
-            <h5>%s</h5>
-            <small>%s</small>
-        </div>
-    </div>
-    </a>
-    """
+    messages = ChatMessage.get_user_list(user)
+    initial = request.args.get('initial')
+    if initial:
+        initial = Profile.objects(pk=initial).first()
+
     _user_list = []
-    for message in messages:
-        v = [u for u in message.profiles if u != user][0]
-        if v is None:
+    if initial:
+        initial_user = dict(id=str(initial.id), image=initial.cover_image_path, name=initial.name, notifications='')
+        _user_list.append(initial_user)
+
+    for m, v in messages.iteritems():
+        if initial and m == initial:
             continue
-        print v
-        mesgs = list(message.messages)
-        data = template % (str(v.id), v.cover_image_path, v.name, mesgs[-1].message if len(mesgs) > 0 else '')
+        data = dict(id=str(m.id), image=m.cover_image_path, name=m.name, notifications=str(v))
         _user_list.append(data)
-    return ''.join(_user_list)
+
+    response = dict(result=_user_list)
+    print 'User list', response
+    return jsonify(response)
 
 @app.route('/messaging/updates')
 @login_required
 def updates():
-    user = Profile.objects(pk=request.args.get('user')).first()
-    luser = g.user
-    mesg = ChatMessage.objects(profiles__in=[luser, user]).first()
-    __message = [u for u in mesg.messages if u.read is None or not u.read]
-    messages = [MESSAGE % ('my' if u.author == luser else 'friend', u.author.cover_image_path, u.message, u.created_timestamp) for u in __message]
-    for m in __message:
-        m.read = True
-    mesg.save()
-    return ''.join(messages)
+    return messages_list(False)
 
 @app.route('/messaging/message-list')
 @login_required
 def message_list():
+    return messages_list(True)
+
+def messages_list(all):
     user = Profile.objects(pk=request.args.get('user')).first()
-    luser = g.user
-    mesg = ChatMessage.objects(profiles__in=[luser, user]).first()
-    __message = mesg.messages
-    messages = [MESSAGE % ('my' if u.author == luser else 'friend', u.author.cover_image_path, u.message, u.created_timestamp) for u in __message]
-    for m in __message:
-        m.read = True
-    mesg.save()
-    return MESSAGE_LIST % (user.cover_image_path, user.name, user.name, ''.join(messages))
+    logged_in_user = g.user
+    messages = list(ChatMessage.get_message_between(user, logged_in_user, all=all))
+    response = dict(result=[dict(my=True if u.author == logged_in_user else False, image=u.author.cover_image_path, message=u.message, time=u.since) for u in messages])
+    print 'Messages: ', logged_in_user, len(response['result'])
+    return jsonify(response)
 
-MESSAGE = """
-            <li class="%s-message clearfix">
-                <figure class="profile-picture">
-                    <img src="%s" class="img-circle img-responsive" alt="">
-                </figure>
-                <div class="message">
-                    %s
-                    <div class="time"><i class="fa fa-clock-o"></i> %s</div>
-                </div>
-            </li>
-"""
-
-MESSAGE_LIST = """
-<div class="profile online">
-        <a href="#" class="pull-left">
-            <figure class="profile-picture">
-                <img src="%s" class="img-circle img-responsive" alt="%s">
-            </figure>
-        </a>
-        <h5>%s</h5>
-    </div>
-
-    <div class="chat-messages">
-        <ul id="message-list-enumerate" class="messages">
-            %s
-        </ul>
-    </div>
-
-    <div class="write-message">
-        <form class="row">
-            <div class="form-group col-xs-1">
-                <div class="btn-group dropup">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-paperclip"></i>
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="#"><i class="fa fa-music"></i></a></li>
-                        <li class="divider"></li>
-                        <li><a href="#"><i class="fa fa-video-camera"></i></a></li>
-                        <li class="divider"></li>
-                        <li><a href="#"><i class="fa fa-image"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="form-group col-xs-10">
-                <textarea class="form-control" placeholder="Write message"></textarea>
-            </div>
-
-            <div class="form-group col-xs-1 sent">
-                <a href=""><i class="fa fa-paper-plane"></i></a>
-            </div>
-        </form>
-    </div>
-"""

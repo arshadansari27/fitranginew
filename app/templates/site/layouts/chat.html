@@ -4,57 +4,215 @@
     <div class="profile online">
         <a href="#" class="pull-left">
             <figure class="profile-picture">
-                <img src="{{user.cover_image_path}}" class="img-circle img-responsive" alt="{{user.name}}">
+                <img src="{{user.cover_image_path}}" class="img-circle img-responsive" alt="User Name">
             </figure>
         </a>
         <h5>{{user.name}}</h5>
 
+        <div class="btn-group">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+
+                <span class="online">Online</span>
+                <span class="busy">Busy</span>
+                <span class="away">Away</span>
+                <span class="offline">Offline</span>
+                <span class="caret"></span>
+
+            </a>
+            <!--ul class="dropdown-menu status-dropdown default" role="menu">
+                <li><a data-status="online"><span class="label label-status label-online">&nbsp;</span> Online</a></li>
+                <li><a data-status="busy"><span class="label label-status label-busy">&nbsp;</span> Busy</a></li>
+                <li><a data-status="away"><span class="label label-status label-away">&nbsp;</span> Away</a></li>
+                <li><a data-status="offline"><span class="label label-status label-offline">&nbsp;</span> Offline</a>
+                </li>
+            </ul-->
+        </div>
+
     </div>
 
-    <div  id="user-list">
+    <div class="contact-list">
+
+
     </div>
 
 </div>
 <!--col4 End -->
 
-<div id="message-list" class="col-lg-8 col-md-8 col-sm-12 col-xs-12 chat-section">
+<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 chat-section">
+
+    <div class="profile online">
+        <a href="#" class="pull-left">
+            <figure class="profile-picture">
+                <!--img src="images/pro4.jpg" class="img-circle img-responsive" alt="User Name"-->
+            </figure>
+        </a>
+        <!--h5>User Name Comes Here</h5-->
+    </div>
+
+    <div class="chat-messages">
+        <ul class="messages" data-user-id="">
+
+
+        </ul>
+    </div>
+
+    <div class="write-message">
+        <form class="row">
+
+            <div class="form-group col-xs-1">
+                <div class="btn-group dropup">
+                    <a class="attachment" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-paperclip"></i>
+
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a><i class="fa fa-music"></i></a></li>
+                        <li class="divider"></li>
+                        <li><a><i class="fa fa-video-camera"></i></a></li>
+                        <li class="divider"></li>
+                        <li><a><i class="fa fa-image"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="form-group col-xs-10">
+                <textarea data-context="message" data-action="chat-send" class="form-control" placeholder="Write message"></textarea>
+            </div>
+
+            <div class="form-group col-xs-1 sent">
+                <a  data-action="chat-send" href="#"><i class="fa fa-paper-plane"></i></a>
+            </div>
+
+        </form>
+    </div>
+
 </div>
 <!--col8 End -->
 
 </section>
-<script>
-    $(document).ready(function(){
 
-        $('body').on('click', '.load-chat-messaging', function(e){
-            e.stopPropagation();
-            var other_user = $(this).attr('data-user-id');
-            $.ajax({
-                url: '/messaging/message-list?user=' + other_user
-            }).done(function (data) {
-                $('#message-list').html('');
-                $('#message-list').append(data);
-                setInterval(function(){
-                    $.ajax({
-                        url: '/messaging/updates?user=' + other_user
-                    }).done(function (data) {
-                        $('#message-list-enumerage').append(data);
-                    });
-                }, 2000);
-            });
-        });
+
+<script>
+    $(document).ready(function () {
+        var initial = '{{initial.id}}';
+        var chat_list = {};
 
         var user_listing = function(){
             $.ajax({
-                url: '/messaging/user-list'
-            }).done(function (data) {
+                url: '/messaging/user-list'+ '?initial=' + initial
+            }).done(function (response) {
+                var data = response.result;
+                console.log(data);
                 $('#user-list').html('');
-                $('#user-list').append(data);
+                var html = '';
+                for(var i = 0; i < data.length; i++) {
+
+                    var id = data[i].id;
+                    var name = data[i].name;
+                    var image = data[i].image;
+                    var notification = data[i].notifications;
+                    html += '<div class="contact" data-user-id="'+id+'">' +
+                                '<a class="pull-left">' +
+                                    '<figure><img class="img-circle img-responsive" alt="" src="'+image+'"></figure>' +
+                                '</a>' +
+                                '<h5>'+ name +'</h5><small>&nbsp;<span class="badge">'+notification+'</span>&nbsp;</small>' +
+                            '</div>'
+                }
+                $('.contact-list').html('');
+                $('.contact-list').html(html);
+            });
+        };
+
+        var message_listing = function(data, refresh) {
+            var full_html = '';
+            for(var i = 0; i < data.length; i++) {
+                var whose = (data[i].my)?'my': 'friend';
+                var mesg = data[i].message;
+                var time = data[i].time;
+                var image = data[i].image;
+                console.log(image + ', ' + mesg);
+                var html = '<li class="'+whose+'-message clearfix">' +
+                    '<figure class="profile-picture">' +
+                        '<img src="' + image + '" class="img-circle img-responsive" alt="">' +
+                    '</figure>' +
+                    '<div class="message">' + mesg + '<div class="time"><i class="fa fa-clock-o"></i> ' + time + '</div>'+'</div>' +
+                '</li>';
+                full_html += html;
+            }
+            if (refresh) {
+                $('.messages').html('');
+            }
+            $('.messages').append(full_html);
+        };
+
+        var load_updates = function(other_user) {
+            $.ajax({
+                url: '/messaging/updates?user=' + other_user
+            }).done(function (response) {
+                var data = response.result;
+                message_listing(data, false);
             });
         }
+
+        $('body').on('click', '.contact', function(e){
+            e.stopPropagation();
+            var other_user = $(this).attr('data-user-id');
+            $('.messages').attr('data-user-id', other_user);
+            $.ajax({
+                url: '/messaging/message-list?user=' + other_user
+            }).done(function (response) {
+                var data = response.result;
+                message_listing(data, true);
+                var updater = setInterval(function(){
+                    load_updates(other_user);
+                }, 10000);
+                chat_list[other_user] = updater;
+                for(key in chat_list) {
+                    if (key == other_user) continue;
+                    clearInterval(chat_list[key]);
+                }
+
+            });
+        });
+
+        $('body').on({
+                    click: function(e) {
+                        e.stopPropagation();
+                        send_message();
+                    },
+                    keypress: function(e) {
+                        var code = e.keyCode || e.which;
+                        if (code == 13)  {
+                            send_message();
+                            e.stopPropagation();
+                        }
+                    }
+                }
+                , '[data-action="chat-send"]');
+
+        var send_message = function() {
+            var message = $('[data-context="message"]').val();
+            if (message == undefined || message.length == 0)
+                return;
+            $('[data-context="message"]').val('');
+            var other_user = $('.messages').attr('data-user-id');
+            $.ajax({
+                type: 'POST',
+                url: '/messaging/create-message',
+                data: {user: other_user, message: message}
+            }).done(function (response) {
+                if(response.status == 'success'){
+                    load_updates(other_user);
+                }
+            });
+        };
+
         user_listing();
-        setInterval(function() {
-            user_listing();
-        }, 10000);
+        setInterval(function() {user_listing()}, 60000);
+
+
+
 
     });
 </script>

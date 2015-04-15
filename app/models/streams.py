@@ -1,3 +1,5 @@
+from app.models.profile import Profile
+from ago import human
 
 __author__ = 'arshad'
 
@@ -93,53 +95,83 @@ class ActivityStream(db.Document):
             profiles.append(profile)
             return ActivityStream.objects(profile__in=profiles, created_timestamp__gt=datetime.datetime.now()).all()
 
-
-class UserMessage(db.EmbeddedDocument):
-    message = db.StringField()
-    author = db.ReferenceField('Profile')
-    read = db.BooleanField(default=False)
-    created_timestamp = db.DateTimeField(default=datetime.datetime.now)
+class ChatTimestamp(db.Document):
+    profile = db.ReferenceField('Profile')
+    last_checked = db.DateTimeField(default=datetime.datetime(2015, 1, 1, 0, 0, 0, 0))
 
 class ChatMessage(db.Document):
     profiles = db.ListField(db.ReferenceField('Profile'))
-    messages = db.ListField(db.EmbeddedDocumentField(UserMessage))
-    cleared = db.ListField(db.ReferenceField('Profile'))
+    message = db.StringField()
+    author = db.ReferenceField('Profile')
+    receiver_read = db.BooleanField(default=False)
+    created_timestamp = db.DateTimeField(default=datetime.datetime.now)
 
-    def __unicode__(self): return "%s -> %s" % (str(self.profiles), str(len(self.messages)))
+    meta = {
+        'indexes': [
+            {'fields': ['profiles','-created_timestamp'], 'unique': False, 'sparse': False, 'types': False },
+        ],
+    }
+
+    @property
+    def since(self): return human(self.created_timestamp, precision=1)
+
+    def __unicode__(self): return "%s" % str(self.profiles)
 
     # Only two profiles
     @classmethod
     def create_message(cls, from_profile, to_profile, mesg):
-        message = ChatMessage.objects(profiles__in=[from_profile, to_profile]).first()
-        if not message:
-            message = ChatMessage(profiles=[from_profile, to_profile], messages=[UserMessage(message=mesg, author=from_profile)])
-        else:
-            message.messages.append(UserMessage(message=mesg, author=from_profile))
+        message = ChatMessage(profiles=sorted([from_profile, to_profile]), message=mesg, author=from_profile)
         message.save()
         ActivityStream.push_message_to_stream(to_profile, message)
+        return message
 
 
     @classmethod
-    def get_messages(cls, profile):
-
-        message_list = {}
-        for message in ChatMessage.objects(profiles__in=[profile], cleared__nin=[profile]).all():
-            for p in message.profiles:
-                if p.id == profile.id:
-                    continue
-                message_list.setdefault(str(p.id), [])
-                message_list[str(p.id)].append(message)
-        return message_list
+    def get_user_list(cls, profile):
+        user_list = {}
+        pipeline = []
+        pipeline.append({'$unwind': '$profiles'})
+        cond = {'$cond': { 'if': { '$eq': [ "receiver_read", False] }, 'then': 1, 'else': 0 }}
+        pipeline.append({'$group': {'_id': '$profiles', 'count': {'$sum':cond}}})
+        result = ChatMessage._get_collection().aggregate(pipeline)['result']
+        for u in result:
+            p = Profile.objects(id=u['_id']).first()
+            if p == profile:
+                continue
+            user_list[p] = u['count']
+        return user_list
 
     @classmethod
-    def get_message_between(cls, profile, another_profile):
-        return  ChatMessage.objects(profiles__in=[profile, another_profile], cleared__nin=[profile]).first()
+    def get_message_between(cls, profile, another_profile, all=False):
+        chat_timestamp = ChatTimestamp.objects(profile=profile).first()
+
+        if not chat_timestamp:
+            chat_timestamp = ChatTimestamp(profile=profile)
+            chat_timestamp.last_checked = datetime.datetime(2015, 1, 1, 0, 0, 0, 0)
+        if all:
+            chats = list(reversed(ChatMessage.objects(__raw__=dict(profiles={'$all': [profile.id, another_profile.id]})).order_by('-created_timestamp').all()))
+        else:
+            chats = list(reversed(ChatMessage.objects(__raw__=dict(profiles={'$all': [profile.id, another_profile.id]}, created_timestamp={'$gte': chat_timestamp.last_checked})).order_by('-created_timestamp').all()))
+        for c in chats:
+            if c.author != profile:
+                c.receiver_read = True
+                c.save()
+
+        chat_timestamp.last_checked = datetime.datetime.now()
+        chat_timestamp.save()
+        return chats
+
 
     @classmethod
     def get_by_id(cls, id):
         return ChatMessage.objects(pk=id).first()
 
-    def clear_messages(self, profile):
-        if profile not in self.cleared:
-            self.cleared.append(profile)
-
+    """
+    @classmethod
+    def _generate_random_messages(cls, p1, p2):
+        import random
+        mesg = 'This is a test message ' + ' '.join(str(random.randint(121313, 21312312312312)) for u in xrange(7))
+        _mesg = mesg.split(' ')
+        random.shuffle(_mesg)
+        cls.create_message(p1, p2, ' '.join(_mesg))
+    """

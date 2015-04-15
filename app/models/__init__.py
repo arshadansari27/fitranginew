@@ -155,6 +155,15 @@ class Node(object):
     def get_by_slug(cls, slug):
         return cls.objects(slug__iexact=slug).first()
 
+    def __lt__(self, other):
+        return (isinstance(other, self.__class__) and str(self.id) < str(other.id))
+
+    def __eq__(self, other):
+        return (isinstance(other, self.__class__) and str(self.id) == str(other.id))
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 
 class Entity(Node):
     name = db.StringField()
@@ -209,7 +218,7 @@ class NodeFactory(object):
         from app.models.store import Product
         from app.models.profile import Profile, ProfileType
         from app.models.trip import Trip
-        from app.models.streams import ActivityStream, ChatMessage, UserMessage
+        from app.models.streams import ActivityStream, ChatMessage
         from app.models.relationships import RelationShips
         name = name.lower()
 
