@@ -169,7 +169,7 @@ class ActivityAdminView(ModelView):
 class AdventureAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'about', 'location', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image', 'activities', 'reviews']
+    form_columns = ['name', 'description', 'about', 'location', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image', 'activities']
     column_list = ('name', 'description', 'cover_image')
     column_filters = ['name', FilterLocation('location.id', 'Location'), FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name',)
