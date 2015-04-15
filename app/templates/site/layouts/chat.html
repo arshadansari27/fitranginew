@@ -1,0 +1,60 @@
+<section class="container fitrangi-conversation">
+
+<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 contact-section">
+    <div class="profile online">
+        <a href="#" class="pull-left">
+            <figure class="profile-picture">
+                <img src="{{user.cover_image_path}}" class="img-circle img-responsive" alt="{{user.name}}">
+            </figure>
+        </a>
+        <h5>{{user.name}}</h5>
+
+    </div>
+
+    <div  id="user-list">
+    </div>
+
+</div>
+<!--col4 End -->
+
+<div id="message-list" class="col-lg-8 col-md-8 col-sm-12 col-xs-12 chat-section">
+</div>
+<!--col8 End -->
+
+</section>
+<script>
+    $(document).ready(function(){
+
+        $('body').on('click', '.load-chat-messaging', function(e){
+            e.stopPropagation();
+            var other_user = $(this).attr('data-user-id');
+            $.ajax({
+                url: '/messaging/message-list?user=' + other_user
+            }).done(function (data) {
+                $('#message-list').html('');
+                $('#message-list').append(data);
+                setInterval(function(){
+                    $.ajax({
+                        url: '/messaging/updates?user=' + other_user
+                    }).done(function (data) {
+                        $('#message-list-enumerage').append(data);
+                    });
+                }, 2000);
+            });
+        });
+
+        var user_listing = function(){
+            $.ajax({
+                url: '/messaging/user-list'
+            }).done(function (data) {
+                $('#user-list').html('');
+                $('#user-list').append(data);
+            });
+        }
+        user_listing();
+        setInterval(function() {
+            user_listing();
+        }, 10000);
+
+    });
+</script>

@@ -97,22 +97,24 @@ class ActivityStream(db.Document):
 class UserMessage(db.EmbeddedDocument):
     message = db.StringField()
     author = db.ReferenceField('Profile')
+    read = db.BooleanField(default=False)
+    created_timestamp = db.DateTimeField(default=datetime.datetime.now)
 
-class Message(db.Document):
+class ChatMessage(db.Document):
     profiles = db.ListField(db.ReferenceField('Profile'))
     messages = db.ListField(db.EmbeddedDocumentField(UserMessage))
     cleared = db.ListField(db.ReferenceField('Profile'))
 
-    def __unicode__(self): return "%s -> %s: %s" % (self.from_user.name, self.to_user.name, self.subject)
+    def __unicode__(self): return "%s -> %s" % (str(self.profiles), str(len(self.messages)))
 
     # Only two profiles
     @classmethod
-    def create_message(cls, from_profile, to_profile, message):
-        message = Message.objects(profiles__in=[from_profile, to_profile]).first()
+    def create_message(cls, from_profile, to_profile, mesg):
+        message = ChatMessage.objects(profiles__in=[from_profile, to_profile]).first()
         if not message:
-            message = Message(profiles=[from_profile, to_profile], messages=[UserMessage(message=message, author=from_profile)])
+            message = ChatMessage(profiles=[from_profile, to_profile], messages=[UserMessage(message=mesg, author=from_profile)])
         else:
-            message.messages.append(UserMessage(message=message, author=from_profile))
+            message.messages.append(UserMessage(message=mesg, author=from_profile))
         message.save()
         ActivityStream.push_message_to_stream(to_profile, message)
 
@@ -121,7 +123,7 @@ class Message(db.Document):
     def get_messages(cls, profile):
 
         message_list = {}
-        for message in Message.objects(profiles__in=[profile], cleared__nin=[profile]).all():
+        for message in ChatMessage.objects(profiles__in=[profile], cleared__nin=[profile]).all():
             for p in message.profiles:
                 if p.id == profile.id:
                     continue
@@ -131,11 +133,11 @@ class Message(db.Document):
 
     @classmethod
     def get_message_between(cls, profile, another_profile):
-        return  Message.objects(profiles__in=[profile, another_profile], cleared__nin=[profile]).first()
+        return  ChatMessage.objects(profiles__in=[profile, another_profile], cleared__nin=[profile]).first()
 
     @classmethod
     def get_by_id(cls, id):
-        return Message.objects(pk=id).first()
+        return ChatMessage.objects(pk=id).first()
 
     def clear_messages(self, profile):
         if profile not in self.cleared:

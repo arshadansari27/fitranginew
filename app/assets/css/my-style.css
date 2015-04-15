@@ -1,8 +1,27 @@
 
 body{
-	font-family: 'lato', Arial, Helvetica, sans-serif;
+	font-family: 'roboto', Arial, Helvetica, sans-serif;
+}
+.fitrangi-conversation .contact-section .contact-list::-webkit-scrollbar,
+.fitrangi-conversation .chat-section .chat-messages::-webkit-scrollbar{
+        width: 8px;
+}
+.fitrangi-conversation .contact-section .contact-list::-webkit-scrollbar-track,
+.fitrangi-conversation .chat-section .chat-messages::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,0.5); 
+/*        -webkit-border-radius: 10px;
+        border-radius: 10px;*/
 }
 
+.fitrangi-conversation .contact-section .contact-list::-webkit-scrollbar-thumb,
+.fitrangi-conversation .chat-section .chat-messages::-webkit-scrollbar-thumb{
+       -webkit-border-radius: 10px;
+        border-radius: 10px;
+        background:#ddd; 
+        -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,0.9); 
+}
+
+	
 .w-100{width:100%}
 .w-75{width:75%}
 .w-50{width:50%}
@@ -356,11 +375,15 @@ min-height: 50px;}
 	background:rgba(205, 205, 205, 0.5);
 }
 
-.btn-primary, .btn-default{
+.btn-primary{
 	padding:10px 20px;
 	border-radius:0px;
 }
-
+.btn-default{
+	background-color: rgba(255,255,255,0.5);
+	padding:10px 20px;
+	border-radius:0px;
+}
 
 /*---------------------------------- COLOR END --------------------------------------*/
 
@@ -2420,6 +2443,21 @@ ul.pagination li a{
 	padding:10px;
 	font-weight:400;
 }
+.userprofile-banner .user-button .btn-group > .btn:first-child {
+	margin-left:5px ;
+}
+.setting-drop{
+  position: relative;
+  left: 116px;
+}
+
+.userprofile-banner .user-button .setting-drop li a{
+	display:block ;
+}
+
+
+
+
 
 .userprofile-banner .user-desc{
 	color:#fff;
@@ -2461,8 +2499,11 @@ ul.pagination li a{
 
 .status {
 	padding:5px 15px;
-	box-shadow:0 0 1px 2px #e3e4e8;
-	border-radius:0px;
+	-webkit-box-shadow: 0 2px 2px rgba(0,0,0,0.15);
+  	box-shadow: 0 2px 2px rgba(0,0,0,0.15);
+  	border: none;
+  	border-radius: 2px;
+	background-color: #f0f1f3;
 }
 .status h5{
 	text-align:left;
@@ -2492,24 +2533,29 @@ ul.pagination li a{
 .status .form-group{
 	background:#FFF;
 	overflow:hidden;
+	padding: 10px;
 }
 .status .form-group textarea{
 	background-color: transparent;
-  	border: 0;
+  	border: 1px solid #efefef;
+	border-radius:0;
   	-webkit-box-sizing: border-box;
   	outline: 0;
 	width: 100%;
 	color:#9197A3;
-	font-family:'lucida grande',tahoma,verdana,arial,sans-serif;
 }
-
+.status .form-group textarea:focus{
+	box-shadow:none;
+	-webkit-box-shadow:none;
+}
 .status ul.list-inline li a .fa{
-	color:#B3B8BD;
+	/*color: #6d7486;*/
+	color:rgba(89, 94, 108, 0.5);
 	font-size:18px;
-	padding:10px 12px;
+	padding: 0px 10px;
 }
 .status ul.list-inline li a .fa:hover, .status ul.list-inline li a .fa:focus{
-	color:#1076BC;
+	color:#000;
 }
 
 @media(max-width:767px){
@@ -2641,7 +2687,8 @@ section.user-post{
 	padding:0 20px;
 }
 .fitrangi-trips .capbottom a span{
-	color:#7F7F7F;
+	/*color:#7F7F7F;*/
+	color: #0F75BC;
 }
 .fitrangi-trips .captop article{
 	right:0px;
@@ -3512,6 +3559,50 @@ section.user-post{
 
 
 
+.change-password .heading h2{
+	 font-family: 'oswald', Arial, Helvetica, sans-serif;
+	 color:#848484;
+	 padding:5px;
+	 border-bottom:1px solid #eaeaea;
+}
+
+
+
+.fitrangi-form {
+	margin:50px 0;
+}
+
+.fitrangi-form .form-group label{
+	text-transform:uppercase;
+	font-family: 'lato', Arial, Helvetica, sans-serif;
+	color:#0F75BC;
+	padding:0 20px;
+}
+.fitrangi-form input{
+	height:50px;
+	border:none;
+	border-radius: 0px;
+	-webkit-box-shadow: none;
+  	box-shadow: none;
+	border-bottom:3px solid #F2F2F2;
+	padding:13px 20px; 
+}
+.fitrangi-form textarea{
+	height:auto;
+	border:none;
+	border-radius: 0px;
+	-webkit-box-shadow: none;
+  	box-shadow: none;
+	border-bottom:3px solid #F2F2F2;
+	padding:13px 20px; 
+}
+.fitrangi-form input:focus, .fitrangi-form input:active, .fitrangi-form textarea:focus, .fitrangi-form textarea:active{
+	box-shadow:none;
+	-webkit-box-shadow:none;
+	border-bottom:3px solid #dadada; 
+}
+
+
 
 /*--------------------- FITRANGI PROFILE START------------------------------*/
 /*fitrangi-profile replaced by fitrangi-pro remove fitrangi-profile on the end*/
@@ -3563,3 +3654,351 @@ section.user-post{
 }
 
 /*--------------------- FITRANGI PROFILE END------------------------------*/
+
+.fitrangi-conversation{
+  	margin-top: 20px;
+  	margin-bottom: 20px;
+	padding: 5px;
+  	background: gainsboro;
+}
+
+.fitrangi-conversation .contact-section{
+	padding:1px;
+}
+
+.fitrangi-conversation .chat-section{
+	padding:1px;
+}
+
+.profile.online {
+  background-color: #16a085;
+}
+.profile.busy {
+  background-color: #d24d57;
+}
+.profile.away {
+  background-color: #eb974e;
+}
+.profile.offline {
+  background-color: #95a5a6;
+}
+.profile .busy,
+.profile .away,
+.profile .offline {
+    display: none;
+}
+        
+.profile.busy .online,
+.profile.away .online,
+.profile.offline .online {
+	display: none;
+}
+        
+.profile.busy .busy,
+.profile.away .away,
+.profile.offline .offline {
+	display: inline-block;
+}
+.label-status {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.label-online{background-color:#16a085}
+.label-busy{background-color:#d24d57}
+.label-away{background-color:#eb974e}
+.label-offline{background-color:#95a5a6}
+		
+.fitrangi-conversation .contact-section .profile, .fitrangi-conversation .chat-section .profile{
+	  width: 100%;
+	  height: 100px;
+	  padding: 15px;
+	  /*background-image:url(../images/chat-profile-bg.svg);*/
+	  -webkit-transition: all 0.3s ease;
+	  -moz-transition: all 0.3s ease;
+	  -ms-transition: all 0.3s ease;
+	  -o-transition: all 0.3s ease;
+	  transition: all 0.3s ease;
+}
+
+.fitrangi-conversation .contact-section .profile .profile-picture, .fitrangi-conversation .chat-section .profile .profile-picture {
+  width: 70px;
+  height: 70px;
+  margin-right: 10px;
+}
+.fitrangi-conversation .contact-section .profile .profile-picture img, .fitrangi-conversation .chat-section .profile .profile-picture img {
+  width: 100%;
+  border: 2px solid #fff;
+}
+.fitrangi-conversation .contact-section .profile h5, .fitrangi-conversation .chat-section .profile h5{
+  margin: 5px 0;
+  font-size: 16px;
+  font-weight: 400;
+  color:#fff;
+}
+.fitrangi-conversation .contact-section .profile .btn-group.open .dropdown-toggle, .fitrangi-conversation .contact-section .profile .btn-group.open .dropdown-toggle:focus{
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.fitrangi-conversation .contact-section .profile .btn-group a.dropdown-toggle:before{
+	content:'Status: ';
+}
+.fitrangi-conversation .contact-section .profile .btn-group a {
+	  font-family: 'lato', Arial, Helvetica, sans-serif;
+	  color: #fff;
+	  cursor: pointer;
+	  text-decoration: none !important;
+	  font-weight: 400;
+	  font-size: 14px;
+	  -webkit-box-shadow: none;
+	  box-shadow: none;
+}
+
+.fitrangi-conversation .contact-section .profile .status-dropdown{
+	border: none;
+	border-radius: 0;
+	box-shadow: none;
+	padding: 0;
+	margin: 1px 0 0;
+}
+.fitrangi-conversation .contact-section .profile .status-dropdown>li>a {
+    padding: 10px;
+    color: #fff;
+}
+    
+.fitrangi-conversation .contact-section .profile .status-dropdown.default>li>a,
+.fitrangi-conversation .contact-section .profile .status-dropdown.default>li>a:hover {
+	color: #666;
+}
+    
+.fitrangi-conversation .contact-section .profile .status-dropdown > li > a:hover,
+.status-dropdown > li > a:focus {
+	outline: none;
+}
+.fitrangi-conversation .contact-section .profile .status-dropdown>li>a:hover {
+	color: #fff;
+}
+    
+.fitrangi-conversation .contact-section .profile .status-dropdown .divider {
+	margin: 0;
+}
+
+
+.fitrangi-conversation .contact-section .contact-list{
+	padding: 0;
+	max-height: 470px;
+	min-height: 475px;
+	overflow: auto;
+	background:#FFFFFF;
+	cursor: all-scroll;
+}
+.fitrangi-conversation .chat-section .chat-messages{
+	padding: 0;
+	max-height: 420px;
+	min-height: 414px;
+	overflow: auto;
+	background:#FFFFFF;
+	cursor: all-scroll;
+}
+
+
+.fitrangi-conversation .contact-section .contact{
+  padding:7px 5px;
+  border-bottom: 1px solid #ddd;
+  margin: 0;
+  cursor:pointer;
+}
+
+.fitrangi-conversation .contact-section .contact figure{
+	width: 50px;
+  	height: 50px;
+  	margin-right: 10px;
+}
+.fitrangi-conversation .contact-section .contact figure img{
+  width: 100%;
+  border: 2px solid #fff;
+}
+.fitrangi-conversation .contact-section .contact h5{
+  margin: 5px 0;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+}
+.fitrangi-conversation .contact-section .contact small{
+	color:#444;
+}
+
+
+.fitrangi-conversation .chat-section .chat-messages .messages{
+	  list-style: none;
+	  margin: 0;
+	  padding: 10px;
+}
+.fitrangi-conversation .chat-section .chat-messages .messages > li {
+  margin-bottom: 10px;
+}
+.fitrangi-conversation .chat-section .chat-messages .messages figure{
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+.fitrangi-conversation .chat-section .chat-messages .messages figure img{
+	width: 100%;
+  border: 2px solid #fff;
+}
+.fitrangi-conversation .chat-section .chat-messages .messages .friend-message .profile-picture {
+	float: left;
+}
+.fitrangi-conversation .chat-section .chat-messages .messages .my-message .profile-picture {
+	float: right;
+}
+
+
+
+.messages .message {
+  background-color: #f6f6f6;
+  color: #000;
+}
+.messages .message {
+  position: relative;
+  min-height: 40px;
+  padding: 10px;
+  font-weight: 400;
+  font-size: 12px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.messages .message .time {
+  color: #999;
+  margin-top: 4px;
+  line-height: 10px;
+  font-size: 10px;
+  text-align: right;
+}
+
+
+
+
+
+.friend-message .message {
+  background-color: #EDEDED;
+  margin-left: 70px;
+}
+.friend-message .message:before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: -10px;
+  width: 0;
+  height: 0;
+  border-top: 0 solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #EDEDED;
+}
+
+
+.my-message .message {
+  margin-right: 70px;
+  background-color: #F5F5F5;
+}
+
+.my-message .message:before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: -10px;
+  width: 0;
+  height: 0;
+  border-top: 0 solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid #F5F5F5;
+}
+
+
+
+.write-message{
+  background-color: #F0EEED;
+  padding:3px 0;
+}
+.write-message .row{
+	margin:0;
+}
+.write-message .form-group:first-child {
+  text-align: center;
+}
+.write-message .form-group:last-child {
+  text-align: center;
+}
+.write-message .attachment{
+  display: block;
+  color: #fff;
+}
+
+.write-message .dropdown-menu {
+  left: 0px;
+  min-width: 50px;
+  margin-bottom: 5px;
+  text-align: center;
+  background:#eaeaea;
+}
+.write-message .dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  color: #333;
+}
+.write-message .dropdown-menu:after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  bottom: -10px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #eaeaea;
+}
+.write-message .form-group {
+  margin: 0 ;
+  padding: 0;
+}
+.write-message .form-control {
+  background-color: #FFFFFF;
+  color: #000;
+  border-radius:0;
+  border:none;
+  box-shadow:none;
+  -webkit-box-shadow:none;
+  border-bottom: 3px inset #777;
+  overflow: hidden;
+  resize: none;
+  height: 50px;
+  padding: 5px;
+}
+.write-message .form-control:focus, .write-message textarea:focus{
+	box-shadow:none;
+  -webkit-box-shadow:none;
+  border:none;
+  border-bottom: 3px inset #aaa;
+}
+
+.write-message .attachment .fa{
+	color:#333;
+	font-size:20px;
+	vertical-align: middle;
+	text-align:center;
+	padding:15px 25px;
+}
+.write-message .sent a{
+	text-decoration:none;
+	color:#333;
+	font-size:16px;
+	padding:14px 25px;
+	display:block;
+}

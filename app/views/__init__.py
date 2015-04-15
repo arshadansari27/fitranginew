@@ -77,3 +77,4 @@ def get_menu_selection(request_path):
     return menu
 
 from .common import *
+from .messaging import *

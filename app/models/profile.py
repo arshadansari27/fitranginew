@@ -6,7 +6,6 @@ from mongoengine import *
 from app.models import update_content, Entity, db, new_object
 from activity import Activity
 from adventure import Adventure
-from streams import Message
 import datetime, hashlib
 from ago import human
 

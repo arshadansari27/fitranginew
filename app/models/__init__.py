@@ -209,7 +209,7 @@ class NodeFactory(object):
         from app.models.store import Product
         from app.models.profile import Profile, ProfileType
         from app.models.trip import Trip
-        from app.models.streams import ActivityStream, Message, UserMessage
+        from app.models.streams import ActivityStream, ChatMessage, UserMessage
         from app.models.relationships import RelationShips
         name = name.lower()
 
@@ -225,7 +225,7 @@ class NodeFactory(object):
         elif name == DISCUSSION: return Discussion
         elif name == CHANNEL: return Channel
         elif name == STREAM: return ActivityStream
-        elif name == MESSAGE: return  Message
+        elif name == MESSAGE: return  ChatMessage
         elif name == RELATIONSHIPS: return RelationShips
         elif name == PROFILE_TYPE: return ProfileType
         elif name == ADVERTISEMENT: return Advertisement
