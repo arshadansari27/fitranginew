@@ -7,12 +7,18 @@ from flask.ext.mongoengine import MongoEngine
 from flask.ext.mandrill import Mandrill
 from flask.ext.mongorest import MongoRest
 from app import settings
+from pymongo import read_preferences
 
 
 app = Flask(__name__, template_folder='templates', static_folder='assets', static_url_path='')
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 app.config['SECRET_KEY'] = os.urandom(24)
-app.config['MONGODB_SETTINGS'] = {'db': settings.MONGODB_DB, 'host': settings.MONGODB_HOST, 'port': settings.MONGODB_PORT}
+app.config['MONGODB_SETTINGS'] = {
+    'db': settings.MONGODB_DB,
+    'host': settings.MONGODB_HOST,
+    'port': settings.MONGODB_PORT,
+    'read_preference': read_preferences.ReadPreference.PRIMARY
+}
 app.config['MANDRILL_API_KEY'] = 'AW8kuRPFtDyZpOrgSf-0BQ'
 app.config['MANDRILL_DEFAULT_FROM'] = 'noreply@fitrangi.com'
 mandrill = Mandrill(app)
