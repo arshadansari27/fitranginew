@@ -127,12 +127,12 @@
                 <li class="dropdown">
                     <div class="top-icon">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="/media/profile/{{user.id}}/cover" class="radius-20 profile-pic" alt="profile" width="40">
+                            <img src="{% if not user or not user.cover_image or user.cover_image.format %}/img/Profile-Picture.jpg{% else %}/media/profile/{{user.id}}/cover{% endif %}" class="radius-20 profile-pic" alt="profile" width="40">
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu pull-right">
                             <li>
-                                <img class="img-responsive" src="/media/profile/{{user.id}}/cover" />
+                                <img class="img-responsive" src="{% if not user or not user.cover_image or user.cover_image.format %}/img/Profile-Picture.jpg{% else %}/media/profile/{{user.id}}/cover{% endif %}" />
                             </li>
                             <li><a data-action="edit-profile" data-model-id="{{user.id}}" data-user-id="{{user.id}}" href="#"><i class="fa fa-user"></i>&nbsp;Edit Profile</a></li>
                             <li><a data-action="edit-profile-preferences" data-model-id="{{user.id}}" data-user-id="{{user.id}}" href="#"><i class="fa fa-cog"></i>&nbsp;Edit Preference</a></li>
@@ -148,6 +148,7 @@
 
         </div>
 
+        {% if menu.app_name in ['explore', 'community'] %}
         <div class="container-fluid border-grey-t">
         	<ul class="nav navbar-nav nav-down">
                 {% if menu.app_name == 'explore' %}
@@ -170,8 +171,7 @@
                 {% endif %}
             </ul>
         </div>
-
-
+        {% endif %}
 
         </div><!-- /.navbar-collapse -->
       </div>

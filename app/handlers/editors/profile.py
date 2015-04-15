@@ -1,3 +1,4 @@
+from app.handlers.messaging import send_single_email
 from app.models.profile import Profile, ProfileType
 from app.models.relationships import RelationShips
 from app.models.event import Event
@@ -6,6 +7,7 @@ from app.models.activity import Activity
 from app.models.adventure import Adventure
 from app.models import Node, NodeFactory, LOCATION
 from app.handlers.editors import NodeEditor, response_handler
+from flask import session
 import hashlib
 
 __author__ = 'arshad'
@@ -14,8 +16,10 @@ __author__ = 'arshad'
 class ProfileEditor(NodeEditor):
 
     def _invoke(self):
-        if   self.command == 'edit-profile':
+        if self.command == 'edit-profile':
             return edit_profile(self.node, self.data)
+        elif self.command == 'subscribe':
+            return subscribe(self.data)
         elif self.command == 'cover-image-edit':
             return edit_cover_image(self.node, self.data)
         elif self.command == 'change-password':
@@ -75,6 +79,18 @@ def edit_profile(profile, data):
             node.location = None
     node.save()
     return node
+
+@response_handler('Successfully subscribed', 'Failed to subscribe', login_required=False)
+def subscribe(data):
+    email = data.get('email', None)
+    assert email is not None
+    node = Profile.objects(email__iexact=email).first()
+    if not node:
+        type = ProfileType.objects(name__iexact='Subscription Only').first()
+        node = Profile(email=email, type=[type])
+        node.save()
+    return node
+
 
 @response_handler('Successfully updated the profile pic', 'Failed to update the profile pic')
 def edit_cover_image(profile, data):
@@ -213,12 +229,33 @@ def edit_profile_preference(profile, data):
     node.save()
     return node
 
-@response_handler('Successfully registered', 'Failed to register')
+@response_handler('Successfully registered', 'Failed to register', login_required=False)
 def register_profile(data):
-    profile = Profile.create(data['name', data['email']])
+    name, email, password = data['name'], data['email'], data['password']
+    subscription_type = ProfileType.objects(name__icontains='subscription').first()
+    if Profile.objects(email__iexact=email, type__nin=[str(subscription_type.id)]).first():
+        raise Exception('Profile already exists')
+
+    type = ProfileType.objects(name__iexact='Enthusiast').first()
+    profile = Profile.objects(email__iexact=email).first()
+    if not profile:
+        profile = Profile.create(name=name, email=email, type=[type], roles=['Basic User'])
+    else:
+        profile.type = [type]
     profile.password = data['password']
     profile.save()
+
+    if profile and profile.id:
+        from app.views import env
+        session['user'] = str(profile.id)
+        template_path = 'notifications/successfully_registered.html'
+        template = env.get_template(template_path)
+        context = {}
+        context['user']  = profile
+        html = template.render(**context)
+        send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=html)
     return profile
+
 
 @response_handler('Successfully updated business status', 'Failed to update business status')
 def business_profile_edit(action, profile):

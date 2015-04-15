@@ -4,14 +4,6 @@
 jQuery(document).ready(function ($) {
 
     var App = window.App;
-    $(".show_login").click(function (e) {
-        e.stopPropagation();
-        App.show_login();
-    });
-    $(".show_signup").click(function (e) {
-        e.stopPropagation();
-        App.show_registration();
-    });
 
     var show_dialog_message = function(dialogRef, status, message) {
 
@@ -26,6 +18,62 @@ jQuery(document).ready(function ($) {
             }, 1000);
         }
     };
+
+    $(".show_login").click(function (e) {
+        e.stopPropagation();
+        window.$loginDialog = new BootstrapDialog({
+            size: BootstrapDialog.SIZE_WIDE,
+            title: "Sign in",
+            message: $('<div></div>').load('/login-modal')
+        });
+        window.$loginDialog.realize();
+        window.$loginDialog.open();
+    });
+
+    $(".show_signup").click(function (e) {
+        e.stopPropagation();
+        window.$signupDialog = new BootstrapDialog({
+                title: "Registration",
+                message: $('<div></div>').load('/registration-modal'),
+                buttons: [
+                    {
+                        label: 'Register',
+                        cssClass: 'btn-primary',
+                        action: function (dialog) {
+                            var name = $('#signup-name').val();
+                            var email = $('#signup-email').val();
+                            var password = $("#signup-password").val();
+                            var confirm = $("#signup-confirm").val();
+                            console.log("Registering with: " + name + ", " + email + ", " + password + ", " + confirm);
+                            if (name == undefined || name.length == 0 || email == undefined || email.length == 0 || password == undefined || password.length < 4) {
+                                show_dialog_message(dialog, 'error', 'Enter correct data');
+                                return;
+                            }
+                            if (password != confirm) {
+                                show_dialog_message(dialog, 'error', 'Passwords do no match');
+                                return;
+                            }
+                            App.profile.register_profile(name, email, password, function(data){
+                                show_dialog_message(dialog, data.status, data.message);
+                                if (data.status == 'success') {
+                                    setTimeout(function(){dialog.close();}, 1000);
+                                }
+                            });
+                        }
+                    },
+                    {
+                        label: 'Close',
+                        action: function (dialogItself) {
+                            dialogItself.close();
+                        }
+                    }
+                ]
+        });
+
+        window.$signupDialog.realize();
+        window.$signupDialog.open();
+    });
+
 
     var filterSearch = '[data-filter-submit="search"]';
     $('body').on('click', filterSearch, function (e) {
@@ -310,13 +358,12 @@ jQuery(document).ready(function ($) {
                             if (data.status == 'success') {
                                 setTimeout(function(){dialog.close();}, 1000);
                             }
-                        })
+                        });
                     }
                 }
             ]
         });
     });
-
 
     $('.show_subscribe').click(function () {
         subscription_modal_text = '<div><div id="subscribe-form"><input type="text" id="subscription-name" class="form-control" placeholder="Name" required="Please Enter Your Name"><br/><input type="email" id="subscription-email" class="form-control" placeholder="email" required="Please Enter Your Email">' + '</div>' + '<div id="subscribe-message"></div>' + '</div>';
@@ -338,15 +385,8 @@ jQuery(document).ready(function ($) {
                         var subscription_name = $('#subscription-name').val();
                         var subscription_email = $('#subscription-email').val();
                         console.log('Subscribing: ' + subscription_name + ", " + subscription_email);
-                        $.ajax({
-                            type: 'POST',
-                            url: '/subscribe',
-                            data: {
-                                name: subscription_name,
-                                email: subscription_email
-                            }
-                        }).done(function (msg) {
-                            $('#subscribe-message').html(msg.message);
+                        App.profile.subscribe(subscription_name, subscription_email, function(data){
+                            $('#subscribe-message').html(data.message);
                             $('#subscribe-message').addClass('alert');
                             if (msg.status == 'success') {
                                 $('#subscribe-form').hide();

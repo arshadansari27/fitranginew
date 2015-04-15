@@ -245,13 +245,22 @@ $(document).ready(function() {
         App.editor(options);
     };
 
-    App.profile.register_profile= function(data) {
+    App.profile.register_profile= function(name, email, password, callback) {
         var options = {
-            data: data,
+            data: {name: name, email: email, password: password},
             type: 'profile',
             command: 'register-profile'
         };
-        App.editor(options);
+        App.editor(options, callback);
+    };
+
+    App.profile.subscribe = function(name, email, callback) {
+        var options = {
+            data: {name: name, email: email},
+            type: 'profile',
+            command: 'subscribe'
+        };
+        App.editor(options, callback);
     };
 
     App.profile.business_profile_edit= function(node, data) {
