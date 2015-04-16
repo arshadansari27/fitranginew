@@ -31,7 +31,7 @@ def get_current_user():
         return None
 
 def mkdirp(directory):
-    pritn 'Checking directory'
+    print 'Checking directory'
     if not os.path.isdir(directory):
         print 'Creating directory: ',directory
         os.makedirs(directory)
