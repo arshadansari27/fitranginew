@@ -101,5 +101,9 @@ def save_cover(type, model, url):
         node.cover_image.replace(open(path, 'rb'))
     if type == 'profile':
         node.uploaded_image_cover = True
+    path = os.getcwd() + '/app/assets/' + node.path_cover_image if len(node.path_cover_image) > 0 else 'some-non-existent-path'
+    if os.path.exists(path):
+        os.remove(path)
+
     node.save()
     return node
