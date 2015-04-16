@@ -101,7 +101,7 @@ def save_media_to_file(obj, attr, name):
             if i is 0:
                 dir_path = base_path + '/' + dir_list[0]
             else:
-                dir_path = base_path + '/'.join(dir_list[:i + 1])
+                dir_path = base_path +'/' + '/'.join(dir_list[:i + 1])
             mkdirp(dir_path)
 
         path = '/' + '/'.join(dir_list) + '/' + name + '.' + _format
@@ -127,7 +127,7 @@ class Node(object):
 
     @property
     def cover_image_path(self):
-        path = str(self.path_cover_image) if hasattr(self, 'path_cover_image') and self.path_cover_image else ''
+        path = str(self.path_cover_image) if hasattr(self, 'path_cover_image') and self.path_cover_image else '-'
         if path and len(path) > 0 and os.path.exists(base_path + path):
             return path
         path = save_media_to_file(self, 'cover_image', 'cover')
