@@ -51,7 +51,11 @@ class NodeEditor(object):
     def invoke(self):
         try:
             print '[Editor] Request:', self.message
-            response = self._invoke()
+
+            if self.command == 'save-cover':
+                response = save_cover(self.type, self.data['model'], self.data['url'])
+            else:
+                response = self._invoke()
             print '[Editor] Response:', response
             return jsonify(response)
         except Exception, e:
@@ -65,9 +69,12 @@ class NodeEditor(object):
         from app.handlers.editors.profile import ProfileEditor
         from app.handlers.editors.post import PostEditor
         from app.handlers.editors.content import ContentEditor
+
         type = message['type']
         if type is None:
             raise Exception("Invalid message")
+        if type == 'base':
+            return NodeEditor(message)
         elif type == PROFILE:
             return ProfileEditor(message)
         elif type == POST:
@@ -76,3 +83,23 @@ class NodeEditor(object):
             return ContentEditor(message, ARTICLE)
         elif type == DISCUSSION:
             return ContentEditor(message, DISCUSSION)
+
+
+@response_handler(success="Successfully uploaded cover image", failure="Failed to upload cover image")
+def save_cover(type, model, url):
+    from app.models import NodeFactory
+    node = NodeFactory.get_by_id(type, model)
+    if not node:
+        raise Exception("Invalid model id")
+    image = url
+    if image and len(image) > 0:
+        image       = image.split('/')[-1]
+        path        = os.getcwd() + '/tmp/' + image
+    else:
+        raise Exception('Invalid image')
+    if path:
+        node.cover_image.replace(open(path, 'rb'))
+    if type == 'profile':
+        node.uploaded_image_cover = True
+    node.save()
+    return node

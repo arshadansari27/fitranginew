@@ -156,7 +156,7 @@ def social_login():
         profile.save()
 
 
-    if profile.is_social_login and profile.id:
+    if profile.is_social_login and profile.id and hasattr(profile, 'uploaded_image_cover') and not profile.uploaded_image_cover:
         img_uploaded = request.form['file']
         if img_uploaded and len(img_uploaded) > 0:
             try:
@@ -172,10 +172,15 @@ def social_login():
             except Exception, e:
                 raise e
 
+    if profile:
         session['user'] = str(profile.id)
         return jsonify(dict(location='/stream/me', status='success'))
 
     return jsonify(dict(location=url_for('login'), status='error'))
+
+@app.route('/cover-image-modal', methods=['GET'])
+def cover_image_modal():
+    return render_template('site/modals/cover-edit.html')
 
 @app.route('/login-modal', methods=['GET'])
 def login_modal():
