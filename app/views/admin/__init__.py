@@ -21,6 +21,7 @@ from app.models.event import Event
 from app.models.trip import Trip
 from app.models.relationships import RelationShips
 import mongoengine
+from mongoengine import Q
 from flask.ext.admin.contrib.mongoengine.filters import BooleanEqualFilter, FilterLike, BaseMongoEngineFilter
 
 from flask.ext.admin.contrib.mongoengine.ajax import QueryAjaxModelLoader
@@ -325,10 +326,10 @@ class ChannelAdminView(ModelView):
 
 class ApprovalContentAdminView(ModelView):
     can_create = False
-    can_edit = False
+    can_edit = True
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['title', 'description', 'content', 'author', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'comments', 'source', 'published', 'admin_published']
+    form_columns = ['title', 'description', 'content', 'author', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'admin_published']
     column_list = ('title', 'author', 'published', 'admin_published')
     form_overrides = dict(description=SummernoteTextAreaField, content=SummernoteTextAreaField)
 
@@ -339,9 +340,25 @@ class ApprovalContentAdminView(ModelView):
 
     def get_query(self):
         if 'Admin' in g.user.roles:
-            return self.model.objects(published=True, admin_published=False)
-        else:
-            return self.model.objects(author=g.user, published=True, admin_published=False)
+            q = {'$and':
+                [
+                    {'published': True},
+                    {
+                        '$or':
+                        [
+                            {
+                                'admin_published': None
+                            },
+                            {
+                                'admin_published': False
+                            }
+                        ]
+                    }
+                ]
+            }
+
+            return self.model.objects(__raw__=q)
+        return None
 
 
 class PreferenceView(flask_admin.BaseView):

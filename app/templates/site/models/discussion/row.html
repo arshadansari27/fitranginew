@@ -11,7 +11,7 @@
 
     <div class="media-right">
     	<a href=""><span class="fa fa-comment"></span> {{model.comments|length}}</a>
-        <a href=""><span class="fa fa-tag"></span> {% for t in model.tag_refs %}{{t.name}}{% if not loop.last %}, {% endif %}{% endfor %}</a>
+        <a href=""><span class="fa fa-tag"></span> {% for t in model.tags%}{{t}}{% if not loop.last %}, {% endif %}{% endfor %}</a>
         <a class="last-seen">{{model.since}}</a>
     </div>
 </li>

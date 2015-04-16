@@ -8,7 +8,7 @@
                 <a  data-action="follow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" title="follow" class="btn btn-default btn-xs mt-10 grey pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-plus"></i></a>
             {% endif %}
         {% endif %}
-        <h4><a href="{{model.slug}}">{% if model.name|length > 35 %}{{model.name[0:35]}}...{% else %}{{model.name}}{% endif %}</a></h4>
+        <h4><a href="{{model.slug}}">{% if model and model.name and model.name|length > 35 %}{{model.name[0:35]}}...{% elif model %}{{model.name}}{% else %}Unknown{% endif %}</a></h4>
         <h5><span class="fa fa-map-marker"></span> {% if model.location %} {{model.location.name }}{% else %} Unknown{% endif %}</h5>
     </article>
 </li>

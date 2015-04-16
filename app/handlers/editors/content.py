@@ -67,7 +67,6 @@ def __edit(node, type, data):
         channels = NodeExtractor.factory(CHANNEL, dict(name='Journal')).get_list(True, 1, 1)
     else:
         channels = []
-    assert len(channels) > 0
 
     image = data.get('image')
     if image and len(image) > 0:

@@ -108,6 +108,7 @@
                     <section class="container-fluid">
                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
                             <input type="hidden" id="my-stream-filter" data-model="stream" data-filter="profile" data-category="my" value="{{model.id}}"/>
+                            <input id="stream-message-filter" type="hidden" data-model="stream" data-filter="is_private" value="bool|False" data-category="my">
                             {{ my_stream_list|safe }}
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
@@ -197,5 +198,6 @@
         App.filter('profile-following-filter');
         App.filter('fitrangi-stream-type-filter');
         App.filter('fitrangi-stream-profile-filter');
+        App.filter('stream-message-filter');
     });
 </script>
