@@ -6,12 +6,14 @@ from ago import human
 import cStringIO
 from mongoengine import signals
 from flask.ext.mongoengine.wtf import model_form
+import os
 
 from app import db
 from app.models.extra.fields import ListField
-from app.utils import convertLinks
+from app.utils import convertLinks, mkdirp
 
 
+base_path = os.getcwd() + '/app/assets'
 db.ListField = ListField
 
 
@@ -41,9 +43,6 @@ def update_content(sender, document):
     if hasattr(document, 'published'):
         if document.published and document.published_timestamp is None:
             document.published_timestamp = datetime.datetime.now()
-    if hasattr(document, 'tag_refs'):
-        if len(document.tag_refs) != len(document.tags) and not all(v.name in set(document.tags) for v in document.tag_refs):
-            document.update_tags_list()
     from app.models.content import Content
     if isinstance(document, Entity):
         use = document.name
@@ -73,50 +72,75 @@ def update_slug(sender, document, type, title):
 
 class EmbeddedImageField(db.EmbeddedDocument):
     image = db.ImageField(thumbnail_size=(128, 128))
+    path = db.StringField()
     alt = db.StringField()
     copyright = db.StringField()
+
+    def image_path(self, parent, i):
+        path = str(self.path) if hasattr(self, 'path') and self.path else ''
+        if path and len(path) > 0 and os.path.exists(path):
+            return path
+        path = save_media_to_file(self, 'image', 'gallery_'% i)
+        if path:
+            self.path = path
+            parent.save()
+            return path
+        else:
+            return ''
+
+def save_media_to_file(obj, attr, name):
+    obj = obj.__class__.objects(id=obj.id).first()
+    image = getattr(obj, attr)
+    if image and image.size:
+        img = Image.open(image)
+        _format = img.format
+        _format = _format.lower()
+
+        dir_list = ['media', obj.__class__.__name__.lower(), str(obj.id)]
+        for i in xrange(len(dir_list)):
+            if i is 0:
+                dir_path = base_path + '/' + dir_list[0]
+            else:
+                dir_path = base_path + '/'.join(dir_list[:i + 1])
+            mkdirp(dir_path)
+
+        path = '/' + '/'.join(dir_list) + '/' + name + '.' + _format
+        file_path = base_path + path
+        print '[*] Save media', file_path
+
+        with open(file_path, 'wb') as file_io:
+            img.save(file_io, _format, quality=70)
+            print '[*] Media path', path
+            return path
+    else:
+        return None
 
 
 class Node(object):
 
     description = db.StringField()
     cover_image = db.ImageField(thumbnail_size=(128, 128))
+    path_cover_image = db.StringField()
     created_timestamp = db.DateTimeField(default=datetime.datetime.now)
     modified_timestamp = db.DateTimeField(default=datetime.datetime.now)
     slug = db.StringField()
 
     @property
     def cover_image_path(self):
-        if self.cover_image and self.cover_image.size:
-            return '/media/' + self.__class__.__name__.lower() + '/' + str(self.id) + '/cover'
+        path = str(self.path_cover_image) if hasattr(self, 'path_cover_image') and self.path_cover_image else ''
+        if path and len(path) > 0 and os.path.exists(base_path + path):
+            return path
+        path = save_media_to_file(self, 'cover_image', 'cover')
+        if path:
+            self.path_cover_image = path
+            self.save()
+            return path
         else:
             return '/img/Profile-Picture.jpg'
 
     @property
-    def gallery_image_path(self):
-        return '/media/' + self.__class__.__name__.lower() + '/' + str(self.id) + '/gallery/'
-
-    def get_cover_image(self):
-        if not hasattr(self, 'cover_image') or not self.cover_image:
-            return None, None
-        img_io = cStringIO.StringIO()
-        if not hasattr(self, 'cover_image') and self.cover_image is None:
-            return None, None
-        img = Image.open(self.cover_image)
-        format = img.format
-        img.save(img_io, format, quality=70)
-        img_io.seek(0)
-        return img_io, format
-
-    def get_gallery_image(self, index):
-        e_i = self.image_gallery[index]
-        i = e_i.image
-        img_io = cStringIO.StringIO()
-        img = Image.open(i)
-        format = img.format
-        img.save(img_io, "JPEG", quality=70)
-        img_io.seek(0)
-        return img_io, format
+    def gallery_image_list(self):
+        return [u.image_path(self, i) for i, u in enumerate(self.image_gallery)]
 
     @property
     def gallery_size(self):

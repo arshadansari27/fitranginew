@@ -76,7 +76,9 @@
             $.ajax({
                 url: url
             }).done(function (data) {
-                container.html('');
+                if (window.current_page[page_key] <= 1) {
+                    container.html('');
+                }
                 if (data.status == 'success') {
                     container.append(data.html);
 
