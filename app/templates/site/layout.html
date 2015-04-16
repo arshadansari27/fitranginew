@@ -127,7 +127,7 @@
                 <li class="dropdown">
                     <div class="top-icon">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="{% if not user or not user.cover_image or not user.cover_image.format %}/img/Profile-Picture.jpg{% else %}/media/profile/{{user.id}}/cover{% endif %}" class="radius-20 profile-pic" alt="profile" width="40">
+                            <img src="{{user.cover_image_path}}" class="radius-20 profile-pic" alt="profile" width="40">
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu pull-right">
