@@ -530,6 +530,7 @@ class ProfileView(NodeView):
             'article_list': ArticleCollectionView("grid", "", is_partial=True, category="all").get_card(),
             'my_stream_list': StreamCollectionView("row", "", is_partial=(not is_same), category="my", fixed_size=False, stream_owner=model, logged_in_user=logged_in_user, parent=logged_in_user).get_card(),
             'fitrangi_posts': PostCollectionView("grid", "", is_partial=True, only_list=True, fixed_size=True, category="fitrangi").get_card(),
+            'featured_profiles': ','.join([str(u.id) for u in NodeExtractor.factory("profile", dict(featured=True)).get_list(False, 1, 10)])
         }
 
     def get_card_context(self):

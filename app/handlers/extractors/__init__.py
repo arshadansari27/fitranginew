@@ -61,6 +61,10 @@ class NodeExtractor(object):
             filters = {}
             for k, v in self.filters.iteritems():
                 print k, v
+                if not isinstance(v, str) and not isinstance(v, unicode):
+                    print '->', k, v, type(v)
+                    filters[k] = v
+                    continue
                 if '|' in v:
                     u = v.split('|')
                     if u[0] == 'bool':
@@ -103,6 +107,8 @@ class NodeExtractor(object):
             if len(merge) > 0:
                 to_add = []
                 for m in merge:
+                    if not filters.has_key(m):
+                        continue
                     for k in filters.keys():
                         if k.startswith(m) and k.endswith('in'):
                             to_add.append((m, k, filters[m]))

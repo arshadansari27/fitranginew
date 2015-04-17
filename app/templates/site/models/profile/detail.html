@@ -123,7 +123,7 @@
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <h4 class="blue pb-5 border-grey-b">Fitrangi.com Popular Stream Feeds</h4>
                             <input type="hidden" id="fitrangi-stream-type-filter" data-model="post" data-filter="type" data-category="fitrangi" value="stream"/>
-                            <input type="hidden" id="fitrangi-stream-profile-filter" data-model="post" data-filter="author__profile__email" data-category="fitrangi" value="arshadansari27@gmail.com"/>
+                            <input type="hidden" id="fitrangi-stream-profile-filter" data-model="post" data-filter="author__in" data-category="fitrangi" value="{{featured_profiles}}"/>
                             {{ fitrangi_posts|safe}}
                         </div>
                     </section>
