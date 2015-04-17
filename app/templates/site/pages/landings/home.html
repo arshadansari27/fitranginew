@@ -193,17 +193,13 @@
     <h2 class="my-h2">Popular Profiles</h2>
 
     <div class="container">
-        <div  class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
         {{ enthusiast_profile|safe}}
         <input id="enthusiast-filter" data-category="enthusiast" data-model="profile" data-filter="type__profile_type__name" type="hidden" value="Enthusiast">
         <input id="enthusiast-featured-filter" data-category="enthusiast" data-model="profile" data-filter="featured" type="hidden" value="bool|1">
-        </div>
         <hr>
-         <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12">
         <input id="organizer-filter" data-category="organizer" data-model="profile" data-filter="type__profile_type__name__ne" type="hidden" value="Enthusiast">
         <input id="organizer-featured-filter" data-category="organizer" data-model="profile" data-filter="featured" type="hidden" value="bool|1">
         {{ organizer_profile|safe}}
-        </div>
         <div class="pull-right">
             <a href="/community/profile" class="btn btn-primary">View All</a>
         </div>
