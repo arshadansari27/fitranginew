@@ -61,6 +61,7 @@ def __edit(node, type, data):
         raise Exception("title is required")
     description = data.get('description', '')
     content         = data.get('content', '')
+    video = data.get('video', '')
     author          = g.user
     tags = data.get('tags', None)
     if type == 'article':
@@ -77,6 +78,10 @@ def __edit(node, type, data):
     obj = get_or_create_content(type, node)
     obj.title = title
     obj.content = content
+    if video:
+        if not obj.video_embed:
+            obj.video_embed = []
+        obj.video_embed.append(video)
     obj.author = author
     obj.tags = tags
     obj.description = description

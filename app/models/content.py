@@ -39,6 +39,20 @@ class ContentCommon(Node):
     content = db.StringField()
     author = db.ReferenceField('Profile')
 
+    def get_videos_list(self):
+        if not self.video_embed or len(self.video_embed) is 0:
+            return []
+
+        videos = []
+        for v in self.video_embed:
+            if 'watch?' in v and 'v=' in v:
+                video_id = v[v.index('v=') + 2:]
+                videos.append('<embed class="col-sm-12" height="400px" src="http://www.youtube.com/v/%s">' % video_id)
+                break
+
+        return videos[0] if len(videos) > 0 else None
+
+
 @update_content.apply
 class Content(ContentCommon, db.Document):
     title = db.StringField()

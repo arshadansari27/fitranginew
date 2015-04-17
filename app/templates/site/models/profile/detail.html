@@ -112,6 +112,11 @@
                     <section class="container-fluid">
                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
                             <input type="hidden" id="my-stream-filter" data-model="stream" data-filter="profile" data-category="my" value="{{model.id}}"/>
+                            {% if model.id == user.id %}
+                            <input type="hidden" id="following-stream-filter" data-model="stream" data-filter="profile__in" data-category="my" value="{% for f in model.following %}{{f.id}}{% if not loop.last%},{% endif %}{% endfor %}"/>
+                            {% else %}
+                            <input type="hidden" id="following-stream-filter" data-model="stream" data-filter="profile__in" data-category="my" value=""/>
+                            {% endif %}
                             <input id="stream-message-filter" type="hidden" data-model="stream" data-filter="is_private" value="bool|False" data-category="my">
                             {{ my_stream_list|safe }}
                         </div>
@@ -203,5 +208,7 @@
         App.filter('fitrangi-stream-type-filter');
         App.filter('fitrangi-stream-profile-filter');
         App.filter('stream-message-filter');
+        App.filter('my-stream-filter');
+        App.filter('following-stream-filter');
     });
 </script>

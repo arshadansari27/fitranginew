@@ -35,6 +35,10 @@
             </article>
         </div>
         <hr class="clearfix divider"/>
+        {% if model.get_videos_list() %}
+        <div class="col-sm-12 thumbnail">{{model.get_videos_list()|safe}}</div>
+        <hr/>
+        {% endif %}
         {{model.process_content|safe}}
         <hr/>
 

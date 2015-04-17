@@ -7,10 +7,11 @@ $(document).ready(function() {
     App.content = App.content || {};
 
 
-    App.content.add = function(type, title, description, image, channels, tags, content, callback) {
+    App.content.add = function(type, title, description, video, image, channels, tags, content, callback) {
         var data = {
             title: title,
             description: description,
+            video: video,
             image: image,
             channels: channels,
             tags: tags,
@@ -24,10 +25,11 @@ $(document).ready(function() {
         App.editor(options, callback);
     };
 
-    App.content.edit = function(node, type, title, description, image, channels, tags, content, callback) {
+    App.content.edit = function(node, type, title, description, video, image, channels, tags, content, callback) {
         var data = {
             title: title,
             description: description,
+            video: video,
             image: image,
             channels: channels,
             tags: tags,

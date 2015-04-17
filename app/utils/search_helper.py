@@ -13,6 +13,7 @@ def listing_helper():
     page = int(request.args.get('page', 1))
     size = int(request.args.get('size', 6))
     search_query = request.args.get('query', None)
+    print '[*] Search Query:', search_query
     context = dict(model_name=model_view, card_type=card_type, page=page, size=size, search_query=search_query)
     context = force_setup_context(context)
     collection_view = NodeCollectionView.factory(model_view, card_type, query=search_query, page=page, size=size, is_partial=True, only_list=False, category='all')
