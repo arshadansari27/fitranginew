@@ -6,3 +6,4 @@ db_address.txt
 *.log
 *.rdb
 tmp/
+media/

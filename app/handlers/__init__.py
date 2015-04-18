@@ -241,9 +241,12 @@ class NodeCollectionView(View):
 class StreamCollectionView(NodeCollectionView):
 
     def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None, category='all', stream_owner=None, logged_in_user=None):
-        super(StreamCollectionView, self).__init__(STREAM, card_type, query, page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size, category=category)
         self.model_name = STREAM
+        super(StreamCollectionView, self).__init__(STREAM, card_type, query, page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size, category=category)
+        print '[*] getting Stream for query', query, stream_owner, logged_in_user
         if stream_owner and hasattr(stream_owner, 'id'):
+            if not logged_in_user and hasattr(g, 'user') and g.user:
+                logged_in_user = logged_in_user
             if logged_in_user and hasattr(logged_in_user, 'id') and logged_in_user.id == stream_owner:
                 profiles = stream_owner.following
                 profiles.append(stream_owner)
@@ -527,6 +530,7 @@ class ProfileView(NodeView):
             'article_list': ArticleCollectionView("grid", "", is_partial=True, category="all").get_card(),
             'my_stream_list': StreamCollectionView("row", "", is_partial=(not is_same), category="my", fixed_size=False, stream_owner=model, logged_in_user=logged_in_user, parent=logged_in_user).get_card(),
             'fitrangi_posts': PostCollectionView("grid", "", is_partial=True, only_list=True, fixed_size=True, category="fitrangi").get_card(),
+            'featured_profiles': ','.join([str(u.id) for u in NodeExtractor.factory("profile", dict(featured=True)).get_list(False, 1, 10)])
         }
 
     def get_card_context(self):

@@ -25,6 +25,7 @@
 
 
     <div class="container discussion">
+        <input id="admin-published-filter" type="hidden" data-model="discussion" data-filter="admin_published" value="bool|True"/>
         {{discussion|safe}}
     </div>
 
@@ -132,3 +133,10 @@
     </div>
 
 </section-->
+<script>
+    $(document).ready(function(){
+        var App = window.App;
+        App.filter('admin-published-filter');
+
+    });
+</script>

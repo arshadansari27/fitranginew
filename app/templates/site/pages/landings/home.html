@@ -176,6 +176,7 @@
 
 
     <div class="container">
+        <input id="article-admin-published-filter" type="hidden" data-model="article" data-filter="admin_published" value="bool|True"/>
 
         {{journal|safe}}
 
@@ -229,6 +230,7 @@
     <h2 class="my-h2" >Trending Discussion</h2>
 
     <div class="container">
+        <input id="discussion-admin-published-filter" type="hidden" data-model="discussion" data-filter="admin_published" value="bool|True"/>
         {{discussion|safe}}
         <div class="pull-right">
             <a href="/community/discussion" class="btn btn-primary">View All</a>
@@ -246,6 +248,8 @@
             App.filter('organizer-filter');
             App.filter('enthusiast-featured-filter');
             App.filter('organizer-featured-filter');
+            App.filter('discussion-admin-published-filter');
+            App.filter('article-admin-published-filter');
 
 
             $('.search-btn').click(function(e){

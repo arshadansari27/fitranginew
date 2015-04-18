@@ -365,6 +365,49 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    $('body').on('click', '[data-action="edit-cover-image"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var model_id = $(this).attr('data-model-id');
+        var model = $(this).attr('data-model');
+        if (model == undefined || model.length == 0 || model_id == undefined || model_id.length == 0){
+            BootstrapDialog.alert('Something went wrong, please try again after refreshing the page.');
+            return;
+        }
+        BootstrapDialog.show({
+            title: 'Upload cover image',
+            message: $('<div></div>').load('/cover-image-modal'),
+            icon: 'glyphicon glyphicon-send',
+            autospin: true,
+            buttons: [
+                {
+                    label: 'Close',
+                    action: function(dialog) {
+                        dialog.close();
+                    }
+                },
+                {
+                    label: 'Upload',
+                    cssClass: 'btn-primary',
+                    action: function(dialog){
+                        $('.form-group').hide();
+                        App.uploader(dialog);
+                    }
+                },
+                {
+                    label: 'Save',
+                    cssClass: 'btn-primary',
+                    action: function(dialog){
+                        var url = $('.upload-image').val();
+                        App.base_editor.save_image_cover(model, model_id, url);
+                    }
+                }
+            ]
+        });
+    });
+
+
+
     $('.show_subscribe').click(function () {
         subscription_modal_text = '<div><div id="subscribe-form"><input type="text" id="subscription-name" class="form-control" placeholder="Name" required="Please Enter Your Name"><br/><input type="email" id="subscription-email" class="form-control" placeholder="email" required="Please Enter Your Email">' + '</div>' + '<div id="subscribe-message"></div>' + '</div>';
         console.log(subscription_modal_text);
@@ -423,6 +466,8 @@ jQuery(document).ready(function ($) {
         postToFeed(elem.data('title'), elem.data('desc'), elem.data('href'), elem.data('image'));
         return false;
     });
+
+    $('.hoverable').popover({trigger: 'hover'});
 
     var App = window.App;
     if (window.App.doFilter != undefined && window.App.doFilter.length != undefined) {

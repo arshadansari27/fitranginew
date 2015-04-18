@@ -46,6 +46,7 @@ class Profile(Entity, db.Document):
     deactivated = db.BooleanField(default=False)
     is_verified = db.BooleanField(default=False)
     is_social_login = db.BooleanField(default=False)
+    uploaded_image_cover = db.BooleanField(default=False)
 
     meta = {
         'indexes': [

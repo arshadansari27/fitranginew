@@ -15,7 +15,11 @@
             <div class="row">
 
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 user-pro">
+                    {% if user and model.id == user.id %}
+                    <a href="#"  role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Click to change" class="hoverable" data-action="edit-cover-image" data-model-id="{{model.id}}" data-model="profile" data-trigger="hover"><img src="{% if not model.cover_image_path or model.cover_image_path|length == 0%}/img/Profile-Picture.jpg{% else %}{{model.cover_image_path}}{% endif %}" alt="" class="center-block text-center img-thumbnail img-responsive"></a>
+                    {% else %}
                     <img src="{% if not model.cover_image_path or model.cover_image_path|length == 0%}/img/Profile-Picture.jpg{% else %}{{model.cover_image_path}}{% endif %}" alt="" class="center-block text-center img-thumbnail img-responsive">
+                    {% endif %}
                 </div>
 
                 <div class="col-lg-9 col-md-4 col-sm-4 col-xs-12 name-location">
@@ -108,13 +112,18 @@
                     <section class="container-fluid">
                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
                             <input type="hidden" id="my-stream-filter" data-model="stream" data-filter="profile" data-category="my" value="{{model.id}}"/>
+                            {% if model.id == user.id %}
+                            <input type="hidden" id="following-stream-filter" data-model="stream" data-filter="profile__in" data-category="my" value="{% for f in model.following %}{{f.id}}{% if not loop.last%},{% endif %}{% endfor %}"/>
+                            {% else %}
+                            <input type="hidden" id="following-stream-filter" data-model="stream" data-filter="profile__in" data-category="my" value=""/>
+                            {% endif %}
                             <input id="stream-message-filter" type="hidden" data-model="stream" data-filter="is_private" value="bool|False" data-category="my">
                             {{ my_stream_list|safe }}
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <h4 class="blue pb-5 border-grey-b">Fitrangi.com Popular Stream Feeds</h4>
                             <input type="hidden" id="fitrangi-stream-type-filter" data-model="post" data-filter="type" data-category="fitrangi" value="stream"/>
-                            <input type="hidden" id="fitrangi-stream-profile-filter" data-model="post" data-filter="author__profile__email" data-category="fitrangi" value="arshadansari27@gmail.com"/>
+                            <input type="hidden" id="fitrangi-stream-profile-filter" data-model="post" data-filter="author__in" data-category="fitrangi" value="{{featured_profiles}}"/>
                             {{ fitrangi_posts|safe}}
                         </div>
                     </section>
@@ -199,5 +208,7 @@
         App.filter('fitrangi-stream-type-filter');
         App.filter('fitrangi-stream-profile-filter');
         App.filter('stream-message-filter');
+        App.filter('my-stream-filter');
+        App.filter('following-stream-filter');
     });
 </script>

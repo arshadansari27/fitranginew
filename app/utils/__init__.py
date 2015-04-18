@@ -30,6 +30,12 @@ def get_current_user():
     else:
         return None
 
+def mkdirp(directory):
+    print 'Checking directory'
+    if not os.path.isdir(directory):
+        print 'Creating directory: ',directory
+        os.makedirs(directory)
+
 def convert_query_to_filter(query):
     filters = []
     if query is None or len(query) is 0:

@@ -74,41 +74,6 @@ def get_image_temp(id):
     buffer.seek(0)
     return send_file(buffer, mimetype='image/' + f.format, add_etags=False, conditional=True)
 
-@app.route("/media/<model_class>/<id>/icon")
-def get_icon_image(model_class, id, index=0):
-    if (id and model_class) is None:
-        return 'Not found', 404
-    model = NodeFactory.get_by_id(model_class, id)
-    if not model.icon_image_path:
-        return 'Not Found', 404
-    return redirect(model.icon_image_path)
-
-
-@app.route("/media/<model_class>/<id>/gallery")
-@app.route("/media/<model_class>/<id>/gallery/<int:index>")
-def get_gallery_image(model_class, id, index=0):
-    if (id and model_class) is None:
-        return 'Not found', 404
-    model = NodeFactory.get_by_id(model_class, id)
-    size = len(model.image_gallery) if hasattr(model, 'image_gallery') else 0
-    if size is 0:
-        return 'Not Found', 404
-    if index >= size:
-        index = size - 1
-    img, format = model.get_icon_image()
-    return send_file(img, mimetype="image/%s" % format.lower())
-
-@app.route("/media/<model_class>/<id>/cover")
-def get_cover_image(model_class, id):
-    if (id and model_class) is None:
-        return 'Not found', 404
-    model = NodeFactory.get_by_id(model_class, id)
-    img, format = model.get_cover_image()
-    if img is None:
-        return ''
-    return send_file(img, mimetype="image/%s" % format.lower())
-
-
 @app.route('/saveimagefromtemp', methods=['POST'])
 @login_required
 def save_image_from_temp():
@@ -156,7 +121,7 @@ def social_login():
         profile.save()
 
 
-    if profile.is_social_login and profile.id:
+    if profile.is_social_login and profile.id and hasattr(profile, 'uploaded_image_cover') and not profile.uploaded_image_cover:
         img_uploaded = request.form['file']
         if img_uploaded and len(img_uploaded) > 0:
             try:
@@ -169,13 +134,22 @@ def social_login():
                 buffer.seek(0)
                 profile.cover_image.replace(buffer)
                 profile.save()
+                path = os.getcwd() + '/app/assets/' + profile.path_cover_image if len(profile.path_cover_image) > 0 else 'some-non-existent-path'
+                if os.path.exists(path):
+                    os.remove(path)
+
             except Exception, e:
                 raise e
 
+    if profile:
         session['user'] = str(profile.id)
         return jsonify(dict(location='/stream/me', status='success'))
 
     return jsonify(dict(location=url_for('login'), status='error'))
+
+@app.route('/cover-image-modal', methods=['GET'])
+def cover_image_modal():
+    return render_template('site/modals/cover-edit.html')
 
 @app.route('/login-modal', methods=['GET'])
 def login_modal():

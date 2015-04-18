@@ -56,10 +56,15 @@ class NodeExtractor(object):
 
     def get_query(self):
         filters = self.init_filters
+        merge = []
         if len(self.filters) > 0:
             filters = {}
             for k, v in self.filters.iteritems():
                 print k, v
+                if not isinstance(v, str) and not isinstance(v, unicode):
+                    print '->', k, v, type(v)
+                    filters[k] = v
+                    continue
                 if '|' in v:
                     u = v.split('|')
                     if u[0] == 'bool':
@@ -90,10 +95,28 @@ class NodeExtractor(object):
                         else:
                             f = fields[0]
                         filters[f] =  __node
+                    elif len(fields) == 2 and fields[1] == 'in':
+                        _values = [u.strip() for u in v.split(',') if u and u.strip() and len(u.strip()) > 0]
+                        filters[k] = _values
+                        merge.append(fields[0])
                     else:
                         filters[k] = v
                 else:
                     filters[k] = v
+
+            if len(merge) > 0:
+                to_add = []
+                for m in merge:
+                    if not filters.has_key(m):
+                        continue
+                    for k in filters.keys():
+                        if k.startswith(m) and k.endswith('in'):
+                            to_add.append((m, k, filters[m]))
+                if len(to_add) > 0:
+                    for m, k, v in to_add:
+                        del filters[m]
+                        filters[k].append(v)
+        print '[',self.model_class(),']Fitlers: ', filters
         return self.model_class().objects(**filters).order_by('-created_timestamp')
 
     def model_class(self):

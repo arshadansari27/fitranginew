@@ -21,6 +21,12 @@
                 <textarea class="form-control" data-name="description" placeholder="Enter blog description" rows="2">{{model.description}}</textarea>
             </div>
 
+
+            <div class="form-group">
+                <label for="video">Youtube video link</label>
+                <input class="form-control" data-name="video-link" placeholder="Paste the link here" value="{% if model.video_embed|length > 0 %}{{model.video_embed[0]}}{% endif %}"/>
+            </div>
+
             <div class="form-group">
                 <div class="thumbnail">
                     <a href="#" data-action="write-content-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/800x400{% endif %}" width="40%"/></a>
@@ -122,16 +128,17 @@
             var description = $('[data-name="description"]').val();
             var content = $('.summernote').code();
             var cover_image = $('[data-name="cover-image"]').val();
+            var video_link = $('[data-name="video-link"]').val();
             var tags = tags;
             if (id != undefined && id.length > 0) {
                 console.log('Edit content: ' + id + "->");
-                editor.edit(id, type, title, description, cover_image, channels, tags, content, function(data){
+                editor.edit(id, type, title, description, video_link, cover_image, channels, tags, content, function(data){
                     $('.alert').show();
                     $('.alert-message').html(data.message);
                 })
             } else {
                 console.log('Add content: ->');
-                editor.add(type, title, description, cover_image, channels, tags, content, function(data){
+                editor.add(type, title, description, video_link, cover_image, channels, tags, content, function(data){
                     $('.alert').show();
                     $('.alert-message').html(data.message);
                     if (data.status == 'success') {
