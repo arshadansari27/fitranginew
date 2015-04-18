@@ -134,7 +134,7 @@ def social_login():
                 buffer.seek(0)
                 profile.cover_image.replace(buffer)
                 profile.save()
-                path = os.getcwd() + '/app/assets/' + profile.path_cover_image if len(profile.path_cover_image) > 0 else 'some-non-existent-path'
+                path = os.getcwd() + '/app/assets/' + profile.path_cover_image if profile.path_cover_image and len(profile.path_cover_image) > 0 else 'some-non-existent-path'
                 if os.path.exists(path):
                     os.remove(path)
 

@@ -41,12 +41,15 @@
 <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 chat-section">
 
     <div class="profile online">
+        <div class="current-chat">
+
         <a href="#" class="pull-left">
             <figure class="profile-picture">
-                <!--img src="images/pro4.jpg" class="img-circle img-responsive" alt="User Name"-->
+                <img id="user-image" src="" class="img-circle img-responsive">
             </figure>
         </a>
-        <!--h5>User Name Comes Here</h5-->
+        <h5 id="user-name"></h5>
+        </div>
     </div>
 
     <div class="chat-messages">
@@ -98,6 +101,8 @@
         var initial = '{{initial.id}}';
         var chat_list = {};
 
+        $('.current-chat').hide();
+
         var user_listing = function(){
             $.ajax({
                 url: '/messaging/user-list'+ '?initial=' + initial
@@ -112,7 +117,7 @@
                     var name = data[i].name;
                     var image = data[i].image;
                     var notification = data[i].notifications;
-                    html += '<div class="contact" data-user-id="'+id+'">' +
+                    html += '<div class="contact" data-user-id="'+id+'" data-user-name="' + name + '" data-user-image="'+ image + '">' +
                                 '<a class="pull-left">' +
                                     '<figure><img class="img-circle img-responsive" alt="" src="'+image+'"></figure>' +
                                 '</a>' +
@@ -158,12 +163,20 @@
         $('body').on('click', '.contact', function(e){
             e.stopPropagation();
             var other_user = $(this).attr('data-user-id');
+            var other_user_name = $(this).attr('data-user-name');
+            var other_user_image = $(this).attr('data-user-image');
+
             $('.messages').attr('data-user-id', other_user);
             $.ajax({
                 url: '/messaging/message-list?user=' + other_user
             }).done(function (response) {
                 var data = response.result;
                 message_listing(data, true);
+
+                $('#user-image').attr('src', other_user_image);
+                $('#user-name').html(other_user_name);
+                $('.current-chat').show();
+
                 var updater = setInterval(function(){
                     load_updates(other_user);
                 }, 10000);

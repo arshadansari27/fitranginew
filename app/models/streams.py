@@ -129,8 +129,12 @@ class ChatMessage(db.Document):
     @classmethod
     def get_user_list(cls, profile):
         user_list = {}
+
+        ids= [p.id for p in ChatMessage.objects(profiles=profile).all()]
+
         pipeline = []
         pipeline.append({'$unwind': '$profiles'})
+        pipeline.append({'$match': {'_id': {'$in': ids}}})
         cond = {'$cond': { 'if': { '$eq': [ "receiver_read", False] }, 'then': 1, 'else': 0 }}
         pipeline.append({'$group': {'_id': '$profiles', 'count': {'$sum':cond}}})
         result = ChatMessage._get_collection().aggregate(pipeline)['result']
