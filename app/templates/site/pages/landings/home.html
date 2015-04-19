@@ -193,10 +193,10 @@
     <div class="container">
         {{ enthusiast_profile|safe}}
         <input id="enthusiast-filter" data-category="enthusiast" data-model="profile" data-filter="type__profile_type__name" type="hidden" value="Enthusiast">
-        <input id="enthusiast-featured-filter" data-category="enthusiast" data-model="profile" data-filter="featured" type="hidden" value="bool|1">
+        <input id="enthusiast-featured-filter" data-category="enthusiast" data-model="profile" data-filter="featured" type="hidden" value="bool|True">
         <hr>
         <input id="organizer-filter" data-category="organizer" data-model="profile" data-filter="type__profile_type__name__ne" type="hidden" value="Enthusiast">
-        <input id="organizer-featured-filter" data-category="organizer" data-model="profile" data-filter="featured" type="hidden" value="bool|1">
+        <input id="organizer-featured-filter" data-category="organizer" data-model="profile" data-filter="featured" type="hidden" value="bool|True">
         {{ organizer_profile|safe}}
 
         <div class="pull-right">
@@ -214,6 +214,7 @@
     <div class="container">
 
         {{ event|safe }}
+        <hr/>
         <div class="pull-right">
             <a href="/community/event" class="btn btn-primary">View All</a>
         </div>

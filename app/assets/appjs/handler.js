@@ -5,6 +5,67 @@ jQuery(document).ready(function ($) {
 
     var App = window.App;
 
+    var load_all_models = function() {
+
+        window.current_page = window.current_page || {};
+        window.filters = window.filters || {};
+
+        /*
+        window.current_page[page_key] = window.current_page[page_key] || 1;
+        window.filters[filter_key] = window.filters[filter_key] || [];
+        var filters_list = window.filters[filter_key];
+        */
+
+        var query = '';
+        for(var u = 0; u < filters_list.length; u++) {
+            console.log('Pre: ' + filters_list[u]);
+            var $input = $('#' + filters_list[u]);
+            var name = $input.attr('data-filter');
+            var value = $input.val();
+            var filter_category= $input.attr('data-category');
+            if (filter_category != undefined && filter_category != null && filter_category.length > 0 &&  filter_category != category) {
+                continue;
+            }
+            console.log('Filter by: ' + filters_list[u] + " -> " + name + ": " + value);
+
+            if (value == undefined ||value == null || value.length == 0 || value == '--') {
+                continue;
+            }
+
+            query += name + ":"  + value;
+            if (u < filters_list.length - 1) {
+                query += ';'
+            }
+        }
+
+        var url = '/listings?model_view=' + model_name + '&card_type=' + card_type + '&page=' + page + '&query=' + query + '&size=' + size;
+        var filter_key = model_name;
+        console.log(url);
+
+        var filters_list = window.filters[filter_key];
+            console.log('[*] ' + window.current_page[page_key] + ' -> ' + window.filters[filter_key]);
+            $.ajax({
+                url: url
+            }).done(function (data) {
+                if (window.current_page[page_key] <= 1) {
+                    container.html('');
+                }
+                if (data.status == 'success') {
+                    container.append(data.html);
+
+                    last_page = data.last_page;
+                    if (!show_load_more || last_page <= window.current_page[page_key]) {
+                       $(loadMoreSelector).hide();
+                    }
+                } else {
+                    container.append('Nothing to load...');
+                }
+                if (!start_over) {
+                    window.current_page[page_key] += 1
+                }
+            });
+    }
+
     var show_dialog_message = function(dialogRef, status, message) {
 
         var box = '<div class="alert alert-'+ ((status=='success')?status: 'danger') +' fade in">'
@@ -475,4 +536,66 @@ jQuery(document).ready(function ($) {
             window.App.doFilter[i]();
         }
     }
+
+    var load_model = function(options, callback) {
+        var query       = options.query;
+        var page        = options.page;
+        var size        = options.size;
+
+        var model       = options.model;
+        var card_type   = options.card_type;
+        var category    = options.category;
+
+        var url = '/listings?model_view=' + model + '&card_type=' + card_type + '&page=' + page + '&query=' + query + '&size=' + size + '&category=' + category;
+        console.log('[*] Loading models from URL: ' + url);
+        $.ajax({
+                url: url
+        }).done(function (data) {
+            if (data.status == 'success') {
+                callback(data);
+            } else {
+                console.log('Nothing to load...');
+            }
+        });
+    };
+
+
+    $('[data-type="model-container"]').each(function(i, elem){
+        var model       = $(elem).attr('data-model');
+        var category    = $(elem).attr('data-category');
+        var card_type   = $(elem).attr('data-card-type');
+        var query = '';
+
+        $('[data-filter][data-model="' + model + '"]').each(function(j, filter_element) {
+            var filter_category     = $(filter_element).attr('data-category');
+            var filter_key          = $(filter_element).attr('data-filter');
+            var filter_value        = $(filter_element).val();
+
+            if (filter_category != undefined && filter_category != category) {
+                return;
+            }
+            if (filter_value == undefined || filter_value == null || filter_value.length == 0 || filter_value == '--') {
+                return;
+            }
+
+            query += filter_key+ ":"  + filter_value + ';';
+        });
+        var options = {
+            query: query,
+            page: 1,
+            size: 24,
+            model: model,
+            category: category,
+            card_type: card_type
+        };
+        console.log('[*]' + JSON.stringify(options));
+        var load_more = $(elem).next('button[data-action="load-more"]');
+        load_model(options,function(data){
+            $(elem).html(data.html);
+            if (data.last_page >= 1 && load_more != undefined)  {
+                $(load_more).hide();
+            }
+        });
+
+    });
 });

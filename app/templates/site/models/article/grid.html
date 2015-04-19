@@ -12,7 +12,7 @@
     </a>
   </div>
 </div-->
-<div class="{{grid_size}} thumbnail" data-model="{{model.id}}">
+<div class="{% block grid_size %}col-lg-4 col-md-4 col-sm-6 col-xs-12{% endblock %} thumbnail" data-model="{{model.id}}">
     <a href="{{model.slug}}">
         <img src="{{model.cover_image_path}}" class="img-responsive" style="height: 209px;">
     	<div class="media">

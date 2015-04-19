@@ -1,11 +1,7 @@
-
-__author__ = 'arshad'
-
-
 from bson import ObjectId
 from mongoengine import Q
 from app.models import ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST, DISCUSSION, STREAM, RELATIONSHIPS, LOCATION, \
-    PROFILE_TYPE, ADVERTISEMENT, CHANNEL
+    PROFILE_TYPE, ADVERTISEMENT, CHANNEL, NodeFactory
 from app.models.streams import ActivityStream
 from app.models.activity import Activity
 from app.models.adventure import Adventure, Location
@@ -14,7 +10,7 @@ from app.models.event import Event
 from app.models.profile import Profile, ProfileType
 from app.models.relationships import RelationShips
 from app.models.trip import Trip
-
+from app.utils import convert_query_to_filter
 
 __author__ = 'arshad'
 
@@ -29,46 +25,47 @@ class JSONEncoder(json.JSONEncoder):
 
 class NodeExtractor(object):
 
-    init_filters = {}
 
-    def __init__(self, filters):
-        self.filters = filters
+    def __init__(self, model_name, init_filters={}):
+        self.model_class = NodeFactory.get_class_by_name(model_name)
+        self.init_filters = init_filters
 
-    def get_list(self, paged, page, size):
+    def get_list(self, query, paged, page, size):
+        query_set = self.get_query(query)
         if paged:
             page = int(page)
+            size = int(size)
             start = (page - 1) * size
             end = start + size
-            print start, end
-            return self.get_query().all()[start: end]
+            print '[*] Pagination', start,'->', end
+            return query_set.all()[start: end]
         else:
-            return self.get_query().all()
+            return query_set.all()
 
-    def get_single(self):
-        return self.get_query().first()
+    def get_single(self, query):
+        return self.get_query(query).first()
 
-    def last_page(self, size):
-        query = self.get_query()
-        count = query.count()
-        page = (count / size) + 1
-        print self.__class__.__name__, page
+    def last_page(self, query, size):
+        query_set = self.get_query(query)
+        count = query_set.count()
+        page = (count / int(size)) + 1
         return page
 
-    def get_query(self):
+    def get_query(self, query):
+        use_filters = convert_query_to_filter(query)
         filters = self.init_filters
         merge = []
-        if len(self.filters) > 0:
+        if len(use_filters) > 0:
             filters = {}
-            for k, v in self.filters.iteritems():
+            for k, v in use_filters.iteritems():
                 print k, v
                 if not isinstance(v, str) and not isinstance(v, unicode):
-                    print '->', k, v, type(v)
                     filters[k] = v
                     continue
-                if '|' in v:
+                elif '|' in v:
                     u = v.split('|')
                     if u[0] == 'bool':
-                        v = True if u[1].strip() == 'True' else False
+                        v = True if u[1].strip() in ('True', '1', 1) else False
                     elif u[0] == 'int':
                         v = int(u[1])
                     elif u[0] == 'float':
@@ -76,20 +73,19 @@ class NodeExtractor(object):
                     else:
                         v = str(u[1])
                     print k, v
+
                 if k.startswith('relationship'):
                     fields = k.split('__')
                     assert len(fields) >= 3
                     relationship = fields[1]
                     from_node_type = fields[2]
-                    from_node = NodeExtractor.factory(from_node_type, dict(pk=v)).get_single()
+                    from_node = NodeExtractor.factory(from_node_type).get_single('pk:%s' % v)
                     nodes = RelationShips.get_by_query(from_node, relationship)
                     filters['id__in'] = [u.id for u in nodes]
                 elif '__' in k:
                     fields = k.split('__')
                     if len(fields) >= 3:
-                        __filters = {}
-                        __filters[fields[2]] = v
-                        __node = NodeExtractor.factory(fields[1], __filters).get_single()
+                        __node = NodeExtractor.factory(fields[1]).get_single('%s:%s' % (fields[2], str(v)))
                         if len(fields) == 4:
                             f = "%s__%s" % (fields[0], fields[3])
                         else:
@@ -116,127 +112,57 @@ class NodeExtractor(object):
                     for m, k, v in to_add:
                         del filters[m]
                         filters[k].append(v)
-        print '[',self.model_class(),']Fitlers: ', filters
-        return self.model_class().objects(**filters).order_by('-created_timestamp')
-
-    def model_class(self):
-        raise Exception("Not implemented")
-
+        print '[*] Filters', filters
+        return self.model_class.objects(**filters).order_by('-created_timestamp')
 
     @classmethod
-    def factory(cls, model_name, filters=None):
+    def factory(cls, model_name):
         if type(model_name) == type:
             model_name = model_name.__name__
         model_name = model_name.lower().strip()
         if model_name == ACTIVITY:
-            cls = ActivityExtractor
+            return activity_extractor
         elif model_name == ADVENTURE:
-            cls = AdventureExtractor
+            return adventure_extractor
         elif model_name == TRIP:
-            cls = TripExtractor
+            return trip_extractor
         elif model_name == EVENT:
-            cls = EventExtractor
+            return event_extractor
         elif model_name == PROFILE:
-            cls = ProfileExtractor
+            return profile_extractor
         elif model_name == ARTICLE:
-            cls =ArticleExtractor
+            return article_extractor
         elif model_name == POST:
-            cls = PostExtractor
+            return post_extractor
         elif model_name == DISCUSSION:
-            cls = DiscussionExtractor
+            return discussion_extractor
         elif model_name == STREAM:
-            cls = ActivityStreamExtractor
+            return stream_extractor
         elif model_name == RELATIONSHIPS:
-            cls = RelationShipExtractor
+            return relationship_extractor
         elif model_name == LOCATION:
-            cls = LocationExtractor
+            return location_extractor
         elif model_name == PROFILE_TYPE:
-            cls = ProfileTypeExtractor
+            return profile_type_extractor
         elif model_name == ADVERTISEMENT:
-            cls = AdvertisementExtractor
+            return advertisement_extractor
         elif model_name == CHANNEL:
-            cls = ChannelExtractor
+            return channel_extractor
         else:
             raise Exception("Invalid model name for extractor")
-        return cls(filters)
 
-class ChannelExtractor(NodeExtractor):
-
-    def model_class(self):
-        return Channel
-
-class AdvertisementExtractor(NodeExtractor):
-
-    def model_class(self):
-        return Advertisement
-
-class ProfileTypeExtractor(NodeExtractor):
-
-    def model_class(self):
-        return ProfileType
-
-class LocationExtractor(NodeExtractor):
-
-    def model_class(self):
-        return Location
-
-class ActivityStreamExtractor(NodeExtractor):
-
-    def model_class(self):
-        return ActivityStream
-
-class ArticleExtractor(NodeExtractor):
-
-    def model_class(self):
-        return Article
-
-
-class DiscussionExtractor(NodeExtractor):
-
-    def model_class(self):
-        return Discussion
-
-
-
-class PostExtractor(NodeExtractor):
-
-    def model_class(self):
-        return Post
-
-
-class ActivityExtractor(NodeExtractor):
-
-    def model_class(self):
-        return Activity
-
-class AdventureExtractor(NodeExtractor):
-
-    def model_class(self):
-        return Adventure
-
-
-
-class EventExtractor(NodeExtractor):
-
-    def model_class(self):
-        return Event
-
-
-class TripExtractor(NodeExtractor):
-
-    def model_class(self):
-        return Trip
-
-
-class ProfileExtractor(NodeExtractor):
-
-    init_filters = dict(type__ne=ProfileType.objects(name__iexact='Subscription Only').first())
-
-    def model_class(self):
-        return Profile
-
-
-class RelationShipExtractor(NodeExtractor):
-
-    def model_class(self):
-        return RelationShips
+stream_extractor = NodeExtractor(STREAM)
+activity_extractor = NodeExtractor(ACTIVITY)
+advertisement_extractor = NodeExtractor(ADVERTISEMENT)
+channel_extractor = NodeExtractor(CHANNEL)
+profile_type_extractor = NodeExtractor(PROFILE_TYPE)
+location_extractor = NodeExtractor(LOCATION)
+article_extractor = NodeExtractor(ARTICLE)
+discussion_extractor = NodeExtractor(DISCUSSION)
+post_extractor = NodeExtractor(POST)
+adventure_extractor = NodeExtractor(ADVENTURE)
+event_extractor = NodeExtractor(EVENT)
+trip_extractor = NodeExtractor(TRIP)
+profile_extractor = NodeExtractor(PROFILE, init_filters=dict(type__ne=ProfileType.objects(name__iexact='Subscription Only').first()))
+all_profile_extractor = NodeExtractor(PROFILE)
+relationship_extractor = NodeExtractor(RELATIONSHIPS)

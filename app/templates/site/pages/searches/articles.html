@@ -90,7 +90,7 @@
 <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home">
 
     <section class="container-fluid fitrangi-blog-thumb">
-        {{cards['all']|safe}}
+        {{all|safe}}
     </section>
 
 </div>
@@ -102,7 +102,7 @@
             <h4 class="border-grey-b pb-5 oswald"> Top Blogs</h4>
             <ul class="blogs-list">
 
-                {{cards['top']|safe}}
+                {{top|safe}}
 
             </ul>
 
@@ -126,7 +126,7 @@
             <input id="my-blog-filter" type="hidden" data-category="my" data-filter="author" data-model="article" value="{{user.id}}"/>
             <h4 class="border-grey-b pb-5 oswald"> My Blogs</h4>
             <ul class="blogs-list">
-                {{cards['my']|safe}}
+                {{my|safe}}
             </ul>
 
         </div>

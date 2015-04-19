@@ -3,7 +3,9 @@ from app.utils import convert_query_to_filter
 __author__ = 'arshad'
 
 from flask import g
-from app.handlers.extractors import NodeExtractor
+from app.handlers.extractors import NodeExtractor, article_extractor, advertisement_extractor, adventure_extractor, \
+    activity_extractor, discussion_extractor, profile_type_extractor, event_extractor, profile_extractor, \
+    trip_extractor, post_extractor, stream_extractor
 from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, POST, STREAM, Node, ADVERTISEMENT
 from app.models.streams import ActivityStream
 from app.models.content import Content, Post, Article, Discussion
@@ -12,6 +14,21 @@ from app.models.activity import Activity
 from app.models.event import Event
 from app.models.trip import Trip
 from app.models.profile import Profile, ProfileType
+
+ICON_VIEW, GRID_VIEW, ROW_VIEW, GRID_ROW_VIEW, DETAIL_VIEW = 'icon', "grid", "row", "grid-row", "detail"
+
+COLLECTION_PATHS = {
+    STREAM: 'site/pages/searches/streams',
+    ADVENTURE: 'site/pages/searches/adventures',
+    PROFILE: 'site/pages/searches/profiles',
+    POST: 'site/pages/searches/posts',
+    DISCUSSION: 'site/pages/searches/discussions',
+    EVENT: 'site/pages/searches/events',
+    ARTICLE: 'site/pages/searches/articles',
+    TRIP: 'site/pages/searches/trips',
+    "explore": 'site/pages/landings/home',
+    "community": 'site/pages/landings/community',
+}
 
 class View(object):
 
@@ -54,551 +71,340 @@ class EditorView(View):
         context['is_edit'] = True if model else False
         return template.render(**context)
 
+class CollectionView(object):
 
-class LandingView(View):
-
-    def __init__(self):
-        pass
-
-    def get_title(self):
-        return "Fitrangi: India's complete adventure portal"
-
-    def get_card(self, context={}):
-        from app.views import env
-        template_path = self.get_template()
-        template = env.get_template(template_path)
-        from app.views import force_setup_context
-        context = self.get_context(context)
-        context = force_setup_context(context)
-        return template.render(**context)
-
-    def get_template(self):
-        raise Exception('Not implemented')
-
-    def get_context(self, context={}):
-        return context
-
-
-class ExploreLandingView(LandingView):
-
-    def __init__(self):
-        super(ExploreLandingView, self).__init__()
-
-    def get_title(self):
-        return "Explore Fitrangi"
-
-    def get_template(self):
-        return "site/pages/landings/home.html"
-
-    def get_context(self, context={}):
-        context['counters'] = dict(adventure=Adventure.objects.count(), profile=Profile.objects(type__ne=ProfileType.objects(name__iexact='subscription only').first()).count(), discussion=Discussion.objects.count(), article=Article.objects.count())
-        context['journal'] = ArticleCollectionView("grid", "", is_partial=True, only_list=True, page=1, size=6, fixed_size=True).get_card(context)
-        context['enthusiast_profile'] = ProfileCollectionView("grid", "type__profile_type__name:Enthusiast;", is_partial=True, only_list=True, page=1, size=4, fixed_size=True, category='enthusiast').get_card(context)
-        context['organizer_profile'] = ProfileCollectionView("grid", "type__profile_type__name:Organizer;", is_partial=True, only_list=True, page=1, size=4, fixed_size=True, category='organizer').get_card(context)
-        context['event'] = EventCollectionView("grid", "", is_partial=True, only_list=True, page=1, size=6, fixed_size=True).get_card(context)
-        context['discussion'] = DiscussionCollectionView("row", "", is_partial=True, only_list=True, page=1, size=6, fixed_size=True).get_card(context)
-        return context
-
-class CommunityLandingView(LandingView):
-
-    def __init__(self):
-        super(CommunityLandingView, self).__init__()
-
-    def get_title(self):
-        return "Community at Fitrangi"
-
-    def get_template(self):
-        return "site/pages/landings/community.html"
-
-    def get_context(self, context={}):
-        context['profile'] = ProfileCollectionView("icon", "", is_partial=True, only_list=True, page=1, size=18, fixed_size=True).get_card(context)
-        context['event'] = EventCollectionView("row", "", is_partial=True, only_list=True, page=1, size=2, fixed_size=True).get_card(context)
-        context['discussion'] = DiscussionCollectionView("row", "", is_partial=True, only_list=True, page=1, size=6, fixed_size=True).get_card(context)
-        return context
-
-
-
-class CompositeNodeCollectionView(View):
-
-    def __init__(self, model_name, parent_model=None, configs={}):
-        self.model_name = model_name
-        self.collections = {}
-        for k, v in configs.iteritems():
-            self.collections[k] = NodeCollectionView.factory(model_name, v['card_type'], v.get('query', None), v.get('page', 1), v.get('size', 25), True, v.get('only_list', False), parent_model, category=k)
-
-    def get_card(self, context={}):
-        from app.views import env
-        template_path = self.get_template()
-        template = env.get_template(template_path)
-        cards = dict((c, v.get_card()) for c, v in self.collections.iteritems())
-        from app.views import force_setup_context
-        context = force_setup_context(context)
-        context['cards'] = cards
-        context['advertisement_list'] = AdvertisementCollectionView("grid-row", "", only_list=True, size=3, fixed_size=True).get_card()
-        return template.render(**context)
-
-    def get_page_path(self):
-        return self.collections[self.collections.keys()[0]].get_page_path()
-
-    def get_template(self):
-        return "%s/%s" % (self.get_page_path(), "composite_view.html")
-
-
-
-
-class NodeCollectionView(View):
-
-    def __init__(self, model_name, card_type, query=None, page=1, size=50, is_partial=False, only_list=False, paged=True, parent_model=None, fixed_size=None, category='all'):
+    def __init__(self, model_name, category):
         self.model_name = model_name
         self.category = category
-        self.filters = convert_query_to_filter(query)
-        self.query = query
-        self.paged = paged
-        self.page = page
-        self.size = size
-        self.card_type = card_type
-        self.is_partial = is_partial
-        self.only_list = only_list
-        self.parent = parent_model
-        self.fixed_size = fixed_size
-        self.extractor = NodeExtractor.factory(self.model_name, self.filters)
 
-    def get_card(self, context=None):
-        from app.views import env
-        template_path = self.get_template()
-        template = env.get_template(template_path)
-        c = dict(model_name=self.model_name, card_type=self.card_type, filters=self.filters,
-                 parent=self.parent, category=self.category, size=self.size, fixed_size=self.fixed_size,
-                 current_page=self.page)
-        if not context:
-            context = c
+    @classmethod
+    def build(cls, model_name, card_type, category='all'):
+        if card_type == 'row':
+            return RowCollectionView(model_name, category)
+        elif card_type == 'grid':
+            return GridCollectionView(model_name, category)
+        elif card_type == 'icon':
+            return IconCollectionView(model_name, category)
         else:
-            for k, v in c.iteritems():
-                context[k] = v
+            return GridRowCollectionView(model_name, category)
 
+    def get_card(self, context={}):
+        from app.views import env
+        template_path = 'site/pages/collections/' + self.card_type + '.html'
+        template = env.get_template(template_path)
+        context['category'] = self.category
+        context['model_name'] = self.model_name
+        context['card_type'] = self.card_type
         html = template.render(**context)
         return html
 
-    def get_last_page(self):
-        if self.fixed_size:
-            return 1
-        else:
-            return self.extractor.last_page(self.size)
+    def only_list(self, models):
+        return self.__get_model_cards(models)
 
-    def next_page(self, page):
-        try:
-            models = self.extractor.get_list(True, page, self.size)
-        except:
-            models = []
+    def __get_model_cards(self, models):
         if len(models) > 0:
-            return ''.join([NodeView.factory(self.model_name, self.card_type, m).get_card() for m in models])
+            for m in models:
+                print '[*] -> ', m
+            return ''.join(NodeView.get_collection_card(self.model_name, self.card_type, model) for model in models)
         else:
             return '<div class="jumbotron"><h6>No data available for this category</h6></div>'
 
-    def get_page_path(self):
-        raise Exception("Not implemented")
+    def _get_template_path(self):
+        raise Exception('Not implemented')
 
-    def get_template(self):
-        if self.only_list:
-            return "%s/%s" % (self.get_page_path(), "list_only.html")
-        elif self.is_partial:
-            return "%s/%s" % (self.get_page_path(), "partial.html")
-        else:
-            return "%s/%s" % (self.get_page_path(), "full_page.html")
+
+class IconCollectionView(CollectionView):
+    def __init__(self, model_name, category='all'):
+        super(IconCollectionView, self).__init__(model_name, category)
+        self.card_type = 'icon'
+
+class RowCollectionView(CollectionView):
+    def __init__(self, model_name, category='all'):
+        super(RowCollectionView, self).__init__(model_name, category)
+        self.card_type = 'row'
+
+class GridCollectionView(CollectionView):
+    def __init__(self, model_name, category='all'):
+        super(GridCollectionView, self).__init__(model_name, category)
+        self.card_type = 'grid'
+
+class GridRowCollectionView(CollectionView):
+    def __init__(self, model_name, category='all'):
+        super(GridRowCollectionView, self).__init__(model_name, category)
+        self.card_type = 'grid-row'
+
+class CollectionType(object):
+
+    def __init__(self, collection_view):
+        self.collection_view = collection_view
+
+    def only_list(self, models):
+        return self.collection_view.only_list(models)
+
+    def get_card(self, context={}):
+        from app.views import env
+        card = self.collection_view.get_card(context)
+        context.update(dict(list_container=card))
+        template_path = self._get_template()
+        template = env.get_template(template_path)
+        html = template.render(**context)
+        return html
+
+
+class FixedCollection(CollectionType):
+
+    def __init__(self, collection_view):
+        super(FixedCollection, self).__init__(collection_view)
+
+    def _get_template(self):
+        return 'site/pages/collections/fixed.html'
+
+class ScrollableCollection(CollectionType):
+
+    def __init__(self, collection_view, is_last_page=False):
+        super(ScrollableCollection, self).__init__(collection_view)
+        self.is_last_page = is_last_page
+
+    def _get_template(self):
+        return 'site/pages/collections/scrollable.html'
+
+
+class NodeCollectionFactory(object):
 
     @classmethod
-    def factory(cls, model_view, card_type, query=None, page=1, size=6, is_partial=False, only_list=False, parent=None, category='all'):
-        if model_view == ADVENTURE:
-            return AdventureCollectionView(
-                card_type, query, page, size, is_partial, only_list, parent=parent, category=category)
-        elif model_view == EVENT:
-            return EventCollectionView(
-                card_type, query, page, size, is_partial, only_list, parent=parent, category=category)
-        elif model_view == TRIP:
-            return TripCollectionView(
-                card_type, query, page, size, is_partial, only_list, parent=parent, category=category)
-        elif model_view == PROFILE:
-            return ProfileCollectionView(
-                card_type, query, page, size, is_partial, only_list, parent=parent, category=category)
-        elif model_view == ARTICLE:
-            return ArticleCollectionView(
-                card_type, query, page, size, is_partial, only_list, parent=parent, category=category)
-        elif model_view == DISCUSSION:
-            return DiscussionCollectionView(
-                card_type, query, page, size, is_partial, only_list, parent=parent, category=category)
-        elif model_view == POST:
-            return PostCollectionView(
-                card_type, query, page, size, is_partial, only_list, parent=parent, category=category)
-        elif model_view == STREAM:
-            return StreamCollectionView(
-                card_type, query, page, size, is_partial, only_list, parent=parent, category=category)
-        elif model_view == ADVERTISEMENT:
-            return AdvertisementCollectionView(
-                card_type, query, page, size, is_partial, only_list, parent=parent, category=category)
+    def resolve(cls, model_name, card_type, category='all', is_scrollable=True):
+        collection_view = CollectionView.build(model_name, card_type, category)
+        if is_scrollable:
+            return ScrollableCollection(collection_view)
         else:
-            raise Exception("Invalid Model View")
-
-class StreamCollectionView(NodeCollectionView):
-
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None, category='all', stream_owner=None, logged_in_user=None):
-        self.model_name = STREAM
-        super(StreamCollectionView, self).__init__(STREAM, card_type, query, page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size, category=category)
-        print '[*] getting Stream for query', query, stream_owner, logged_in_user
-        if stream_owner and hasattr(stream_owner, 'id'):
-            if not logged_in_user and hasattr(g, 'user') and g.user:
-                logged_in_user = logged_in_user
-            if logged_in_user and hasattr(logged_in_user, 'id') and logged_in_user.id == stream_owner:
-                profiles = stream_owner.following
-                profiles.append(stream_owner)
-                print 'Stream from ', profiles
-                self.extractor.init_filters = dict(profile__in=profiles)
-            else:
-                print 'Stream from ', stream_owner
-                self.extractor.init_filters = dict(profile=stream_owner)
-
-    def get_page_path(self):
-        return 'site/pages/searches/streams'
-
-class AdvertisementCollectionView(NodeCollectionView):
-
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None, category='all'):
-        super(self.__class__, self).__init__(ADVERTISEMENT, card_type, query,  page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size, category=category)
-        self.model_name = ADVERTISEMENT
-
-    def get_page_path(self):
-        return 'site/pages/searches/advertisements'
-
-
-class AdventureCollectionView(NodeCollectionView):
-
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None, category='all'):
-        super(self.__class__, self).__init__(ADVENTURE, card_type, query,  page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size, category=category)
-        self.model_name = ADVENTURE
-
-    def get_page_path(self):
-        return 'site/pages/searches/adventures'
-
-class ProfileCollectionView(NodeCollectionView):
-
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None, category='all'):
-        super(ProfileCollectionView, self).__init__(PROFILE, card_type, query,  page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size, category=category)
-        self.model_name = PROFILE
-
-    def get_page_path(self):
-        return 'site/pages/searches/profiles'
-
-class PostCollectionView(NodeCollectionView):
-
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None, category='all'):
-        super(PostCollectionView, self).__init__(POST, card_type, query, page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size, category=category)
-        self.model_name = POST
-
-    def get_page_path(self):
-        return 'site/pages/searches/posts'
-
-class DiscussionCollectionView(NodeCollectionView):
-
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None, category='all'):
-        super(DiscussionCollectionView, self).__init__(DISCUSSION, card_type, query, page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size, category=category)
-        self.model_name = DISCUSSION
-
-    def get_page_path(self):
-        return 'site/pages/searches/discussions'
-
-class EventCollectionView(NodeCollectionView):
-
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None, category='all'):
-        super(EventCollectionView, self).__init__(EVENT, card_type, query, page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size, category=category)
-        self.model_name = EVENT
-
-    def get_page_path(self):
-        return 'site/pages/searches/events'
-
-class ArticleCollectionView(NodeCollectionView):
-
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None, category='all'):
-        super(ArticleCollectionView, self).__init__(ARTICLE, card_type, query, page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size, category=category)
-        self.model_name = ARTICLE
-
-    def get_page_path(self):
-        return 'site/pages/searches/articles'
-
-class TripCollectionView(NodeCollectionView):
-
-    def __init__(self, card_type, query, page=1, size=10, is_partial=False, only_list=False, parent=None, fixed_size=None, category='all'):
-        super(TripCollectionView, self).__init__(TRIP, card_type, query, page, size, is_partial, only_list, parent_model=parent, fixed_size=fixed_size, category=category)
-        self.model_name = TRIP
-
-    def get_page_path(self):
-        return 'site/pages/searches/trips'
+            return FixedCollection(collection_view)
 
 
 class NodeView(View):
 
-    def __init__(self, model_name, card_type, id, key='pk'):
-        self.model_name = model_name
-        self.card_type = card_type
-        if (isinstance(id, Node)) or isinstance(id, ActivityStream):
-            self.model = id
-        else:
-            filters = {}
-            filters[key] = str(id)
-            self.extractor = NodeExtractor.factory(self.model_name, filters)
-
-    def get_title(self):
-        return "Fitrangi: India's complete adventure portal"
-
-    def get_card(self):
+    @classmethod
+    def get_collection_card(cls, model_name, card_type, model, context={}):
         from app.views import env
         from app.views import force_setup_context
-        if self.card_type == 'grid-row':
-            file_name = 'grid'
-        else:
-            file_name = self.card_type
-        template_path = self.get_template_folder() + '/' + file_name + ".html"
-        template = env.get_template(template_path)
-        context = self.get_context()
-
+        template_path = 'site/models/' + model_name + '/' + card_type + ".html"
         context = force_setup_context(context)
-        context['model'] = self.get_model()
-        context['grid_size'] = 'col-lg-4 col-md-4 col-sm-6 col-xs-12' if self.card_type != 'grid-row' else 'col-sm-12 col-xs-12'
+        context['model'] = model
+        if model_name == STREAM:
+            if model.is_post_activity:
+                template_path = 'site/models/post/row.html'
+                context['model'] = model.object
+            else:
+                if model.is_entity_activity:
+                    context['entity_view'] = NodeView.get_collection_card(model.object.__class__.__name__.lower(), "grid", model.object)
+                template_path = 'site/models/stream/row.html'
+        template = env.get_template(template_path)
         return template.render(**context)
 
-    def get_template_folder(self):
-        return 'site/models/%s' % self.model_name
-
-    def get_context(self):
-        if self.card_type == 'detail':
-            return self.get_detail_context()
-        else:
-            return self.get_card_context()
-
-    def get_model(self):
-        if not hasattr(self, 'model') or not self.model:
-            self.model = self.extractor.get_single()
-        return self.model
-
-    def get_detail_context(self):
-        raise Exception("Not Implemented")
-
-    def get_card_context(self):
-        raise Exception("Not Implemented")
 
     @classmethod
-    def factory(cls, model_view, card_type, id, key='pk'):
-        if model_view == ACTIVITY:
-            return ActivityView(card_type, id, key)
-        elif model_view == ADVENTURE:
-            return AdventureView(card_type, id, key)
-        elif model_view == EVENT:
-            return EventView(card_type, id, key)
-        elif model_view == TRIP:
-            return TripView(card_type, id, key)
-        elif model_view == PROFILE:
-            return ProfileView(card_type, id, key)
-        elif model_view == ARTICLE:
-            return ArticleView(card_type, id, key)
-        elif model_view == DISCUSSION:
-            return DiscussionView(card_type, id, key)
-        elif model_view == POST:
-            return PostView(card_type, id, key)
-        elif model_view == STREAM:
-            return StreamView(card_type, id, key)
-        elif model_view == ADVERTISEMENT:
-            return AdvertisementView(card_type, id, key)
-        else:
-            raise Exception("Invalid Model View")
-
-
-class StreamView(NodeView):
-
-    def __init__(self, card_type, id, key='pk'):
-        super(StreamView, self).__init__(STREAM, card_type, id, key)
-
-    def get_detail_context(self):
-        return {}
-
-    def get_card_context(self):
-        return {}
-
-
-    def get_card(self):
+    def get_detail_card(cls, model_name, model, context={}):
         from app.views import env
         from app.views import force_setup_context
-        assert self.card_type == 'row'
-        context = self.get_context()
-        context = force_setup_context(context)
-        if self.get_model().is_post_activity:
-            template_path = 'site/models/post/row.html'
-            context['model'] = self.get_model().object
-        else:
-            context['model'] = self.get_model()
-            if self.get_model().is_entity_activity:
-                context['entity_view'] = NodeView.factory(self.get_model().object.__class__.__name__.lower(), "grid", self.get_model().object).get_card()
-            template_path = 'site/models/stream/row.html'
+        template_path = 'site/models/' + model_name + '/detail.html'
         template = env.get_template(template_path)
+        context = force_setup_context(context)
+        context['model'] = model
         return template.render(**context)
 
+class PageManager(object):
 
-class ActivityView(NodeView):
+    @classmethod
+    def get_detail_title_and_page(cls, model_name, **kwargs):
+        query = kwargs.get('query', None)
+        user = kwargs.get('user', None)
+        assert  query is not None
+        model = NodeExtractor.factory(model_name).get_single(query)
+        context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query))
+        context.update(Page.factory(model_name, 'detail').get_context(context))
+        title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s complete adventure portal')
+        return title, NodeView.get_detail_card(model_name, model, context), context
 
-    def __init__(self, card_type, id, key='pk'):
-        super(ActivityView, self).__init__(ACTIVITY, card_type, id, key)
+    @classmethod
+    def get_search_title_and_page(cls, model_name, **kwargs):
+        query = kwargs.get('query', None)
+        user = kwargs.get('user', None)
+        from app.views import env
+        from app.views import force_setup_context
+        template_path = COLLECTION_PATHS.get(model_name) + '.html'
+        print 'Loading template: ', template_path
+        template = env.get_template(template_path)
+        context = dict(user=user, query=query, filters=convert_query_to_filter(query))
+        context = force_setup_context(context)
+        context.update(Page.factory(model_name, 'search').get_context(context))
+        html = template.render(**context)
+        print len(html)
+        return 'Fitrangi: India\'s complete adventure portal. Find what you are looking for', html, context
+
+    @classmethod
+    def get_landing_title_and_page(cls, model_name, **kwargs):
+        from app.views import env
+        from app.views import force_setup_context
+        query = kwargs.get('query', None)
+        user = kwargs.get('user', None)
+        template_path = COLLECTION_PATHS.get(model_name) + '.html'
+        template = env.get_template(template_path)
+        context = dict(user=user, query=query, filters=convert_query_to_filter(query))
+        context = force_setup_context(context)
+        context.update(Page.factory(model_name, 'landing').get_context(context))
+        html = template.render(**context)
+        return 'Fitrangi: India\'s complete adventure portal. Find what you are looking for', html, context
 
 
-    def get_title(self):
-        return self.get_model().name
+class Page(object):
 
-    def get_detail_context(self):
-        parent=self.get_model()
-        return {
-            'adventure_list': AdventureCollectionView("grid", "", is_partial=True, parent=parent).get_card(),
-            "follower_list": ProfileCollectionView("row", "", is_partial=True, parent=parent).get_card(),
-            'discussion_list': DiscussionCollectionView("row", "", is_partial=True, parent=parent).get_card(),
-            'article_list': ArticleCollectionView("grid", "", is_partial=True, parent=parent).get_card()
-        }
+    def __init__(self, model_name):
+        self.model_name = model_name
 
-    def get_card_context(self):
-        return {}
+    def get_context(self, context):
+        raise Exception('Unimplemented')
+
+    @classmethod
+    def factory(self, model_name, type):
+        if type == 'detail':
+            if model_name == ACTIVITY:
+                return article_detail_page
+            elif model_name == ADVENTURE:
+                return adventure_detail_page
+            elif model_name == PROFILE:
+                return profile_detail_page
+            elif model_name == ARTICLE:
+                return article_detail_page
+            elif model_name == DISCUSSION:
+                return discussion_detail_page
+            else:
+                raise Exception("Not implemented")
+        elif type == 'search':
+            if model_name == ADVENTURE:
+                return adventure_search_page
+            elif model_name == PROFILE:
+                return profile_search_page
+            elif model_name == ARTICLE:
+                return article_search_page
+            elif model_name == DISCUSSION:
+                return discussion_search_page
+            elif model_name == EVENT:
+                return event_search_page
+            else:
+                raise Exception("Not implemented")
+        elif type == 'landing':
+            if model_name == 'explore':
+                return explore_landing_page
+            elif model_name == 'community':
+                return community_landing_page
+            else:
+                raise Exception("Not implemented")
+        else:
+            raise Exception("Invalid argument")
+
+class LandingPage(Page):
+
+    def __init__(self, model_name):
+        super(LandingPage, self).__init__(model_name)
+
+    def get_context(self, context):
+        if self.model_name == 'explore':
+            counters = dict(adventure=Adventure.objects.count(),
+                            profile=Profile.objects(type__ne=ProfileType.objects(name__iexact='subscription only').first()).count(),
+                            discussion=Discussion.objects.count(),
+                            article=Article.objects.count())
+            journal = NodeCollectionFactory.resolve(ARTICLE, GRID_VIEW, is_scrollable=False).get_card(context)
+            enthusiast_profile = NodeCollectionFactory.resolve(PROFILE, GRID_VIEW, is_scrollable=False, category='enthusiast').get_card(context)
+            organizer_profile = NodeCollectionFactory.resolve(PROFILE, GRID_VIEW, is_scrollable=False, category='organizer').get_card(context)
+            event = NodeCollectionFactory.resolve(EVENT, GRID_VIEW, is_scrollable=False).get_card(context)
+            discussion = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, is_scrollable=False).get_card(context)
+            return dict(counters=counters, journal=journal, enthusiast_profile=enthusiast_profile, organizer_profile=organizer_profile, event=event, discussion=discussion)
+        elif self.model_name == 'community':
+            profile = NodeCollectionFactory.resolve(PROFILE, ICON_VIEW, is_scrollable=False).get_card(context)
+            event = NodeCollectionFactory.resolve(EVENT, GRID_VIEW, is_scrollable=False).get_card(context)
+            discussion = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, is_scrollable=False).get_card(context)
+            return dict(profile=profile, event=event, discussion=discussion)
+        else:
+            raise Exception('Not implemented')
+
+class SearchPage(Page):
+
+    def __init__(self, model_name):
+        super(SearchPage, self).__init__(model_name)
+
+    def get_context(self, context):
+        if self.model_name == ADVENTURE:
+            return dict(adventure_list=NodeCollectionFactory.resolve(ADVENTURE, GRID_VIEW).get_card(context))
+        elif self.model_name == PROFILE:
+            return dict(profiles_list=NodeCollectionFactory.resolve(PROFILE, ROW_VIEW).get_card(context))
+        elif self.model_name == ARTICLE:
+            all = NodeCollectionFactory.resolve(ARTICLE, GRID_VIEW).get_card(context)
+            top = NodeCollectionFactory.resolve(ARTICLE, ROW_VIEW, category='top').get_card(context)
+            my = NodeCollectionFactory.resolve(ARTICLE, ROW_VIEW, category='my').get_card(context)
+            advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, is_scrollable=False).get_card(context)
+            return dict(all=all, top=top, my=my, advertisement_list=advertisement_list)
+        elif self.model_name == DISCUSSION:
+            featured = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, category='featured').get_card(context)
+            latest = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, category='latest').get_card(context)
+            return dict(featured=featured, latest=latest)
+        elif self.model_name == EVENT:
+            return dict(events_list=NodeCollectionFactory.resolve(EVENT, ROW_VIEW).get_card(context))
+        else:
+            raise Exception("not implemented")
+
+class DetailPage(Page):
+
+    def __init__(self, model_name):
+        super(DetailPage, self).__init__(model_name)
+
+    def get_context(self, context):
+        if self.model_name == ARTICLE:
+            adventure_list = NodeCollectionFactory.resolve(ADVENTURE, GRID_VIEW).get_card(context)
+            follower_list = NodeCollectionFactory.resolve(PROFILE, ROW_VIEW).get_card(context)
+            discussion_list = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW).get_card(context)
+            article_list = NodeCollectionFactory.resolve(ARTICLE, GRID_VIEW).get_card(context)
+            return dict(adventure_list=adventure_list, follower_list=follower_list, discussion_list=discussion_list, article_list=article_list)
+        elif self.model_name == ADVENTURE:
+            other_adventure_list = NodeCollectionFactory.resolve(ADVENTURE, GRID_ROW_VIEW, is_scrollable=False).get_card(context)
+            advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, is_scrollable=False).get_card(context)
+            reviews = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
+            return dict(other_adventure_list=other_adventure_list, advertisement_list=advertisement_list, reviews=reviews)
+        elif self.model_name == PROFILE:
+            wish_listed_adventure_list = NodeCollectionFactory.resolve(ADVENTURE, GRID_VIEW, category="wishlisted").get_card(context)
+            accomplished_adventure_list = NodeCollectionFactory.resolve(ADVENTURE, GRID_VIEW, category="accomplished").get_card(context)
+            following_list = NodeCollectionFactory.resolve(PROFILE, ROW_VIEW, category="following").get_card(context)
+            follower_list = NodeCollectionFactory.resolve(PROFILE, ROW_VIEW, category="follower").get_card(context)
+            discussion_list = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW).get_card(context)
+            article_list = NodeCollectionFactory.resolve(ARTICLE, GRID_VIEW).get_card(context)
+            my_stream_list = NodeCollectionFactory.resolve(STREAM, ROW_VIEW, category='my').get_card(context)
+            fitrangi_posts = NodeCollectionFactory.resolve(POST, GRID_VIEW, category="fitrangi").get_card(context)
+            featured_profiles = ','.join(str(u.id) for u in profile_extractor.get_list("featured:bool|True;", False, 1, 10))
+            return dict(wish_listed_adventure_list=wish_listed_adventure_list, accomplished_adventure_list=accomplished_adventure_list,
+                            follower_list=follower_list, following_list=following_list, discussion_list=discussion_list,
+                            article_list=article_list, my_stream_list=my_stream_list, fitrangi_posts=fitrangi_posts,
+                            featured_profiles=featured_profiles)
+        elif self.model_name == ARTICLE:
+            comments = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
+            related = NodeCollectionFactory.resolve(ARTICLE, GRID_ROW_VIEW, is_scrollable=False).get_card(context)
+            advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, is_scrollable=False).get_card(context)
+            return dict(comments=comments, related=related, advertisement_list=advertisement_list)
+        elif self.model_name == DISCUSSION:
+            comments = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
+            featured = NodeCollectionFactory.resolve(ARTICLE, GRID_ROW_VIEW, is_scrollable=False).get_card(context)
+            advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, is_scrollable=False).get_card(context)
+            return dict(comments=comments, featured=featured, advertisement_list=advertisement_list)
 
 
-class AdventureView(NodeView):
+explore_landing_page    = LandingPage('explore')
+community_landing_page  = LandingPage('community')
 
-    def __init__(self, card_type, id, key='pk'):
-        super(AdventureView, self).__init__(ADVENTURE, card_type, id, key)
+article_search_page     = SearchPage(ARTICLE)
+adventure_search_page   = SearchPage(ADVENTURE)
+profile_search_page     = SearchPage(PROFILE)
+discussion_search_page  = SearchPage(DISCUSSION)
+event_search_page       = SearchPage(EVENT)
 
-    def get_title(self):
-        return self.get_model().name
-
-    def get_detail_context(self):
-        parent=self.get_model()
-        other_adventure_list = AdventureCollectionView("grid-row", "", only_list=True, parent=parent, size=3, fixed_size=True).get_card()
-        advertisement_list = AdvertisementCollectionView("grid-row", "", only_list=True, size=3, fixed_size=True).get_card()
-        reviews = PostCollectionView("row", "", is_partial=False, parent=parent).get_card(dict(post_type='review'))
-        return dict(other_adventure_list=other_adventure_list, advertisement_list=advertisement_list, reviews=reviews)
-
-    def get_card_context(self):
-        return {}
-
-
-class EventView(NodeView):
-
-    def __init__(self, card_type, id, key='pk'):
-        super(EventView, self).__init__(EVENT, card_type, id, key)
-
-    def get_title(self):
-        return self.get_model().name
-
-    def get_detail_context(self):
-        return {}
-
-    def get_card_context(self):
-        return {}
-
-class TripView(NodeView):
-
-    def __init__(self, card_type, id, key='pk'):
-        super(TripView, self).__init__(TRIP, card_type, id, key)
-
-    def get_title(self):
-        return self.get_model().name
-
-    def get_detail_context(self):
-        return {}
-
-    def get_card_context(self):
-        return {}
-
-class ProfileView(NodeView):
-
-    def __init__(self, card_type, id, key='pk'):
-        super(ProfileView, self).__init__(PROFILE, card_type, id, key)
-
-    def get_title(self):
-        return self.get_model().name
-
-    def get_detail_context(self):
-        logged_in_user = g.user if hasattr(g, 'user') and g.user is not None else None
-        model = self.get_model()
-        is_same = True if logged_in_user and logged_in_user.id == model.id else False
-        return {
-            'wish_listed_adventure_list': AdventureCollectionView("grid", "", is_partial=True, category="wishlisted").get_card(),
-            'accomplished_adventure_list': AdventureCollectionView("grid", "", is_partial=True, category="accomplished").get_card(),
-            "follower_list": ProfileCollectionView("row", "", is_partial=True, category="follower").get_card(),
-            "following_list": ProfileCollectionView("row", "", is_partial=True, category="following").get_card(),
-            'discussion_list': DiscussionCollectionView("row", "", is_partial=True, category="all").get_card(),
-            'article_list': ArticleCollectionView("grid", "", is_partial=True, category="all").get_card(),
-            'my_stream_list': StreamCollectionView("row", "", is_partial=(not is_same), category="my", fixed_size=False, stream_owner=model, logged_in_user=logged_in_user, parent=logged_in_user).get_card(),
-            'fitrangi_posts': PostCollectionView("grid", "", is_partial=True, only_list=True, fixed_size=True, category="fitrangi").get_card(),
-            'featured_profiles': ','.join([str(u.id) for u in NodeExtractor.factory("profile", dict(featured=True)).get_list(False, 1, 10)])
-        }
-
-    def get_card_context(self):
-        return {}
-
-class DiscussionView(NodeView):
-
-    def __init__(self, card_type, id, key='pk'):
-        super(DiscussionView, self).__init__(DISCUSSION, card_type, id, key)
-
-    def get_title(self):
-        return self.get_model().title
-
-    def get_detail_context(self):
-        parent = self.get_model()
-        posts = PostCollectionView("row", "", is_partial=False, parent=parent).get_card(dict(post_type='comment'))
-        featured = DiscussionCollectionView("grid-row", "", only_list=True, is_partial=True, fixed_size=True).get_card()
-        advertisement_list = AdvertisementCollectionView("grid-row", "", only_list=True, size=3, fixed_size=True).get_card()
-        return {
-            'comments': posts,
-            'featured': featured,
-            'advertisement_list': advertisement_list
-        }
-
-    def get_card_context(self):
-        return {}
-
-class ArticleView(NodeView):
-
-    def __init__(self, card_type, id, key='pk'):
-        super(ArticleView, self).__init__(ARTICLE, card_type, id, key)
-
-    def get_title(self):
-        return self.get_model().title
-
-    def get_detail_context(self):
-        parent=self.get_model()
-        posts = PostCollectionView("row", "", is_partial=False, parent=parent).get_card(dict(post_type='comment'))
-        related = ArticleCollectionView("grid-row", "", only_list=True, is_partial=True, fixed_size=True).get_card()
-        advertisement_list = AdvertisementCollectionView("grid-row", "", only_list=True, size=3, fixed_size=True).get_card()
-        return {
-            'comments': posts,
-            'related': related,
-            'advertisement_list': advertisement_list
-        }
-
-    def get_card_context(self):
-        return {}
-
-class PostView(NodeView):
-
-    def __init__(self, card_type, id, key='pk'):
-        super(PostView, self).__init__(POST, card_type, id, key)
-
-    def get_detail_context(self):
-        return {}
-
-    def get_card_context(self):
-        return {}
-
-class AdvertisementView(NodeView):
-
-    def __init__(self, card_type, id, key='pk'):
-        super(AdvertisementView, self).__init__(ADVERTISEMENT, card_type, id, key)
-
-    def get_detail_context(self):
-        return {}
-
-    def get_card_context(self):
-        return {}
-
+activity_detail_page    = DetailPage(ACTIVITY)
+adventure_detail_page   = DetailPage(ADVENTURE)
+profile_detail_page     = DetailPage(PROFILE)
+article_detail_page     = DetailPage(ARTICLE)
+discussion_detail_page  = DetailPage(DISCUSSION)

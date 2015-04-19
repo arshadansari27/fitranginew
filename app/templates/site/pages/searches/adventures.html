@@ -58,8 +58,7 @@
 
 <section class="container-fluid p-0">
     <div id="models_list" class="container fitrangi-thumb">
-        {% import 'site/pages/commons/list_page.html' as listing %}
-        {{ listing.list_page('adventure', card_type, fixed_size, current_page, category=category, size=size) }}
+        {{ adventure_list|safe }}
     </div>
 </section>
  <script>

@@ -19,10 +19,7 @@
     </div>
 </section>
 
-
-
-{% import 'site/pages/commons/list_page.html' as listing %}
-{{ listing.list_page('event', card_type, fixed_size, current_page, container_id='accordion', category=category, size=size) }}
+{{events_list|safe}}
 
 <!-- TODO: Testimonials for events -->
 <!--section class="container fitrangi-testimonial text-center">
