@@ -173,7 +173,7 @@
     <h2 class="my-h2">Popular from journal</h2>
 
     <div class="container">
-        <input id="article-admin-published-filter" type="hidden" data-model="article" data-filter="admin_published" value="bool|True"/>
+        <input id="article-admin-published-filter" type="hidden" data-model="article" data-filter="admin_published" value="bool|True" data-filter-type="fixed"/>
 
         {{journal|safe}}
 
@@ -192,11 +192,11 @@
 
     <div class="container">
         {{ enthusiast_profile|safe}}
-        <input id="enthusiast-filter" data-category="enthusiast" data-model="profile" data-filter="type__profile_type__name" type="hidden" value="Enthusiast">
-        <input id="enthusiast-featured-filter" data-category="enthusiast" data-model="profile" data-filter="featured" type="hidden" value="bool|True">
+        <input id="enthusiast-filter" data-category="enthusiast" data-model="profile" data-filter="type__profile_type__name" type="hidden" value="Enthusiast" data-filter-type="fixed">
+        <input id="enthusiast-featured-filter" data-category="enthusiast" data-model="profile" data-filter="featured" type="hidden" value="bool|True" data-filter-type="fixed">
         <hr>
-        <input id="organizer-filter" data-category="organizer" data-model="profile" data-filter="type__profile_type__name__ne" type="hidden" value="Enthusiast">
-        <input id="organizer-featured-filter" data-category="organizer" data-model="profile" data-filter="featured" type="hidden" value="bool|True">
+        <input id="organizer-filter" data-category="organizer" data-model="profile" data-filter="type__profile_type__name__ne" type="hidden" value="Enthusiast" data-filter-type="fixed">
+        <input id="organizer-featured-filter" data-category="organizer" data-model="profile" data-filter="featured" type="hidden" value="bool|True" data-filter-type="fixed">
         {{ organizer_profile|safe}}
 
         <div class="pull-right">
@@ -229,7 +229,7 @@
     <h2 class="my-h2" >Trending Discussion</h2>
 
     <div class="container">
-        <input id="discussion-admin-published-filter" type="hidden" data-model="discussion" data-filter="admin_published" value="bool|True"/>
+        <input id="discussion-admin-published-filter" type="hidden" data-model="discussion" data-filter="admin_published" value="bool|True" data-filter-type="fixed"/>
         {{discussion|safe}}
         <div class="pull-right">
             <a href="/community/discussion" class="btn btn-primary">View All</a>

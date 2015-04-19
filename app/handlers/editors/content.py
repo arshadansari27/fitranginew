@@ -38,7 +38,7 @@ def delete(node, type):
 def get_or_create_content(type, id=None):
 
     if id:
-        node = NodeExtractor.factory(type, dict(pk=id)).get_single()
+        node = NodeExtractor.factory(type).get_single('pk:%s;' % str(id))
         return node
     else:
         cls = NodeFactory.get_class_by_name(type)
@@ -65,7 +65,7 @@ def __edit(node, type, data):
     author          = g.user
     tags = data.get('tags', None)
     if type == 'article':
-        channels = NodeExtractor.factory(CHANNEL, dict(name='Journal')).get_list(True, 1, 1)
+        channels = NodeExtractor.factory(CHANNEL).get_list('name:Journal;', True, 1, 1)
     else:
         channels = []
 
@@ -98,7 +98,7 @@ def __edit(node, type, data):
 def publish(node, type):
     if not node or not type:
         raise Exception("invalid parameters")
-    content = NodeExtractor.factory(type, dict(pk=node)).get_single()
+    content = NodeExtractor.factory(type).get_single('pk:%s' % str(node))
     if not content:
         raise Exception("Invalid content")
     if content.published:
@@ -112,7 +112,7 @@ def publish(node, type):
 def unpublish(node, type):
     if not node or not type:
         raise Exception("invalid parameters")
-    content = NodeExtractor.factory(type, dict(pk=node)).get_single()
+    content = NodeExtractor.factory(type).get_single('pk:%s' % str(node))
     if not content:
         raise Exception("Invalid content")
     if not content.published:

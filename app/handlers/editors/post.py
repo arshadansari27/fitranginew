@@ -32,7 +32,7 @@ def delete(node):
 
 def get_or_create_post(id=None):
     if id:
-        post = NodeExtractor.factory(POST, dict(pk=id)).get_single()
+        post = NodeExtractor.factory(POST).get_single('pk:%s;' % str(id))
         return post
     else:
         post = Post()
@@ -49,8 +49,8 @@ def add(data):
     assert post_type is not None
     if parent:
         parent_type = data.get('parent_type', None)
-        extractor   = NodeExtractor.factory(parent_type.lower(), {'pk': parent})
-        parent      = extractor.get_single()
+        extractor   = NodeExtractor.factory(parent_type.lower())
+        parent      = extractor.get_single('pk:%s;' % str(parent))
     image = data.get('image')
     if image and len(image) > 0:
         image       = image.split('/')[-1]
@@ -71,7 +71,7 @@ def add(data):
 
 @response_handler('Successfully voted on post', 'Failed to vote')
 def vote(node, data):
-    post = NodeExtractor.factory(POST, dict(pk=node)).get_single()
+    post = NodeExtractor.factory(POST).get_single('pk:%s;' % str(node))
     if not post:
         raise Exception("Invalid post")
     post.vote(g.user.id, data.get('up', False))
@@ -79,7 +79,7 @@ def vote(node, data):
 
 @response_handler('Successfully added comment on post', 'Failed to comment')
 def comment(node, data):
-    post = NodeExtractor.factory(POST, dict(pk=node)).get_single()
+    post = NodeExtractor.factory(POST).get_single('pk:%s;' % str(node))
     content = data.get('content', '')
     comment = Comment(author=g.user, content=content)
     post.comments.append(comment)

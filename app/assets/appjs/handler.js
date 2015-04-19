@@ -5,67 +5,6 @@ jQuery(document).ready(function ($) {
 
     var App = window.App;
 
-    var load_all_models = function() {
-
-        window.current_page = window.current_page || {};
-        window.filters = window.filters || {};
-
-        /*
-        window.current_page[page_key] = window.current_page[page_key] || 1;
-        window.filters[filter_key] = window.filters[filter_key] || [];
-        var filters_list = window.filters[filter_key];
-        */
-
-        var query = '';
-        for(var u = 0; u < filters_list.length; u++) {
-            console.log('Pre: ' + filters_list[u]);
-            var $input = $('#' + filters_list[u]);
-            var name = $input.attr('data-filter');
-            var value = $input.val();
-            var filter_category= $input.attr('data-category');
-            if (filter_category != undefined && filter_category != null && filter_category.length > 0 &&  filter_category != category) {
-                continue;
-            }
-            console.log('Filter by: ' + filters_list[u] + " -> " + name + ": " + value);
-
-            if (value == undefined ||value == null || value.length == 0 || value == '--') {
-                continue;
-            }
-
-            query += name + ":"  + value;
-            if (u < filters_list.length - 1) {
-                query += ';'
-            }
-        }
-
-        var url = '/listings?model_view=' + model_name + '&card_type=' + card_type + '&page=' + page + '&query=' + query + '&size=' + size;
-        var filter_key = model_name;
-        console.log(url);
-
-        var filters_list = window.filters[filter_key];
-            console.log('[*] ' + window.current_page[page_key] + ' -> ' + window.filters[filter_key]);
-            $.ajax({
-                url: url
-            }).done(function (data) {
-                if (window.current_page[page_key] <= 1) {
-                    container.html('');
-                }
-                if (data.status == 'success') {
-                    container.append(data.html);
-
-                    last_page = data.last_page;
-                    if (!show_load_more || last_page <= window.current_page[page_key]) {
-                       $(loadMoreSelector).hide();
-                    }
-                } else {
-                    container.append('Nothing to load...');
-                }
-                if (!start_over) {
-                    window.current_page[page_key] += 1
-                }
-            });
-    }
-
     var show_dialog_message = function(dialogRef, status, message) {
 
         var box = '<div class="alert alert-'+ ((status=='success')?status: 'danger') +' fade in">'
@@ -136,23 +75,6 @@ jQuery(document).ready(function ($) {
     });
 
 
-    var filterSearch = '[data-filter-submit="search"]';
-    $('body').on('click', filterSearch, function (e) {
-        e.stopPropagation();
-        if (App.doFilter != undefined && App.doFilter.length != undefined) {
-            for (var i = 0; i < App.doFilter.length; i++) {
-                App.doFilter[i]();
-            }
-        }
-    });
-
-   var resetSearch = '[data-filter-submit="reset"]';
-   $(resetSearch).on('click', function(e){
-        e.stopPropagation();
-        for(k in App.resetFilter) {
-            App.resetFilter[k]();
-        }
-   });
 
     $('body').on('click', '[data-action="add-discussion"]', function (e) {
         e.stopPropagation();
@@ -530,12 +452,27 @@ jQuery(document).ready(function ($) {
 
     $('.hoverable').popover({trigger: 'hover'});
 
-    var App = window.App;
-    if (window.App.doFilter != undefined && window.App.doFilter.length != undefined) {
-        for (var i = 0; i < window.App.doFilter.length; i++) {
-            window.App.doFilter[i]();
-        }
-    }
+    var query_from_filters = function(model, category) {
+        var query = '';
+        $('[data-filter][data-model="' + model + '"]').each(function(j, filter_element) {
+            var filter_category     = $(filter_element).attr('data-category');
+            var filter_key          = $(filter_element).attr('data-filter');
+            var filter_value        = $(filter_element).val();
+
+            if (filter_category != undefined && filter_category != category) {
+                return;
+            }
+            if (filter_value == undefined || filter_value == null || filter_value.length == 0 || filter_value == '--') {
+                return;
+            }
+
+            query += filter_key+ ":"  + filter_value + ';';
+        });
+
+        return query;
+    };
+
+    App.fitler_to_query = query_from_filters;
 
     var load_model = function(options, callback) {
         var query       = options.query;
@@ -560,42 +497,142 @@ jQuery(document).ready(function ($) {
     };
 
 
-    $('[data-type="model-container"]').each(function(i, elem){
+    var load_more = function(load_more_button) {
+        var btn_load_more = $(load_more_button);
+        var model       = btn_load_more.attr('data-model');
+        var category    = btn_load_more.attr('data-category');
+        var card_type   = btn_load_more.attr('data-card-type');
+
+        var page        = parseInt(btn_load_more.next('input[data-type="page"]').val() || 1);
+        var size        = 24;
+
+        var query       = query_from_filters(model, category);
+
+        var options = {
+            query: query,
+            page: page,
+            size: size,
+            model: model,
+            category: category,
+            card_type: card_type
+        };
+
+        console.log('[*] Load more' + JSON.stringify(options));
+
+        if (page == 1) {
+            btn_load_more.next('input[data-type="page"]').val('1');
+        }
+
+        var container = $('[data-type="model-container"][data-model="' +  model + '"][data-card-type="' + card_type + '"][data-category="'+ category + '"]');
+
+        load_model(options,function(data){
+            container.append(data.html);
+            if (data.last_page <= page)  {
+                btn_load_more.hide();
+            }
+            btn_load_more.next('[data-type="page"]').val(page + 1);
+        });
+
+
+    };
+
+    var initiate_model_loading = function(elem) {
         var model       = $(elem).attr('data-model');
         var category    = $(elem).attr('data-category');
         var card_type   = $(elem).attr('data-card-type');
-        var query = '';
 
-        $('[data-filter][data-model="' + model + '"]').each(function(j, filter_element) {
-            var filter_category     = $(filter_element).attr('data-category');
-            var filter_key          = $(filter_element).attr('data-filter');
-            var filter_value        = $(filter_element).val();
+        var query = query_from_filters(model, category);
 
-            if (filter_category != undefined && filter_category != category) {
-                return;
-            }
-            if (filter_value == undefined || filter_value == null || filter_value.length == 0 || filter_value == '--') {
-                return;
-            }
-
-            query += filter_key+ ":"  + filter_value + ';';
-        });
+        var page = 1;
+        var size = 24;
         var options = {
             query: query,
-            page: 1,
-            size: 24,
+            page: page,
+            size: size,
             model: model,
             category: category,
             card_type: card_type
         };
         console.log('[*]' + JSON.stringify(options));
-        var load_more = $(elem).next('button[data-action="load-more"]');
+        var load_more = $('button[data-action="load-more"][data-model="' +  model + '"][data-card-type="' + card_type + '"][data-category="'+ category + '"]');
         load_model(options,function(data){
             $(elem).html(data.html);
-            if (data.last_page >= 1 && load_more != undefined)  {
+            if (data.last_page <= 1 && load_more != undefined)  {
                 $(load_more).hide();
             }
+            $(load_more).next().val(page + 1);
+        });
+    };
+
+    App.reset_models_listing = initiate_model_loading;
+
+    var filterSearch = '[data-filter-submit="search"]';
+    $('body').on('click', filterSearch, function(e) {
+        e.stopPropagation();
+
+        var model       = $(this).attr('data-model');
+        var category    = $(this).attr('data-category');
+
+        var without_category_selector = '[data-type="model-container"][data-model="' + model + '"]';
+        var with_category_selector = '[data-type="model-container"][data-model="' + model + '"][data-category="' + category + '"]';
+        var selector = null;
+        if (category == undefined) {
+            selector = without_category_selector;
+        } else {
+            selector = with_category_selector;
+        }
+
+        $(selector).each(function(i, elem){
+            initiate_model_loading(elem);
         });
 
     });
+
+    var resetSearch = '[data-filter-submit="reset"]';
+    $('body').on('click', resetSearch, function(e) {
+        var model       = $(this).attr('data-model');
+        var category    = $(this).attr('data-category');
+
+        var without_category_selector = '[data-filter][data-model="' + model + '"]';
+        var with_category_selector = '[data-filter][data-model="' + model + '"][data-category="' + category + '"]';
+        var selector = null;
+        if (category == undefined) {
+            selector = without_category_selector;
+        } else {
+            selector = with_category_selector;
+        }
+        $(selector).each(function(j, filter_element) {
+            var is_fixed = $(filter_element).attr('data-filter-type');
+            if (is_fixed != undefined && is_fixed=='fixed') {
+                return;
+            }
+            $(filter_element).val('');
+        });
+
+
+        without_category_selector = '[data-type="model-container"][data-model="' + model + '"]';
+        with_category_selector = '[data-type="model-container"][data-model="' + model + '"][data-category="' + category + '"]';
+        selector = null;
+        if (category == undefined) {
+            selector = without_category_selector;
+        } else {
+            selector = with_category_selector;
+        }
+
+        $(selector).each(function(i, elem){
+            initiate_model_loading(elem);
+        });
+    });
+
+    $('body').on('click', 'button[data-action="load-more"]', function(e) {
+        e.stopPropagation();
+        load_more(e.target);
+    });
+
+
+    $('[data-type="model-container"]').each(function(i, elem){
+        initiate_model_loading(elem);
+    });
+
+
 });

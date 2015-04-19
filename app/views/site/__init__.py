@@ -108,7 +108,7 @@ def list_profile():
 def my_profile():
     if not hasattr(g, 'user') or g.user is None:
         return redirect(url_for('community_mail'))
-    title, card, context = PageManager.get_detail_title_and_page(PROFILE, 'pk=%s' % g.user.id)
+    title, card, context = PageManager.get_detail_title_and_page(PROFILE, query='pk:%s;' % g.user.id)
     context['card'] = card
     context['title'] = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
     return render_template('site/pages/commons/view.html', **context)
@@ -136,7 +136,11 @@ def paged_list():
     models = extractor.get_list(query, True, page, size)
     html = NodeCollectionFactory.resolve(model, card_type, category, is_scrollable=True).only_list(models)
     context['user'] = g.user if hasattr(g, 'user') and g.user is not None else None
-    return jsonify(status='success', html=html, last_page=extractor.last_page(query, size))
+    last_page=extractor.last_page(query, size)
+    err_html = '<div class="jumbotron"><h6>No data available for this category</h6></div>'
+    if page is 1 and page is last_page and len(html) is 0:
+        html = err_html
+    return jsonify(status='success', html=html, last_page=last_page)
 
 @app.route('/options')
 def ajax_options():
@@ -191,13 +195,12 @@ def ajax_buttons():
 @app.route('/discussion/<slug>')
 @app.route('/post/<slug>')
 def model_view(slug):
-    model_type = [u for u in request.path.split('/') if u and len(u) > 0][0]
-    view = NodeView.factory(model_type, MODEL_DETAIL_VIEW, '/%s/%s' % (model_type, slug), key='slug__iexact')
     from app.views import force_setup_context
-    context = force_setup_context({})
-    context['card'] = view.get_card()
-    title = view.get_title()
-    context['title'] = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
+    model_type = [u for u in request.path.split('/') if u and len(u) > 0][0]
+    value = '/%s/%s' % (model_type, slug)
+    title, card, context = PageManager.get_detail_title_and_page(model_type, query="slug__iexact:%s;" % value)
+    context['card']     = card
+    context['title']    = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
     return render_template('site/pages/commons/view.html', **context)
 
 

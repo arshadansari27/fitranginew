@@ -65,11 +65,7 @@
                         $('#post-alert').removeClass('alert-success');
                     });
                     clear();
-                    for (key in window.App.resetFilter) {
-                        if (key.search('post') == 0) {
-                            window.App.resetFilter[key]();
-                        }
-                    }
+                    window.App.reset_models_listing($('[data-type="model-container"][data-model="post"]'));
                 } else {
                     show_error(data.message);
                 }

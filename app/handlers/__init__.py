@@ -50,8 +50,8 @@ class EditorView(View):
 
     def get_card(self):
         if self.id:
-            extractor = NodeExtractor.factory(self.model_name, dict(pk=self.id))
-            model = extractor.get_single()
+            extractor = NodeExtractor.factory(self.model_name)
+            model = extractor.get_single("pk:%s;" % str(self.id) )
             if not g.user:
                 print 'User not logged in'
                 raise Exception("where is the user")
@@ -103,11 +103,17 @@ class CollectionView(object):
 
     def __get_model_cards(self, models):
         if len(models) > 0:
-            for m in models:
-                print '[*] -> ', m
-            return ''.join(NodeView.get_collection_card(self.model_name, self.card_type, model) for model in models)
+
+            def iterate_models(models):
+                for model in models:
+                    print model
+                    temp = NodeView.get_collection_card(self.model_name, self.card_type, model)
+                    print temp.replace('\n', '').replace('\r', '')
+                    yield model, temp
+
+            return ''.join(u[1] for u in iterate_models(models))
         else:
-            return '<div class="jumbotron"><h6>No data available for this category</h6></div>'
+            return ''
 
     def _get_template_path(self):
         raise Exception('Not implemented')
@@ -189,14 +195,21 @@ class NodeView(View):
         template_path = 'site/models/' + model_name + '/' + card_type + ".html"
         context = force_setup_context(context)
         context['model'] = model
+        print '[*] Test Card:', model_name, model, template_path
         if model_name == STREAM:
             if model.is_post_activity:
                 template_path = 'site/models/post/row.html'
                 context['model'] = model.object
             else:
                 if model.is_entity_activity:
-                    context['entity_view'] = NodeView.get_collection_card(model.object.__class__.__name__.lower(), "grid", model.object)
-                template_path = 'site/models/stream/row.html'
+                    if model.object and model.object.id:
+                        m_name, id = (model.object.__class__.__name__.lower(), str(model.object.id))
+                        if m_name == 'profile':
+                            c_type = ICON_VIEW
+                        else:
+                            c_type = GRID_VIEW
+                        entity_view =  NodeView.get_collection_card(m_name, c_type, NodeExtractor.factory(m_name).get_single("pk:%s" % id), {})
+                        context['entity_view'] = entity_view
         template = env.get_template(template_path)
         return template.render(**context)
 
@@ -357,7 +370,7 @@ class DetailPage(Page):
         super(DetailPage, self).__init__(model_name)
 
     def get_context(self, context):
-        if self.model_name == ARTICLE:
+        if self.model_name == ACTIVITY:
             adventure_list = NodeCollectionFactory.resolve(ADVENTURE, GRID_VIEW).get_card(context)
             follower_list = NodeCollectionFactory.resolve(PROFILE, ROW_VIEW).get_card(context)
             discussion_list = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW).get_card(context)

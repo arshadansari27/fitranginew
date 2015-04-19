@@ -50,8 +50,12 @@
         {% endif %}
         {{model.process_content|safe}}
         <hr/>
-        <input id="post-filter" type="hidden" data-model="post" data-category="all" data-filter="parent__article__pk" value="{{model.id}}"/>
-        <div class="">{{ comments|safe }}</div>
+        <input id="post-filter" type="hidden" data-model="post" data-category="all" data-filter="parent__article__pk" value="{{model.id}}" data-filter-type="fixed" />
+        <div class="">
+            {% import 'site/includes/post_box.html' as post %}
+            {{ post.show_post_form(model, 'comment') }}
+            {{ comments|safe }}
+        </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-3">
         <h4 class="lightgrey">Sponsored</h4>
