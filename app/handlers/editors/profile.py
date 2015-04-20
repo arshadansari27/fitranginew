@@ -76,7 +76,7 @@ def edit_profile(profile, data):
         ll = loc_cls.objects(name__iexact=location).first()
         if not ll:
             ll = loc_cls(name=location)
-            ll.geo_location = [location_lat, location_long]
+            ll.geo_location = [float(location_lat), float(location_long)]
             ll.save()
         node.location = ll
     node.save()
