@@ -1,7 +1,7 @@
 __author__ = 'arshad'
 
 from wtforms import Form, PasswordField, BooleanField, SelectField, TextAreaField
-from wtforms.fields import TextAreaField
+from wtforms.fields import TextAreaField, HiddenField
 from wtforms.widgets import TextInput
 
 class ChangePasswordForm(Form):
@@ -28,3 +28,8 @@ class ProfileForm(Form):
     youtube_channel = TextAreaField()
     blog_channel = TextAreaField()
 
+class LocationForm(Form):
+    name = TextAreaField()
+    geo_location_name = HiddenField()
+    geo_location_lat = HiddenField()
+    geo_location_long = HiddenField()

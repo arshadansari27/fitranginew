@@ -24,6 +24,9 @@
     <link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Roboto:500,900,400italic,700italic,300,700,300italic,400' rel='stylesheet' type='text/css'>
 
+    <!-- Google Maps Api -->
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+
     <!-- Custom CSS -->
     <link href="/css/my-style.css" rel="stylesheet">
     <link href="/css/menus.css" rel="stylesheet">
@@ -40,6 +43,7 @@
     <link href="/css/summernote.css" rel="stylesheet" type="text/css" />
     <link href="/css/summernote-bs3.css" rel="stylesheet" type="text/css" />
     <script src="/js/summernote.js"></script>
+
 
 
     {% block header_scripts %}{% endblock %}
@@ -68,6 +72,10 @@
             border: 0;
             box-shadow: 0;
             display: inline;
+        }
+
+        .ui-autocomplete {
+            z-index: 5000;
         }
 
     </style>
@@ -259,6 +267,7 @@
 <script src="/js/css3-mediaqueries.js"></script>
 <script src="/js/bootstrap-dialog.min.js"></script>
 <script src="/js/bootstrap-tagsinput.js"></script>
+<script src="/js/jquery.geocomplete.min.js"></script>
 <script src="/appjs/handler.js"></script>
 <script>
     $(function(){

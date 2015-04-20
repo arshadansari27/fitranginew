@@ -9,14 +9,14 @@ from flask_admin.contrib.mongoengine import ModelView
 from flask import g, request, flash, url_for, redirect
 from app import admin
 from app.utils import get_current_user
-from app.views.forms import ChangePasswordForm, UserPreferenceForm, ProfileForm
+from app.views.forms import ChangePasswordForm, UserPreferenceForm, ProfileForm, LocationForm
 
 # Define wtforms widget and field
 from app.models.profile import Profile, ProfileType
 from app.models.streams import ActivityStream, ChatMessage
 from app.models.content import Content, Channel, Comment, Article, Post, PostVote, Discussion, Advertisement
 from app.models.activity import Activity
-from app.models.adventure import Adventure, Location, State
+from app.models.adventure import Adventure, Location
 from app.models.event import Event
 from app.models.trip import Trip
 from app.models.relationships import RelationShips
@@ -125,7 +125,6 @@ class GeneralTextAreaField(fields.TextAreaField):
     widget = GeneralTextAreaWidget()
 
 
-
 class TagAdminView(ModelView):
     column_filters = ['name']
 
@@ -137,19 +136,6 @@ class TagAdminView(ModelView):
             return True
         return False
 
-
-class LocationAdminView(ModelView):
-    create_template = 'admin/my_custom/create.html'
-    edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'zipcode', 'state']
-    column_list = ('name', 'state')
-    column_filters = ['name']
-    column_searchable_list = ('name', 'zipcode')
-
-    def is_accessible(self):
-        if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
-            return True
-        return False
 
 
 class ActivityAdminView(ModelView):
@@ -172,9 +158,10 @@ class AdventureAdminView(ModelView):
     edit_template = 'admin/my_custom/edit.html'
     form_columns = ['name', 'description', 'about', 'location', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image', 'activities']
     column_list = ('name', 'description', 'cover_image')
-    column_filters = ['name', FilterLocation('location.id', 'Location'), FilterActivities('activities.id', 'Activity')]
+    column_filters = ['name', FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name',)
     form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField)
+
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
             return True
@@ -405,6 +392,65 @@ class ChangePasswordView(flask_admin.BaseView):
     def is_visible(self):
         return False
 
+
+class LocationAdminView(ModelView):
+    column_list = ('name', 'geo_location')
+    column_sortable_list = ('name')
+
+    column_searchable_list = ('name',)
+
+    form = LocationForm
+    #form_overrides = dict(name=GeoCompleteTextInputField)
+    form_widget_args = dict(name={'class': 'geo-complete'})
+
+    """
+    def get_list(self, *args, **kwargs):
+        count, data = super(LocationAdminView, self).get_list(*args, **kwargs)
+
+
+        # Grab user names
+        query = {'_id': {'$in': [x['user_id'] for x in data]}}
+        users = db.user.find(query, fields=('name',))
+
+        # Contribute user names to the models
+        users_map = dict((x['_id'], x['name']) for x in users)
+
+        for item in data:
+            item['user_name'] = users_map.get(item['user_id'])
+        return count, data
+
+    # Contribute list of user choices to the forms
+    def _feed_user_choices(self, form):
+        users = db.user.find(fields=('name',))
+        form.user_id.choices = [(str(x['_id']), x['name']) for x in users]
+        return form
+    """
+
+    def edit_form(self, obj):
+        form = super(LocationAdminView, self).edit_form(obj)
+        form.geo_location_name.data = obj.name
+        x, y = obj.geo_location['coordinates']
+        form.geo_location_lat.data, form.geo_location_long.data = x, y
+        return form
+
+    # Correct user_id reference before saving
+
+    def on_model_change(self, form, model):
+        name    = form['geo_location_name'].data
+        lat     = form['geo_location_lat'].data
+        long    = form['geo_location_long'].data
+        print '[*] Saving location', name, lat, long
+        model.name = name
+        model.geo_location = [float(lat), float(long)]
+        return model
+
+    def is_accessible(self):
+        if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
+            return True
+        return False
+
+
+
 class ProfileSettingAdminView(flask_admin.BaseView):
 
     @flask_admin.expose('/', methods=['GET', 'POST'])
@@ -465,7 +511,6 @@ admin.add_view(PostForContentAdminView(Post, name="Posts on content", endpoint="
 admin.add_view(EventAdminView(Event, category="Organizers"))
 admin.add_view(TripAdminView(Trip, category="Organizers"))
 
-admin.add_view(RestrictedAdminView(State, category="Tools"))
 admin.add_view(RestrictedAdminView(ProfileType, category="Tools"))
 admin.add_view(LocationAdminView(Location, category="Tools"))
 admin.add_view(ChannelAdminView(Channel, category="Tools"))

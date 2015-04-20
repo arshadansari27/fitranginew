@@ -4,9 +4,13 @@
 {% block head_tail %}
     {{ super() }}
     <!--link href="{{ url_for('static', filename='layout.css') }}" rel="stylesheet"-->
+    <script src="/js/jquery.min.js"></script>
     <link href="/css/font-awesome.min.css" rel="stylesheet">
     <link href="/css/morris.css" rel="stylesheet">
     <link href="/css/bootstrap-tagsinput.css" rel="stylesheet" type="text/css">
+    <!-- Google Maps Api -->
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -90,4 +94,25 @@
         </div>
     </div>
 </div>
+
+{% endblock %}
+{% block tail_js %}
+        {{super()}}
+        <script src="/js/jquery.geocomplete.min.js"></script>
+        <script language="javascript">
+        $(document).ready(function(){
+          if ($(".geo-complete") != undefined) {
+              $(".geo-complete").geocomplete().bind("geocode:result", function (event, result) {
+                console.log("Result: " + JSON.stringify(result));
+                var name = result.formatted_address;
+                var lat = result.geometry.location.k;
+                var lon = result.geometry.location.D;
+                $('input[type="hidden"][name="geo_location_name"]').val(name);
+                $('input[type="hidden"][name="geo_location_lat"]').val(lat);
+                $('input[type="hidden"][name="geo_location_long"]').val(lon);
+
+              });
+          }
+        });
+        </script>
 {% endblock %}

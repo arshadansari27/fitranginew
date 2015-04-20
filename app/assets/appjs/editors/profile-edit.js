@@ -7,7 +7,7 @@ $(document).ready(function() {
     App.profile = App.profile || {};
 
 
-    App.profile.edit_profile = function(node, data, calllback) {
+    App.profile.edit_profile = function(node, data, callback) {
         var options = {
             node: node,
             data: data,

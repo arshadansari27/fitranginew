@@ -64,19 +64,21 @@ class ProfileEditor(NodeEditor):
 def edit_profile(profile, data):
     node = Profile.objects(pk=profile).first()
     for k, v in data.iteritems():
-        if not hasattr(node, k) or k == 'email' or k == 'location':
+        if not hasattr(node, k) or k == 'email' or k == 'location' or k.startswith('location'):
             continue
         setattr(node, k, v)
 
-    location = data.get('location', None)
+    location        = data.get('location', None)
+    location_lat    = data.get('location_lat', None)
+    location_long   = data.get('location_long', None)
     if location is not None and len(location) > 0:
-        options = dict((u.full_name, str(getattr(u, 'id'))) for u in NodeFactory.get_class_by_name(LOCATION).objects.all())
-        if options.has_key(location):
-            node.location = NodeFactory.get_class_by_name(LOCATION).objects(pk=options.get(location)).first()
-            node.location_typed = None
-        else:
-            node.location_typed = location
-            node.location = None
+        loc_cls = NodeFactory.get_class_by_name(LOCATION)
+        ll = loc_cls.objects(name__iexact=location).first()
+        if not ll:
+            ll = loc_cls(name=location)
+            ll.geo_location = [location_lat, location_long]
+            ll.save()
+        node.location = ll
     node.save()
     return node
 

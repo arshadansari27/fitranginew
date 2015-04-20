@@ -4,29 +4,17 @@ __author__ = 'arshad'
 
 from app.models import update_content, Entity, db
 
-class State(db.Document):
-    state = db.StringField()
-    country = db.StringField()
-
-    def __unicode__(self):
-        return "%s %s" % ("%s -" % self.state if self.state else '', self.country)
-
 @update_content.apply
 class Location(db.Document):
     geo_location = db.PointField()
     name = db.StringField()
-    zipcode = db.StringField()
-    state = db.ReferenceField('State')
 
     meta = {
         'indexes': [
-            {'fields': ['zipcode'], 'unique': True, 'sparse': False, 'types': False },
+            {'fields': ['geo_location'], 'unique': True, 'sparse': False, 'types': False },
+            {'fields': ['name'], 'unique': True, 'sparse': False, 'types': False },
         ],
     }
-
-    @property
-    def full_name(self):
-        return "%s, %s, %s" % (self.name, self.state.state, self.state.country)
 
     def __repr__(self):
         return self.name

@@ -227,11 +227,13 @@ jQuery(document).ready(function ($) {
                     cssClass: 'btn-primary',
                     action: function(dialog){
                         dialog.getModalBody().find('.alert').remove();
-                        var id, name, phone, location, website, facebook, google_plus, linked_in, youtube_channel, blog_channel;
+                        var id, name, phone, location, website, facebook, google_plus, linked_in, youtube_channel, blog_channel, location_lat, location_long;
                         id              = $('#profile-id').val();
                         name            = $('#name-edit').val();
                         phone           = $('#phone-edit').val();
-                        location        = $('#location-edit').val();
+                        location        = $('#geo_location_name').val();
+                        location_lat    = $('#geo_location_lat').val();
+                        location_long   = $('#geo_location_long').val();
                         website         = $('#website-edit').val();
                         facebook        = $('#facebook-edit').val();
                         google_plus     = $('#google-plus-edit').val();
@@ -242,6 +244,8 @@ jQuery(document).ready(function ($) {
                             name: name,
                             phone: phone,
                             location: location,
+                            location_lat: location_lat,
+                            location_long: location_long,
                             website:website,
                             facebook: facebook,
                             google_plus: google_plus,
@@ -634,5 +638,13 @@ jQuery(document).ready(function ($) {
         initiate_model_loading(elem);
     });
 
+     $(".geo-complete").geocomplete()
+		  .bind("geocode:result", function(event, result){
+			console.log("Result: " + JSON.stringify(result));
+			var name = result.formatted_address;
+			var lat  = result.geometry.location.k;
+			var lon  = result.geometry.location.D;
+			$('[data-type="geo-complete"]').val(name + "|" + lat +'|' + lon);
+     });
 
 });

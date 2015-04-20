@@ -16,19 +16,10 @@
             </div>
             <div class="form-group">
                 <label for="heading">Location</label>
-                <input id="location-edit" type="text" list="location-data" class="form-control" placeholder="Location (city or region, state, country)" value="{% if user.location %}{{user.location.display_name}}{% endif %}">
-                <datalist id="location-data">
-                    <option value="">
-                </datalist>
-                <script>
-                    $(document).ready(function(){
-                        $.ajax({
-                            url: '/options?model_name=location&attr=name'
-                        }).done(function (data) {
-                            $('#location-data').append(data);
-                        });
-                    });
-                </script>
+                <input id="location-edit" type="text" class="geo-complete form-control" placeholder="Hit enter to auto complete on location" value="{% if user.location %}{{user.location.name}}{% endif %}">
+                <input type="hidden" name="geo_location_name" id="geo_location_name" value="{% if user.location %}{{user.location.name}}{% endif %}"/>
+                <input type="hidden" name="geo_location_lat" id="geo_location_lat" value="{% if user.location and user.location.geo_location %}{{user.location.geo_location['coordinates'][0]}}{% endif %}"/>
+                <input type="hidden" name="geo_location_long" id="geo_location_long" value="{% if user.location and user.location.get_location %}{{user.location.geo_location['coordinates'][1]}}{% endif %}"/>
             </div>
             <div class="form-group">
                 <label for="heading">Website</label>
@@ -57,5 +48,19 @@
         </form>
     </div>
 </section>
+<script>
+    $(document).ready(function(){
+        $(".geo-complete").geocomplete()
+		  .bind("geocode:result", function(event, result){
+			console.log("Result: " + JSON.stringify(result));
+			var name = result.formatted_address;
+			var lat  = result.geometry.location.k;
+			var lon  = result.geometry.location.D;
+            $('input[type="hidden"][name="geo_location_name"]').val(name);
+            $('input[type="hidden"][name="geo_location_lat"]').val(lat);
+            $('input[type="hidden"][name="geo_location_long"]').val(lon);
+        });
 
+    });
+</script>
 
