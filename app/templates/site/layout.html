@@ -143,7 +143,7 @@
                             <li>
                                <a href="#"  role="button" data-placement="left" data-toggle="popover" data-trigger="focus" data-content="Click to change the cover" class="hoverable" data-action="edit-cover-image" data-model-id="{{user.id}}" data-model="profile" data-trigger="hover"><img class="img-responsive" src="{{user.cover_image_path}}" /></a>
                             </li>
-                            <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="/community/my">My Page</a></li>
+                            <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="/community/my"><i class="fa fa-info"></i>&nbsp;My Page</a></li>
                             <li><a data-action="edit-profile" data-model-id="{{user.id}}" data-user-id="{{user.id}}" href="#"><i class="fa fa-user"></i>&nbsp;Edit Profile</a></li>
                             <li><a data-action="edit-profile-preferences" data-model-id="{{user.id}}" data-user-id="{{user.id}}" href="#"><i class="fa fa-cog"></i>&nbsp;Edit Preference</a></li>
                             <li><a data-action="edit-profile-password" data-model-id="{{user.id}}" data-user-id="{{user.id}}" href="#"><i class="fa fa-key"></i>&nbsp;Change Password</a></li>

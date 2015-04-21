@@ -108,7 +108,6 @@ class CollectionView(object):
                 for model in models:
                     print model
                     temp = NodeView.get_collection_card(self.model_name, self.card_type, model)
-                    print temp.replace('\n', '').replace('\r', '')
                     yield model, temp
 
             return ''.join(u[1] for u in iterate_models(models))
