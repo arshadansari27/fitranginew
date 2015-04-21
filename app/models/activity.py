@@ -4,30 +4,31 @@ from app.models import update_content, db, Entity
 from app.models.relationships import RelationShips
 
 ICONS = {
-"HotAirBallooning" :"/images/adventure-icons/air-activities/hot-air-balooning.png",
-"Paragliding" :"/images/adventure-icons/air-activities/paragliding.png",
-"ParaMotoring" :"/images/adventure-icons/air-activities/para-motoring.png",
-"Parasailing" :"/images/adventure-icons/air-activities/parasailing.png",
-"SkyDiving" :"/images/adventure-icons/air-activities/sky-diving.png",
-"ZipLine" :"/images/adventure-icons/air-activities/zip-line.png",
-"Camping" :"/images/adventure-icons/land-activities/camping.png",
-"Canyoning" :"/images/adventure-icons/land-activities/canyoning.png",
-"Cycling-Biking" :"/images/adventure-icons/land-activities/cycling-biking.png",
-"HorseRiding" :"/images/adventure-icons/land-activities/horse-riding.png",
-"Marathons" :"/images/adventure-icons/land-activities/marathons.png",
-"Mountaineering" :"/images/adventure-icons/land-activities/mountaineering.png",
-"RappellingandValleyCrossing" :"/images/adventure-icons/land-activities/rappelling-valley-crossing.png",
-"RockClimbing" :"/images/adventure-icons/land-activities/rock-climbing.png",
-"Skiing" :"/images/adventure-icons/land-activities/skiing.png",
-"Snow-Flow" :"/images/adventure-icons/land-activities/snowboarding.png",
-"TrekkingandHiking" :"/images/adventure-icons/land-activities/trekking-hiking.png",
-"Zorbing" :"/images/adventure-icons/land-activities/zorbing.png",
-"Kayaking" :"/images/adventure-icons/water-activities/kayaking.png",
-"KiteSurfing" :"/images/adventure-icons/water-activities/kite-surfing.png",
-"ScubaDiving" :"/images/adventure-icons/water-activities/scuba-diving.png",
-"Snorkelling" :"/images/adventure-icons/water-activities/snorkelling.png",
-"Surfing" :"/images/adventure-icons/water-activities/surfing.png",
-"WaterRafting" :"/images/adventure-icons/water-activities/water-rafting.png"
+"hotairballooning" :"/images/adventure-icons/air-activities/hot-air-balooning.png",
+"paragliding" :"/images/adventure-icons/air-activities/paragliding.png",
+"paramotoring" :"/images/adventure-icons/air-activities/para-motoring.png",
+"parasailing" :"/images/adventure-icons/air-activities/parasailing.png",
+"skydiving" :"/images/adventure-icons/air-activities/sky-diving.png",
+"zipline" :"/images/adventure-icons/air-activities/zip-line.png",
+"bungeejumping": '/images/adventure-icons/air-activities/bungee-jumping.png',
+"camping" :"/images/adventure-icons/land-activities/camping.png",
+"canyoning" :"/images/adventure-icons/land-activities/canyoning.png",
+"cyclingbiking" :"/images/adventure-icons/land-activities/cycling-biking.png",
+"horseriding" :"/images/adventure-icons/land-activities/horse-riding.png",
+"marathons" :"/images/adventure-icons/land-activities/marathons.png",
+"mountaineering" :"/images/adventure-icons/land-activities/mountaineering.png",
+"rappellingandvalleycrossing" :"/images/adventure-icons/land-activities/rappelling-valley-crossing.png",
+"rockclimbing" :"/images/adventure-icons/land-activities/rock-climbing.png",
+"skiing" :"/images/adventure-icons/land-activities/skiing.png",
+"snowflow" :"/images/adventure-icons/land-activities/snowboarding.png",
+"trekkingandhiking" :"/images/adventure-icons/land-activities/trekking-hiking.png",
+"zorbing" :"/images/adventure-icons/land-activities/zorbing.png",
+"kayaking" :"/images/adventure-icons/water-activities/kayaking.png",
+"kitesurfing" :"/images/adventure-icons/water-activities/kite-surfing.png",
+"scubadiving" :"/images/adventure-icons/water-activities/scuba-diving.png",
+"snorkelling" :"/images/adventure-icons/water-activities/snorkelling.png",
+"surfing" :"/images/adventure-icons/water-activities/surfing.png",
+"waterrafting" :"/images/adventure-icons/water-activities/water-rafting.png"
 }
 
 
@@ -59,6 +60,7 @@ class Activity(Entity, db.Document):
 
     @property
     def icon_image_path(self):
-        path = ICONS.get(self.name.replace(' ', ''))
+        icon_path = self.name.replace(' ', '').replace('-', '').lower()
+        path = ICONS.get(icon_path)
         return path
 
