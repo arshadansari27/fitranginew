@@ -6,9 +6,9 @@
                 <div class="favourite" style="background: white;">
                     <img src="{{model.icon_image_path}}" class="img-rounded img-responsive">
                     {% if model in user.favorite_activities %}
-                    <a href="#" data-type="activity" data-action="add-favorite" data-model="{{model.id}}" data-user="{{user.id}}"><h3><i class="fa fa-check"></i>Added to Favourites</h3></a>
+                    <a href="#" data-type="activity" data-action="remove-activity-favorite" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><h3><i class="fa fa-check"></i>Added to Favourites</h3></a>
                     {% else %}
-                    <a href="#" data-type="activity" data-action="remove-favorite" data-model="{{model.id}}" data-user="{{user.id}}"><h3>Add to Favourites</h3></a>
+                    <a href="#" data-type="activity" data-action="add-activity-favorite" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><h3>Add to Favourites</h3></a>
                     {% endif %}
                 </div>
             </div>

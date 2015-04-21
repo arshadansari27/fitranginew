@@ -33,28 +33,36 @@ class RelationShips(db.Document):
         ],
     }
 
+    def __unicode__(self):
+        return self.subject, '=', self.relation, '=>', self.object
+
+    def __repr__(self):
+        return self.subject, '=', self.relation, '=>', self.object
 
     @classmethod
     def create_relationship(cls, subject, object, relation):
         from app.models.streams import ActivityStream
         if RelationShips.objects(subject=subject, object=object, relation=relation).first() is None:
-            relationship = RelationShips(subject=subject, object=object, relation=relation)
-            relationship.save()
-            ActivityStream.push_relationship_to_stream(relationship)
+            relationship1 = RelationShips(subject=subject, object=object, relation=relation)
+            relationship1.save()
+            ActivityStream.push_relationship_to_stream(relationship1)
         if RelationShips.objects(subject=object, object=subject, relation=inverse_relation.get(relation)).first() is None:
-            relationship = RelationShips(subject=object, object=subject, relation=inverse_relation.get(relation))
-            relationship.save()
+            relationship2 = RelationShips(subject=object, object=subject, relation=inverse_relation.get(relation))
+            relationship2.save()
+        print 'Created Relationship:', relationship1, '|', relationship2
+        return relationship1, relationship2
 
 
 
     @classmethod
     def remove_relationship(cls, subject, object, relation):
-        relation = RelationShips.objects(subject=subject, object=object, relation=relation).first()
-        if relation is not None:
-            relation.delete()
-        relation = RelationShips.objects(subject=object, object=subject, relation=inverse_relation.get(relation)).first()
-        if relation is not None:
-            relation.delete()
+        relationship1 = RelationShips.objects(subject=subject, object=object, relation=relation).first()
+        if relationship1 is not None:
+            relationship1.delete()
+        relationship2 = RelationShips.objects(subject=object, object=subject, relation=inverse_relation.get(relation)).first()
+        if relationship2 is not None:
+            relationship2.delete()
+        print 'Removed Relationship:', relationship1, '|', relationship2
 
     @classmethod
     def follow(cls, subject, object):
@@ -66,7 +74,7 @@ class RelationShips(db.Document):
 
     @classmethod
     def favorite(cls, subject, object):
-        cls.create_relationship(subject, object, FAVORITE)
+        r1, r2 = cls.create_relationship(subject, object, FAVORITE)
 
     @classmethod
     def un_favorite(cls, subject, object):
@@ -74,7 +82,7 @@ class RelationShips(db.Document):
 
     @classmethod
     def interested(cls, subject, object):
-         cls.create_relationship(subject, object, INTERESTED)
+         r1, r2 = cls.create_relationship(subject, object, INTERESTED)
 
     @classmethod
     def uninterested(cls, subject, object):
@@ -82,7 +90,7 @@ class RelationShips(db.Document):
 
     @classmethod
     def join(cls, subject, object):
-        cls.create_relationship(subject, object, JOINED)
+        r1, r2 = cls.create_relationship(subject, object, JOINED)
 
     @classmethod
     def unjoin(cls, subject, object):
@@ -90,7 +98,7 @@ class RelationShips(db.Document):
 
     @classmethod
     def accomplish(cls, subject, object):
-        cls.create_relationship(subject, object, ACCOMPLISHED)
+        r1, r2 = cls.create_relationship(subject, object, ACCOMPLISHED)
 
     @classmethod
     def unaccomplish(cls, subject, object):
@@ -98,7 +106,7 @@ class RelationShips(db.Document):
 
     @classmethod
     def wishlist(cls, subject, object):
-        cls.create_relationship(subject, object, WISHLISTED)
+        r1, r2 = cls.create_relationship(subject, object, WISHLISTED)
 
     @classmethod
     def unwishlist(cls, subject, object):

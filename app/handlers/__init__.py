@@ -279,7 +279,7 @@ class Page(object):
     def factory(self, model_name, type):
         if type == 'detail':
             if model_name == ACTIVITY:
-                return article_detail_page
+                return activity_detail_page
             elif model_name == ADVENTURE:
                 return adventure_detail_page
             elif model_name == PROFILE:
