@@ -128,9 +128,10 @@
           </div-->
 
         	<ul class="top-icons nav navbar-nav navbar-right pull-right">
+                <li><div class="top-icon"><a class="" href="/community/profile" title="Members"><i class="fa fa-users"></i></a></div></li>
                 {% if not (user and user.id) %}
-      	        <li><div class="top-icon"><a class="show_login" href="#" title="Login"><i class="fa fa-user"></i></a></div></li>
-                <li><div class="top-icon"><a class="show_signup" href="#" title="Register"><i class="fa fa-key"></i></a></div></li>
+      	        <li><div class="top-icon"><a class="show_login" href="#" title="Login"><i class="fa fa-key"></i></a></div></li>
+                <li><div class="top-icon"><a class="show_signup" href="#" title="Register"><i class="fa fa-user">+</i></a></div></li>
                 {% elif user and user.id  %}
                 <li class="dropdown">
                     <div class="top-icon">
@@ -142,11 +143,11 @@
                             <li>
                                <a href="#"  role="button" data-placement="left" data-toggle="popover" data-trigger="focus" data-content="Click to change the cover" class="hoverable" data-action="edit-cover-image" data-model-id="{{user.id}}" data-model="profile" data-trigger="hover"><img class="img-responsive" src="{{user.cover_image_path}}" /></a>
                             </li>
+                            <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="/community/my">My Page</a></li>
                             <li><a data-action="edit-profile" data-model-id="{{user.id}}" data-user-id="{{user.id}}" href="#"><i class="fa fa-user"></i>&nbsp;Edit Profile</a></li>
                             <li><a data-action="edit-profile-preferences" data-model-id="{{user.id}}" data-user-id="{{user.id}}" href="#"><i class="fa fa-cog"></i>&nbsp;Edit Preference</a></li>
                             <li><a data-action="edit-profile-password" data-model-id="{{user.id}}" data-user-id="{{user.id}}" href="#"><i class="fa fa-key"></i>&nbsp;Change Password</a></li>
-                            <li><a href="/admin"><i class="fa fa-dashboard"></i>&nbsp;Admin dashboard</a></li>
-                            <li><a data-action="edit-profile-preferences" data-model-id="{{user.id}}" data-user-id="{{user.id}}" href="#"><i class="fa fa-cog"></i>&nbsp;Edit Preference</a></li>
+                            {% if 'Admin' in user.roles %}<li><a href="/admin"><i class="fa fa-dashboard"></i>&nbsp;Admin dashboard</a></li>{% endif %}
                             <li><a href="/logout"><i class="fa fa-lock"></i> Log Out</a></li>
                         </ul>
                     </div>
