@@ -78,6 +78,17 @@
             z-index: 5000;
         }
 
+        .exactCenter {
+            width:100px;
+            height:100px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin-top: -50px;
+            margin-left: -50px;
+            z-index: 100000;
+        }
+
     </style>
 
 </head>
@@ -257,7 +268,7 @@
 
 </section>
 
-
+<img id="loadingImage" class="exactCenter" src="/img/loading.gif"/>
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
@@ -272,6 +283,7 @@
 <script src="/appjs/handler.js"></script>
 <script>
     $(function(){
+        $('#loadingImage').hide();
         $('li.inner-level-dropdown>a').on('click', function (event) {
             event.stopPropagation();
             $('li.inner-level-dropdown').removeClass('open');
