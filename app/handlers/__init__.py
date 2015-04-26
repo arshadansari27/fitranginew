@@ -150,6 +150,8 @@ class CollectionType(object):
         from app.views import env
         card = self.collection_view.get_card(context)
         context.update(dict(list_container=card))
+        if hasattr(self, 'size') and self.size is not None:
+            context['size'] = self.size
         template_path = self._get_template()
         template = env.get_template(template_path)
         html = template.render(**context)
@@ -158,8 +160,9 @@ class CollectionType(object):
 
 class FixedCollection(CollectionType):
 
-    def __init__(self, collection_view):
+    def __init__(self, collection_view, size=6):
         super(FixedCollection, self).__init__(collection_view)
+        self.size = size
 
     def _get_template(self):
         return 'site/pages/collections/fixed.html'
@@ -177,12 +180,12 @@ class ScrollableCollection(CollectionType):
 class NodeCollectionFactory(object):
 
     @classmethod
-    def resolve(cls, model_name, card_type, category='all', is_scrollable=True):
+    def resolve(cls, model_name, card_type, category='all', fixed_size=None):
         collection_view = CollectionView.build(model_name, card_type, category)
-        if is_scrollable:
+        if not fixed_size:
             return ScrollableCollection(collection_view)
         else:
-            return FixedCollection(collection_view)
+            return FixedCollection(collection_view, fixed_size)
 
 
 class NodeView(View):
@@ -194,7 +197,6 @@ class NodeView(View):
         template_path = 'site/models/' + model_name + '/' + card_type + ".html"
         context = force_setup_context(context)
         context['model'] = model
-        print '[*] Test Card:', model_name, model, template_path
         if model_name == STREAM:
             if model.is_post_activity:
                 template_path = 'site/models/post/row.html'
@@ -324,16 +326,16 @@ class LandingPage(Page):
                             profile=Profile.objects(type__ne=ProfileType.objects(name__iexact='subscription only').first()).count(),
                             discussion=Discussion.objects.count(),
                             article=Article.objects.count())
-            journal = NodeCollectionFactory.resolve(ARTICLE, GRID_VIEW, is_scrollable=False).get_card(context)
-            enthusiast_profile = NodeCollectionFactory.resolve(PROFILE, GRID_VIEW, is_scrollable=False, category='enthusiast').get_card(context)
-            organizer_profile = NodeCollectionFactory.resolve(PROFILE, GRID_VIEW, is_scrollable=False, category='organizer').get_card(context)
-            event = NodeCollectionFactory.resolve(EVENT, GRID_VIEW, is_scrollable=False).get_card(context)
-            discussion = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, is_scrollable=False).get_card(context)
-            return dict(counters=counters, journal=journal, enthusiast_profile=enthusiast_profile, organizer_profile=organizer_profile, event=event, discussion=discussion)
+            journal = NodeCollectionFactory.resolve(ARTICLE, GRID_VIEW, fixed_size=6).get_card(context)
+            adventure = NodeCollectionFactory.resolve(ADVENTURE, GRID_VIEW, fixed_size=6).get_card(context)
+            event = NodeCollectionFactory.resolve(EVENT, GRID_VIEW, fixed_size=6).get_card(context)
+            profile = NodeCollectionFactory.resolve(PROFILE, ICON_VIEW, fixed_size=24).get_card(context)
+            discussion = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, fixed_size=4).get_card(context)
+            return dict(counters=counters, adventure=adventure, journal=journal, profile=profile, event=event, discussion=discussion)
         elif self.model_name == 'community':
-            profile = NodeCollectionFactory.resolve(PROFILE, ICON_VIEW, is_scrollable=False).get_card(context)
-            event = NodeCollectionFactory.resolve(EVENT, GRID_VIEW, is_scrollable=False).get_card(context)
-            discussion = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, is_scrollable=False).get_card(context)
+            profile = NodeCollectionFactory.resolve(PROFILE, ICON_VIEW, fixed_size=24).get_card(context)
+            event = NodeCollectionFactory.resolve(EVENT, GRID_VIEW, fixed_size=6).get_card(context)
+            discussion = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, fixed_size=4).get_card(context)
             return dict(profile=profile, event=event, discussion=discussion)
         else:
             raise Exception('Not implemented')
@@ -352,7 +354,7 @@ class SearchPage(Page):
             all = NodeCollectionFactory.resolve(ARTICLE, GRID_VIEW).get_card(context)
             top = NodeCollectionFactory.resolve(ARTICLE, ROW_VIEW, category='top').get_card(context)
             my = NodeCollectionFactory.resolve(ARTICLE, ROW_VIEW, category='my').get_card(context)
-            advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, is_scrollable=False).get_card(context)
+            advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, fixed_size=3).get_card(context)
             return dict(all=all, top=top, my=my, advertisement_list=advertisement_list)
         elif self.model_name == DISCUSSION:
             featured = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, category='featured').get_card(context)
@@ -376,8 +378,8 @@ class DetailPage(Page):
             article_list = NodeCollectionFactory.resolve(ARTICLE, GRID_VIEW).get_card(context)
             return dict(adventure_list=adventure_list, follower_list=follower_list, discussion_list=discussion_list, article_list=article_list)
         elif self.model_name == ADVENTURE:
-            other_adventure_list = NodeCollectionFactory.resolve(ADVENTURE, GRID_ROW_VIEW, is_scrollable=False).get_card(context)
-            advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, is_scrollable=False).get_card(context)
+            other_adventure_list = NodeCollectionFactory.resolve(ADVENTURE, GRID_ROW_VIEW, fixed_size=4).get_card(context)
+            advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, fixed_size=3).get_card(context)
             reviews = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
             return dict(other_adventure_list=other_adventure_list, advertisement_list=advertisement_list, reviews=reviews)
         elif self.model_name == PROFILE:
@@ -396,13 +398,13 @@ class DetailPage(Page):
                             featured_profiles=featured_profiles)
         elif self.model_name == ARTICLE:
             comments = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
-            related = NodeCollectionFactory.resolve(ARTICLE, GRID_ROW_VIEW, is_scrollable=False).get_card(context)
-            advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, is_scrollable=False).get_card(context)
+            related = NodeCollectionFactory.resolve(ARTICLE, GRID_ROW_VIEW, fixed_size=3).get_card(context)
+            advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, fixed_size=3).get_card(context)
             return dict(comments=comments, related=related, advertisement_list=advertisement_list)
         elif self.model_name == DISCUSSION:
             comments = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
-            featured = NodeCollectionFactory.resolve(ARTICLE, GRID_ROW_VIEW, is_scrollable=False).get_card(context)
-            advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, is_scrollable=False).get_card(context)
+            featured = NodeCollectionFactory.resolve(DISCUSSION, GRID_ROW_VIEW, fixed_size=3).get_card(context)
+            advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, fixed_size=3).get_card(context)
             return dict(comments=comments, featured=featured, advertisement_list=advertisement_list)
 
 

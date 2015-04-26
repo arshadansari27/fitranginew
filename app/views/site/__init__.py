@@ -134,7 +134,7 @@ def paged_list():
     context = {}
     extractor = NodeExtractor.factory(model)
     models = extractor.get_list(query, True, page, size)
-    html = NodeCollectionFactory.resolve(model, card_type, category, is_scrollable=True).only_list(models)
+    html = NodeCollectionFactory.resolve(model, card_type, category, fixed_size=size).only_list(models)
     context['user'] = g.user if hasattr(g, 'user') and g.user is not None else None
     last_page=extractor.last_page(query, size)
     err_html = '<div class="jumbotron"><h6>No data available for this category</h6></div>'

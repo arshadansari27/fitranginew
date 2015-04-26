@@ -548,7 +548,8 @@ jQuery(document).ready(function ($) {
         var query = query_from_filters(model, category);
 
         var page = 1;
-        var size = 24;
+        var $sizeContainer = $('[data-type="size"][data-model="'+model+'"][data-category="' + category + '"][data-card-type="' + card_type + '"]');
+        var size = ($sizeContainer != undefined && $sizeContainer.length > 0)? $sizeContainer.val(): 24;
         var options = {
             query: query,
             page: page,
