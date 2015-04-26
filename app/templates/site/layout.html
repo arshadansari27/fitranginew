@@ -22,7 +22,8 @@
     <!-- Google Font-->
     <link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Roboto:500,900,400italic,700italic,300,700,300italic,400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:500,900,400italic,700italic,300,700,300italic,400'
+          rel='stylesheet' type='text/css'>
 
     <!-- Google Maps Api -->
     <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
@@ -39,11 +40,10 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/fotorama.js"></script>
 
-    <link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
-    <link href="/css/summernote.css" rel="stylesheet" type="text/css" />
-    <link href="/css/summernote-bs3.css" rel="stylesheet" type="text/css" />
+    <link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/summernote.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/summernote-bs3.css" rel="stylesheet" type="text/css"/>
     <script src="/js/summernote.js"></script>
-
 
 
     {% block header_scripts %}{% endblock %}
@@ -62,8 +62,8 @@
 
     <style>
         /* TODO: Remove Later in case it is fixed in my-style css */
-        .blogs-content img{
-              padding: 0px 0px;
+        .blogs-content img {
+            padding: 0px 0px;
         }
 
         #share-buttons img {
@@ -79,8 +79,8 @@
         }
 
         .exactCenter {
-            width:100px;
-            height:100px;
+            width: 100px;
+            height: 100px;
             position: fixed;
             top: 50%;
             left: 50%;
@@ -97,106 +97,140 @@
 <div id="fb-root"></div>
 <script>
 
-    (function(d, s, id) {
+    (function (d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
+        js = d.createElement(s);
+        js.id = id;
         js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3&appId=526533334116117";
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
 
-    window.twttr=(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return t;js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);t._e=[];t.ready=function(f){t._e.push(f);};return t;}(document,"script","twitter-wjs"));
+    window.twttr = (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0], t = window.twttr || {};
+        if (d.getElementById(id))return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+        t._e = [];
+        t.ready = function (f) {
+            t._e.push(f);
+        };
+        return t;
+    }(document, "script", "twitter-wjs"));
 
 </script>
 <nav class="navbar navbar-default navbar-static-top">
-      <div class="container-fluid">
+    <div class="container-fluid">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-8">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#"></a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-8">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-8">
 
-        <div class="container-fluid">
-        	<ul class="nav navbar-nav">
-            <li class="{% if menu.app_name == 'explore'%}active{% endif %}"><a href="/explore">Explore</a></li>
-            <li class="{% if menu.app_name == 'community'%}active{% endif %}"><a href="/community">Community</a></li>
-          </ul>
+            <div class="container-fluid">
+                <ul class="nav navbar-nav">
+                    <li class="{% if menu.app_name == 'explore'%}active{% endif %}"><a href="/explore">Adventure
+                        Community</a></li>
+                    <li class="{% if menu.app_name == 'trip'%}active{% endif %}"><a href="/trip">Adventure Trips</a>
+                    </li>
+                </ul>
+                <ul class="top-icons nav navbar-nav navbar-right pull-right">
+                    <li>
+                        <div class="top-icon"><a class="" href="/community/profile" title="Members"><i
+                                class="fa fa-users"></i></a></div>
+                    </li>
+                    {% if not (user and user.id) %}
+                    <li>
+                        <div class="top-icon"><a class="show_login" href="#" title="Login"><i class="fa fa-key"></i></a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="top-icon"><a class="show_signup" href="#" title="Register"><i
+                                class="fa fa-user">+</i></a></div>
+                    </li>
+                    {% elif user and user.id %}
+                    <li class="dropdown">
+                        <div class="top-icon">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="{{user.cover_image_path}}" class="radius-20 profile-pic" alt="profile"
+                                     width="40">
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="#" role="button" data-placement="left" data-toggle="popover"
+                                       data-trigger="focus" data-content="Click to change the cover" class="hoverable"
+                                       data-action="edit-cover-image" data-model-id="{{user.id}}" data-model="profile"
+                                       data-trigger="hover"><img class="img-responsive"
+                                                                 src="{{user.cover_image_path}}"/></a>
+                                </li>
+                                <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="/community/my"><i
+                                        class="fa fa-info"></i>&nbsp;My Page</a></li>
+                                <li><a data-action="edit-profile" data-model-id="{{user.id}}" data-user-id="{{user.id}}"
+                                       href="#"><i class="fa fa-user"></i>&nbsp;Edit Profile</a></li>
+                                <li><a data-action="edit-profile-preferences" data-model-id="{{user.id}}"
+                                       data-user-id="{{user.id}}" href="#"><i class="fa fa-cog"></i>&nbsp;Edit
+                                    Preference</a></li>
+                                <li><a data-action="edit-profile-password" data-model-id="{{user.id}}"
+                                       data-user-id="{{user.id}}" href="#"><i class="fa fa-key"></i>&nbsp;Change
+                                    Password</a></li>
+                                {% if 'Admin' in user.roles %}
+                                <li><a href="/admin"><i class="fa fa-dashboard"></i>&nbsp;Admin dashboard</a></li>
+                                {% endif %}
+                                <li><a href="/logout"><i class="fa fa-lock"></i> Log Out</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <!--li><div class="top-icon"><a href="" title="Notifications"><i class="fa fa-bell"></i></a><span>12</span></div></li-->
+                    <li>
+                        <div class="top-icon"><a href="/messaging" title="Messages"><i class="fa fa-envelope"></i></a>
+                        </div>
+                    </li>
+                    {% endif %}
+                </ul>
 
-          <!--div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-          	<div class="top-search-form navbar-nav">
-    		<form action="#" method="post">
-        		<input type="text" placeholder="Search ..." class="form-control">
-            	<button type="submit"><i class="fa fa-search"></i></button>
-        	</form>
-			</div>
-          </div-->
+            </div>
 
-        	<ul class="top-icons nav navbar-nav navbar-right pull-right">
-                <li><div class="top-icon"><a class="" href="/community/profile" title="Members"><i class="fa fa-users"></i></a></div></li>
-                {% if not (user and user.id) %}
-      	        <li><div class="top-icon"><a class="show_login" href="#" title="Login"><i class="fa fa-key"></i></a></div></li>
-                <li><div class="top-icon"><a class="show_signup" href="#" title="Register"><i class="fa fa-user">+</i></a></div></li>
-                {% elif user and user.id  %}
-                <li class="dropdown">
-                    <div class="top-icon">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="{{user.cover_image_path}}" class="radius-20 profile-pic" alt="profile" width="40">
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li>
-                               <a href="#"  role="button" data-placement="left" data-toggle="popover" data-trigger="focus" data-content="Click to change the cover" class="hoverable" data-action="edit-cover-image" data-model-id="{{user.id}}" data-model="profile" data-trigger="hover"><img class="img-responsive" src="{{user.cover_image_path}}" /></a>
-                            </li>
-                            <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="/community/my"><i class="fa fa-info"></i>&nbsp;My Page</a></li>
-                            <li><a data-action="edit-profile" data-model-id="{{user.id}}" data-user-id="{{user.id}}" href="#"><i class="fa fa-user"></i>&nbsp;Edit Profile</a></li>
-                            <li><a data-action="edit-profile-preferences" data-model-id="{{user.id}}" data-user-id="{{user.id}}" href="#"><i class="fa fa-cog"></i>&nbsp;Edit Preference</a></li>
-                            <li><a data-action="edit-profile-password" data-model-id="{{user.id}}" data-user-id="{{user.id}}" href="#"><i class="fa fa-key"></i>&nbsp;Change Password</a></li>
-                            {% if 'Admin' in user.roles %}<li><a href="/admin"><i class="fa fa-dashboard"></i>&nbsp;Admin dashboard</a></li>{% endif %}
-                            <li><a href="/logout"><i class="fa fa-lock"></i> Log Out</a></li>
+            {% if menu.app_name in ['explore', 'community'] %}
+            <div class="container-fluid border-grey-t">
+                <ul class="nav navbar-nav nav-down">
+                    <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="/community/my">My Page</a>
+                    </li>
+                    <li class="inner-level-dropdown dropdown {% if menu.main_menu == 'activity' %}active{% endif %}">
+                        <a id="subdropdown1" href="#" class="dropdown-toggle">Activities<b class="caret"></b></a>
+                        <ul class="dropdown-menu multi-column columns-3" aria-labelledby="subdropdown1" role="menu">
+                            <div class="row">
+                                {{activity_menu|safe}}
+                            </div>
                         </ul>
-                    </div>
-                </li>
-                <!--li><div class="top-icon"><a href="" title="Notifications"><i class="fa fa-bell"></i></a><span>12</span></div></li-->
-                <li><div class="top-icon"><a href="/messaging" title="Messages"><i class="fa fa-envelope"></i></a></div></li>
-                {% endif %}
-            </ul>
+                    </li>
+                    <li class="{% if menu.main_menu == 'adventure' %}active{% endif %}"><a href="/explore/adventure">Adventures</a>
+                    </li>
+                    <li class="{% if menu.main_menu == 'profile' %}active{% endif %}"><a href="/community/profile">Finder</a>
+                    </li>
+                    <li class="{% if menu.main_menu in ['journal', 'article'] %}active{% endif %}"><a
+                            href="/explore/journal">Journal</a></li>
+                    <li class="{% if menu.main_menu == 'discussion' %}active{% endif %}"><a
+                            href="/community/discussion">Discussions</a></li>
+                    <li class="{% if menu.main_menu == 'event' %}active{% endif %}"><a
+                            href="/community/event">Events</a></li>
+                </ul>
+            </div>
+            {% endif %}
 
         </div>
-
-        {% if menu.app_name in ['explore', 'community'] %}
-        <div class="container-fluid border-grey-t">
-        	<ul class="nav navbar-nav nav-down">
-                {% if menu.app_name == 'explore' %}
-                <li class="inner-level-dropdown dropdown {% if menu.main_menu == 'activity' %}active{% endif %}">
-		        	<a id="subdropdown1" href="#" class="dropdown-toggle" >Activities<b class="caret"></b></a>
-		            <ul class="dropdown-menu multi-column columns-3" aria-labelledby="subdropdown1" role="menu">
-			                    <div class="row">
-                                    {{activity_menu|safe}}
-			                    </div>
-		            </ul>
-		        </li>
-                <li class="{% if menu.main_menu == 'adventure' %}active{% endif %}"><a href="/explore/adventure">Adventures</a></li>
-                <li class="{% if menu.main_menu in ['journal', 'article'] %}active{% endif %}"><a href="/explore/journal">Blogs</a></li>
-                {% elif menu.app_name == 'community' %}
-                <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="/community/my">My Page</a></li>
-                <li class="{% if menu.main_menu == 'discussion' %}active{% endif %}"><a href="/community/discussion">Discussions</a></li>
-                <li class="{% if menu.main_menu == 'profile' %}active{% endif %}"><a href="/community/profile">Finder</a></li>
-                <li class="{% if menu.main_menu == 'event' %}active{% endif %}"><a href="/community/event">Events</a></li>
-
-                {% endif %}
-            </ul>
-        </div>
-        {% endif %}
-
-        </div><!-- /.navbar-collapse -->
-      </div>
+        <!-- /.navbar-collapse -->
+    </div>
 </nav>
 
 {% block body %}{% endblock %}
@@ -243,13 +277,15 @@
     <div class="col-lg-4 col-md-4 col-sm-3 col-xs-12 social">
         <h3 class="my-h3">Follow us</h3>
         <a href="https://www.facebook.com/Fitrangi" class="fa fa-facebook-square" title="Facebook" target="_blank"></a>
-        <a href="https://twitter.com/FitRangi" class="fa fa-twitter-square" title="Twitter" target="_blank" ></a>
-        <a href="#" class="fa fa-rss-square" title="RSS" target="_blank" ></a>
+        <a href="https://twitter.com/FitRangi" class="fa fa-twitter-square" title="Twitter" target="_blank"></a>
+        <a href="#" class="fa fa-rss-square" title="RSS" target="_blank"></a>
         <a href="#" class="fa fa-linkedin-square" title="LinkedIn" target="_blank"></a>
-        <a href="https://plus.google.com/115019600318035585202/posts" class="fa fa-google-plus-square" title="Google Plus" target="_blank" ></a>
-        <a href="https://www.youtube.com/user/Fitrangi" class="fa fa-youtube-square" title="Youtube" target="_blank"></a>
-        <a href="#" class="fa fa-vimeo-square" title="Vimeo" target="_blank" ></a>
-        <a href="#" class="fa fa-pinterest-square" title="Pinterest" target="_blank" ></a>
+        <a href="https://plus.google.com/115019600318035585202/posts" class="fa fa-google-plus-square"
+           title="Google Plus" target="_blank"></a>
+        <a href="https://www.youtube.com/user/Fitrangi" class="fa fa-youtube-square" title="Youtube"
+           target="_blank"></a>
+        <a href="#" class="fa fa-vimeo-square" title="Vimeo" target="_blank"></a>
+        <a href="#" class="fa fa-pinterest-square" title="Pinterest" target="_blank"></a>
 
 
         <p>By Continuing past this page, you agree to
@@ -282,7 +318,7 @@
 <script src="/js/jquery.geocomplete.min.js"></script>
 <script src="/appjs/handler.js"></script>
 <script>
-    $(function(){
+    $(function () {
         $('#loadingImage').hide();
         $('li.inner-level-dropdown>a').on('click', function (event) {
             event.stopPropagation();
@@ -291,19 +327,26 @@
         });
         $('body').on('click', function (e) {
             if (!$('li.dropdown').is(e.target)
-                && $('li.dropdown').has(e.target).length === 0
-                && $('.open').has(e.target).length === 0
-            ) {
+                    && $('li.dropdown').has(e.target).length === 0
+                    && $('.open').has(e.target).length === 0
+                    ) {
                 $('li.dropdown').removeClass('open');
             }
         });
 
     });
 
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
     ga('create', 'UA-59043882-1', 'auto');
     ga('send', 'pageview');

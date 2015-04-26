@@ -1,62 +1,15 @@
 <section class="container-fluid p-0">
-    <div class="home-banner">
-        <h2 class="my-h2">Discover nearest adventures</h2>
+<div class="home-banner">
+<h4>Welcome to</h4>
+<h2>India's Complete Adventure Portal</h2>
 
-        <form class="form-inline search-form text-center col-lg-8 col-md-8 col-xs-10 col-xs-offset-1 col-md-offset-2"
-              action="#" method="get" onsubmit="return false;">
-            <div class="form-group">
-                <span class="fa fa-map-marker"></span>
-                <input id="location-filter" data-category="all" data-model="adventure" data-filter="location__location__name" list="location" placeholder="FILTER BY LOCATION">
-                <datalist id="location">
-                    <option value="">
-                </datalist>
-                <script>
-                    $(document).ready(function(){
-                        $.ajax({
-                            url: '/options?model_name=location&attr=name'
-                        }).done(function (data) {
-                            $('#location').append(data);
-                        });
-                    });
-                </script>
-                <!--select class="form-control" data-placeholder="Choose a Country...">
-                    <datalist id="location-list">
+<div class="col-lg-8 col-md-8 col-xs-10 col-xs-offset-1 col-md-offset-2 mt-10">
+<p>know everything about adventure sport activities & tourism in India. Connect with the
+like minded people discussion about your adventure quest & get curated trips and gear options</p>
+</div>
 
-                    </datalist>
-                </select-->
-
-            </div>
-            <div class="form-group">
-                <span class="fa fa-search"></span>
-                <!--input type="text" name="search-text" class="form-control" placeholder="Select Activity"-->
-
-                <input id="activity-filter" data-category="all" data-model="adventure" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
-                <datalist id="activity">
-                    <option value="">
-                </datalist>
-                <script>
-                    $(document).ready(function(){
-                        $.ajax({
-                            url: '/options?model_name=activity&attr=name'
-                        }).done(function (data) {
-                            $('#activity').append(data);
-                        });
-                    });
-                </script>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-primary search-btn no-radius">Submit</button>
-            </div>
-
-        </form>
-
-        <br>
-        <br>
-        <br>
-
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-85 text-center white fitrangi">
-            <h3 class="light my-h3" >Fitrangi Counter</h3>
-
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-50 text-center white fitrangi">
+<h3 class="light">fitrangi.com in number</h3>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
                 <h4>{{counters['profile']}}</h4>
 
@@ -94,150 +47,182 @@
             </div>
 
 
-        </div>
 
-    </div>
+
+</div>
+
+</div>
 </section>
 
 
 <section class="container adventure">
-    <h2 class="my-h2">Choose your adventure</h2>
+<h2>Choose your adventure</h2>
 
-    <div class="row">
-        <div class="col-sm-offset-4 col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Bungee jumping" title="Bungee Jumping"><img
-                src="images/adventure-icons/air-activities/bungee-jumping.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Hang Gliding " title="Hang Gliding"><img
-                src="images/adventure-icons/air-activities/hang-gliding.png"></a></div>
-    </div>
-    <div class="row">
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Hot Air Ballooning" title="Hot Air Balooning"><img
-                src="images/adventure-icons/air-activities/hot-air-balooning.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Paragliding" title="Paragliding"><img
-                src="images/adventure-icons/air-activities/paragliding.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Para Motoring" title="Para Motoring"><img
-                src="images/adventure-icons/air-activities/para-motoring.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Parasailing" title="Parasailing"><img
-                src="images/adventure-icons/air-activities/parasailing.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Sky Diving" title="Sky Diving"><img
-                src="images/adventure-icons/air-activities/sky-diving.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Zip Line" title="Zip Line"><img
-                src="images/adventure-icons/air-activities/zip-line.png"></a></div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Camping" title="Camping"><img
-                src="images/adventure-icons/land-activities/camping.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Canyoning" title="Canyoning"><img
-                src="images/adventure-icons/land-activities/canyoning.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Cycling-Biking" title="Cycling And Biking"><img
-                src="images/adventure-icons/land-activities/cycling-biking.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Horse Riding" title="Horse Riding"><img
-                src="images/adventure-icons/land-activities/horse-riding.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Marathons" title="Marathons"><img
-                src="images/adventure-icons/land-activities/marathons.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Mountaineering" title="Mountaineering"><img
-                src="images/adventure-icons/land-activities/mountaineering.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Rappelling and Valley Crossing" title="Rappelling & Valley-Crossing"><img
-                src="images/adventure-icons/land-activities/rappelling-valley-crossing.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Rock Climbing" title="Rock Climbing"><img
-                src="images/adventure-icons/land-activities/rock-climbing.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Skiing" title="Skiing"><img
-                src="images/adventure-icons/land-activities/skiing.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Snow - Flow" title="Snowboarding"><img
-                src="images/adventure-icons/land-activities/snowboarding.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Trekking and Hiking" title="Trekking & Hiking"><img
-                src="images/adventure-icons/land-activities/trekking-hiking.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Zorbing" title="Zorbing"><img
-                src="images/adventure-icons/land-activities/zorbing.png"></a></div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Kayaking" title="Kayaking"><img
-                src="images/adventure-icons/water-activities/kayaking.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Kite Surfing" title="Kite Surfing"><img
-                src="images/adventure-icons/water-activities/kite-surfing.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Scuba Diving" title="Scuba Diving"><img
-                src="images/adventure-icons/water-activities/scuba-diving.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Snorkelling" title="Snorkelling"><img
-                src="images/adventure-icons/water-activities/snorkelling.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Surfing" title="Surfing"><img
-                src="images/adventure-icons/water-activities/surfing.png"></a></div>
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6"><a href="/explore/activity?name=Water Rafting" title="Water Rafting"><img
-                src="images/adventure-icons/water-activities/water-rafting.png"></a></div>
-    </div>
+<div class="row">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+<a href="/explore/activity?name=Bungee jumping"><img src="images/adventure-icons/air-activities/bungee-jumping.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Hot Air Ballooning"><img src="images/adventure-icons/air-activities/hot-air-balooning.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Paragliding"><img src="images/adventure-icons/air-activities/paragliding.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Parasailing"><img src="images/adventure-icons/air-activities/parasailing.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Sky Diving"><img src="images/adventure-icons/air-activities/sky-diving.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Zip Line"><img src="images/adventure-icons/air-activities/zip-line.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Camping"><img src="images/adventure-icons/land-activities/camping.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Canyoning"><img src="images/adventure-icons/land-activities/canyoning.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Cycling-Biking"><img src="images/adventure-icons/land-activities/cycling-biking.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Horse Riding"><img src="images/adventure-icons/land-activities/horse-riding.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Marathons"><img src="images/adventure-icons/land-activities/marathons.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Mountaineering"><img src="images/adventure-icons/land-activities/mountaineering.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Rappelling and Valley Crossing"><img src="images/adventure-icons/land-activities/rappelling-valley-crossing.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Rock Climbing"><img src="images/adventure-icons/land-activities/rock-climbing.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Skiing"><img src="images/adventure-icons/land-activities/skiing.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Snowboarding"><img src="images/adventure-icons/land-activities/snowboarding.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Trekking and Hiking"><img src="images/adventure-icons/land-activities/trekking-hiking.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Zorbing"><img src="images/adventure-icons/land-activities/zorbing.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Kayaking"><img src="images/adventure-icons/water-activities/kayaking.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Kit Surfing"><img src="images/adventure-icons/water-activities/kite-surfing.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Scuba Diving"><img src="images/adventure-icons/water-activities/scuba-diving.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Snorkelling"><img src="images/adventure-icons/water-activities/snorkelling.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Surfing"><img src="images/adventure-icons/water-activities/surfing.png" class="img-responsive"></a>
+<a href="/explore/activity?name=Water Rafting"><img src="images/adventure-icons/water-activities/water-rafting.png" class="img-responsive"></a>
+</div>
+</div>
 
 </section>
 
 
-<!--section class="container-fluid lightgrey-bg">
-    <h2 class="my-h2">Popular from journal</h2-->
-<section class="container-fluid profiles pb-20 lightgrey-bg">
-    <h2 class="my-h2">Popular from Journal</h2>
+<section class="container-fluid subheading lightgrey-bg pb-20">
+
+<div class="container fitrangi-thumb">
+
+<h2>Trending Adventures</h2>
 
 
-    <div class="container">
-        <input id="article-admin-published-filter" type="hidden" data-model="article" data-filter="admin_published" value="bool|True" data-filter-type="fixed"/>
+{{adventure|safe}}
 
-        {{journal|safe}}
+<div class="pull-right">
+    <a href="/explore/adventure" class="btn btn-primary mb-10 pull-right">View all</a>
+</div>
 
-        <div class="pull-right">
-            <a href="/explore/journal" class="btn btn-primary">View All</a>
-        </div>
 
+</div>
+</section>
+
+
+
+<section>
+<div class="container">
+
+<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 who-joined-community">
+<h2>Take a look at who has just joined</h2>
+
+
+
+    <div class="row">
+        {{profile|safe}}
     </div>
+    <a href="/community/profile" class="btn btn-primary mb-10 pull-right">View all</a>
+</div>
+
+
+
+<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 trending-discussion">
+<h2>Trending Discussion</h2>
+
+<div class="discussion">
+    <input id="discussion-admin-published-filter" type="hidden" data-model="discussion" data-filter="admin_published" value="bool|True" data-filter-type="fixed"/>
+    {{discussion|safe}}
+</div>
+<button data-action="add-discussion" data-user-id="{{user.id}}" type="button" class="btn btn-primary mb-10 pull-left">Add a Discussion</button>
+<a href="/community/discussion" class="btn btn-primary mb-10 pull-right">View all</a>
+
+</div>
+
+
+</div>
+</section>
+
+
+<section class="container-fluid fitrangi-blog-thumb subheading lightgrey-bg pb-20">
+
+<div class="container">
+<h2>Popular Blogs</h2>
+
+<div class="container">
+    <input id="article-admin-published-filter" type="hidden" data-model="article" data-filter="admin_published" value="bool|True" data-filter-type="fixed"/>
+    {{journal|safe}}
+
+</div>
+
+
+{% if user %}<a data-user-id="{{user.id}}" data-action="add-article" href="#" class="btn btn-primary pull-left">Write Blog</a>{% endif %}
+<a href="/explore/journal" class="btn btn-primary pull-right">View All</a>
+
+
+
+</div>
+</section>
+
+
+
+
+
+
+<section class="container-fluid events pb-20">
+
+<div class="container">
+<h2>Upcoming Events</h2>
+ {{ event|safe }}
+
+
+<div class="pull-right">
+    <a href="/community/event" class="btn btn-primary">View All</a>
+</div>
+
+</div>
+
 
 
 </section>
 
 
-<section class="container-fluid profiles pb-20">
-    <h2 class="my-h2">Popular Profiles</h2>
+<section class="container fitrangi-testimonial subheading text-center">
 
-    <div class="container">
-        {{ enthusiast_profile|safe}}
-        <input id="enthusiast-filter" data-category="enthusiast" data-model="profile" data-filter="type__profile_type__name" type="hidden" value="Enthusiast" data-filter-type="fixed">
-        <input id="enthusiast-featured-filter" data-category="enthusiast" data-model="profile" data-filter="featured" type="hidden" value="bool|True" data-filter-type="fixed">
-        <hr>
-        <input id="organizer-filter" data-category="organizer" data-model="profile" data-filter="type__profile_type__name__ne" type="hidden" value="Enthusiast" data-filter-type="fixed">
-        <input id="organizer-featured-filter" data-category="organizer" data-model="profile" data-filter="featured" type="hidden" value="bool|True" data-filter-type="fixed">
-        {{ organizer_profile|safe}}
-        <div class="pull-right">
-            <a href="/community/profile" class="btn btn-primary">View All</a>
-        </div>
+<h2>Testimonials</h2>
 
-    </div>
+<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+<h4><i class="fa fa-quote-left"></i>
+India unearths this wonderful opportunity to feature itself
+in world records for Sky-diving and Scuba-diving.
+Don't miss this historic opportunity to associate yourself
+with this exciting and daring adventure! <i class="fa fa-quote-right"></i>
+</h4>
+<article class="media">
+<img src="images/pro1.jpg" class="img-circle img-responsive pull-left p-5" width="90">
+    <h3>User Name Comes Here</h3>
+	<h5><span class="fa fa-map-marker"></span> Mumbai, Maharashtra </h5>
+</article>
+</div>
 
-</section>
+<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 
+<h4><i class="fa fa-quote-left"></i>
+India unearths this wonderful opportunity to feature itself
+in world records for Sky-diving and Scuba-diving.
+Don't miss this historic opportunity to associate yourself
+with this exciting and daring adventure! <i class="fa fa-quote-right"></i>
+</h4>
 
-<section class="container-fluid profiles pb-20 lightgrey-bg">
-    <h2 class="my-h2">Interesting Events</h2>
-
-    <div class="container">
-
-        {{ event|safe }}
-        <hr/>
-        <div class="pull-right">
-            <a href="/community/event" class="btn btn-primary">View All</a>
-        </div>
-
-    </div>
-
-
-</section>
+<article class="media">
+<img src="images/pro7.jpg" class="media-object img-responsive pull-left p-5" width="90">
+    <h3>User Name Comes Here</h3>
+	<h5><span class="fa fa-map-marker"></span> Mumbai, Maharashtra </h5>
+</article>
+</div>
 
 
-<section class="container-fluid discussion pb-20">
-    <h2 class="my-h2" >Trending Discussion</h2>
-
-    <div class="container">
-        <input id="discussion-admin-published-filter" type="hidden" data-model="discussion" data-filter="admin_published" value="bool|True" data-filter-type="fixed"/>
-        {{discussion|safe}}
-        <div class="pull-right">
-            <a href="/community/discussion" class="btn btn-primary">View All</a>
-        </div>
-
-    </div>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-20 mb-20 pt-10 border-grey-t">
+<button class="btn btn-primary pull-right">View all Testimonials</button>
+</div>
 
 </section>
 
@@ -245,23 +230,7 @@
 <script language="JavaScript">
         $(document).ready(function(){
             var App = window.App;
-            App.filter('enthusiast-filter');
-            App.filter('organizer-filter');
-            App.filter('enthusiast-featured-filter');
-            App.filter('organizer-featured-filter');
             App.filter('discussion-admin-published-filter');
             App.filter('article-admin-published-filter');
-
-
-            $('.search-btn').click(function(e){
-                var activity_key = $('#activity-filter').attr('data-filter');
-                var activity_value = $('#activity-filter').val();
-                var location_key = $('#location-filter').attr('data-filter');
-                var location_value= $('#location-filter').val();
-                var location = '/explore/adventure?query=' + activity_key + ":" + activity_value + ";" + location_key + ":" + location_value + ";";
-                console.log(location)
-                window.location.href = location;
-                return false;
-            });
         });
 </script>
