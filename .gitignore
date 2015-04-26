@@ -7,3 +7,4 @@ db_address.txt
 *.rdb
 tmp/
 media/
+venv/
