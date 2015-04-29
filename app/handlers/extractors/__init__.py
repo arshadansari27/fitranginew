@@ -14,7 +14,7 @@ from app.utils import convert_query_to_filter
 
 __author__ = 'arshad'
 
-import json
+import json, datetime
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
@@ -93,7 +93,11 @@ class NodeExtractor(object):
                         filters[k] = _values
                         merge.append(fields[0])
                     else:
-                        filters[k] = v
+                        if 'date' in k:
+                            yy, mm, dd = v.split('-')
+                            filters[k] = datetime.datetime(int(yy), int(mm), int(dd))
+                        else:
+                            filters[k] = v
                 else:
                     filters[k] = v
 
@@ -109,6 +113,7 @@ class NodeExtractor(object):
                     for m, k, v in to_add:
                         del filters[m]
                         filters[k].append(v)
+        print filters
         return self.model_class.objects(**filters).order_by('-created_timestamp')
 
     @classmethod

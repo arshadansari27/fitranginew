@@ -521,6 +521,8 @@ jQuery(document).ready(function ($) {
         $('[data-filter][data-model="' + model + '"]').each(function(j, filter_element) {
             var filter_category     = $(filter_element).attr('data-category');
             var filter_key          = $(filter_element).attr('data-filter');
+            var filter_type         = $(filter_element).attr('data-filter-type');
+
             var filter_value        = $(filter_element).val();
 
             if (filter_category != undefined && filter_category != category) {
@@ -528,6 +530,10 @@ jQuery(document).ready(function ($) {
             }
             if (filter_value == undefined || filter_value == null || filter_value.length == 0 || filter_value == '--') {
                 return;
+            }
+
+            if (filter_type != undefined && filter_type.length > 0){
+                filter_value = filter_type + '|' + filter_value;
             }
 
             query += filter_key+ ":"  + filter_value + ';';

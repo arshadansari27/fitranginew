@@ -11,49 +11,66 @@
             </div>
 
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
-
-                <input list="activity" placeholder="FILTER BY ACTIVITY">
+                <input id="activity-filter" data-category="all" data-model="trip" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
                 <datalist id="activity">
-                    <option value="Lorem Ipsum ">
-                    <option value="Lorem Ipsum ">
-                    <option value="Lorem Ipsum ">
-                    <option value="Lorem Ipsum ">
-                    <option value="Lorem Ipsum ">
+                    <option value="">
                 </datalist>
+                <script>
+                    $(document).ready(function(){
+                        $.ajax({
+                            url: '/options?model_name=activity&attr=name'
+                        }).done(function (data) {
+                            $('#activity').append(data);
+
+                        });
+                    });
+                </script>
             </div>
 
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
 
-                <input list="location" placeholder="FILTER BY LOCATION">
+               <input id="location-filter" data-category="all" data-model="trip" data-filter="location__location__name" list="location" placeholder="FILTER BY LOCATION">
                 <datalist id="location">
-                    <option value="Lorem Ipsum ">
-                    <option value="Lorem Ipsum ">
-                    <option value="Lorem Ipsum ">
-                    <option value="Lorem Ipsum ">
-                    <option value="Lorem Ipsum ">
+                    <option value="">
                 </datalist>
+                <script>
+                    $(document).ready(function(){
+                        $.ajax({
+                            url: '/options?model_name=location&attr=name'
+                        }).done(function (data) {
+                            $('#location').append(data);
+                        });
+                    });
+                </script>
             </div>
 
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-range">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 fitrangi-range">
                 <div class="form-group">
-                    <h3>Price Range</h3>
+                    <h3>Price Range Starts</h3>
 
                     <div class="range range-primary">
-                        <input type="range" name="range" min="1000" max="50000" value="10000"
-                               onchange="rangePrimary.value=value">
-                        <output id="rangePrimary" class="price"> 10000</output>
+                        <input id="price-start-filter" data-category="all" data-model="trip" data-filter="price__gte" data-filter-type="float" type="range" min="0" max="20000" step="1000" onchange="rangePrimary1.value=value">
+                        <output id="rangePrimary1"></output>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 fitrangi-range">
+                <div class="form-group">
+                    <h3>Price Range Ends</h3>
+
+                    <div class="range range-primary">
+                        <input id="price-end-filter" data-category="all" data-model="trip" data-filter="price__lte" data-filter-type="float" type="range" min="0" max="20000" step="1000" onchange="rangePrimary2.value=value">
+                        <output id="rangePrimary2"></output>
                     </div>
                 </div>
             </div>
 
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 fitrangi-range">
                 <div class="form-group">
-                    <h3>Date From</h3>
+                    <h3>Date Starts After</h3>
 
                     <div class="range range-primary">
-                        <input type="range" name="range" min="1" max="31" value="25"
-                               onchange="rangePrimary1.value=value">
-                        <output id="rangePrimary1" class="month">25</output>
+                        <input id="start-date-filter" data-category="all" data-model="trip" data-filter="start_date__gte" type="date" name="start">
                     </div>
 
                 </div>
@@ -61,12 +78,10 @@
 
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 fitrangi-range">
                 <div class="form-group">
-                    <h3>Date To</h3>
+                    <h3>Date Ends Before</h3>
 
                     <div class="range range-primary">
-                        <input type="range" name="range" min="1" max="31" value="22"
-                               onchange="rangePrimary2.value=value">
-                        <output id="rangePrimary2" class="month">30</output>
+                        <input id="end-date-filter" data-category="all" data-model="trip" data-filter="end_date__lte" type="date" name="end">
                     </div>
 
                 </div>
@@ -75,11 +90,10 @@
 
             <div class="col-lg-offset-4 col-md-offset-4">
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a href="" class="btn btn-info blue-bg no-radius w-100 mt-15">GO</a>
+                    <a data-category="all" data-model="trip" data-filter-submit="search" href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">GO</a>
                 </div>
-
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a href="" class="btn btn-info blue-bg no-radius w-100 mt-15">RESET</a>
+                    <a data-category="all" data-model="trip" data-filter-submit="reset"  href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">RESET</a>
                 </div>
             </div>
 
@@ -99,4 +113,36 @@
     </div>
 </section>
 
+ <script>
+    $(document).ready(function(){
 
+        $('#activity-filter').val('');
+        $('#location-filter').val('');
+        $('#start-date-filter').val('');
+        $('#end-date-filter').val('');
+        $('#price-start-filter').val('0');
+        $('#rangePrimary1').val('0');
+        $('#price-end-filter').val('20000');
+        $('#rangePrimary2').val('20000');
+        window.App.filter('activity-filter');
+        window.App.filter('location-filter');
+        window.App.filter('start-date-filter');
+        window.App.filter('end-date-filter');
+        window.App.filter('price-start-filter');
+        window.App.filter('price-end-filter');
+    });
+</script>
+{% if filters.get('activities__activity__name') %}
+  <script>
+    $(document).ready(function(){
+        $('#activity-filter').val('{{filters.get("activities__activity__name")}}');
+    });
+</script>
+{% endif %}
+ {% if filters.get('location__location__name') %}
+  <script>
+    $(document).ready(function(){
+        $('#location-filter').val('{{filters.get("location__location__name")}}');
+    });
+</script>
+{% endif %}
