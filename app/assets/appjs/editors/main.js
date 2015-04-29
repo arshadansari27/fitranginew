@@ -22,6 +22,7 @@ jQuery(document).ready(function($){
     		url: '/editors/invoke',
     		data: JSON.stringify(options),
     		success: function(data) {
+                $('#loadingImage').hide();
                 if (data.status=='error' && data.message == 'Please login before making requests'){
                     App.show_login();
                 }

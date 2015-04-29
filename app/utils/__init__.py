@@ -101,3 +101,7 @@ def all_tags(type=None):
     col = Content._get_collection()
     pipeline = [{"$unwind": "$tags"}, {"$group": {"_id": "$tags", "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}]
     return [(u['_id'], u['count']) for u in col.aggregate(pipeline)['result']]
+
+
+def get_month(month):
+    return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month - 1]

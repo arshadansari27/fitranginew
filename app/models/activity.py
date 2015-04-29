@@ -4,6 +4,7 @@ from app.models import update_content, db, Entity
 from app.models.relationships import RelationShips
 
 ICONS = {
+"hillstation" :"/images/adventure-icons/air-activities/hot-air-balooning.png",
 "hotairballooning" :"/images/adventure-icons/air-activities/hot-air-balooning.png",
 "paragliding" :"/images/adventure-icons/air-activities/paragliding.png",
 "paramotoring" :"/images/adventure-icons/air-activities/para-motoring.png",

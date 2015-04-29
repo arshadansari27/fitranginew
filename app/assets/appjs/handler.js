@@ -188,6 +188,66 @@ jQuery(document).ready(function ($) {
         var model = $(this).attr('data-model-id');
         App.profile.remove_profile_from_follow(user, model);
     });
+    $('body').on('click', '[data-action="add-trip-joined"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var user = $(this).attr('data-user-id');
+        var model = $(this).attr('data-model-id');
+        App.profile.add_trip_to_join(user, model);
+    });
+    $('body').on('click', '[data-action="remove-trip-joined"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var user = $(this).attr('data-user-id');
+        var model = $(this).attr('data-model-id');
+        App.profile.remove_trip_from_join(user, model);
+    });
+    $('body').on('click', '[data-action="add-trip-interested"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var user = $(this).attr('data-user-id');
+        var model = $(this).attr('data-model-id');
+        App.profile.add_trip_to_interest(user, model);
+    });
+    $('body').on('click', '[data-action="remove-trip-interested"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var user = $(this).attr('data-user-id');
+        var model = $(this).attr('data-model-id');
+        App.profile.remove_trip_from_interest(user, model);
+    });
+
+    $('body').on('click', '[data-action="send-enquiry"]', function(e){
+        e.stopPropagation();
+        e.preventDefault();
+        var values = $('[data-action-value]');
+        var name, email, phone, enquiry;
+        var model = $(this).attr('data-model-id');
+        console.log(values);
+        console.log(model);
+        if (values != undefined) {
+            for(var i = 0; i < values.length; i++){
+                var elem = values[i]
+                var value = $(elem).attr('data-action-value');
+                if (value == 'name') {
+                    name = $(elem).val();
+                } else if (value == 'email') {
+                    email = $(elem).val();
+                } else if (value == 'phone') {
+                    phone = $(elem).val();
+                } else if (value == 'enquiry') {
+                    enquiry = $(elem).val();
+                }
+            }
+            if ((name == undefined || name.length == 0) || (email == undefined || email.length == 0) ){
+                BootstrapDialog.alert('Please enter your name and email. They are mandatory.');
+            } else {
+                App.profile.book_trip(name, email, phone, enquiry, model);
+            }
+        }
+
+    });
+
 
     $('body').on('click', '[data-action="delete-article"]', function (e) {
         e.stopPropagation();
@@ -461,6 +521,8 @@ jQuery(document).ready(function ($) {
         $('[data-filter][data-model="' + model + '"]').each(function(j, filter_element) {
             var filter_category     = $(filter_element).attr('data-category');
             var filter_key          = $(filter_element).attr('data-filter');
+            var filter_type         = $(filter_element).attr('data-filter-type');
+
             var filter_value        = $(filter_element).val();
 
             if (filter_category != undefined && filter_category != category) {
@@ -468,6 +530,10 @@ jQuery(document).ready(function ($) {
             }
             if (filter_value == undefined || filter_value == null || filter_value.length == 0 || filter_value == '--') {
                 return;
+            }
+
+            if (filter_type != undefined && filter_type.length > 0){
+                filter_value = filter_type + '|' + filter_value;
             }
 
             query += filter_key+ ":"  + filter_value + ';';
@@ -548,7 +614,8 @@ jQuery(document).ready(function ($) {
         var query = query_from_filters(model, category);
 
         var page = 1;
-        var size = 24;
+        var $sizeContainer = $('[data-type="size"][data-model="'+model+'"][data-category="' + category + '"][data-card-type="' + card_type + '"]');
+        var size = ($sizeContainer != undefined && $sizeContainer.length > 0)? $sizeContainer.val(): 24;
         var options = {
             query: query,
             page: page,

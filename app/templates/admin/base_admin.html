@@ -1,6 +1,10 @@
 {% import 'admin/layout.html' as layout with context -%}
 {% extends 'admin/base.html' %}
-
+{% block head_css %}
+	{{ super() }}
+	<link href="/css/font-awesome.min.css" rel="stylesheet">
+	<link href="/css/summernote.css" rel="stylesheet">
+{% endblock %}
 {% block head_tail %}
     {{ super() }}
     <!--link href="{{ url_for('static', filename='layout.css') }}" rel="stylesheet"-->
@@ -99,6 +103,7 @@
 {% block tail_js %}
         {{super()}}
         <script src="/js/jquery.geocomplete.min.js"></script>
+        <script src="/js/summernote.min.js" type="text/javascript"></script>
         <script language="javascript">
         $(document).ready(function(){
           if ($(".geo-complete") != undefined) {
@@ -112,6 +117,20 @@
                 $('input[type="hidden"][name="geo_location_long"]').val(lon);
 
               });
+          }
+          if ($(".summernote") != undefined) {
+            $('.summernote').summernote({
+  				height: 240,                 // set editor height
+  				minHeight: null,             // set minimum height of editor
+  				maxHeight: null,             // set maximum height of editor
+  				focus: true,                 // set focus to editable area after initializing summernot
+            });
+
+            $('textarea').addClass("span8");
+            {% if not is_admin %}
+                $("#author").addClass('hide');
+                $('#author').parent().append('<span class="clearfix"><strong>{{user.name}}</strong></span>');
+            {% endif %}
           }
         });
         </script>

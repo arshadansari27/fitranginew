@@ -1,1 +1,359 @@
-{% extends 'site/models/common/_detail.html' %}
+<section class="container-fluid p1">
+    <div class="adventures-trips-banner" style="background: url({{model.cover_image_path}}) no-repeat center center;">
+
+        <div class="container">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h3>{{model.name}}</h3>
+            </div>
+
+        </div>
+
+
+    </div>
+</section>
+<section class="container border-grey-b text-right p-10 mb-20">
+
+    {% if not model in user.interested_trip %}
+        <a class="btn btn-primary" href="#" data-action="add-trip-interested" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-link"></span>&nbsp;Interested</a>
+    {% else %}
+        <a class="btn btn-primary"  href="#" data-action="remove-trip-interested" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-link green"></span>&nbsp;Not Interested</a>
+    {% endif %}
+    {% if not model in user.joined_trip %}
+        <a  class="btn btn-primary" href="#" data-action="add-trip-joined" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-link"></span>&nbsp;Join</a>
+    {% else %}
+        <a class="btn btn-primary"  href="#" data-action="remove-trip-joined" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-link green"></span>&nbsp;Unjoin</a>
+    {% endif %}
+    <a class="btn btn-primary"  href="#book-now" ><span class="fa fa-bookmark"></span>&nbsp;Booking Enquiry</a>
+</section>
+
+<section class="container adventure-trips-content">
+
+    <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12 ">
+        <div class="row-fluid adventure-trips-tabs">
+            <ul class="nav nav-pills " role="tablist">
+                <li class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">
+                    <i class="fa fa-home"></i> <strong>Overview</strong></a></li>
+
+
+                <li><a href="#details" aria-controls="details" role="tab" data-toggle="tab">
+                    <i class="fa fa-home"></i> <strong>Details</strong></a></li>
+
+                {% if model.has_gallery_images %}
+                <li><a href="#gallery-images" aria-controls="gallery-images" role="tab"
+                       data-toggle="tab">
+                    <i class="fa fa-home"></i> <strong>Gallery</strong></a></li>
+                {% endif %}
+            </ul>
+
+            <!-- Tab content -->
+            <div class="tab-content">
+                <div class="tab-pane" id="gallery-images">
+                    <article class="col-xs-12 col-md-12 tab-details">
+                        <div class="fotorama thumbnail" data-nav="thumbs">
+                            <a href=""><img src="/images/slider-3.jpg"></a>
+                        </div>
+                    </article>
+                </div>
+                <!-- End of Tab Pane -->
+
+                <div class="tab-pane active" id="overview">
+                    <!--h3>Overview Underconstructions</h3-->
+                    {% if model.description %}
+                    <h4><u>Description</u></h4>
+                    {{model.description}}
+                    <hr/>
+                    {% endif %}
+                    <h4><u>More</u></h4>
+                    {{ model.about }}
+                </div>
+                <!-- End of Tab Pane -->
+
+                <div class="tab-pane" id="details">
+                    <h3>Schedule</h3>
+                    <ul>
+                        {% for i in model.schedule %}
+                        <li>{{i}}</li>
+                        {% endfor %}
+                    </ul>
+                    <hr/>
+                    <h3>Inclusive</h3>
+                    <ul>
+                        {% for i in model.inclusive %}
+                        <li>{{i}}</li>
+                        {% endfor %}
+                    </ul>
+                    <hr/>
+                    <h3>Exclusive</h3>
+                    <ul>
+                        {% for i in model.exclusive %}
+                        <li>{{i}}</li>
+                        {% endfor %}
+                    </ul>
+                    <hr/>
+                    <h3>Things to carry</h3>
+                    <ul>
+                        {% for i in model.things_to_carry %}
+                        <li>{{i}}</li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+                <!-- End of Tab Pane -->
+
+            </div>
+            <!-- Tab content end -->
+
+
+        </div>
+
+
+    </div>
+    <!--col7-close-->
+
+
+
+
+
+
+
+    <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+
+        <div class="row box-bg">
+
+            <div class="heading">
+                <h4>QUICK INFO</h4>
+            </div>
+
+            <article>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <i class="fa fa-calendar"></i><strong>Date</strong>
+
+                    <p>{{model.total_date|safe}}</p>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <i class="fa fa-clock-o"></i><strong>Days</strong>
+
+                    <p> {{model.duration}} </p>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <i class="fa fa-map-marker"></i><strong>Location</strong>
+
+                    <p>{{model.location }}</p>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <i class="fa fa-inr"></i><strong>Amount</strong>
+
+                    <p>{{model.price}} /- per person</p>
+                </div>
+            </article>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-10">
+                <div class="sub-heading">
+                    <h5>ACTIVITY</h5>
+                </div>
+                <center>
+                    {% for activity in model.activities %}
+                        {% if activity and activity.icon_image_path and activity.icon_image_path |length > 0 %}
+                            <img src="{{activity.icon_image_path}}" class="img-thumbnail" width="64" alt="{{activity.name}}">
+                        {% endif %}
+                    {% endfor %}
+                </center>
+            </div>
+
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-10">
+                <div class="sub-heading">
+                    <h5>ORGANISED BY</h5>
+                </div>
+
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object" data-src="holder.js/74x74" alt="74x74" src="{{model.organizer.cover_image_path}}"  data-holder-rendered="true"  style="width: 74px; height: 74px;">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h3 class="media-heading">{{model.organizer.name}}</h3>
+                        {% if model.organizer.location %}<h5><i class="fa fa-map-marker fs-22"></i> {{model.organizer.location }}</h5>{% endif %}
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!--div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <button class="btn btn-default w-100 black mt-20">Send Enquiry</button>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <button class="btn btn-primary w-100 mt-20">Book Now</button>
+            </div>
+
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 col-lg-offset-1 col-md-offset-1 col-sm-offset-1 text">
+                <p>**This trip is listed by above organiser on the website. It will be executed by the
+                    organiser and Fitrangi.com is a booking and ticketing partner for it.</p>
+            </div-->
+
+        </div>
+
+    </div>
+    <!--col5-close-->
+    <div class="col-lg-12 col-md-12 col-xs-12 going-list">
+        {% if not user or user in model.joined %}
+            {% for u in model.joined %}
+            <img src="{{u.cover_image_path}}" class="" width="48">
+            {% endfor %}
+            <!--h3>45+</h3-->
+        {% else %}
+            {% for u in model.interested %}
+            <img src="{{u.cover_image_path}}" class="" width="48">
+            {% else %}
+            <div class="well well-sm">
+                <h4>Be the first to show interest in this event</h4>
+            </div>
+            {% endfor %}
+
+        {% endif %}
+    </div>
+
+
+    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        <div>
+            {% import 'site/includes/post_box.html' as post %}
+            {{ post.show_post_form(model, 'discussion') }}
+            <input type="hidden" id="discussion-filter" data-category="all" data-filter="parent__trip__pk" data-model="post" value="{{model.id}}" data-filter-type="fixed"/>
+            {{ discussions|safe }}
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+        {% if user and user.followers|length > 0 %}
+        <div class="row box-bg">
+            <div class="heading">
+                <h4>Invite Followers</h4>
+            </div>
+
+            <!--input type="text" class="form-control" placeholder="+ Add Followers to this event"-->
+
+            <ul class="media-list">
+                {% if user.followers|length > 4 %}
+                {% set follower_length = 4 %}
+                {% else %}
+                {% set follower_length = user.followers|length %}
+                {% endif %}
+                {% for u in user.followers[0: follower_length] %}
+                <li>
+                    <div class="fitrangi-invite">
+                        <img src="{{u.cover_image_path}}" class="img-circle img-responsive pull-left p-5" width="60"
+                             height="100">
+                        <a href="" class="btn btn-default btn-xs mt-10 grey pull-right">Invite</a>
+                        <h4>{{u.name}}</h4>
+                    </div>
+                </li>
+                {% endfor %}
+
+            </ul>
+
+
+        </div>
+        {% endif %}
+
+
+        <div class="row box-bg">
+            <div class="heading">
+                <h4>Why Book Through us?</h4>
+            </div>
+
+            <ul class="my-list-right">
+                <li>Best Price Guarantee</li>
+                <!--li>2500+ Trips to Select</li-->
+                <li>Only Genuine Trips</li>
+                <!--li>Trusted by 100,000+ Adventurers</li-->
+                <li>Un-biased curated trips</li>
+            </ul>
+
+            <div class="sub-heading">
+                <h5>Not Sure Yet? Have a Question?</h5>
+            </div>
+            <form id="book-now" class="form-horizontal question-form">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><i class="fa fa-envelope"></i></label>
+
+                    <div class="col-sm-10">
+                        {% if user %}
+                        <input data-action-value="name" type="text" class="form-control" value="{{user.name}}">
+                        {% else %}
+                        <input data-action-value="name" type="text" class="form-control" placeholder="your email">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><i class="fa fa-envelope"></i></label>
+
+                    <div class="col-sm-10">
+                        {% if user %}
+                        <input data-action-value="email" type="email" class="form-control" value="{{user.email}}">
+                        {% else %}
+                        <input data-action-value="email" type="email" class="form-control" placeholder="your email">
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><i class="fa fa-phone"></i></label>
+
+                    <div class="col-sm-10">
+                        {% if user %}
+                        <input data-action-value="phone" type="text" class="form-control" value="{{user.phone}}">
+                        {% else %}
+                        <input data-action-value="phone" type="text" class="form-control" placeholder="your phone number">
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><i class="fa fa-comment"></i></label>
+
+                    <div class="col-sm-10">
+                        <textarea  data-action-value="enquiry" class="form-control" placeholder="how can we help you" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <button type="button" data-model-id="{{model.id}}" data-action="send-enquiry" class="btn btn-primary btn-block btn-sm">Send Booking</button>
+
+            </form>
+        </div>
+
+        <div class="row fitrangi-trips">
+            <div class="heading">
+                <h4>Similar Trips</h4>
+            </div>
+            <input id="trip-not-same-filter" type="hidden" data-category="other" data-model="trip" data-filter="id__ne" value="{{model.id}}"/>
+            {% if model.location %}
+            <input id="trip-location-filter" type="hidden" data-category="all" data-model="trip" data-filter="location__location__id" value="{{model.location.id}}"/>
+            {% endif %}
+            {{other_trips|safe}}
+        </div>
+
+
+    </div>
+    <!--col5-close-->
+
+
+</section>
+
+<hr class="divider">
+
+<script>
+    $(document).ready(function(){
+            var user = '{{user.id}}';
+            var trip = '{{model.id}}';
+            var App = window.App;
+            if ($('#trip-location-filter') != undefined)  {
+                App.filter('trip-location-filter');
+            }
+            App.filter('discussion-filter');
+            App.filter('trip-not-same-filter');
+    });
+</script>

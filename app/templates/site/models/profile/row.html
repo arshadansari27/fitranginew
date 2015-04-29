@@ -9,6 +9,6 @@
             {% endif %}
         {% endif %}
         <h4><a href="{{model.slug}}">{% if model and model.name and model.name|length > 35 %}{{model.name[0:35]}}...{% elif model %}{{model.name}}{% else %}Unknown{% endif %}</a></h4>
-        <h5><span class="fa fa-map-marker"></span> {% if model.location %} {{model.location.name }}{% else %} Unknown{% endif %}</h5>
+        <h5><span class="fa fa-map-marker"></span> {% if model.location %} {{model.location }}{% else %} Unknown{% endif %}</h5>
     </article>
 </li>
