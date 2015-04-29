@@ -1,1 +1,33 @@
-{% extends 'site/models/common/_grid.html' %}
+<div class="{% block grid_size %}col-lg-4 col-md-4 col-sm-6 col-xs-12{% endblock %}">
+    <div class="thumbnail">
+      <a href="{{model.slug}}"></a><img src="{{model.cover_image_path}}" alt="..."></a>
+
+      <div class="caption captop">
+        <article>
+			<h4>Organised by : </h4>
+			<img src="{{model.organizer.cover_image_path}}" class="img-rounded" width="52">
+		</article>
+      </div>
+
+      <div class="caption capbottom">
+        <a href="" class="btn btn-default"><span class="fa fa-user"></span></a>
+        <a href="" class="btn btn-default"><span class="fa fa-tags"></span></a>
+      </div>
+
+      <div class="caption">
+      	<!--div class="going">
+      		<img src="/images/pro1.jpg" class="img-circle" width="38">
+        	<img src="/images/pro6.jpg" class="img-circle" width="38">
+        	<img src="/images/pro5.jpg" class="img-circle" width="38">
+        	<img src="/images/pro4.jpg" class="img-circle" width="38">
+        	<img src="/images/pro2.jpg" class="img-circle" width="38">
+        	<h5>32+</h5>
+	  	</div-->
+        <h4><a href="{{model.slug}}">{{ model.name }}</a></h4>
+        <h3>{{ model.price }}</h3>
+        <span class="days">{{ model.duration }}</span>
+      </div>
+
+    </div>
+</div>
+

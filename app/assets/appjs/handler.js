@@ -188,6 +188,66 @@ jQuery(document).ready(function ($) {
         var model = $(this).attr('data-model-id');
         App.profile.remove_profile_from_follow(user, model);
     });
+    $('body').on('click', '[data-action="add-trip-joined"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var user = $(this).attr('data-user-id');
+        var model = $(this).attr('data-model-id');
+        App.profile.add_trip_to_join(user, model);
+    });
+    $('body').on('click', '[data-action="remove-trip-joined"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var user = $(this).attr('data-user-id');
+        var model = $(this).attr('data-model-id');
+        App.profile.remove_trip_from_join(user, model);
+    });
+    $('body').on('click', '[data-action="add-trip-interested"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var user = $(this).attr('data-user-id');
+        var model = $(this).attr('data-model-id');
+        App.profile.add_trip_to_interest(user, model);
+    });
+    $('body').on('click', '[data-action="remove-trip-interested"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var user = $(this).attr('data-user-id');
+        var model = $(this).attr('data-model-id');
+        App.profile.remove_trip_from_interest(user, model);
+    });
+
+    $('body').on('click', '[data-action="send-enquiry"]', function(e){
+        e.stopPropagation();
+        e.preventDefault();
+        var values = $('[data-action-value]');
+        var name, email, phone, enquiry;
+        var model = $(this).attr('data-model-id');
+        console.log(values);
+        console.log(model);
+        if (values != undefined) {
+            for(var i = 0; i < values.length; i++){
+                var elem = values[i]
+                var value = $(elem).attr('data-action-value');
+                if (value == 'name') {
+                    name = $(elem).val();
+                } else if (value == 'email') {
+                    email = $(elem).val();
+                } else if (value == 'phone') {
+                    phone = $(elem).val();
+                } else if (value == 'enquiry') {
+                    enquiry = $(elem).val();
+                }
+            }
+            if ((name == undefined || name.length == 0) || (email == undefined || email.length == 0) ){
+                BootstrapDialog.alert('Please enter your name and email. They are mandatory.');
+            } else {
+                App.profile.book_trip(name, email, phone, enquiry, model);
+            }
+        }
+
+    });
+
 
     $('body').on('click', '[data-action="delete-article"]', function (e) {
         e.stopPropagation();

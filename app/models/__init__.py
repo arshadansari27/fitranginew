@@ -5,8 +5,8 @@ from PIL import Image
 from ago import human
 import cStringIO
 from mongoengine import signals
-from flask.ext.mongoengine.wtf import model_form
-import os
+#from flask.ext.mongoengine.wtf import model_form
+import os, hashlib
 
 from app import db
 from app.models.extra.fields import ListField
@@ -60,14 +60,19 @@ def new_object(sender, document, created):
 
 
 def update_slug(sender, document, type, title):
-    if document.slug is not None and len(document.slug) > 0:
-        return
+    if hasattr(document, 'id') and document.id:
+        _doc = document.__class__.objects(pk=str(document.id)).first()
+    else:
+        _doc = None
     original_slug = "/%s/%s" % (type, title.lower().replace(',', '-').replace('.', '-').replace(' ', '-'))
-    _slug = original_slug
-    count = 1
-    while document.__class__.objects(slug=_slug).first() is not None:
-        _slug = original_slug + str(count)
-        count += 1
+    if not _doc:
+        _slug = original_slug
+        count = 1
+        while document.__class__.objects(slug=_slug).first() is not None:
+            _slug = original_slug + str(count)
+            count += 1
+    else:
+        _slug = original_slug
     document.slug = _slug
 
 class EmbeddedImageField(db.EmbeddedDocument):
@@ -112,6 +117,10 @@ def save_media_to_file(obj, attr, name):
             img.save(file_io, _format, quality=70)
             print '[*] Media path', path
             return path
+        obj = obj.__class__.objects(id=obj.id).first()
+        with open(file_path, 'r') as _file_io:
+            if hashlib.md5(_file_io.read()).hexdigest() != hashlib.md5(getattr(obj, attr).read()).hexdigest():
+                return save_media_to_file(str(obj.id), attr, name)
     else:
         return None
 
@@ -206,6 +215,10 @@ class ExternalNetwork(object):
     external_link = db.StringField()
     external_domain = db.StringField()
 
+
+class BookingEnquiry(db.EmbeddedDocument):
+    message = db.StringField()
+    author = db.ReferenceField('Profile')
 
 class Charge(object):
     price = db.DecimalField()

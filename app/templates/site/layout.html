@@ -218,7 +218,7 @@
                     </li>
                     <li class="{% if menu.main_menu == 'profile' %}active{% endif %}"><a href="/community/profile">Finder</a>
                     </li>
-                    <li class="{% if menu.main_menu in ['journal', 'article'] %}active{% endif %}"><a
+                    <li class="{% if menu.main_menu in ['journal', 'article', 'blog'] %}active{% endif %} {{menu.main_menu}}"><a
                             href="/explore/journal">Journal</a></li>
                     <li class="{% if menu.main_menu == 'discussion' %}active{% endif %}"><a
                             href="/community/discussion">Discussions</a></li>

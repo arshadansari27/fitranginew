@@ -1,4 +1,6 @@
 from app.utils import convert_query_to_filter
+import sys, traceback
+
 
 __author__ = 'arshad'
 
@@ -53,10 +55,8 @@ class EditorView(View):
             extractor = NodeExtractor.factory(self.model_name)
             model = extractor.get_single("pk:%s;" % str(self.id) )
             if not g.user:
-                print 'User not logged in'
                 raise Exception("where is the user")
             if model and model.author.id != g.user.id or 'Admin' not in g.user.roles:
-                print 'not the same user'
                 raise Exception("Invalid User")
         else:
             model = None
@@ -106,7 +106,6 @@ class CollectionView(object):
 
             def iterate_models(models):
                 for model in models:
-                    print model
                     temp = NodeView.get_collection_card(self.model_name, self.card_type, model)
                     yield model, temp
 
@@ -192,27 +191,33 @@ class NodeView(View):
 
     @classmethod
     def get_collection_card(cls, model_name, card_type, model, context={}):
-        from app.views import env
-        from app.views import force_setup_context
-        template_path = 'site/models/' + model_name + '/' + card_type + ".html"
-        context = force_setup_context(context)
-        context['model'] = model
-        if model_name == STREAM:
-            if model.is_post_activity:
-                template_path = 'site/models/post/row.html'
-                context['model'] = model.object
-            else:
-                if model.is_entity_activity:
-                    if model.object and model.object.id:
-                        m_name, id = (model.object.__class__.__name__.lower(), str(model.object.id))
-                        if m_name == 'profile':
-                            c_type = ICON_VIEW
-                        else:
-                            c_type = GRID_VIEW
-                        entity_view =  NodeView.get_collection_card(m_name, c_type, NodeExtractor.factory(m_name).get_single("pk:%s" % id), {})
-                        context['entity_view'] = entity_view
-        template = env.get_template(template_path)
-        return template.render(**context)
+        try:
+            from app.views import env
+            from app.views import force_setup_context
+            template_path = 'site/models/' + model_name + '/' + card_type + ".html"
+            context = force_setup_context(context)
+            context['model'] = model
+            if model_name == STREAM:
+                if model.is_post_activity:
+                    template_path = 'site/models/post/row.html'
+                    context['model'] = model.object
+                else:
+                    if model.is_entity_activity:
+                        if model.object and model.object.id:
+                            m_name, id = (model.object.__class__.__name__.lower(), str(model.object.id))
+                            if m_name == 'profile':
+                                c_type = ICON_VIEW
+                            else:
+                                c_type = GRID_VIEW
+                            entity_view =  NodeView.get_collection_card(m_name, c_type, NodeExtractor.factory(m_name).get_single("pk:%s" % id), {})
+                            context['entity_view'] = entity_view
+
+            template = env.get_template(template_path)
+            return template.render(**context)
+        except Exception, e:
+            traceback.print_exc(file=sys.stdout)
+            print e.message
+            return ''
 
 
     @classmethod
@@ -245,13 +250,11 @@ class PageManager(object):
         from app.views import env
         from app.views import force_setup_context
         template_path = COLLECTION_PATHS.get(model_name) + '.html'
-        print 'Loading template: ', template_path
         template = env.get_template(template_path)
         context = dict(user=user, query=query, filters=convert_query_to_filter(query))
         context = force_setup_context(context)
         context.update(Page.factory(model_name, 'search').get_context(context))
         html = template.render(**context)
-        print len(html)
         return 'Fitrangi: India\'s complete adventure portal. Find what you are looking for', html, context
 
     @classmethod
@@ -290,6 +293,8 @@ class Page(object):
                 return article_detail_page
             elif model_name == DISCUSSION:
                 return discussion_detail_page
+            elif model_name == TRIP:
+                return trip_detail_page
             else:
                 raise Exception("Not implemented")
         elif type == 'search':
@@ -303,6 +308,8 @@ class Page(object):
                 return discussion_search_page
             elif model_name == EVENT:
                 return event_search_page
+            elif model_name == TRIP:
+                return trip_search_page
             else:
                 raise Exception("Not implemented")
         elif type == 'landing':
@@ -362,6 +369,8 @@ class SearchPage(Page):
             return dict(featured=featured, latest=latest)
         elif self.model_name == EVENT:
             return dict(events_list=NodeCollectionFactory.resolve(EVENT, ROW_VIEW).get_card(context))
+        elif self.model_name == TRIP:
+            return dict(trips=NodeCollectionFactory.resolve(TRIP, GRID_VIEW).get_card(context))
         else:
             raise Exception("not implemented")
 
@@ -406,6 +415,10 @@ class DetailPage(Page):
             featured = NodeCollectionFactory.resolve(DISCUSSION, GRID_ROW_VIEW, fixed_size=3).get_card(context)
             advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, fixed_size=3).get_card(context)
             return dict(comments=comments, featured=featured, advertisement_list=advertisement_list)
+        elif self.model_name == TRIP:
+            discussions = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
+            other_trips = NodeCollectionFactory.resolve(TRIP, GRID_ROW_VIEW, category="other", fixed_size=4).get_card(context)
+            return dict(discussions=discussions, other_trips=other_trips)
 
 
 explore_landing_page    = LandingPage('explore')
@@ -416,9 +429,11 @@ adventure_search_page   = SearchPage(ADVENTURE)
 profile_search_page     = SearchPage(PROFILE)
 discussion_search_page  = SearchPage(DISCUSSION)
 event_search_page       = SearchPage(EVENT)
+trip_search_page        = SearchPage(TRIP)
 
 activity_detail_page    = DetailPage(ACTIVITY)
 adventure_detail_page   = DetailPage(ADVENTURE)
 profile_detail_page     = DetailPage(PROFILE)
 article_detail_page     = DetailPage(ARTICLE)
 discussion_detail_page  = DetailPage(DISCUSSION)
+trip_detail_page        = DetailPage(TRIP)

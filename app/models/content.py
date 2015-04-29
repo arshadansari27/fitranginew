@@ -121,7 +121,7 @@ class Content(ContentCommon, db.Document):
 class Post(ContentCommon, db.Document):
     parent = db.GenericReferenceField()
     comments = db.ListField(db.EmbeddedDocumentField(Comment))
-    type = db.StringField(choices=['comment', 'review', 'stream'])
+    type = db.StringField(choices=['comment', 'review', 'stream', 'discussion'])
 
     meta = {
         'allow_inheritance': True,
@@ -131,10 +131,10 @@ class Post(ContentCommon, db.Document):
     }
 
     def __repr__(self):
-        return "%s %s" % (self.author.name, self.content[0: 25])
+        return "%s %s" % (self.author.name if self.author and hasattr(self.author, 'name') and self.author.name else 'Anonymous', self.content[0: 25] if self.content and len(self.content) > 25 else self.content)
 
     def __unicode__(self):
-        return "%s %s" % (self.author.name, self.content[0: 25])
+        return "%s %s" % (self.author.name if self.author and hasattr(self.author, 'name') and self.author.name else 'Anonymous', self.content[0: 25] if self.content and len(self.content) > 25 else self.content)
 
     @property
     def partial_content(self):

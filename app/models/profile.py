@@ -22,7 +22,8 @@ class Profile(Entity, db.Document):
     subscription_date = db.DateTimeField(default=datetime.datetime.now)
     email = db.StringField(unique=True)
     passwd = db.StringField()
-    location = db.ReferenceField('Location')
+    location = db.StringField()
+    geo_location = db.PointField()
     location_typed = db.StringField()
     phone = db.StringField()
     website = db.StringField()
@@ -143,4 +144,23 @@ class Profile(Entity, db.Document):
         from app.models.store import Product
         return [u for u in RelationShips.get_accomplished(self) if isinstance(u, Product)]
 
+    @property
+    def interested_trip(self):
+        from app.models.trip import Trip
+        return [u for u in RelationShips.get_interested(self) if isinstance(u, Trip)]
+
+    @property
+    def interested_event(self):
+        from app.models.event import Event
+        return [u for u in RelationShips.get_interested(self) if isinstance(u, Event)]
+
+    @property
+    def joined_trip(self):
+        from app.models.trip import Trip
+        return [u for u in RelationShips.get_joined(self) if isinstance(u, Trip)]
+
+    @property
+    def joined_event(self):
+        from app.models.event import Event
+        return [u for u in RelationShips.get_joined(self) if isinstance(u, Event)]
 

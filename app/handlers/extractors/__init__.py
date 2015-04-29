@@ -37,7 +37,6 @@ class NodeExtractor(object):
             size = int(size)
             start = (page - 1) * size
             end = start + size
-            print '[*] Pagination', start,'->', end
             return query_set.all()[start: end]
         else:
             return query_set.all()
@@ -58,7 +57,6 @@ class NodeExtractor(object):
         if len(use_filters) > 0:
             filters = {}
             for k, v in use_filters.iteritems():
-                print k, v
                 if not isinstance(v, str) and not isinstance(v, unicode):
                     filters[k] = v
                     continue
@@ -72,7 +70,6 @@ class NodeExtractor(object):
                         v = float(u[1])
                     else:
                         v = str(u[1])
-                    print k, v
 
                 if k.startswith('relationship'):
                     fields = k.split('__')
@@ -112,7 +109,6 @@ class NodeExtractor(object):
                     for m, k, v in to_add:
                         del filters[m]
                         filters[k].append(v)
-        print '[*] Filters', filters
         return self.model_class.objects(**filters).order_by('-created_timestamp')
 
     @classmethod

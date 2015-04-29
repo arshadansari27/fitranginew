@@ -215,6 +215,20 @@ $(document).ready(function() {
         App.editor(options);
     };
 
+    App.profile.book_trip = function(name, email, phone, message, trip) {
+        var options = {
+            name: name,
+            email: email,
+            phone: phone,
+            message: message,
+            trip: trip,
+            type: 'profile',
+            command: 'book-enquiry-trip',
+            action: ''
+        };
+        App.editor(options);
+    };
+
     App.profile.verify_profile= function(node, data) {
         var options = {
             node: node,

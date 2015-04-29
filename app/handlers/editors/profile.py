@@ -56,6 +56,8 @@ class ProfileEditor(NodeEditor):
             return edit_role(self.action, self.node, self.message['role'])
         elif self.command == 'deactivate-profile':
             return deactivate_profile(self.action, self.node)
+        elif self.command == 'book-enquiry-trip':
+            return book_trip(self.action, self.message['name'], self.message['email'], self.message['phone'], self.message['message'], self.message['trip'])
         else:
             raise Exception('Invalid command')
 
@@ -72,13 +74,8 @@ def edit_profile(profile, data):
     location_lat    = data.get('location_lat', None)
     location_long   = data.get('location_long', None)
     if location is not None and len(location) > 0:
-        loc_cls = NodeFactory.get_class_by_name(LOCATION)
-        ll = loc_cls.objects(name__iexact=location).first()
-        if not ll:
-            ll = loc_cls(name=location)
-            ll.geo_location = [float(location_lat), float(location_long)]
-            ll.save()
-        node.location = ll
+        node.location = location
+        node.geo_location = [float(location_lat), float(location_long)]
     node.save()
     return node
 
@@ -192,9 +189,9 @@ def interest_trip(action, profile, trip):
     trip = Trip.objects(pk=trip).first()
     if not node or not trip:
         raise Exception('Invalid profile or event')
-    if action == 'interested':
+    if action == 'add':
         RelationShips.interested(node, trip)
-    elif action == 'uninterested':
+    elif action == 'remove':
         RelationShips.uninterested(node, trip)
     else:
         raise Exception("Invalid action")
@@ -206,9 +203,9 @@ def join_trip(action, profile, trip):
     trip = Trip.objects(pk=trip).first()
     if not node or not trip:
         raise Exception('Invalid profile or event')
-    if action == 'join':
+    if action == 'add':
         RelationShips.join(node, trip)
-    elif action == 'unjoin':
+    elif action == 'remove':
         RelationShips.unjoin(node, trip)
     else:
         raise Exception("Invalid action")
@@ -298,4 +295,15 @@ def deactivate_profile(action, profile):
     node.save()
     return node
 
+@response_handler('Successfully sent enquiry regarding trip', 'Failed to send the enquiry regarding trip')
+def book_trip(action, name, email, phone, message, trip):
+    node = Profile.objects(email__iexact=email).first()
+    if not node:
+        type = ProfileType.objects(name__iexact='Subscription Only').first()
+        node = Profile(name=name, email=email, phone=phone, type=[type]).save()
+    trip = Trip.objects(pk=trip).first()
+    if not node or not trip:
+        raise Exception('Invalid profile or event')
+    trip.add_enquiry(node, message)
+    return node
 

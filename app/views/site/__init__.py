@@ -6,7 +6,7 @@ from app import app
 from flask import render_template, request, g, redirect, jsonify, url_for
 from app.handlers.editors import NodeEditor
 from app.handlers import NodeCollectionFactory, NodeExtractor
-from app.models import Node, NodeFactory, ACTIVITY, ADVENTURE, ARTICLE, DISCUSSION, PROFILE, EVENT
+from app.models import Node, NodeFactory, ACTIVITY, ADVENTURE, ARTICLE, DISCUSSION, PROFILE, EVENT, TRIP
 from app.utils.search_helper import listing_helper, node_helper
 from app.utils import login_required, all_tags, convert_query_to_filter
 from app.handlers import  EditorView, NodeView, Page, CollectionView, PageManager
@@ -123,6 +123,16 @@ def list_event():
     context['card'] = card
     return render_template('site/pages/commons/view.html', **context)
 
+@app.route("/trip")
+def list_trip():
+    query = request.args.get('query', '')
+    if not query or len(query) is 0:
+        query = None
+    title, card, context = PageManager.get_search_title_and_page(TRIP, query=query)
+    context['title'] = title
+    context['card'] = card
+    return render_template('site/pages/commons/view.html', **context)
+
 @app.route("/listings")
 def paged_list():
     query       = request.args.get('query', None)
@@ -150,7 +160,7 @@ def ajax_options():
     if model_name == 'tag':
         options = [(u[0], u[0]) for u in all_tags()]
     elif model_name == 'location' and attr == 'name':
-        options = ((str(getattr(u, 'id')), u.full_name) for u in NodeFactory.get_class_by_name(model_name).objects.all())
+        options = ((str(getattr(u, 'id')), u.name) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     else:
         options = ((str(getattr(u, 'id')), getattr(u, attr)) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     if not select:

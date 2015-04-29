@@ -44,6 +44,7 @@ def get_menu_selection(request_path):
         ('/adventure', ('explore', 'adventure')),
         ('/article', ('explore', 'journal')),
         ('/blog', ('explore', 'journal')),
+        ('/journal', ('explore', 'journal')),
         ('/profile', ('community', 'profile')),
         ('/discussion', ('community', 'discussion')),
         ('/event', ('community', 'event')),
