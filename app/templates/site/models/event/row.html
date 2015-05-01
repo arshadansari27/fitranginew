@@ -1,9 +1,9 @@
-<li class="media panel panel-default">
+<li class="panel-default">
 <section class="container fitrangi-event mt-10">
     <div class="row text-center">
         <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 left">
             <i class="fa fa-calendar"></i>
-            <h4>{{model.scheduled_date}}</h4>
+            <h4>{{model.formatted_scheduled_date}}</h4>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-4 col-xs-12">
             <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne-{{model.id}}">
@@ -12,39 +12,39 @@
         </div>
         <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 right">
             <i class="fa fa-map-marker"></i>
-            <h4>{{model.location.name}}</h4>
+            <h4>{% if model.location %}{{model.location.name}}{% endif %}</h4>
         </div>
     </div>
 
      <div id="collapseOne-{{model.id}}" class="panel-collapse collapse">
      <div class="panel-body">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="fotorama" data-stopautoplayontouch="false" data-nav="false" data-loop="true" data-autoplay="true"
-                     data-width="100%" data-minwidth="400" data-maxwidth="1366" data-minheight="200" data-maxheight="100%">
-                    <img src="../images/img2.jpg">
-                    <img src="../images/adventure-banner.jpg">
-                </div>
-            </div>
-        </div>
-        <section class="container-fluid lightgrey-bg">
-
-
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
-                    <div class="events-box-bg">
-
-                        <h3>{{model.description}}</h3>
-                        <address>
-                            <h4><i class="fa fa-user"></i>{{model.organizer.name}}</h4>
-                            <h4><i class="fa fa-at"></i><a href="mailto:mail@domain.com">mail@domain.com</a></h4>
-                            <h4><i class="fa fa-phone"></i>+91 9999999999</h4>
-                        </address>
-                        <address>
-                            <h4><i class="fa fa-user"></i>{{model.organizer.name}}</h4>
-                            <h4><i class="fa fa-at"></i><a href="mailto:mail@domain.com">mail@domain.com</a></h4>
-                            <h4><i class="fa fa-phone"></i>+91 9999999999</h4>
-                        </address>
-
+        <section class="container lightgrey-bg">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row-fluid">
+                        <div class="col-sm-6 col-xs-6">
+                                    <div class="thumbnail">
+                                        <img src="{{model.organizer.cover_image_path}}"/>
+                                        <div class="caption">
+                                        <h5>Contact Details:</h5>
+                                        <div>
+                                            <p><i class="fa fa-user"></i><a href="{{model.organizer.slug}}">&nbsp;{{model.organizer.name}}</a></p>
+                                            <p><i class="fa fa-at"></i><a href="mailto:{{model.organizer.email}}">&nbsp;{{model.organizer.email}}</a></p>
+                                            {% if model.organizer.phone %}<p><i class="fa fa-phone"></i>&nbsp;{{model.organizer.phone}}</p>{% endif %}
+                                            {% if model.organizer.website %}<p><i class="fa fa-link"></i>&nbsp;{{model.organizer.website}}</p>{% endif %}
+                                        </div>
+                                    </div>
+                                    </div>
+                        </div>
+                        <div>
+                            <h4>Description:</h4>
+                            <p>{{model.description}}</p>
+                            {% if model.external_link %}
+                            <h4>Event Website:</h4>
+                            <p>Click on the link to go to the website <a href="{{model.external_link}}">{{model.external_link}}</a></p>
+                            {% endif %}
+                            <h4>About:</h4>
+                            <p>{{model.about}}</p>
+                        </div>
                     </div>
                 </div>
         </section>
