@@ -19,7 +19,7 @@
                     <h2>{{model.name}}</h2>
 
                     <article>
-                        <h4>{% if model.reviews|length > 0 %}{{model.reviews|length}} Reviews: {% else %} No Reviews {%
+                        <h4>{% set reviews_count = model.reviews_count %}{% if reviews_count > 0 %}{{reviews_count}} Reviews: {% else %} Not Reviewed yet {%
                             endif %}</h4>
                         <a href=""
                            class="btn rating-{% if model.extremity_level %}{{model.extremity_level|lower}}{% else%}easy{% endif %}">{%
