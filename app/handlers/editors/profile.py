@@ -94,6 +94,7 @@ def subscribe(data):
 @response_handler('Successfully updated the profile pic', 'Failed to update the profile pic')
 def edit_cover_image(profile, data):
     node = Profile.objects(pk=profile).first()
+    print '****', node, data
     return node
 
 @response_handler('Successfully updated the password', 'Failed to update the password')

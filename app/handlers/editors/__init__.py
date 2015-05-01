@@ -30,7 +30,6 @@ def response_handler(success, failure, login_required=True):
                     return dict(status='error', message='Please login before making requests')
             try:
                 node = f(*kargs, **kwargs)
-                print node
                 return dict(status='success', message=success, node=str(node.id))
             except Exception, e:
                 return dict(status='error', message=failure, exception=str(e))
@@ -89,6 +88,7 @@ class NodeEditor(object):
 def save_cover(type, model, url):
     from app.models import NodeFactory
     node = NodeFactory.get_by_id(type, model)
+    print '[*] Uploading cover image...', node, url
     if not node:
         raise Exception("Invalid model id")
     image = url
@@ -101,9 +101,9 @@ def save_cover(type, model, url):
         node.cover_image.replace(open(path, 'rb'))
     if type == 'profile':
         node.uploaded_image_cover = True
-    path = os.getcwd() + '/app/assets/' + node.path_cover_image if len(node.path_cover_image) > 0 else 'some-non-existent-path'
+    node.save()
+    node = NodeFactory.get_by_id(type, model)
+    path = os.getcwd() + '/app/assets/' + node.path_cover_image if hasattr(node, 'path_cover_image') and node.path_cover_image and len(node.path_cover_image) > 0 else 'some-non-existent-path'
     if os.path.exists(path):
         os.remove(path)
-
-    node.save()
     return node
