@@ -1,5 +1,5 @@
 <section class="container-fluid p-0">
-<div class="home-banner">
+<div class="home-banner" style="{{background_cover}}">
 <h4>Welcome to</h4>
 <h2>India's Complete Adventure Portal</h2>
 
@@ -129,7 +129,7 @@ like minded people discussion about your adventure quest & get curated trips and
 <h2>Trending Discussion</h2>
 
 <div class="discussion">
-    <input id="discussion-admin-published-filter" type="hidden" data-model="discussion" data-filter="admin_published" value="bool|True" data-filter-type="fixed"/>
+    <input id="discussion-admin-published-filter" type="hidden" data-model="discussion" data-filter="admin_published" value="bool|True" data-filter-status="fixed"/>
     {{discussion|safe}}
 </div>
 <button data-action="add-discussion" data-user-id="{{user.id}}" type="button" class="btn btn-primary mb-10 pull-left">Add a Discussion</button>
@@ -148,7 +148,7 @@ like minded people discussion about your adventure quest & get curated trips and
 <h2>Popular Blogs</h2>
 
 <div class="container">
-    <input id="article-admin-published-filter" type="hidden" data-model="article" data-filter="admin_published" value="bool|True" data-filter-type="fixed"/>
+    <input id="article-admin-published-filter" type="hidden" data-model="article" data-filter="admin_published" value="bool|True" data-filter-status="fixed"/>
     {{journal|safe}}
 
 </div>

@@ -1,5 +1,5 @@
 <section class="container-fluid p-0">
-    <div class="userprofile-banner" style="background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(/images/userprofile-banner.jpg) no-repeat center center; background-size: cover;">
+    <div class="userprofile-banner" style="{{background_cover}}">
 
         <div class="container">
 
@@ -111,21 +111,21 @@
                 <div role="tabpanel" class="tab-pane fade active in" id="my-stream" aria-labelledby="my-stream">
                     <section class="container-fluid">
                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
-                            <input type="hidden" id="my-stream-filter" data-model="stream" data-filter="profile" data-category="my" value="{{model.id}}" data-filter-type="fixed"/>
+                            <input type="hidden" id="my-stream-filter" data-model="stream" data-filter="profile" data-category="my" value="{{model.id}}" data-filter-status="fixed"/>
                             {% if model.id == user.id %}
-                            <input type="hidden" id="following-stream-filter" data-model="stream" data-filter="profile__in" data-category="my" value="{% for f in model.following %}{{f.id}}{% if not loop.last%},{% endif %}{% endfor %}" data-filter-type="fixed"/>
+                            <input type="hidden" id="following-stream-filter" data-model="stream" data-filter="profile__in" data-category="my" value="{% for f in model.following %}{{f.id}}{% if not loop.last%},{% endif %}{% endfor %}" data-filter-status="fixed"/>
                             {% else %}
-                            <input type="hidden" id="following-stream-filter" data-model="stream" data-filter="profile__in" data-category="my" value="" data-filter-type="fixed"/>
+                            <input type="hidden" id="following-stream-filter" data-model="stream" data-filter="profile__in" data-category="my" value="" data-filter-status="fixed"/>
                             {% endif %}
-                            <input id="stream-message-filter" type="hidden" data-model="stream" data-filter="is_private" value="bool|False" data-category="my" data-filter-type="fixed">
+                            <input id="stream-message-filter" type="hidden" data-model="stream" data-filter="is_private" value="bool|False" data-category="my" data-filter-status="fixed">
                             {% import 'site/includes/post_box.html' as post %}
                             {{ post.show_post_form(model, 'stream') }}
                             {{ my_stream_list|safe }}
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <h4 class="blue pb-5 border-grey-b">Fitrangi.com Popular Stream Feeds</h4>
-                            <input type="hidden" id="fitrangi-stream-type-filter" data-model="post" data-filter="type" data-category="fitrangi" value="stream" data-filter-type="fixed"/>
-                            <input type="hidden" id="fitrangi-stream-profile-filter" data-model="post" data-filter="author__in" data-category="fitrangi" value="{{featured_profiles}}" data-filter-type="fixed"/>
+                            <input type="hidden" id="fitrangi-stream-type-filter" data-model="post" data-filter="type" data-category="fitrangi" value="stream" data-filter-status="fixed"/>
+                            <input type="hidden" id="fitrangi-stream-profile-filter" data-model="post" data-filter="author__in" data-category="fitrangi" value="{{featured_profiles}}" data-filter-status="fixed"/>
                             {{ fitrangi_posts|safe}}
                         </div>
                     </section>
@@ -134,25 +134,25 @@
                 </div><!--Tab Pane End-->
 
                 <div role="tabpanel" class="tab-pane fade" id="adventure-done" aria-labelledby="adventure-done">
-                    <input id="accomplished-adventure-filter" data-category="accomplished" data-model="adventure" data-filter="relationship__accomplished__profile" type="hidden" value="{{model.id}}" data-filter-type="fixed">
+                    <input id="accomplished-adventure-filter" data-category="accomplished" data-model="adventure" data-filter="relationship__accomplished__profile" type="hidden" value="{{model.id}}" data-filter-status="fixed">
 
                     {{accomplished_adventure_list|safe}}
 
                 </div><!--Tab Pane End-->
 
                 <div role="tabpanel" class="tab-pane fade" id="my-wishlist" aria-labelledby="my-wishlist">
-                    <input id="wish-list-adventure-filter" data-category="wishlisted" data-model="adventure" data-filter="relationship__wishlisted__profile" type="hidden" value="{{model.id}}" data-filter-type="fixed">
+                    <input id="wish-list-adventure-filter" data-category="wishlisted" data-model="adventure" data-filter="relationship__wishlisted__profile" type="hidden" value="{{model.id}}" data-filter-status="fixed">
                     {{wish_listed_adventure_list|safe}}
 
                 </div><!--Tab Pane End-->
 
                 <div role="tabpanel" class="tab-pane fade" id="following" aria-labelledby="following">
-                    <input id="profile-following-filter" data-category="following" data-model="profile" data-filter="relationship__follows__profile" type="hidden" value="{{model.id}}" data-filter-type="fixed">
+                    <input id="profile-following-filter" data-category="following" data-model="profile" data-filter="relationship__follows__profile" type="hidden" value="{{model.id}}" data-filter-status="fixed">
                     {{following_list|safe}}
                 </div><!--Tab Pane End-->
 
                 <div role="tabpanel" class="tab-pane fade" id="follower" aria-labelledby="follower">
-                    <input id="profile-follower-filter" data-category="follower" data-model="profile" data-filter="relationship__followed_by__profile" type="hidden" value="{{model.id}}" data-filter-type="fixed">
+                    <input id="profile-follower-filter" data-category="follower" data-model="profile" data-filter="relationship__followed_by__profile" type="hidden" value="{{model.id}}" data-filter-status="fixed">
                     {{follower_list|safe}}
                 </div><!--Tab Pane End-->
 
@@ -161,13 +161,13 @@
                 </div><!--Tab Pane End-->
 
                 <div role="tabpanel" class="tab-pane fade" id="journals" aria-labelledby="journals">
-                    <input id="article-filter" data-category="all" data-model="article" data-filter="author" type="hidden" value="{{model.id}}" data-filter-type="fixed">
+                    <input id="article-filter" data-category="all" data-model="article" data-filter="author" type="hidden" value="{{model.id}}" data-filter-status="fixed">
                     {{article_list|safe}}
                 </div><!--Tab Pane End-->
 
 
                 <div role="tabpanel" class="tab-pane fade discussion" id="discussions" aria-labelledby="discussions">
-                    <input id="discussion-filter" data-category="all" data-model="discussion" data-filter="author" type="hidden" value="{{model.id}}" data-filter-type="fixed">
+                    <input id="discussion-filter" data-category="all" data-model="discussion" data-filter="author" type="hidden" value="{{model.id}}" data-filter-status="fixed">
 
                     {{discussion_list|safe}}
 

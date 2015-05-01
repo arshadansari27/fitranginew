@@ -673,7 +673,7 @@ jQuery(document).ready(function ($) {
             selector = with_category_selector;
         }
         $(selector).each(function(j, filter_element) {
-            var is_fixed = $(filter_element).attr('data-filter-type');
+            var is_fixed = $(filter_element).attr('data-filter-status');
             if (is_fixed != undefined && is_fixed=='fixed') {
                 return;
             }

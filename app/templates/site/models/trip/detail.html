@@ -1,5 +1,5 @@
 <section class="container-fluid p1">
-    <div class="adventures-trips-banner" style="background: url({{model.cover_image_path}}) no-repeat center center;">
+    <div class="adventures-trips-banner" style="{{background_cover}}">
 
         <div class="container">
 
@@ -221,7 +221,7 @@
         <div>
             {% import 'site/includes/post_box.html' as post %}
             {{ post.show_post_form(model, 'discussion') }}
-            <input type="hidden" id="discussion-filter" data-category="all" data-filter="parent__trip__pk" data-model="post" value="{{model.id}}" data-filter-type="fixed"/>
+            <input type="hidden" id="discussion-filter" data-category="all" data-filter="parent__trip__pk" data-model="post" value="{{model.id}}" data-filter-status="fixed"/>
             {{ discussions|safe }}
         </div>
     </div>

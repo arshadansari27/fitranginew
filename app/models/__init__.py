@@ -64,7 +64,7 @@ def update_slug(sender, document, type, title):
         _doc = document.__class__.objects(pk=str(document.id)).first()
     else:
         _doc = None
-    original_slug = "/%s/%s" % (type, title.lower().replace(',', '-').replace('.', '-').replace(' ', '-'))
+    original_slug = "/%s/%s" % (type, title.lower().replace(',', '-').replace('.', '-').replace(' ', '-').replace('?', '-').replace('/', '-').replace('\\', '-'))
     if not _doc:
         _slug = original_slug
         count = 1

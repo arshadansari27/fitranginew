@@ -1,5 +1,5 @@
 <section class="container-fluid p-0">
-    <div class="blogs-banner" style="background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url({{model.cover_image_path}}) no-repeat center center;background-size: cover;">
+    <div class="blogs-banner" style="{{background_cover}}">
         <section class="container  blogs-heading">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h2>{{model.title}} </h2>
@@ -50,7 +50,7 @@
         {% endif %}
         {{model.process_content|safe}}
         <hr/>
-        <input id="post-filter" type="hidden" data-model="post" data-category="all" data-filter="parent__article__pk" value="{{model.id}}" data-filter-type="fixed" />
+        <input id="post-filter" type="hidden" data-model="post" data-category="all" data-filter="parent__article__pk" value="{{model.id}}" data-filter-status="fixed" />
         <div class="">
             {% import 'site/includes/post_box.html' as post %}
             {{ post.show_post_form(model, 'comment') }}

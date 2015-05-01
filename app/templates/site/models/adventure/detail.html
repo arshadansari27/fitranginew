@@ -1,6 +1,6 @@
 <section class="container-fluid p-0">
     <div class="adventure-banner"
-         style="background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url({{model.cover_image_path}}) no-repeat ; background-size: 100%; ">
+         style="{{background_cover}}">
 
         <div class="container">
 
@@ -272,7 +272,7 @@
         <div>
             {% import 'site/includes/post_box.html' as post %}
             {{ post.show_post_form(model, 'review') }}
-            <input type="hidden" id="review-filter" data-category="all" data-filter="parent__adventure__pk" data-model="post" value="{{model.id}}" data-filter-type="fixed"/>
+            <input type="hidden" id="review-filter" data-category="all" data-filter="parent__adventure__pk" data-model="post" value="{{model.id}}" data-filter-status="fixed"/>
             {{ reviews|safe }}
         </div>
 

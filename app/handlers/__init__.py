@@ -32,6 +32,22 @@ COLLECTION_PATHS = {
     "community": 'site/pages/landings/community',
 }
 
+WALL_IMAGE_STYLE = "background:  linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(%s) no-repeat center center;background-size: cover;"
+
+WALL_IMAGE_NAMES = {
+    ACTIVITY: dict(detail=lambda u: u.cover_image_path, search='', landing=''),
+    STREAM: dict(detail=lambda u: None, search='', landing=''),
+    ADVENTURE: dict(detail=lambda u: u.cover_image_path, search='/images/adventure-banner.jpg', landing=''),
+    PROFILE: dict(detail=lambda u: '/images/userprofile-banner.jpg', search='/images/userprofile-banner.jpg', landing=''),
+    POST: dict(detail=lambda u: None, search='', landing=''),
+    DISCUSSION: dict(detail=lambda u: u.cover_image_path, search='/images/discussion-banner.jpg', landing=''),
+    EVENT: dict(detail=lambda u: u.cover_image_path, search='/images/events-banner.jpg', landing=''),
+    ARTICLE: dict(detail=lambda u: u.cover_image_path, search='/images/userprofile-banner.jpg', landing=''),
+    TRIP: dict(detail=lambda u: u.cover_image_path, search='/images/adventure-trips-banner.jpg', landing=''),
+    "explore": dict(detail=lambda u: None, search=None, landing='/images/home-banner.jpg'),
+    "community": dict(detail=lambda u: None, search=None, landing='/images/community-banner.jpg'),
+}
+
 class View(object):
 
     def get_card(self):
@@ -238,7 +254,7 @@ class PageManager(object):
         user = kwargs.get('user', None)
         assert  query is not None
         model = NodeExtractor.factory(model_name).get_single(query)
-        context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query))
+        context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), background_cover=WALL_IMAGE_STYLE % WALL_IMAGE_NAMES[model_name].get('detail', '')(model))
         context.update(Page.factory(model_name, 'detail').get_context(context))
         title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s complete adventure portal')
         return title, NodeView.get_detail_card(model_name, model, context), context
@@ -251,7 +267,7 @@ class PageManager(object):
         from app.views import force_setup_context
         template_path = COLLECTION_PATHS.get(model_name) + '.html'
         template = env.get_template(template_path)
-        context = dict(user=user, query=query, filters=convert_query_to_filter(query))
+        context = dict(user=user, query=query, filters=convert_query_to_filter(query), background_cover=WALL_IMAGE_STYLE % WALL_IMAGE_NAMES[model_name].get('search', ''))
         context = force_setup_context(context)
         context.update(Page.factory(model_name, 'search').get_context(context))
         html = template.render(**context)
@@ -265,7 +281,7 @@ class PageManager(object):
         user = kwargs.get('user', None)
         template_path = COLLECTION_PATHS.get(model_name) + '.html'
         template = env.get_template(template_path)
-        context = dict(user=user, query=query, filters=convert_query_to_filter(query))
+        context = dict(user=user, query=query, filters=convert_query_to_filter(query), background_cover=WALL_IMAGE_STYLE % WALL_IMAGE_NAMES[model_name].get('landing', ''))
         context = force_setup_context(context)
         context.update(Page.factory(model_name, 'landing').get_context(context))
         html = template.render(**context)
