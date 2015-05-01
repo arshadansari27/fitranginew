@@ -10,18 +10,16 @@ def get_query_set(cls):
 
 def get_activities():
     activities= {
-        "Sky - Fly": {
+        "Air Sports": {
                     "Bungee jumping": "/explore/activity?name=Bungee jumping",
                     "Hang Gliding": "/explore/activity?name=Hang Gliding",
                     "Hot Air Ballooning": "/explore/activity?name=Hot Air Ballooning",
                     "Para Motoring": "/explore/activity?name=Para Motoring",
                     "Paragliding": "/explore/activity?name=Paragliding",
-                    "Parasailing": "/explore/activity?name=Parasailing",
                     "Sky Diving": "/explore/activity?name=Sky Diving",
                     "Zip Line": "/explore/activity?name=Zip Line"
         },
         "Water - Wonders": {
-                    "Canyoning": "/explore/activity?name=Canyoning",
                     "Kayaking": "/explore/activity?name=Kayaking",
                     "Kite Surfing": "/explore/activity?name=Kite Surfing",
                     "Scuba Diving": "/explore/activity?name=Scuba Diving",
@@ -30,8 +28,10 @@ def get_activities():
                     "Water Rafting": "/explore/activity?name=Water Rafting"
         },
         "Land Sports": {
-                    "Snow - Flow": "/explore/activity?name=Snow - Flow",
+                    "Skiing": "/explore/activity?name=Skiing",
+                    "Snowboarding": "/explore/activity?name=Snowboarding",
                     "Camping": "/explore/activity?name=Camping",
+                    "Canyoning": "/explore/activity?name=Canyoning",
                     "Cycling-Biking": "/explore/activity?name=Cycling-Biking",
                     "Marathons": "/explore/activity?name=Marathons",
                     "Mountaineering": "/explore/activity?name=Mountaineering",
