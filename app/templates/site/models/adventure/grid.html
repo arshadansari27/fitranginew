@@ -9,8 +9,18 @@
             </article>
         </div>
         <div class="caption capbottom">
-            <a href="" class="btn btn-default"><span class="fa fa-user"></span></a>
-            <a href="" class="btn btn-default"><span class="fa fa-tags"></span></a>
+            {% if user %}
+                {% if not model in user.accomplished_adventure %}
+                    <a href="#" class="btn btn-default" data-action="add-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-check"></span>&nbsp;</a>
+                {% else %}
+                    <a href="#" class="btn btn-default" data-action="remove-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-check orange"></span>&nbsp;</a>
+                {% endif %}
+                {% if not model in user.wish_list_adventure %}
+                    <a href="#" class="btn btn-default" data-action="add-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-star"></span> </a>
+                {% else %}
+                    <a href="#" class="btn btn-default" data-action="remove-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-star orange"></span> </a>
+                {% endif %}
+            {% endif %}
         </div>
         <div class="caption">
             <h4><a class="text-muted" href="{{model.slug}}">{{model.name}}</a> </h4>
