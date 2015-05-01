@@ -44,7 +44,7 @@
                 <script>
                     $(document).ready(function () {
                         $.ajax({
-                            url: '/names?model_name=tag&attr=name'
+                            url: '/names?model_name=tag&attr=name&size=15'
                         }).done(function (data) {
                             var tag_list = data.split(',');
                             var tags = '';

@@ -95,12 +95,19 @@ def convertLinks(text):
 def tag_remove(text):
     return TAG_RE.sub('', text)
 
-@cache.cached(60)
+#@cache.cached(60)
 def all_tags(type=None):
     from app.models.content import Content, Article, Discussion
+    from app.models.activity import Activity
+    tags = [(u.name, 100) for u in Activity.objects.all()]
     col = Content._get_collection()
     pipeline = [{"$unwind": "$tags"}, {"$group": {"_id": "$tags", "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}]
-    return [(u['_id'], u['count']) for u in col.aggregate(pipeline)['result']]
+    tags.extend([(u['_id'], u['count']) for u in col.aggregate(pipeline)['result']])
+    _tags = {}
+    for tu, tv in tags:
+        _tags.setdefault(tu, 0)
+        _tags[tu] += tv
+    return _tags.items()
 
 
 def get_month(month):

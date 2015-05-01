@@ -1,4 +1,4 @@
-import os
+import os, random
 from jinja2 import Template
 import simplejson as json
 from PIL import Image
@@ -175,8 +175,12 @@ def ajax_options():
 def ajax_names():
     model_name = request.args.get('model_name', '')
     attr = request.args.get('attr', None)
+    size = request.args.get('size', None)
     if model_name == 'tag':
-        options = [u[0] for u in all_tags()][:30]
+        options = [u[0] for u in all_tags()]
+        options.extend([u.name for u in NodeExtractor.factory(ACTIVITY).get_list("", False, 0, 0)])
+        if size:
+            options = options[0: int(size)]
     else:
         options = (getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     results = (u for u in options)
