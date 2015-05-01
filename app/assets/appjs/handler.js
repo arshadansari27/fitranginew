@@ -19,8 +19,7 @@ jQuery(document).ready(function ($) {
         }
     };
 
-    $(".show_login").click(function (e) {
-        e.stopPropagation();
+    var show_login_dialog = function() {
         window.$loginDialog = new BootstrapDialog({
             size: BootstrapDialog.SIZE_WIDE,
             title: "Sign in",
@@ -28,6 +27,23 @@ jQuery(document).ready(function ($) {
         });
         window.$loginDialog.realize();
         window.$loginDialog.open();
+    }
+
+    $('body').on('click', '[data-action="check-login"]', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var user_id = $(this).attr('data-user-id');
+        if (user_id == undefined || user_id.length == 0) {
+            show_login_dialog();
+        } else {
+            window.location.href = '/community/my';
+        }
+        return false;
+    });
+
+    $(".show_login").click(function (e) {
+        e.stopPropagation();
+        show_login_dialog();
     });
 
     $(".show_signup").click(function (e) {
@@ -713,5 +729,7 @@ jQuery(document).ready(function ($) {
 			var lon  = result.geometry.location.D;
 			$('[data-type="geo-complete"]').val(name + "|" + lat +'|' + lon);
      });
+
+
 
 });

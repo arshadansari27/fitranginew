@@ -175,7 +175,7 @@
                                                                  src="{{user.cover_image_path}}"/></a>
                                 </li>
                                 <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="/community/my"><i
-                                        class="fa fa-info"></i>&nbsp;My Page</a></li>
+                                        class="fa fa-info" data-action="check-login" data-user-id="{{user.id}}"></i>&nbsp;My Page</a></li>
                                 <li><a data-action="edit-profile" data-model-id="{{user.id}}" data-user-id="{{user.id}}"
                                        href="#"><i class="fa fa-user"></i>&nbsp;Edit Profile</a></li>
                                 <li><a data-action="edit-profile-preferences" data-model-id="{{user.id}}"
@@ -204,7 +204,7 @@
             {% if menu.app_name in ['explore', 'community'] %}
             <div class="container-fluid border-grey-t">
                 <ul class="nav navbar-nav nav-down">
-                    <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="/community/my">My Page</a>
+                    <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="#" data-action="check-login" data-user-id="{{user.id}}">My Page</a>
                     </li>
                     <li class="inner-level-dropdown dropdown {% if menu.main_menu == 'activity' %}active{% endif %}">
                         <a id="subdropdown1" href="#" class="dropdown-toggle">Activities<b class="caret"></b></a>
