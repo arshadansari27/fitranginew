@@ -348,7 +348,9 @@ class LandingPage(Page):
             counters = dict(adventure=Adventure.objects.count(),
                             profile=Profile.objects(type__ne=ProfileType.objects(name__iexact='subscription only').first()).count(),
                             discussion=Discussion.objects.count(),
-                            article=Article.objects.count())
+                            article=Article.objects.count(),
+                            trips=Trip.objects.count(),
+                            posts=Post.objects.count())
             journal = NodeCollectionFactory.resolve(ARTICLE, GRID_VIEW, fixed_size=6).get_card(context)
             adventure = NodeCollectionFactory.resolve(ADVENTURE, GRID_VIEW, fixed_size=6).get_card(context)
             event = NodeCollectionFactory.resolve(EVENT, GRID_VIEW, fixed_size=6).get_card(context)
