@@ -88,7 +88,7 @@ class Content(ContentCommon, db.Document):
 
     @property
     def comments_count(self):
-        return len(self.comments)
+        return Post.objects(parent=self).count()
 
     def add_comment(self, content, author):
         comment = Post(parent=self, content=content, author=author)
