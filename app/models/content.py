@@ -63,6 +63,7 @@ class Content(ContentCommon, db.Document):
     published = db.BooleanField()
     published_timestamp = db.DateTimeField()
     admin_published = db.BooleanField()
+    views = db.IntField(default=0)
 
     meta = {
         'allow_inheritance': True,
@@ -192,7 +193,6 @@ class PostVote(db.Document):
 @update_content.apply
 class Article(Content):
     pass
-
 
 @update_content.apply
 class Discussion(Content):

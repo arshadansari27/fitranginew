@@ -243,6 +243,12 @@ class NodeView(View):
         template_path = 'site/models/' + model_name + '/detail.html'
         template = env.get_template(template_path)
         context = force_setup_context(context)
+        if isinstance(model, Content):
+            if not hasattr(model, 'views'):
+                model.views = 0
+            if model.views < 1000000000:
+                model.views += 1
+            model = model.save()
         context['model'] = model
         return template.render(**context)
 
