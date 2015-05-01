@@ -117,20 +117,19 @@
     <!--Tab Pane End-->
 
     <div role="tabpanel" class="tab-pane fade" id="how-to-reach" aria-labelledby="how-to-reach">
-        {% if model.location %}
-        <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span> {{model.location.name}}
-        </h4>
-
-        <div class="tab-details">
-            <iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyC2G0kvBLJBEnBCUPf053z6mL5tgbWON5o&q={{model.location.name}}&zoom=7"
-                    width="100%" height="600" frameborder="0" style="border:0"></iframe>
-        </div>
-        <hr class="divider clearfix">
-        {% endif %}
-
-
         <div class="container">
             <h4>How to Reach</h4>
+            {% if model.location %}
+                <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span> {{model.location.name}}</h4>
+                <div class="tab-details">
+                    <div class="thumbnail">
+                        <center><iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyC2G0kvBLJBEnBCUPf053z6mL5tgbWON5o&q={{model.location.name}}&zoom=7" width="60%" height="400" frameborder="0" style="border:0"></iframe></center>
+                    </div>
+                </div>
+                <hr class="divider clearfix">
+            {% endif %}
+
+
 
             <div>
                 {% if model.reach_by_air|length > 0 %}

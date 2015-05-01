@@ -34,7 +34,6 @@ class Channel(db.Document):
 
 class ContentCommon(Node):
     video_embed = db.ListField(db.StringField())
-    image_gallery = db.ListField(db.EmbeddedDocumentField(EmbeddedImageField))
     map_embed = db.DictField()
     content = db.StringField()
     author = db.ReferenceField('Profile')

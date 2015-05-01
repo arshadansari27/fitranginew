@@ -141,7 +141,7 @@ class TagAdminView(ModelView):
 class ActivityAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'icon', 'about', 'dos', 'donts', 'safety_tips', 'tips', 'facts', 'highlights', 'cover_image']
+    form_columns = ['name', 'description', 'icon', 'about', 'dos', 'donts', 'safety_tips', 'tips', 'facts', 'highlights', 'cover_image', 'image_gallery']
     column_list = ('name', 'description', 'cover_image')
     column_filters = ['name']
     column_searchable_list = ('name',)
