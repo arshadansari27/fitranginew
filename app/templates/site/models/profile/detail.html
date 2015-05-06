@@ -118,8 +118,10 @@
                             <input type="hidden" id="following-stream-filter" data-model="stream" data-filter="profile__in" data-category="my" value="" data-filter-status="fixed"/>
                             {% endif %}
                             <input id="stream-message-filter" type="hidden" data-model="stream" data-filter="is_private" value="bool|False" data-category="my" data-filter-status="fixed">
+                            {% if user and user.id == model.id %}
                             {% import 'site/includes/post_box.html' as post %}
                             {{ post.show_post_form(model, 'stream') }}
+                            {% endif %}
                             {{ my_stream_list|safe }}
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
