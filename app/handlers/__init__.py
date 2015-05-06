@@ -1,10 +1,9 @@
-from app.utils import convert_query_to_filter
-import sys, traceback
-
-
 __author__ = 'arshad'
 
+import sys, traceback, random
+
 from flask import g
+from app.utils import convert_query_to_filter
 from app.handlers.extractors import NodeExtractor, article_extractor, advertisement_extractor, adventure_extractor, \
     activity_extractor, discussion_extractor, profile_type_extractor, event_extractor, profile_extractor, \
     trip_extractor, post_extractor, stream_extractor
@@ -369,7 +368,8 @@ class LandingPage(Page):
             testimonials.append(dict(name=u"Divyesh Muni", image="/images/testimonials/DIVYESH MUNI.jpg", title=u"Hon. Treasurer and Hon. Secretary - The Himalayan Club. IMF Climbing Award - Excellence in Mountaineering", context=u"About Adventure Tourism Conclave 2015", content=u"Today's conclave is a good start and it's something that one needs to continue because it brings the community together and take things forward."))
             testimonials.append(dict(name=u"Shantanu Pandit", image="/images/testimonials/Shantanu Pandit.jpg", title=u"Adventure Consultant. Founder , EKO (Experience - Knowledge - Outdoors)", context=u"About Adventure Tourism Conclave 2015", content=u"I think this was a great initiative. It brought a lot of people together perhaps after a long time and at a scale which was speaking at Maharashtra level. This is desperately required for the field of Adventure.  I really liked the fact that safety was emphasized and the speakers brought concrete inputs.  Hey Fitrangi - Great Stuff."))
             testimonials.append(dict(name=u"Shalik Jogwe", image="/images/testimonials/Shalik Jogwe.jpg", title=u"Wildlife Photographer, Naturalist and Owner at Vidarbha Wildlife", context=u"About Adventure Tourism Conclave 2015", content=u"I am thankful to ATOM and Fitrangi for providing this opportunity to present wildlife and accepting wild life as an adventure activity at Adventure Tourism Conclave 2015."))
-            return dict(counters=counters, adventure=adventure, journal=journal, profile=profile, event=event, discussion=discussion, testimonials=testimonials)
+            random.shuffle(testimonials)
+            return dict(counters=counters, adventure=adventure, journal=journal, profile=profile, event=event, discussion=discussion, testimonials=testimonials[0: 2])
 
         elif self.model_name == 'community':
             profile = NodeCollectionFactory.resolve(PROFILE, ICON_VIEW, fixed_size=24).get_card(context)
