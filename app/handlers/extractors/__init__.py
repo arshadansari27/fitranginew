@@ -78,7 +78,7 @@ class NodeExtractor(object):
                     from_node_type = fields[2]
                     from_node = NodeExtractor.factory(from_node_type).get_single('pk:%s' % v)
                     nodes = RelationShips.get_by_query(from_node, relationship)
-                    filters['id__in'] = [u.id for u in nodes]
+                    filters['id__in'] = [u.id for u in nodes if u is not None and hasattr(u, 'id')]
                 elif '__' in k:
                     fields = k.split('__')
                     if len(fields) >= 3:
