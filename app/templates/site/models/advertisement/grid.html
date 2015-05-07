@@ -1,9 +1,9 @@
 <div class="{% block grid_size %}col-lg-4 col-md-4 col-sm-6 col-xs-12{% endblock %}">
     <div class="thumbnail">
-        <img src="{{model.cover_image_path}}" alt="...">
+        <a href="{% if model.link %}{{model.link}}{% else %}#{% endif%}"><img src="{{model.cover_image_path}}" alt="..."></a>
         <!--div class="overlay-caption">{{model.description}}</div-->
         <div class="caption">
-            <h4>{{model.title}}</h4>
+            <h4><a href="{% if model.link %}{{model.link}}{% else %}#{% endif%}">{{model.title}}</a></h4>
         </div>
     </div>
 </div>
