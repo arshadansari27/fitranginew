@@ -4,11 +4,11 @@
         <form class="fitrangi-form">
             <div class="form-group">
                 <label for="heading">Name</label>
-                <input id="name-edit" type="text" class="form-control" placeholder="Enter name" value="{{user.name}}">
+                <input id="name-edit" type="text" class="form-control" placeholder="Enter name" value="{% if user.name %}{{user.name}}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="heading">Phone</label>
-                <input id="phone-edit" type="text" class="form-control" placeholder="Enter name" value="{{user.phone}}">
+                <input id="phone-edit" type="text" class="form-control" placeholder="Enter name" value="{% if user.phone %}{{user.phone}}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="heading">Email</label>
@@ -23,27 +23,27 @@
             </div>
             <div class="form-group">
                 <label for="heading">Website</label>
-                <input id="website-edit" type="text" class="form-control" placeholder="Enter website link" value="{{user.website}}">
+                <input id="website-edit" type="text" class="form-control" placeholder="Enter website link" value="{% if user.website %}{{user.website}}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="heading">Facebook Profile Link</label>
-                <input id="facebook-edit" type="text" class="form-control" placeholder="Enter facebook profile link" value="{{user.facebook}}">
+                <input id="facebook-edit" type="text" class="form-control" placeholder="Enter facebook profile link" value="{% if user.facebook %}{{user.facebook}}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="heading">Google+ Profile Link</label>
-                <input id="google-plus-edit" type="text" class="form-control" placeholder="Enter G+ profile link" value="{{user.google_plus}}">
+                <input id="google-plus-edit" type="text" class="form-control" placeholder="Enter G+ profile link" value="{% if user.google_plus %}{{user.google_plus}}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="heading">Linked In Profile Link</label>
-                <input id="linked-in-edit" type="text" class="form-control" placeholder="Enter LinkedIn profile link" value="{{user.linked_in}}">
+                <input id="linked-in-edit" type="text" class="form-control" placeholder="Enter LinkedIn profile link" value="{% if user.linked_in %}{{user.linked_in}}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="heading">Own a blog?</label>
-                <input id="blog-channel-edit" type="text" class="form-control" placeholder="Share the link with us" value="{{user.blog_channel}}">
+                <input id="blog-channel-edit" type="text" class="form-control" placeholder="Share the link with us" value="{% if user.blog_channel %}{{user.blog_channel}}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="heading">Own a youtube channel?</label>
-                <input id="youtube-channel-edit" type="text" class="form-control" placeholder="Share the channel link with us" value="{{user.youtube_channel}}">
+                <input id="youtube-channel-edit" type="text" class="form-control" placeholder="Share the channel link with us" value="{% if user.youtube_channel %}{{user.youtube_channel}}{% endif %}">
             </div>
         </form>
     </div>
@@ -54,11 +54,11 @@
 		  .bind("geocode:result", function(event, result){
 			console.log("Result: " + JSON.stringify(result));
 			var name = result.formatted_address;
-			var lat  = result.geometry.location.k;
-			var lon  = result.geometry.location.D;
-            $('input[type="hidden"][name="geo_location_name"]').val(name);
-            $('input[type="hidden"][name="geo_location_lat"]').val(lat);
-            $('input[type="hidden"][name="geo_location_long"]').val(lon);
+			var lat  = result.geometry.location.A;
+			var lon  = result.geometry.location.F;
+            $('input[type="hidden"][id="geo_location_name"]').val(name);
+            $('input[type="hidden"][id="geo_location_lat"]').val(lat);
+            $('input[type="hidden"][id="geo_location_long"]').val(lon);
         });
 
     });

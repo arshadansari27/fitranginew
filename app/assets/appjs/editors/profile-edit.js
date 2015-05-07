@@ -6,6 +6,37 @@ $(document).ready(function() {
     var App = window.App;
     App.profile = App.profile || {};
 
+    App.profile.reset_counter = function(node, action, callback) {
+        var options = {
+            node: node,
+            action: action,
+            type: 'profile',
+            command: 'reset-activity-count'
+        }
+        App.editor(options, callback);
+    };
+
+    App.profile.update_counter = function(node) {
+		$.ajax({
+    		type: 'GET',
+    		url: '/notifications-count',
+    		success: function(data) {
+                if (data.status=='error' && data.message == 'Please login before making requests'){
+                    return;
+                }
+    		    var public = data.public_activity_count;
+    		    var private = data.private_activity_count;
+                    if($('#public-activity-count') != undefined){
+                        $('#public-activity-count').html('' + public);
+                    }
+                    if($('#private-activity-count') != undefined){
+                        $('#private-activity-count').html('' + private);
+                    }
+    		},
+    		contentType: "application/json",
+    		dataType: 'json'
+		});
+    }
 
     App.profile.edit_profile = function(node, data, callback) {
         var options = {

@@ -159,6 +159,11 @@ def paged_list():
         html = err_html
     return jsonify(status='success', html=html, last_page=last_page)
 
+@app.route('/notifications-count')
+def get_notifications_count():
+    if hasattr(g, 'user') and g.user:
+        return jsonify(dict(public_activity_count=g.user.public_activity_count, private_activity_count=g.user.private_activity_count))
+
 @app.route('/options')
 def ajax_options():
     model_name = request.args.get('model_name', '')

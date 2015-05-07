@@ -713,6 +713,17 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    App.force_reset_listing = function(model, category) {
+        if (category == undefined) {
+            category = 'all';
+        }
+        selector = '[data-type="model-container"][data-model="' + model + '"][data-category="' + category + '"]';
+
+        $(selector).each(function(i, elem){
+            initiate_model_loading(elem);
+        });
+    }
+
     $('body').on('click', 'button[data-action="load-more"]', function(e) {
         e.stopPropagation();
         load_more(e.target);
@@ -727,11 +738,17 @@ jQuery(document).ready(function ($) {
 		  .bind("geocode:result", function(event, result){
 			console.log("Result: " + JSON.stringify(result));
 			var name = result.formatted_address;
-			var lat  = result.geometry.location.k;
-			var lon  = result.geometry.location.D;
+			var lat  = result.geometry.location.A;
+			var lon  = result.geometry.location.F;
 			$('[data-type="geo-complete"]').val(name + "|" + lat +'|' + lon);
      });
 
+     if (window.location.href.indexOf('/my') != -1) {
+        window.App.profile.reset_counter(null, 'public', window.App.profile.update_counter);
+     }
+     if (window.location.href.indexOf('/messaging') != -1) {
+        window.App.profile.reset_counter(null, 'private', window.App.profile.update_counter);
+     }
 
-
+    setInterval(window.App.profile.update_counter, 5000);
 });

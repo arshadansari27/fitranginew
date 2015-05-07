@@ -48,12 +48,26 @@ class Profile(Entity, db.Document):
     is_verified = db.BooleanField(default=False)
     is_social_login = db.BooleanField(default=False)
     uploaded_image_cover = db.BooleanField(default=False)
+    public_activity_count = db.IntField(default=0)
+    private_activity_count = db.IntField(default=0)
 
     meta = {
         'indexes': [
             {'fields': ['email', 'slug', 'name'], 'unique': False, 'sparse': False, 'types': False },
         ],
     }
+
+    def increment_public_activity_count(self):
+        if not hasattr(self, 'public_activity_count'):
+            self.public_activity_count = 0
+        self.public_activity_count += 1
+        self.save()
+
+    def increment_private_activity_count(self):
+        if not hasattr(self, 'private_activity_count'):
+            self.private_activity_count = 0
+        self.private_activity_count += 1
+        self.save()
 
     @property
     def since(self):

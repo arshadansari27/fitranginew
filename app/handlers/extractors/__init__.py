@@ -37,9 +37,15 @@ class NodeExtractor(object):
             size = int(size)
             start = (page - 1) * size
             end = start + size
-            return query_set.all()[start: end]
+            models = query_set.all()[start: end]
         else:
-            return query_set.all()
+            models = query_set.all()
+        if models and len(models) > 0:
+            models = [u for u in list(models)]
+            for u in models:
+                if hasattr(u, 'on_get') and callable(u.on_get):
+                    u.on_get()
+        return models
 
     def get_single(self, query):
         return self.get_query(query).first()

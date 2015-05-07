@@ -92,11 +92,7 @@
                     return;
                 }
                 editor.vote(model_id, true, function(e){
-                    for (key in window.App.resetFilter) {
-                        if (key.search('post') == 0) {
-                            window.App.resetFilter[key]();
-                        }
-                    }
+                    window.location.reload();
                 });
             });
 
@@ -108,15 +104,9 @@
                     return;
                 }
                 editor.vote(model_id, false, function(e){
-                    for (key in window.App.resetFilter) {
-                        if (key.search('post') == 0) {
-                            window.App.resetFilter[key]();
-                        }
-                    }
+                    window.location.reload();
                 });
             });
-
-
 
             $('[data-model-id="'+model+'"][data-comment-text="1"]').on('keypress', function (event) {
                 if (event.which != 13) {

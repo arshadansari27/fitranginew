@@ -89,6 +89,8 @@
             z-index: 100000;
         }
 
+        .pac-container { z-index:20000 !important; }
+
     </style>
 
 </head>
@@ -191,9 +193,9 @@
                             </ul>
                         </div>
                     </li>
-                    <!--li><div class="top-icon"><a href="" title="Notifications"><i class="fa fa-bell"></i></a><span>12</span></div></li-->
+                    <li><div class="top-icon"><a href="/community/my" title="Notifications"><i class="fa fa-bell"></i></a><span id="public-activity-count">{{public_activity_count}}</span></div></li>
                     <li>
-                        <div class="top-icon"><a href="/messaging" title="Messages"><i class="fa fa-envelope"></i></a>
+                        <div class="top-icon"><a href="/messaging" title="Messages"><i class="fa fa-envelope"></i></a><span id="private-activity-count">{{private_activity_count}}</span>
                         </div>
                     </li>
                     {% endif %}
