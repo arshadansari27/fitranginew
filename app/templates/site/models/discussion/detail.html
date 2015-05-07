@@ -60,9 +60,9 @@
         <div class="discussion-bg text-center">
             <h3>Featured Discussions</h3>
             <div class="row discussion pl-5 pr-5">
-                 <input id="discussion-not-same-filter" type="hidden" data-category="all" data-model="discussion" data-filter="id__ne" value="{{model.id}}"/>
-
-                 {{ featured| safe }}
+                <input id="discussion-not-same-filter" type="hidden" data-category="all" data-model="discussion" data-filter="id__ne" value="{{model.id}}"/>
+                <input id="admin-published-filter" type="hidden" data-cateogry="all" data-model="discussion" data-filter="admin_published" value="bool|True" data-filter-status="fixed"/>
+                {{ featured| safe }}
             </div>
         </div>
     </div>
@@ -71,6 +71,7 @@
     $(document).ready(function(){
         window.App.filter('post-filter');
         window.App.filter('discussion-not-same-filter');
+        window.App.filter('admin-published-filter-filter');
     });
 
 </script>
