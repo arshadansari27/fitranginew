@@ -29,6 +29,7 @@ COLLECTION_PATHS = {
     TRIP: 'site/pages/searches/trips',
     "explore": 'site/pages/landings/home',
     "community": 'site/pages/landings/community',
+    'about': 'site/pages/landings/about'
 }
 
 WALL_IMAGE_STYLE = "background:  linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(%s) no-repeat center center;background-size: cover;"
@@ -39,12 +40,13 @@ WALL_IMAGE_NAMES = {
     ADVENTURE: dict(detail=lambda u: u.cover_image_path, search='/images/adventure-banner.jpg', landing=''),
     PROFILE: dict(detail=lambda u: '/images/userprofile-banner.jpg', search='/images/userprofile-banner.jpg', landing=''),
     POST: dict(detail=lambda u: None, search='', landing=''),
-    DISCUSSION: dict(detail=lambda u: u.cover_image_path, search='/images/discussion-banner.jpg', landing=''),
+    DISCUSSION: dict(detail=lambda u: u.cover_image_path if u.cover_image_path and len(u.cover_image_path) > 0 else '/images/discussion-banner.jpg', search='/images/discussion-banner.jpg', landing=''),
     EVENT: dict(detail=lambda u: u.cover_image_path, search='/images/events-banner.jpg', landing=''),
     ARTICLE: dict(detail=lambda u: u.cover_image_path, search='/images/userprofile-banner.jpg', landing=''),
     TRIP: dict(detail=lambda u: u.cover_image_path, search='/images/adventure-trips-banner.jpg', landing=''),
     "explore": dict(detail=lambda u: None, search=None, landing='/images/home-banner.jpg'),
     "community": dict(detail=lambda u: None, search=None, landing='/images/community-banner.jpg'),
+    "about": dict(detail=lambda u: None, search=None, landing='/images/home-banner.jpg'),
 }
 
 class View(object):
@@ -259,6 +261,7 @@ class PageManager(object):
         user = kwargs.get('user', None)
         assert  query is not None
         model = NodeExtractor.factory(model_name).get_single(query)
+        print '[*] Detail page for', model_name, 'with backgroud image', WALL_IMAGE_NAMES[model_name].get('detail', '')(model)
         context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), background_cover=WALL_IMAGE_STYLE % WALL_IMAGE_NAMES[model_name].get('detail', '')(model))
         context.update(Page.factory(model_name, 'detail').get_context(context))
         title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s complete adventure portal')
@@ -338,6 +341,8 @@ class Page(object):
                 return explore_landing_page
             elif model_name == 'community':
                 return community_landing_page
+            elif model_name == 'about':
+                return about_landing_page
             else:
                 raise Exception("Not implemented")
         else:
@@ -376,6 +381,8 @@ class LandingPage(Page):
             event = NodeCollectionFactory.resolve(EVENT, GRID_VIEW, fixed_size=6).get_card(context)
             discussion = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, fixed_size=4).get_card(context)
             return dict(profile=profile, event=event, discussion=discussion)
+        elif self.model_name == 'about':
+            return {}
         else:
             raise Exception('Not implemented')
 
@@ -455,6 +462,7 @@ class DetailPage(Page):
 
 explore_landing_page    = LandingPage('explore')
 community_landing_page  = LandingPage('community')
+about_landing_page      = LandingPage('about')
 
 article_search_page     = SearchPage(ARTICLE)
 adventure_search_page   = SearchPage(ADVENTURE)

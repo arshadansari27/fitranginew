@@ -161,7 +161,8 @@ class Node(object):
             self.save()
             return path
         else:
-            return '/img/Profile-Picture.jpg'
+            from app.models.profile import Profile
+            return '/img/Profile-Picture.jpg' if isinstance(self, Profile) else None
 
     @property
     def gallery_image_list(self):

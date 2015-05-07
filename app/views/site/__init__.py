@@ -45,6 +45,13 @@ def home():
     context['card'] = card
     return render_template('site/pages/commons/view.html', **context)
 
+@app.route('/about')
+def about():
+    title, card, context = PageManager.get_landing_title_and_page('about', user=g.user if hasattr(g, 'user') else None)
+    context['title'] = title
+    context['card'] = card
+    return render_template('site/pages/commons/view.html', **context)
+
 @app.route("/community")
 def community_mail():
     title, card, context = PageManager.get_landing_title_and_page('community', user=g.user if hasattr(g, 'user') else None)

@@ -27,7 +27,9 @@ jQuery(document).ready(function ($) {
         });
         window.$loginDialog.realize();
         window.$loginDialog.open();
-    }
+    };
+
+    App.show_login = function(){ show_login_dialog(); };
 
     $('body').on('click', '[data-action="check-login"]', function(e){
         e.preventDefault();
@@ -43,7 +45,7 @@ jQuery(document).ready(function ($) {
 
     $(".show_login").click(function (e) {
         e.stopPropagation();
-        show_login_dialog();
+        App.show_login_dialog();
     });
 
     $(".show_signup").click(function (e) {

@@ -1,7 +1,7 @@
 <li class="media">
     <div class="media-left">
       <a href="#">
-            {% if model.author and model.author.type[0].name == 'Enthusiast' %}
+            {% if model.author and model.author.type and model.author.type|length > 0 and model.author.type[0].name == 'Enthusiast' %}
             <img class="media-object img-circle img-responsive p-10" src="{{ model.author.cover_image_path }}" width="100"  alt="...">
             {% else %}
             <img class="media-object img-responsive p-10" src="{{ model.author.cover_image_path }}" width="100"  alt="...">
@@ -14,7 +14,7 @@
     </div>
 
     <div class="media-right">
-    	<a href=""><span class="fa fa-comment"></span> {{model.comments|length}}</a>
+    	<a href=""><span class="fa fa-comment"></span> {{model.comments_count}}</a>
         <a href=""><span class="fa fa-tag"></span> {% for t in model.tags%}{{t}}{% if not loop.last %}, {% endif %}{% endfor %}</a>
         <a class="last-seen">{{model.since}}</a>
     </div>
