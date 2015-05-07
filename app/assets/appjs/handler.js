@@ -45,7 +45,7 @@ jQuery(document).ready(function ($) {
 
     $(".show_login").click(function (e) {
         e.stopPropagation();
-        App.show_login_dialog();
+        show_login_dialog();
     });
 
     $(".show_signup").click(function (e) {
