@@ -24,6 +24,9 @@ def force_setup_context(context={}):
     user = g.user if hasattr(g, 'user') and g.user is not None else None
     activity_menu = view_menu()
     d = dict(user=user, activity_menu=activity_menu, menu=get_menu_selection(request.path))
+    if user:
+        context['public_activity_count'] = user.public_activity_count if user.public_activity_count else 0
+        context['private_activity_count'] = user.private_activity_count if user.private_activity_count else 0
     for k, v in d.iteritems():
         context[k] = v
     return context

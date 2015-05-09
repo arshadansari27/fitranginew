@@ -55,6 +55,8 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+
+    <script src="/js/autobahn.min.jgz"></script>
     <script src="/appjs/editors/main.js"></script>
     <script src="/appjs/editors/profile-edit.js"></script>
     <script src="/appjs/editors/post-edit.js"></script>
@@ -89,11 +91,13 @@
             z-index: 100000;
         }
 
+        .pac-container { z-index:20000 !important; }
+
     </style>
 
 </head>
 
-<body>
+<body data-logged-in-as="{% if user %}{{user.id}}{% else %}null{% endif %}">
 <div id="fb-root"></div>
 <script>
 
@@ -139,10 +143,9 @@
 
             <div class="container-fluid">
                 <ul class="nav navbar-nav">
-                    <li class="{% if menu.app_name == 'explore'%}active{% endif %}"><a href="/explore">Adventure
-                        Community</a></li>
-                    <li class="{% if menu.app_name == 'trip'%}active{% endif %}"><a href="/trip">Adventure Trips</a>
-                    </li>
+                    <li class="{% if menu.app_name == 'explore'%}active{% endif %}"><a href="/explore"></a></li>
+                    <!--li class="{% if menu.app_name == 'trip'%}active{% endif %}"><a href="/trip">Upcoming Trips</a>
+                    </li-->
                 </ul>
                 <ul class="top-icons nav navbar-nav navbar-right pull-right">
                     <li>
@@ -175,7 +178,7 @@
                                                                  src="{{user.cover_image_path}}"/></a>
                                 </li>
                                 <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="/community/my"><i
-                                        class="fa fa-info"></i>&nbsp;My Page</a></li>
+                                        class="fa fa-info" data-action="check-login" data-user-id="{{user.id}}"></i>&nbsp;My Page</a></li>
                                 <li><a data-action="edit-profile" data-model-id="{{user.id}}" data-user-id="{{user.id}}"
                                        href="#"><i class="fa fa-user"></i>&nbsp;Edit Profile</a></li>
                                 <li><a data-action="edit-profile-preferences" data-model-id="{{user.id}}"
@@ -191,9 +194,9 @@
                             </ul>
                         </div>
                     </li>
-                    <!--li><div class="top-icon"><a href="" title="Notifications"><i class="fa fa-bell"></i></a><span>12</span></div></li-->
+                    <li><div class="top-icon"><a href="/community/my" title="Notifications"><i class="fa fa-bell"></i></a><span id="public-activity-count">{{public_activity_count}}</span></div></li>
                     <li>
-                        <div class="top-icon"><a href="/messaging" title="Messages"><i class="fa fa-envelope"></i></a>
+                        <div class="top-icon"><a href="/messaging" title="Messages"><i class="fa fa-envelope"></i></a><span id="private-activity-count">{{private_activity_count}}</span>
                         </div>
                     </li>
                     {% endif %}
@@ -204,7 +207,7 @@
             {% if menu.app_name in ['explore', 'community'] %}
             <div class="container-fluid border-grey-t">
                 <ul class="nav navbar-nav nav-down">
-                    <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="/community/my">My Page</a>
+                    <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="#" data-action="check-login" data-user-id="{{user.id}}">My Page</a>
                     </li>
                     <li class="inner-level-dropdown dropdown {% if menu.main_menu == 'activity' %}active{% endif %}">
                         <a id="subdropdown1" href="#" class="dropdown-toggle">Activities<b class="caret"></b></a>
@@ -232,9 +235,11 @@
         <!-- /.navbar-collapse -->
     </div>
 </nav>
-
+<div style="min-height: 100%;">
 {% block body %}{% endblock %}
+</div>
 {% if not user %}
+
 <section class="container-fluid footer-signup lightgrey-bg">
     <div class="container">
         <form class="form-inline">
@@ -268,9 +273,9 @@
         <h3>Need Help?</h3>
         <strong>Contact us Via Phone or Email</strong>
 
-        <p><em>Phone :</em> +91-123456789</p>
+        <p><em>Phone :</em> +91-8879921115</p>
 
-        <p><em>Email :</em> <a href="mailto:info@fitrangi.com">info@fitrangi.com</a></p>
+        <p><em>Email :</em> <a href="mailto:info@fitrangi.com">go@fitrangi.com</a></p>
 
     </div>
 
@@ -279,13 +284,11 @@
         <a href="https://www.facebook.com/Fitrangi" class="fa fa-facebook-square" title="Facebook" target="_blank"></a>
         <a href="https://twitter.com/FitRangi" class="fa fa-twitter-square" title="Twitter" target="_blank"></a>
         <a href="#" class="fa fa-rss-square" title="RSS" target="_blank"></a>
-        <a href="#" class="fa fa-linkedin-square" title="LinkedIn" target="_blank"></a>
-        <a href="https://plus.google.com/115019600318035585202/posts" class="fa fa-google-plus-square"
-           title="Google Plus" target="_blank"></a>
-        <a href="https://www.youtube.com/user/Fitrangi" class="fa fa-youtube-square" title="Youtube"
-           target="_blank"></a>
-        <a href="#" class="fa fa-vimeo-square" title="Vimeo" target="_blank"></a>
-        <a href="#" class="fa fa-pinterest-square" title="Pinterest" target="_blank"></a>
+        <!--a href="#" class="fa fa-linkedin-square" title="LinkedIn" target="_blank"></a-->
+        <a href="https://plus.google.com/115019600318035585202/posts" class="fa fa-google-plus-square" title="Google Plus" target="_blank"></a>
+        <a href="https://www.youtube.com/user/Fitrangi" class="fa fa-youtube-square" title="Youtube" target="_blank"></a>
+        <!--a href="#" class="fa fa-vimeo-square" title="Vimeo" target="_blank"></a-->
+        <!--a href="#" class="fa fa-pinterest-square" title="Pinterest" target="_blank"></a-->
 
 
         <p>By Continuing past this page, you agree to
@@ -317,6 +320,7 @@
 <script src="/js/bootstrap-tagsinput.js"></script>
 <script src="/js/jquery.geocomplete.min.js"></script>
 <script src="/appjs/handler.js"></script>
+<script src="/appjs/async.js"></script>
 <script>
     $(function () {
         $('#loadingImage').hide();

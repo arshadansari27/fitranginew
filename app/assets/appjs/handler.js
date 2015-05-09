@@ -19,8 +19,7 @@ jQuery(document).ready(function ($) {
         }
     };
 
-    $(".show_login").click(function (e) {
-        e.stopPropagation();
+    var show_login_dialog = function() {
         window.$loginDialog = new BootstrapDialog({
             size: BootstrapDialog.SIZE_WIDE,
             title: "Sign in",
@@ -28,6 +27,25 @@ jQuery(document).ready(function ($) {
         });
         window.$loginDialog.realize();
         window.$loginDialog.open();
+    };
+
+    App.show_login = function(){ show_login_dialog(); };
+
+    $('body').on('click', '[data-action="check-login"]', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var user_id = $(this).attr('data-user-id');
+        if (user_id == undefined || user_id.length == 0) {
+            show_login_dialog();
+        } else {
+            window.location.href = '/community/my';
+        }
+        return false;
+    });
+
+    $(".show_login").click(function (e) {
+        e.stopPropagation();
+        show_login_dialog();
     });
 
     $(".show_signup").click(function (e) {
@@ -673,7 +691,7 @@ jQuery(document).ready(function ($) {
             selector = with_category_selector;
         }
         $(selector).each(function(j, filter_element) {
-            var is_fixed = $(filter_element).attr('data-filter-type');
+            var is_fixed = $(filter_element).attr('data-filter-status');
             if (is_fixed != undefined && is_fixed=='fixed') {
                 return;
             }
@@ -695,6 +713,17 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    App.force_reset_listing = function(model, category) {
+        if (category == undefined) {
+            category = 'all';
+        }
+        selector = '[data-type="model-container"][data-model="' + model + '"][data-category="' + category + '"]';
+
+        $(selector).each(function(i, elem){
+            initiate_model_loading(elem);
+        });
+    }
+
     $('body').on('click', 'button[data-action="load-more"]', function(e) {
         e.stopPropagation();
         load_more(e.target);
@@ -709,9 +738,19 @@ jQuery(document).ready(function ($) {
 		  .bind("geocode:result", function(event, result){
 			console.log("Result: " + JSON.stringify(result));
 			var name = result.formatted_address;
-			var lat  = result.geometry.location.k;
-			var lon  = result.geometry.location.D;
+			var lat  = result.geometry.location.lat || result.geometry.location.A;
+			var lon  = result.geometry.location.lng || result.geometry.location.F;
+			console.log(name + ', ' + lat + ', ' + lon);
 			$('[data-type="geo-complete"]').val(name + "|" + lat +'|' + lon);
      });
+
+     /*
+     if (window.location.href.indexOf('/my') != -1) {
+        window.App.profile.reset_counter(null, 'public', window.App.profile.update_counter);
+     }
+     if (window.location.href.indexOf('/messaging') != -1) {
+        window.App.profile.reset_counter(null, 'private', window.App.profile.update_counter);
+     }
+     */
 
 });

@@ -37,9 +37,15 @@ class NodeExtractor(object):
             size = int(size)
             start = (page - 1) * size
             end = start + size
-            return query_set.all()[start: end]
+            models = query_set.all()[start: end]
         else:
-            return query_set.all()
+            models = query_set.all()
+        if models and len(models) > 0:
+            models = [u for u in list(models)]
+            for u in models:
+                if hasattr(u, 'on_get') and callable(u.on_get):
+                    u.on_get()
+        return models
 
     def get_single(self, query):
         return self.get_query(query).first()
@@ -78,7 +84,7 @@ class NodeExtractor(object):
                     from_node_type = fields[2]
                     from_node = NodeExtractor.factory(from_node_type).get_single('pk:%s' % v)
                     nodes = RelationShips.get_by_query(from_node, relationship)
-                    filters['id__in'] = [u.id for u in nodes]
+                    filters['id__in'] = [u.id for u in nodes if u is not None and hasattr(u, 'id')]
                 elif '__' in k:
                     fields = k.split('__')
                     if len(fields) >= 3:

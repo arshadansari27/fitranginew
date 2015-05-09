@@ -8,3 +8,4 @@ db_address.txt
 tmp/
 media/
 venv/
+node.pid

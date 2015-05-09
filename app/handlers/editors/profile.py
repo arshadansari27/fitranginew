@@ -58,8 +58,26 @@ class ProfileEditor(NodeEditor):
             return deactivate_profile(self.action, self.node)
         elif self.command == 'book-enquiry-trip':
             return book_trip(self.action, self.message['name'], self.message['email'], self.message['phone'], self.message['message'], self.message['trip'])
+        elif self.command == 'reset-activity-count':
+            return reset_activity_count(self.node, self.action)
         else:
             raise Exception('Invalid command')
+
+
+@response_handler('Successfully updated the counter', 'Failed to update the counter')
+def reset_activity_count(profile, action):
+    if not profile:
+        from flask import g
+        profile = g.user.id
+    node = Profile.objects(pk=profile).first()
+    if action == 'public':
+        node.public_activity_count = 0
+    elif action == 'private':
+        node.private_activity_count = 0
+    else:
+        raise Exception('Invalid action')
+    node.save()
+    return node
 
 
 @response_handler('Successfully updated the profile', 'Failed to update the profile')
@@ -94,6 +112,7 @@ def subscribe(data):
 @response_handler('Successfully updated the profile pic', 'Failed to update the profile pic')
 def edit_cover_image(profile, data):
     node = Profile.objects(pk=profile).first()
+    print '****', node, data
     return node
 
 @response_handler('Successfully updated the password', 'Failed to update the password')

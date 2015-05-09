@@ -97,135 +97,36 @@
 
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
+
+        window.App.messaging = window.App.messaging || {};
+        window.App.messaging.on_chat = true;
+
         var initial = '{{initial.id}}';
-        var chat_list = {};
+        window.App.messaging.selected_user  = initial;
+        window.App.messaging.initial_user   = initial;
 
-        $('.current-chat').hide();
 
-        var user_listing = function(){
-            $.ajax({
-                url: '/messaging/user-list'+ '?initial=' + initial
-            }).done(function (response) {
-                var data = response.result;
-                console.log(data);
-                $('#user-list').html('');
-                var html = '';
-                for(var i = 0; i < data.length; i++) {
-
-                    var id = data[i].id;
-                    var name = data[i].name;
-                    var image = data[i].image;
-                    var notification = data[i].notifications;
-                    html += '<div class="contact" data-user-id="'+id+'" data-user-name="' + name + '" data-user-image="'+ image + '">' +
-                                '<a class="pull-left">' +
-                                    '<figure><img class="img-circle img-responsive" alt="" src="'+image+'"></figure>' +
-                                '</a>' +
-                                '<h5>'+ name +'</h5><small>&nbsp;<span class="badge">'+notification+'</span>&nbsp;</small>' +
-                            '</div>'
-                }
-                $('.contact-list').html('');
-                $('.contact-list').html(html);
-            });
-        };
-
-        var message_listing = function(data, refresh) {
-            var full_html = '';
-            for(var i = 0; i < data.length; i++) {
-                var whose = (data[i].my)?'my': 'friend';
-                var mesg = data[i].message;
-                var time = data[i].time;
-                var image = data[i].image;
-                console.log(image + ', ' + mesg);
-                var html = '<li class="'+whose+'-message clearfix">' +
-                    '<figure class="profile-picture">' +
-                        '<img src="' + image + '" class="img-circle img-responsive" alt="">' +
-                    '</figure>' +
-                    '<div class="message">' + mesg + '<div class="time"><i class="fa fa-clock-o"></i> ' + time + '</div>'+'</div>' +
-                '</li>';
-                full_html += html;
+        $('a[data-action="chat-send"]').on('click', function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            var author = $('body').attr('data-logged-in-as');
+            if (author == undefined)  {
+                console.log("User is not logged in " + author);
             }
-            if (refresh) {
-                $('.messages').html('');
-            }
-            $('.messages').append(full_html);
-        };
-
-        var load_updates = function(other_user) {
-            $.ajax({
-                url: '/messaging/updates?user=' + other_user
-            }).done(function (response) {
-                var data = response.result;
-                message_listing(data, false);
-            });
-        }
+            var recipient = $('.messages').attr('data-user-id');
+            var message = $('[data-context="message"][data-action="chat-send"]').val();
+            window.App.messaging.send(message, recipient);
+            $('[data-context="message"][data-action="chat-send"]').val('');
+        });
 
         $('body').on('click', '.contact', function(e){
             e.stopPropagation();
-            var other_user = $(this).attr('data-user-id');
-            var other_user_name = $(this).attr('data-user-name');
-            var other_user_image = $(this).attr('data-user-image');
-
-            $('.messages').attr('data-user-id', other_user);
-            $.ajax({
-                url: '/messaging/message-list?user=' + other_user
-            }).done(function (response) {
-                var data = response.result;
-                message_listing(data, true);
-
-                $('#user-image').attr('src', other_user_image);
-                $('#user-name').html(other_user_name);
-                $('.current-chat').show();
-
-                var updater = setInterval(function(){
-                    load_updates(other_user);
-                }, 10000);
-                chat_list[other_user] = updater;
-                for(key in chat_list) {
-                    if (key == other_user) continue;
-                    clearInterval(chat_list[key]);
-                }
-
-            });
+            var id = $(this).attr('data-user-id');
+            window.App.messaging.selected_user  = id;
+            window.App.messaging.update_users();
+            window.App.messaging.update_messages();
         });
-
-        $('body').on({
-                    click: function(e) {
-                        e.stopPropagation();
-                        send_message();
-                    },
-                    keypress: function(e) {
-                        var code = e.keyCode || e.which;
-                        if (code == 13)  {
-                            send_message();
-                            e.stopPropagation();
-                        }
-                    }
-                }
-                , '[data-action="chat-send"]');
-
-        var send_message = function() {
-            var message = $('[data-context="message"]').val();
-            if (message == undefined || message.length == 0)
-                return;
-            $('[data-context="message"]').val('');
-            var other_user = $('.messages').attr('data-user-id');
-            $.ajax({
-                type: 'POST',
-                url: '/messaging/create-message',
-                data: {user: other_user, message: message}
-            }).done(function (response) {
-                if(response.status == 'success'){
-                    load_updates(other_user);
-                }
-            });
-        };
-
-        user_listing();
-        setInterval(function() {user_listing()}, 60000);
-
-
-
 
     });
 </script>

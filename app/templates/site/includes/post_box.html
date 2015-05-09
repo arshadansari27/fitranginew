@@ -25,6 +25,8 @@
 
         var App = window.App;
         var editor = App.post;
+        var post_type = '{{post_type}}';
+        var container_type = (post_type == 'stream')?'stream': 'post';
 
         $(".upload-image-view").hide();
         $("#post-alert").hide();
@@ -65,7 +67,7 @@
                         $('#post-alert').removeClass('alert-success');
                     });
                     clear();
-                    window.App.reset_models_listing($('[data-type="model-container"][data-model="post"]'));
+                    window.App.reset_models_listing($('[data-type="model-container"][data-model="' + container_type + '"]'));
                 } else {
                     show_error(data.message);
                 }

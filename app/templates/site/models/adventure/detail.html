@@ -1,6 +1,6 @@
 <section class="container-fluid p-0">
     <div class="adventure-banner"
-         style="background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url({{model.cover_image_path}}) no-repeat ; background-size: 100%; ">
+         style="{{background_cover}}">
 
         <div class="container">
 
@@ -19,7 +19,7 @@
                     <h2>{{model.name}}</h2>
 
                     <article>
-                        <h4>{% if model.reviews|length > 0 %}{{model.reviews|length}} Reviews: {% else %} No Reviews {%
+                        <h4>{% set reviews_count = model.reviews_count %}{% if reviews_count > 0 %}{{reviews_count}} Reviews: {% else %} Not Reviewed yet {%
                             endif %}</h4>
                         <a href=""
                            class="btn rating-{% if model.extremity_level %}{{model.extremity_level|lower}}{% else%}easy{% endif %}">{%
@@ -117,20 +117,19 @@
     <!--Tab Pane End-->
 
     <div role="tabpanel" class="tab-pane fade" id="how-to-reach" aria-labelledby="how-to-reach">
-        {% if model.location %}
-        <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span> {{model.location.name}}
-        </h4>
-
-        <div class="tab-details">
-            <iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyC2G0kvBLJBEnBCUPf053z6mL5tgbWON5o&q={{model.location.name}}&zoom=7"
-                    width="100%" height="600" frameborder="0" style="border:0"></iframe>
-        </div>
-        <hr class="divider clearfix">
-        {% endif %}
-
-
         <div class="container">
             <h4>How to Reach</h4>
+            {% if model.location %}
+                <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span> {{model.location.name}}</h4>
+                <div class="tab-details">
+                    <div class="thumbnail">
+                        <center><iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyC2G0kvBLJBEnBCUPf053z6mL5tgbWON5o&q={{model.location.name}}&zoom=7" width="60%" height="400" frameborder="0" style="border:0"></iframe></center>
+                    </div>
+                </div>
+                <hr class="divider clearfix">
+            {% endif %}
+
+
 
             <div>
                 {% if model.reach_by_air|length > 0 %}
@@ -272,7 +271,7 @@
         <div>
             {% import 'site/includes/post_box.html' as post %}
             {{ post.show_post_form(model, 'review') }}
-            <input type="hidden" id="review-filter" data-category="all" data-filter="parent__adventure__pk" data-model="post" value="{{model.id}}" data-filter-type="fixed"/>
+            <input type="hidden" id="review-filter" data-category="all" data-filter="parent__adventure__pk" data-model="post" value="{{model.id}}" data-filter-status="fixed"/>
             {{ reviews|safe }}
         </div>
 

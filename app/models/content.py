@@ -34,7 +34,6 @@ class Channel(db.Document):
 
 class ContentCommon(Node):
     video_embed = db.ListField(db.StringField())
-    image_gallery = db.ListField(db.EmbeddedDocumentField(EmbeddedImageField))
     map_embed = db.DictField()
     content = db.StringField()
     author = db.ReferenceField('Profile')
@@ -63,6 +62,7 @@ class Content(ContentCommon, db.Document):
     published = db.BooleanField()
     published_timestamp = db.DateTimeField()
     admin_published = db.BooleanField()
+    views = db.IntField(default=0)
 
     meta = {
         'allow_inheritance': True,
@@ -87,7 +87,8 @@ class Content(ContentCommon, db.Document):
 
     @property
     def comments_count(self):
-        return len(self.comments)
+        raw = {'parent._ref.$id': self.id}
+        return Post.objects(__raw__=raw).count()
 
     def add_comment(self, content, author):
         comment = Post(parent=self, content=content, author=author)
@@ -192,7 +193,6 @@ class PostVote(db.Document):
 @update_content.apply
 class Article(Content):
     pass
-
 
 @update_content.apply
 class Discussion(Content):

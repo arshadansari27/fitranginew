@@ -1,13 +1,17 @@
 <div class="{% block grid_size %}col-lg-4 col-md-4 col-sm-6 col-xs-12{% endblock %}">
   <div class="thumbnail">
-    <img src="{{model.cover_image_path}}" alt="...">
-    <div class="caption">
-    	<h4>{{model.title}}</h4>
-    	<div class="media">
-    		<img src="{{model.author.cover_image_path}}" class="img-circle img-responsive pull-left p-5 media-object" width="64">
-    		<h5>by {{model.author.name}}</h5>
-    		<h6>{{model.since}}</h6>
-		</div>
-    </div>
+        {% if model.cover_image_path and  model.cover_image_path|length > 0 %}
+        <a href="{{model.slug}}"><img src="{{model.cover_image_path}}" alt="..."></a>
+        {% else %}
+        <!--a href="{{model.slug}}"><img src="/images/discussion-banner.jpg" alt="..."></a-->
+        {% endif %}
+        <div class="caption">
+    	    <h4><a href="{{model.slug}}">{{model.title}}</a></h4>
+    	    <div class="">
+    		    {% if model.author.cover_image_path and model.author.cover_image_path|length > 0 %}<img src="{{model.author.cover_image_path}}" class="img-circle img-responsive pull-left p-5 media-object" width="64">{% endif %}
+    		    <h5>by {{model.author.name}}</h5>
+    		    <h6>{{model.since}}</h6>
+		    </div>
+        </div>
   </div>
 </div>

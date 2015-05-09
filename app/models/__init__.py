@@ -6,7 +6,7 @@ from ago import human
 import cStringIO
 from mongoengine import signals
 #from flask.ext.mongoengine.wtf import model_form
-import os, hashlib
+import os, hashlib, random
 
 from app import db
 from app.models.extra.fields import ListField
@@ -64,7 +64,7 @@ def update_slug(sender, document, type, title):
         _doc = document.__class__.objects(pk=str(document.id)).first()
     else:
         _doc = None
-    original_slug = "/%s/%s" % (type, title.lower().replace(',', '-').replace('.', '-').replace(' ', '-'))
+    original_slug = "/%s/%s" % (type, title.lower().replace(',', '-').replace('.', '-').replace(' ', '-').replace('?', '-').replace('/', '-').replace('\\', '-'))
     if not _doc:
         _slug = original_slug
         count = 1
@@ -75,7 +75,11 @@ def update_slug(sender, document, type, title):
         _slug = original_slug
     document.slug = _slug
 
+def get_random():
+    return random.randint(0, 99999999999)
+
 class EmbeddedImageField(db.EmbeddedDocument):
+    id_field = db.IntField(default=get_random)
     image = db.ImageField(thumbnail_size=(128, 128))
     path = db.StringField()
     alt = db.StringField()
@@ -85,7 +89,7 @@ class EmbeddedImageField(db.EmbeddedDocument):
         path = str(self.path) if hasattr(self, 'path') and self.path else ''
         if path and len(path) > 0 and os.path.exists(path):
             return path
-        path = save_media_to_file(self, 'image', 'gallery_'% i)
+        path = save_media_to_file(self, 'image', 'gallery_%d' % i, parent)
         if path:
             self.path = path
             parent.save()
@@ -93,15 +97,23 @@ class EmbeddedImageField(db.EmbeddedDocument):
         else:
             return ''
 
-def save_media_to_file(obj, attr, name):
-    obj = obj.__class__.objects(id=obj.id).first()
-    image = getattr(obj, attr)
+def save_media_to_file(obj, attr, name, path_obj=None):
+    is_embedded = path_obj is not None
+    if not is_embedded:
+        path_obj = obj
+        obj = obj.__class__.objects(id=obj.id).first()
+        image = getattr(obj, attr)
+    else:
+        path_obj = path_obj.__class__.objects(id=path_obj.id).first()
+        obj = [u for u in path_obj.image_gallery if u.id_field == obj.id_field][0]
+        image = getattr(obj, attr)
+
     if image and image.size:
         img = Image.open(image)
         _format = img.format
         _format = _format.lower()
 
-        dir_list = ['media', obj.__class__.__name__.lower(), str(obj.id)]
+        dir_list = ['media', path_obj.__class__.__name__.lower(), str(path_obj.id)]
         for i in xrange(len(dir_list)):
             if i is 0:
                 dir_path = base_path + '/' + dir_list[0]
@@ -111,13 +123,16 @@ def save_media_to_file(obj, attr, name):
 
         path = '/' + '/'.join(dir_list) + '/' + name + '.' + _format
         file_path = base_path + path
-        print '[*] Save media', file_path
-
         with open(file_path, 'wb') as file_io:
             img.save(file_io, _format, quality=70)
-            print '[*] Media path', path
             return path
-        obj = obj.__class__.objects(id=obj.id).first()
+
+        if is_embedded:
+            obj = obj.__class__.objects(id=obj.id).first()
+        else:
+            path_obj = path_obj.__class__.objects(id=path_obj.id).first()
+            obj = [u for u in path_obj.image_gallery if u == obj][0]
+
         with open(file_path, 'r') as _file_io:
             if hashlib.md5(_file_io.read()).hexdigest() != hashlib.md5(getattr(obj, attr).read()).hexdigest():
                 return save_media_to_file(str(obj.id), attr, name)
@@ -129,6 +144,7 @@ class Node(object):
 
     description = db.StringField()
     cover_image = db.ImageField(thumbnail_size=(128, 128))
+    image_gallery = db.ListField(db.EmbeddedDocumentField(EmbeddedImageField))
     path_cover_image = db.StringField()
     created_timestamp = db.DateTimeField(default=datetime.datetime.now)
     modified_timestamp = db.DateTimeField(default=datetime.datetime.now)
@@ -145,11 +161,14 @@ class Node(object):
             self.save()
             return path
         else:
-            return '/img/Profile-Picture.jpg'
+            from app.models.profile import Profile
+            return '/img/Profile-Picture.jpg' if isinstance(self, Profile) else None
 
     @property
     def gallery_image_list(self):
-        return [u.image_path(self, i) for i, u in enumerate(self.image_gallery)]
+        gallery_images = [u.image_path(self, i) for i, u in enumerate(self.image_gallery)]
+        print '****', gallery_images
+        return gallery_images
 
     @property
     def gallery_size(self):
@@ -157,14 +176,6 @@ class Node(object):
 
     def on_create(self):
         pass
-
-    def add_cover_image(self, file):
-        self.cover_image.put(file)
-        self.save()
-
-    def add_to_image_gallery(self, file):
-        self.image_gallery.append(file)
-        self.save()
 
     @property
     def since(self):

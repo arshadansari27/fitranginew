@@ -1,9 +1,11 @@
 from app.models.profile import Profile
+from app.models.content import Content
 from ago import human
 
 __author__ = 'arshad'
 
 from app.models import db
+from mongoengine import Q
 import datetime
 
 def get_activity_display(name):
@@ -32,12 +34,12 @@ class ActivityStream(db.Document):
         if self.action is None:
             action = 'responded'
         else:
-            if self.action.endswith('e'):
-                action = self.action + 'd'
-            elif self.action.endswith('ed'):
-                action = self.action
+            if '_' in self.action:
+                action = self.action.replace('_', ' ')
             else:
-                action = self.action + 'ed'
+                action = self.action
+            return action
+
         return action
 
     @property
@@ -57,32 +59,83 @@ class ActivityStream(db.Document):
 
     @classmethod
     def push_comment_to_stream(cls, post):
-        activity = ActivityStream(profile=post.author, action=post.type, object=post, view_html='', view_text='', view_json='')
+        return cls.push_post_to_stream(post, 'commented on')
+
+    @classmethod
+    def push_stream_post_to_stream(cls, post):
+        return cls.push_post_to_stream(post, 'stream')
+
+    @classmethod
+    def push_review_to_stream(cls, post):
+        return cls.push_post_to_stream(post, 'reviewed')
+
+
+    @classmethod
+    def push_post_to_stream(cls, post, type):
+        activity = ActivityStream(profile=post.author, action=type, object=post, view_html='', view_text='', view_json='')
         activity.save()
+        if post.author:
+            author = Profile.objects(pk=post.author.id).first()
+            author.increment_public_activity_count()
+            if type == 'stream':
+                for u in author.followers:
+                    u.increment_public_activity_count()
+
+        if post.parent is not None and isinstance(post.parent, Content):
+            content = post.parent
+            activity2 = ActivityStream(profile=content.author, action='received comment on', object=content, view_html='', view_text='', view_json='')
+            activity2.save()
+            if content.author:
+                author = Profile.objects(pk=content.author.id).first()
+                author.increment_public_activity_count()
+
         return activity
 
     @classmethod
     def push_content_to_stream(cls, content):
-        activity = ActivityStream(profile=content.author, action='content', object=content, view_html='', view_text='', view_json='')
+        activity = ActivityStream(profile=content.author, action='added content', object=content, view_html='', view_text='', view_json='')
         activity.save()
+        if content.author:
+            author = Profile.objects(pk=content.author.id).first()
+            author.increment_public_activity_count()
+            for u in author.followers:
+                u.increment_public_activity_count()
         return activity
 
     @classmethod
     def push_vote_to_stream(cls, post_vote):
-        activity = ActivityStream(profile=post_vote.voter, action= 'vote', object=post_vote.post, view_html='', view_text='', view_json='')
+        activity = ActivityStream(profile=post_vote.voter, action= 'voted on', object=post_vote.post, view_html='', view_text='', view_json='')
         activity.save()
+        if post_vote.voter:
+            voter = Profile.objects(pk=post_vote.voter.id).first()
+            voter.increment_public_activity_count()
+            for u in voter.followers:
+                u.increment_public_activity_count()
+
+        if post_vote.post.author is not None:
+            post = post_vote.post
+            activity2 = ActivityStream(profile=post.author, action='received vote on', object=post, view_html='', view_text='', view_json='')
+            activity2.save()
+            if post.author:
+                author = Profile.objects(pk=post.author.id).first()
+                author.increment_public_activity_count()
+
         return activity
 
     @classmethod
     def push_relationship_to_stream(cls, relationship):
         activity = ActivityStream(profile=relationship.subject, action=get_activity_display(relationship.relation), object=relationship.object, view_html='', view_text='', view_json='')
         activity.save()
+        relationship.subject.increment_public_activity_count()
+        for u in relationship.subject.followers:
+            u.increment_public_activity_count()
         return activity
 
     @classmethod
     def push_message_to_stream(cls, to_profile, message):
         activity = ActivityStream(profile=to_profile, action='message', object=message, view_html='', view_text='', view_json='', is_private=True)
         activity.save()
+        to_profile.increment_private_activity_count()
         return activity
 
     @classmethod
@@ -90,10 +143,9 @@ class ActivityStream(db.Document):
         if not is_self:
             return ActivityStream.objects(profile=profile, created_timestamp__gt=datetime.datetime.now()).all()
         else:
-            from app.models.relationships import RelationShips
             profiles = list(profile.following)
             profiles.append(profile)
-            return ActivityStream.objects(profile__in=profiles, created_timestamp__gt=datetime.datetime.now()).all()
+            return ActivityStream.objects(Q(profile__in=profiles) | Q(object=profile)).all()
 
 class ChatTimestamp(db.Document):
     profile = db.ReferenceField('Profile')
@@ -140,29 +192,21 @@ class ChatMessage(db.Document):
         result = ChatMessage._get_collection().aggregate(pipeline)['result']
         for u in result:
             p = Profile.objects(id=u['_id']).first()
-            if p == profile:
+            if p == profile or not p:
                 continue
             user_list[p] = u['count']
         return user_list
 
     @classmethod
     def get_message_between(cls, profile, another_profile, all=False):
-        chat_timestamp = ChatTimestamp.objects(profile=profile).first()
-
-        if not chat_timestamp:
-            chat_timestamp = ChatTimestamp(profile=profile)
-            chat_timestamp.last_checked = datetime.datetime(2015, 1, 1, 0, 0, 0, 0)
-        if all:
-            chats = list(reversed(ChatMessage.objects(__raw__=dict(profiles={'$all': [profile.id, another_profile.id]})).order_by('-created_timestamp').all()))
-        else:
-            chats = list(reversed(ChatMessage.objects(__raw__=dict(profiles={'$all': [profile.id, another_profile.id]}, created_timestamp={'$gte': chat_timestamp.last_checked})).order_by('-created_timestamp').all()))
+        chats = list(reversed(ChatMessage.objects(__raw__=dict(profiles={'$all': [profile.id, another_profile.id]})).order_by('-created_timestamp').limit(20).all()))
+        _chats = []
         for c in chats:
-            if c.author != profile:
-                c.receiver_read = True
-                c.save()
-
-        chat_timestamp.last_checked = datetime.datetime.now()
-        chat_timestamp.save()
+            if c.author == profile:
+                continue
+            c.receiver_read = True
+            c = c.save()
+            _chats.append(c)
         return chats
 
 

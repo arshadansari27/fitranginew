@@ -1,14 +1,13 @@
 <section class="container-fluid p-0">
-<div class="home-banner">
+<div class="home-banner" style="{{background_cover}}">
 <h4>Welcome to</h4>
 <h2>India's Complete Adventure Portal</h2>
 
 <div class="col-lg-8 col-md-8 col-xs-10 col-xs-offset-1 col-md-offset-2 mt-10">
-<p>know everything about adventure sport activities & tourism in India. Connect with the
-like minded people discussion about your adventure quest & get curated trips and gear options</p>
+<p>Know everything about adventure tourism in India and connect with like minded people</p>
 </div>
 
-<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-50 text-center white fitrangi">
+<div class="hidden-xs col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-50 text-center white fitrangi">
 <h3 class="light">fitrangi.com in number</h3>
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
                 <h4>{{counters['profile']}}</h4>
@@ -16,7 +15,7 @@ like minded people discussion about your adventure quest & get curated trips and
                 <p>Members</p>
             </div>
 
-            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <h4>{{counters['adventure']}}</h4>
 
                 <p>Adventure</p>
@@ -28,27 +27,17 @@ like minded people discussion about your adventure quest & get curated trips and
                 <p>Discussion</p>
             </div>
 
-            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <h4>{{counters['article']}}</h4>
 
                 <p>Journals</p>
             </div>
 
             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
-                <h4>{{counters['profile']}}</h4>
-
-                <p>Registered</p>
-            </div>
-
-            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
-                <h4>1200</h4>
+                <h4>{{counters['posts']}}</h4>
 
                 <p>Comments</p>
             </div>
-
-
-
-
 </div>
 
 </div>
@@ -60,30 +49,30 @@ like minded people discussion about your adventure quest & get curated trips and
 
 <div class="row">
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-<a href="/explore/activity?name=Bungee jumping"><img src="images/adventure-icons/air-activities/bungee-jumping.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Hot Air Ballooning"><img src="images/adventure-icons/air-activities/hot-air-balooning.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Paragliding"><img src="images/adventure-icons/air-activities/paragliding.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Parasailing"><img src="images/adventure-icons/air-activities/parasailing.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Sky Diving"><img src="images/adventure-icons/air-activities/sky-diving.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Zip Line"><img src="images/adventure-icons/air-activities/zip-line.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Camping"><img src="images/adventure-icons/land-activities/camping.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Canyoning"><img src="images/adventure-icons/land-activities/canyoning.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Cycling-Biking"><img src="images/adventure-icons/land-activities/cycling-biking.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Horse Riding"><img src="images/adventure-icons/land-activities/horse-riding.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Marathons"><img src="images/adventure-icons/land-activities/marathons.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Mountaineering"><img src="images/adventure-icons/land-activities/mountaineering.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Rappelling and Valley Crossing"><img src="images/adventure-icons/land-activities/rappelling-valley-crossing.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Rock Climbing"><img src="images/adventure-icons/land-activities/rock-climbing.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Skiing"><img src="images/adventure-icons/land-activities/skiing.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Snowboarding"><img src="images/adventure-icons/land-activities/snowboarding.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Trekking and Hiking"><img src="images/adventure-icons/land-activities/trekking-hiking.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Zorbing"><img src="images/adventure-icons/land-activities/zorbing.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Kayaking"><img src="images/adventure-icons/water-activities/kayaking.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Kit Surfing"><img src="images/adventure-icons/water-activities/kite-surfing.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Scuba Diving"><img src="images/adventure-icons/water-activities/scuba-diving.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Snorkelling"><img src="images/adventure-icons/water-activities/snorkelling.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Surfing"><img src="images/adventure-icons/water-activities/surfing.png" class="img-responsive"></a>
-<a href="/explore/activity?name=Water Rafting"><img src="images/adventure-icons/water-activities/water-rafting.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Bungee Jumping" class="hoverable" data-trigger="hover" href="/explore/activity?name=Bungee jumping"><img src="images/adventure-icons/air-activities/bungee-jumping.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Hot Air Ballooning" class="hoverable" data-trigger="hover" href="/explore/activity?name=Hot Air Ballooning"><img src="images/adventure-icons/air-activities/hot-air-balooning.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Paragliding" class="hoverable" data-trigger="hover" href="/explore/activity?name=Paragliding"><img src="images/adventure-icons/air-activities/paragliding.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Parasailing" class="hoverable" data-trigger="hover" href="/explore/activity?name=Parasailing"><img src="images/adventure-icons/air-activities/parasailing.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Sky Diving" class="hoverable" data-trigger="hover" href="/explore/activity?name=Sky Diving"><img src="images/adventure-icons/air-activities/sky-diving.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Zip Line" class="hoverable" data-trigger="hover" href="/explore/activity?name=Zip Line"><img src="images/adventure-icons/air-activities/zip-line.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Camping" class="hoverable" data-trigger="hover" href="/explore/activity?name=Camping"><img src="images/adventure-icons/land-activities/camping.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Canyoning" class="hoverable" data-trigger="hover" href="/explore/activity?name=Canyoning"><img src="images/adventure-icons/land-activities/canyoning.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Cycling Biking" class="hoverable" data-trigger="hover" href="/explore/activity?name=Cycling and Biking"><img src="images/adventure-icons/land-activities/cycling-biking.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Horse Riding" class="hoverable" data-trigger="hover" href="/explore/activity?name=Horse Riding"><img src="images/adventure-icons/land-activities/horse-riding.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Marathons" class="hoverable" data-trigger="hover" href="/explore/activity?name=Marathons"><img src="images/adventure-icons/land-activities/marathons.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Mountaineering" class="hoverable" data-trigger="hover" href="/explore/activity?name=Mountaineering"><img src="images/adventure-icons/land-activities/mountaineering.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Rappelling and Valley Crossing" class="hoverable" data-trigger="hover" href="/explore/activity?name=Rappelling and Valley Crossing"><img src="images/adventure-icons/land-activities/rappelling-valley-crossing.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Rock Climbing" class="hoverable" data-trigger="hover" href="/explore/activity?name=Rock Climbing"><img src="images/adventure-icons/land-activities/rock-climbing.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Skiing" class="hoverable" data-trigger="hover" href="/explore/activity?name=Skiing"><img src="images/adventure-icons/land-activities/skiing.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Snowboarding" class="hoverable" data-trigger="hover" href="/explore/activity?name=Snowboarding"><img src="images/adventure-icons/land-activities/snowboarding.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Trekking and Hiking" class="hoverable" data-trigger="hover" href="/explore/activity?name=Trekking and Hiking"><img src="images/adventure-icons/land-activities/trekking-hiking.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Zorbing" class="hoverable" data-trigger="hover" href="/explore/activity?name=Zorbing"><img src="images/adventure-icons/land-activities/zorbing.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Kayaking" class="hoverable" data-trigger="hover" href="/explore/activity?name=Kayaking"><img src="images/adventure-icons/water-activities/kayaking.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Kit Surfing" class="hoverable" data-trigger="hover" href="/explore/activity?name=Kit Surfing"><img src="images/adventure-icons/water-activities/kite-surfing.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Scuba Diving" class="hoverable" data-trigger="hover" href="/explore/activity?name=Scuba Diving"><img src="images/adventure-icons/water-activities/scuba-diving.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Snorkelling" class="hoverable" data-trigger="hover" href="/explore/activity?name=Snorkelling"><img src="images/adventure-icons/water-activities/snorkelling.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Surfing" class="hoverable" data-trigger="hover" href="/explore/activity?name=Surfing"><img src="images/adventure-icons/water-activities/surfing.png" class="img-responsive"></a>
+<a role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Water Rafting" class="hoverable" data-trigger="hover" href="/explore/activity?name=Water Rafting"><img src="images/adventure-icons/water-activities/water-rafting.png" class="img-responsive"></a>
 </div>
 </div>
 
@@ -129,7 +118,7 @@ like minded people discussion about your adventure quest & get curated trips and
 <h2>Trending Discussion</h2>
 
 <div class="discussion">
-    <input id="discussion-admin-published-filter" type="hidden" data-model="discussion" data-filter="admin_published" value="bool|True" data-filter-type="fixed"/>
+    <input id="discussion-admin-published-filter" type="hidden" data-model="discussion" data-filter="admin_published" value="bool|True" data-filter-status="fixed"/>
     {{discussion|safe}}
 </div>
 <button data-action="add-discussion" data-user-id="{{user.id}}" type="button" class="btn btn-primary mb-10 pull-left">Add a Discussion</button>
@@ -145,10 +134,10 @@ like minded people discussion about your adventure quest & get curated trips and
 <section class="container-fluid fitrangi-blog-thumb subheading lightgrey-bg pb-20">
 
 <div class="container">
-<h2>Popular Blogs</h2>
+<h2>Popular Journals</h2>
 
 <div class="container">
-    <input id="article-admin-published-filter" type="hidden" data-model="article" data-filter="admin_published" value="bool|True" data-filter-type="fixed"/>
+    <input id="article-admin-published-filter" type="hidden" data-model="article" data-filter="admin_published" value="bool|True" data-filter-status="fixed"/>
     {{journal|safe}}
 
 </div>
@@ -173,11 +162,6 @@ like minded people discussion about your adventure quest & get curated trips and
 <h2>Upcoming Events</h2>
  {{ event|safe }}
 
-
-<div class="pull-right">
-    <a href="/community/event" class="btn btn-primary">View All</a>
-</div>
-
 </div>
 
 
@@ -188,41 +172,22 @@ like minded people discussion about your adventure quest & get curated trips and
 <section class="container fitrangi-testimonial subheading text-center">
 
 <h2>Testimonials</h2>
-
+{% for testimonial in testimonials %}
 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-<h4><i class="fa fa-quote-left"></i>
-India unearths this wonderful opportunity to feature itself
-in world records for Sky-diving and Scuba-diving.
-Don't miss this historic opportunity to associate yourself
-with this exciting and daring adventure! <i class="fa fa-quote-right"></i>
-</h4>
-<article class="media">
-<img src="images/pro1.jpg" class="img-circle img-responsive pull-left p-5" width="90">
-    <h3>User Name Comes Here</h3>
-	<h5><span class="fa fa-map-marker"></span> Mumbai, Maharashtra </h5>
-</article>
+        <article class="media">
+            <img src="{{testimonial['image']}}" class="img-circle img-responsive pull-left p-5" width="90">
+            <h3>{{testimonial['name']}}</h3>
+            <h5><span class="fa fa-info"></span> <strong>{{ testimonial['title'] }}</strong></h5>
+        </article>
+        <h4>
+        <i class="fa fa-quote-left"></i> {{ testimonial['content'] }} <i class="fa fa-quote-right"></i></h4>
+        <p>
+            {{testimonial['context']}}
+        </p>
 </div>
+    {% if loop.index % 2 == 0 %}<hr class="clearfix"/> {%endif %}
+{% endfor %}
 
-<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-
-<h4><i class="fa fa-quote-left"></i>
-India unearths this wonderful opportunity to feature itself
-in world records for Sky-diving and Scuba-diving.
-Don't miss this historic opportunity to associate yourself
-with this exciting and daring adventure! <i class="fa fa-quote-right"></i>
-</h4>
-
-<article class="media">
-<img src="images/pro7.jpg" class="media-object img-responsive pull-left p-5" width="90">
-    <h3>User Name Comes Here</h3>
-	<h5><span class="fa fa-map-marker"></span> Mumbai, Maharashtra </h5>
-</article>
-</div>
-
-
-<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-20 mb-20 pt-10 border-grey-t">
-<button class="btn btn-primary pull-right">View all Testimonials</button>
-</div>
 
 </section>
 

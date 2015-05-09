@@ -73,7 +73,19 @@ class Adventure(Entity, db.Document):
 
     def remove_review(self, id):
         from app.models.content import Post
-        review = Post.objects(pk=id).firs()
+        review = Post.objects(pk=id).first()
         self.reviews.remove(review)
         self.save()
         review.delete()
+
+    @property
+    def reviews(self):
+        from app.models.content import Post
+        reviews = Post.objects(parent=self).all()
+        return reviews
+
+    @property
+    def reviews_count(self):
+        from app.models.content import Post
+        return Post.objects(parent=self).count()
+

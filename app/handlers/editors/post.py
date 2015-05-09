@@ -67,6 +67,10 @@ def add(data):
     post.save()
     if post_type == 'comment':
         ActivityStream.push_comment_to_stream(post)
+    elif post_type == 'review':
+        ActivityStream.push_review_to_stream(post)
+    else:
+        ActivityStream.push_stream_post_to_stream(post)
     return post
 
 @response_handler('Successfully voted on post', 'Failed to vote')
@@ -84,6 +88,7 @@ def comment(node, data):
     comment = Comment(author=g.user, content=content)
     post.comments.append(comment)
     post.save()
+    ActivityStream.push_comment_to_stream(post)
     return post
 
 

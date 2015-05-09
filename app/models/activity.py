@@ -14,7 +14,7 @@ ICONS = {
 "bungeejumping": '/images/adventure-icons/air-activities/bungee-jumping.png',
 "camping" :"/images/adventure-icons/land-activities/camping.png",
 "canyoning" :"/images/adventure-icons/land-activities/canyoning.png",
-"cyclingbiking" :"/images/adventure-icons/land-activities/cycling-biking.png",
+"cyclingandbiking" :"/images/adventure-icons/land-activities/cycling-biking.png",
 "horseriding" :"/images/adventure-icons/land-activities/horse-riding.png",
 "marathons" :"/images/adventure-icons/land-activities/marathons.png",
 "mountaineering" :"/images/adventure-icons/land-activities/mountaineering.png",

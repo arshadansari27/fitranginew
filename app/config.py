@@ -10,18 +10,14 @@ def get_query_set(cls):
 
 def get_activities():
     activities= {
-        "Sky - Fly": {
+        "Air Sports": {
                     "Bungee jumping": "/explore/activity?name=Bungee jumping",
-                    "Hang Gliding": "/explore/activity?name=Hang Gliding",
                     "Hot Air Ballooning": "/explore/activity?name=Hot Air Ballooning",
-                    "Para Motoring": "/explore/activity?name=Para Motoring",
                     "Paragliding": "/explore/activity?name=Paragliding",
-                    "Parasailing": "/explore/activity?name=Parasailing",
                     "Sky Diving": "/explore/activity?name=Sky Diving",
                     "Zip Line": "/explore/activity?name=Zip Line"
         },
-        "Water - Wonders": {
-                    "Canyoning": "/explore/activity?name=Canyoning",
+        "Water Sports": {
                     "Kayaking": "/explore/activity?name=Kayaking",
                     "Kite Surfing": "/explore/activity?name=Kite Surfing",
                     "Scuba Diving": "/explore/activity?name=Scuba Diving",
@@ -30,17 +26,17 @@ def get_activities():
                     "Water Rafting": "/explore/activity?name=Water Rafting"
         },
         "Land Sports": {
-                    "Snow - Flow": "/explore/activity?name=Snow - Flow",
+                    "Skiing": "/explore/activity?name=Skiing",
+                    "Snowboarding": "/explore/activity?name=Snowboarding",
                     "Camping": "/explore/activity?name=Camping",
-                    "Cycling-Biking": "/explore/activity?name=Cycling-Biking",
+                    "Canyoning": "/explore/activity?name=Canyoning",
+                    "Cycling-Biking": "/explore/activity?name=Cycling and Biking",
                     "Marathons": "/explore/activity?name=Marathons",
                     "Mountaineering": "/explore/activity?name=Mountaineering",
-                    "Off-beat Activities": "/explore/activity?name=Off-beat Activities",
                     "Rappelling and Valley Crossing": "/explore/activity?name=Rappelling and Valley Crossing",
                     "Rock Climbing": "/explore/activity?name=Rock Climbing",
                     "Trekking and Hiking": "/explore/activity?name=Trekking and Hiking",
                     "Horse Riding": "/explore/activity?name=Horse Riding",
-                    "Stargazing": "/explore/activity?name=Stargazing",
                     "Zorbing": "/explore/activity?name=Zorbing"
         }
     }

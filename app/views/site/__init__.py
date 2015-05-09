@@ -1,4 +1,4 @@
-import os
+import os, random
 from jinja2 import Template
 import simplejson as json
 from PIL import Image
@@ -41,6 +41,13 @@ def act_home():
 @app.route("/explore")
 def home():
     title, card, context = PageManager.get_landing_title_and_page('explore', user=g.user if hasattr(g, 'user') else None)
+    context['title'] = title
+    context['card'] = card
+    return render_template('site/pages/commons/view.html', **context)
+
+@app.route('/about')
+def about():
+    title, card, context = PageManager.get_landing_title_and_page('about', user=g.user if hasattr(g, 'user') else None)
     context['title'] = title
     context['card'] = card
     return render_template('site/pages/commons/view.html', **context)
@@ -152,6 +159,11 @@ def paged_list():
         html = err_html
     return jsonify(status='success', html=html, last_page=last_page)
 
+@app.route('/notifications-count')
+def get_notifications_count():
+    if hasattr(g, 'user') and g.user:
+        return jsonify(dict(public_activity_count=g.user.public_activity_count, private_activity_count=g.user.private_activity_count))
+
 @app.route('/options')
 def ajax_options():
     model_name = request.args.get('model_name', '')
@@ -175,8 +187,12 @@ def ajax_options():
 def ajax_names():
     model_name = request.args.get('model_name', '')
     attr = request.args.get('attr', None)
+    size = request.args.get('size', None)
     if model_name == 'tag':
-        options = [u[0] for u in all_tags()][:30]
+        options = [u[0] for u in all_tags()]
+        options.extend([u.name for u in NodeExtractor.factory(ACTIVITY).get_list("", False, 0, 0)])
+        if size:
+            options = options[0: int(size)]
     else:
         options = (getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     results = (u for u in options)

@@ -11,21 +11,23 @@
     </div>
 
     <div class="post-content">
-        <h5><i class="fa fa-user"></i> has {{ model.action_display }} {% if model.is_content_activity %} on {% endif %}</h5>
+        <h5><i class="fa fa-user"></i> {{ model.action_display }} {% if model.is_content_activity %}{% endif %}</h5>
 
         <div class="container-fluid fitrangi-blog-thumb">
             {% if model.is_content_activity %}
             <ul class="blogs-list">
                 <li style="border: 0;">
-                    <div class="row">
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                            {% if model.object.parent %}
+                    <div class="row well well-sm">
+                        {% if model.object.parent %}
                             {% set object = model.object.parent %}
                             {% else %}
                             {% set object = model.object %}
-                            {% endif %}
+                        {% endif %}
+                        {% if object.cover_image_path %}
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                             <a href="#"><img class="img-responsive img-thumbnail" src="{{object.cover_image_path}}" alt=""></a>
-                        </div>
+                            </div>
+                        {% endif %}
                         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
                             <h3 class="title"><a href="{{object.slug}}">{{ object.title }}</a></h3>
                             <h4 class="sub-title">

@@ -49,9 +49,8 @@ class RelationShips(db.Document):
         if RelationShips.objects(subject=object, object=subject, relation=inverse_relation.get(relation)).first() is None:
             relationship2 = RelationShips(subject=object, object=subject, relation=inverse_relation.get(relation))
             relationship2.save()
-        print 'Created Relationship:', relationship1, '|', relationship2
+            ActivityStream.push_relationship_to_stream(relationship2)
         return relationship1, relationship2
-
 
 
     @classmethod
@@ -115,7 +114,8 @@ class RelationShips(db.Document):
 
     @classmethod
     def get_by_query(cls, subject, relation, paged=False, page=1, size=PAGE_LIMIT):
-        query = RelationShips.objects(subject=subject, relation=relation)
+        raw = {'subject._ref.$id': subject.id, 'relation': relation}
+        query = RelationShips.objects(__raw__=raw)
         if paged:
             s, e = get_start_end(page, size)
             return (u.object for u in query.all()[s: e])
