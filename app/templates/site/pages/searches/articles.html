@@ -4,7 +4,6 @@
         <div class="container">
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <input id="admin-published-filter" type="hidden" data-model="article" data-filter="admin_published" value="bool|True"/>
                 <a data-user-id="{{user.id}}" data-action="add-article" href="#" class="btn btn-primary btn-lg  m-5">Write Blog</a>
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 pull-right">
                     <div class="input-group">
@@ -90,6 +89,7 @@
 <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home">
 
     <section class="container-fluid fitrangi-blog-thumb">
+        <input id="admin-published-all-filter" type="hidden" data-category="all" data-model="article" data-filter="admin_published" value="bool|True"/>
         {{all|safe}}
     </section>
 
@@ -102,6 +102,7 @@
             <h4 class="border-grey-b pb-5 oswald"> Top Blogs</h4>
             <ul class="blogs-list">
 
+                <input id="admin-published-top-filter" type="hidden" data-category="top" data-model="article" data-filter="admin_published" value="bool|True"/>
                 {{top|safe}}
 
             </ul>
@@ -158,7 +159,8 @@
         App.filter('name-filter');
         App.filter('channel-filter');
         App.filter('tag-filter');
-        App.filter('admin-published-filter');
+        App.filter('admin-published-all-filter');
+        App.filter('admin-published-top-filter');
 
 
     });
