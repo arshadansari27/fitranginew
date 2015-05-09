@@ -131,7 +131,9 @@ $(document).ready(function() {
                 };
 
                 var update_single_message = function(result) {
-                    console.log('[*] ' + result.name + ": " + result.messages[0].message);
+                    if (result.messages != undefined && result.messages.length > 0 ) {
+                        console.log('[*] ' + result.name + ": " + result.messages[0].message);
+                    }
                     window.App.messaging.selected_user = window.App.messaging.selected_user || null;
                     window.App.messaging.user_notification = window.App.messaging.user_notification || {};
                     var selected_user = window.App.messaging.selected_user;
