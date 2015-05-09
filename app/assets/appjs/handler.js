@@ -743,11 +743,13 @@ jQuery(document).ready(function ($) {
 			$('[data-type="geo-complete"]').val(name + "|" + lat +'|' + lon);
      });
 
+     /*
      if (window.location.href.indexOf('/my') != -1) {
         window.App.profile.reset_counter(null, 'public', window.App.profile.update_counter);
      }
      if (window.location.href.indexOf('/messaging') != -1) {
         window.App.profile.reset_counter(null, 'private', window.App.profile.update_counter);
      }
+     */
 
 });
