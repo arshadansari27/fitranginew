@@ -1,1 +1,5 @@
-{#% extends 'site/models/common/_icon.html' %#}
+<div class="well well-sm">
+    <a href="{{model.slug}}" title="{{model.name}}"><img src="{{model.icon_image_path}}" class="p-5" style="width: 120px; height: 120px;"></a>
+    <div class="text-center light blue">{{model.name|upper}}</div>
+</div>
+
