@@ -32,7 +32,7 @@ COLLECTION_PATHS = {
     'about': 'site/pages/landings/about'
 }
 
-WALL_IMAGE_STYLE = "background:  linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(%s) no-repeat center center;background-size: cover;"
+WALL_IMAGE_STYLE = "background:  linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url(%s) no-repeat center center;background-size: cover;"
 
 WALL_IMAGE_NAMES = {
     ACTIVITY: dict(detail=lambda u: u.cover_image_path, search='', landing=''),
