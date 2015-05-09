@@ -3,8 +3,8 @@
     <div class="activity-banner"  style="{{background_cover}}">
         <div class="container">
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                <div class="favourite" style="background: white;">
-                    <img src="{{model.icon_image_path}}" class="img-rounded img-responsive">
+                <div class="favourite">
+                    <img src="{{model.icon_image_path}}" class="img-rounded img-responsive" style="background: white;">
                     {% if model in user.favorite_activities %}
                     <a href="#" data-type="activity" data-action="remove-activity-favorite" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><h3><i class="fa fa-check"></i>Added to Favourites</h3></a>
                     {% else %}

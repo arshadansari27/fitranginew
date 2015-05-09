@@ -3,7 +3,7 @@
         {% if model.cover_image_path and  model.cover_image_path|length > 0 %}
         <a href="{{model.slug}}"><img src="{{model.cover_image_path}}" alt="..."></a>
         {% else %}
-        <a href="{{model.slug}}"><img src="/images/discussion-banner.jpg" alt="..."></a>
+        <!--a href="{{model.slug}}"><img src="/images/discussion-banner.jpg" alt="..."></a-->
         {% endif %}
         <div class="caption">
     	    <h4><a href="{{model.slug}}">{{model.title}}</a></h4>

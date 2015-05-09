@@ -235,9 +235,11 @@
         <!-- /.navbar-collapse -->
     </div>
 </nav>
-
+<div style="min-height: 100%;">
 {% block body %}{% endblock %}
+</div>
 {% if not user %}
+
 <section class="container-fluid footer-signup lightgrey-bg">
     <div class="container">
         <form class="form-inline">
