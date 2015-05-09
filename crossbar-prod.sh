@@ -1,0 +1,2 @@
+cd daemons
+crossbar start
