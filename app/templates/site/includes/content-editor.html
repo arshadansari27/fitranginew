@@ -12,7 +12,7 @@
         <form class="blog-form">
             <input data-name="id" type="hidden" value="{{model.id}}">
             <div class="form-group">
-                <label for="heading">Title</label>
+                <label for="heading">Title<span class="red">*</span></label>
                 <input data-name="title" type="text" data-name="title" class="form-control" placeholder="Enter blog heading" value="{{model.title}}">
             </div>
 
@@ -27,22 +27,31 @@
                 <input class="form-control" data-name="video-link" placeholder="Paste the link here" value="{% if model.video_embed|length > 0 %}{{model.video_embed[0]}}{% endif %}"/>
             </div>
             {% endif %}
-
+            {% if model_name == 'article' %}
             <div class="form-group">
                 <div class="thumbnail">
                     <a href="#" data-action="write-content-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/800x400{% endif %}" width="40%"/></a>
-                    <div class="caption text-center">Click to change</div>
+                    <div class="caption text-center">Click to change <span class="red">*</span> </div>
                 </div>
                 <input type="hidden" data-name="cover-image" value=""/>
-                {% if model_name == 'article' %}
                 <input type="hidden" data-name="cover-image-necessary" value="{% if not model.cover_image %}1{% endif %}"/>
-                {% endif %}
             </div>
+            {% endif %}
 
             <div class="form-group">
-                <label for="content">Content</label>
+                <label for="content">Content<span class="red">*</span></label>
                 <textarea class="form-control summernote" data-name="content" placeholder="Enter blog description" rows="10" >{{model.content}}</textarea>
             </div>
+
+            {% if model_name == 'discussion' %}
+            <div class="form-group">
+                <div class="thumbnail">
+                    <a href="#" data-action="write-content-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/800x400{% endif %}" width="40%"/></a>
+                    <div class="caption text-center">Click to add/change (Optional)</div>
+                </div>
+                <input type="hidden" data-name="cover-image" value=""/>
+            </div>
+            {% endif %}
 
             <div class="form-group">
                 <label for="tags">Tags</label>
