@@ -1,20 +1,23 @@
 
 <section class="col-lg-12 col-xs-12 media user-post">
-    <div class="container">
+    <div class="">
 
     <div class="media-left">
-        <img src="{{model.profile.cover_image_path}}" class="img-circle" width="48">
+        <img src="{{model.profile.cover_image_path}}" class="img-circle p-5" style="height:60px; width: 60px;">
     </div>
     <div class="media-body">
-        <h3>{{model.profile.name}}</h3>
-        <h5><i class="fa fa-map-marker"></i> {% if model.profile.location.name %}{{model.profile.location.name}}{% else %}Unknown{% endif %}</h5>
+        <h3>
+                {{model.profile.name}} &nbsp;<br/>
+        </h3>
+        <h4>{{ model.action_display }}</h4>
     </div>
-
+    <div class="media-right">
+        <span class="">{% if not model.is_content_activity %}{{ entity_view|safe }}{% endif %}</span>
+    </div>
     <div class="post-content">
-        <h5><i class="fa fa-user"></i> {{ model.action_display }} {% if model.is_content_activity %}{% endif %}</h5>
 
+        {% if model.is_content_activity %}
         <div class="container-fluid fitrangi-blog-thumb">
-            {% if model.is_content_activity %}
             <ul class="blogs-list">
                 <li style="border: 0;">
                     <div class="row well well-sm">
@@ -41,10 +44,8 @@
                     </div>
                 </li>
             </ul>
-            {% else %}
-                {{ entity_view|safe }}
-            {% endif %}
         </div>
+        {% endif %}
     </div>
     </div>
     <hr class="clearfix user-post-divider"/>

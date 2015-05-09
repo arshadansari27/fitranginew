@@ -65,30 +65,30 @@
     <style>
         /* TODO: Remove Later in case it is fixed in my-style css */
         .blogs-content img {
-            padding: 0px 0px;
+        padding: 0px 0px;
         }
 
         #share-buttons img {
-            width: 35px;
-            padding: 5px;
-            border: 0;
-            box-shadow: 0;
-            display: inline;
+        width: 35px;
+        padding: 5px;
+        border: 0;
+        box-shadow: 0;
+        display: inline;
         }
 
         .ui-autocomplete {
-            z-index: 5000;
+        z-index: 5000;
         }
 
         .exactCenter {
-            width: 100px;
-            height: 100px;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            margin-top: -50px;
-            margin-left: -50px;
-            z-index: 100000;
+        width: 100px;
+        height: 100px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin-top: -50px;
+        margin-left: -50px;
+        z-index: 100000;
         }
 
         .pac-container { z-index:20000 !important; }
@@ -98,8 +98,9 @@
 </head>
 
 <body data-logged-in-as="{% if user %}{{user.id}}{% else %}null{% endif %}">
-<div id="fb-root"></div>
-<script>
+<div class="wrap-site">
+    <div id="fb-root"></div>
+    <script>
 
     (function (d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
@@ -124,121 +125,142 @@
         return t;
     }(document, "script", "twitter-wjs"));
 
-</script>
-<nav class="navbar navbar-default navbar-static-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-8">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/"></a>
-        </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-8">
-
-            <div class="container-fluid">
-                <ul class="nav navbar-nav">
-                    <li class="{% if menu.app_name == 'explore'%}active{% endif %}"><a href="/explore"></a></li>
-                    <!--li class="{% if menu.app_name == 'trip'%}active{% endif %}"><a href="/trip">Upcoming Trips</a>
-                    </li-->
-                </ul>
-                <ul class="top-icons nav navbar-nav navbar-right pull-right">
-                    <li>
-                        <div class="top-icon"><a class="" href="/community/profile" title="Members"><i
-                                class="fa fa-users"></i></a></div>
-                    </li>
-                    {% if not (user and user.id) %}
-                    <li>
-                        <div class="top-icon"><a class="show_login" href="#" title="Login"><i class="fa fa-key"></i></a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="top-icon"><a class="show_signup" href="#" title="Register"><i
-                                class="fa fa-user">+</i></a></div>
-                    </li>
-                    {% elif user and user.id %}
-                    <li class="dropdown">
-                        <div class="top-icon">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="{{user.cover_image_path}}" class="radius-20 profile-pic" alt="profile"
-                                     width="40">
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li>
-                                    <a href="#" role="button" data-placement="left" data-toggle="popover"
-                                       data-trigger="focus" data-content="Click to change the cover" class="hoverable"
-                                       data-action="edit-cover-image" data-model-id="{{user.id}}" data-model="profile"
-                                       data-trigger="hover"><img class="img-responsive"
-                                                                 src="{{user.cover_image_path}}"/></a>
-                                </li>
-                                <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="/community/my"><i
-                                        class="fa fa-info" data-action="check-login" data-user-id="{{user.id}}"></i>&nbsp;My Page</a></li>
-                                <li><a data-action="edit-profile" data-model-id="{{user.id}}" data-user-id="{{user.id}}"
-                                       href="#"><i class="fa fa-user"></i>&nbsp;Edit Profile</a></li>
-                                <li><a data-action="edit-profile-preferences" data-model-id="{{user.id}}"
-                                       data-user-id="{{user.id}}" href="#"><i class="fa fa-cog"></i>&nbsp;Edit
-                                    Preference</a></li>
-                                <li><a data-action="edit-profile-password" data-model-id="{{user.id}}"
-                                       data-user-id="{{user.id}}" href="#"><i class="fa fa-key"></i>&nbsp;Change
-                                    Password</a></li>
-                                {% if 'Admin' in user.roles %}
-                                <li><a href="/admin"><i class="fa fa-dashboard"></i>&nbsp;Admin dashboard</a></li>
-                                {% endif %}
-                                <li><a href="/logout"><i class="fa fa-lock"></i> Log Out</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li><div class="top-icon"><a href="/community/my" title="Notifications"><i class="fa fa-bell"></i></a><span id="public-activity-count">{{public_activity_count}}</span></div></li>
-                    <li>
-                        <div class="top-icon"><a href="/messaging" title="Messages"><i class="fa fa-envelope"></i></a><span id="private-activity-count">{{private_activity_count}}</span>
-                        </div>
-                    </li>
-                    {% endif %}
-                </ul>
-
+    </script>
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-8">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/"></a>
             </div>
 
-            {% if menu.app_name in ['explore', 'community'] %}
-            <div class="container-fluid border-grey-t">
-                <ul class="nav navbar-nav nav-down">
-                    <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="#" data-action="check-login" data-user-id="{{user.id}}">My Page</a>
-                    </li>
-                    <li class="inner-level-dropdown dropdown {% if menu.main_menu == 'activity' %}active{% endif %}">
-                        <a id="subdropdown1" href="#" class="dropdown-toggle">Activities<b class="caret"></b></a>
-                        <ul class="dropdown-menu multi-column columns-3" aria-labelledby="subdropdown1" role="menu">
-                            <div class="row">
-                                {{activity_menu|safe}}
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-8">
+
+                <div class="container-fluid">
+                    <ul class="nav navbar-nav">
+                        <li class="{% if menu.app_name == 'explore'%}active{% endif %}"><a href="/explore"></a></li>
+                        <!--li class="{% if menu.app_name == 'trip'%}active{% endif %}"><a href="/trip">Upcoming Trips</a>
+                        </li-->
+                    </ul>
+                    <ul class="top-icons nav navbar-nav navbar-right pull-right">
+                        <li>
+                            <div class="top-icon"><a class="" href="/community/profile" title="Members"><i
+                                    class="fa fa-users"></i></a></div>
+                        </li>
+                        {% if not (user and user.id) %}
+                        <li>
+                            <div class="top-icon"><a class="show_login" href="#" title="Login"><i class="fa fa-key"></i></a>
                             </div>
-                        </ul>
-                    </li>
-                    <li class="{% if menu.main_menu == 'adventure' %}active{% endif %}"><a href="/explore/adventure">Adventures</a>
-                    </li>
-                    <li class="{% if menu.main_menu == 'profile' %}active{% endif %}"><a href="/community/profile">Finder</a>
-                    </li>
-                    <li class="{% if menu.main_menu in ['journal', 'article', 'blog'] %}active{% endif %} {{menu.main_menu}}"><a
-                            href="/explore/journal">Journal</a></li>
-                    <li class="{% if menu.main_menu == 'discussion' %}active{% endif %}"><a
-                            href="/community/discussion">Discussions</a></li>
-                    <li class="{% if menu.main_menu == 'event' %}active{% endif %}"><a
-                            href="/community/event">Events</a></li>
-                </ul>
-            </div>
-            {% endif %}
+                        </li>
+                        <li>
+                            <div class="top-icon"><a class="show_signup" href="#" title="Register"><i
+                                    class="fa fa-user">+</i></a></div>
+                        </li>
+                        {% elif user and user.id %}
+                        <li class="dropdown">
+                            <div class="top-icon">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <img src="{{user.cover_image_path}}" class="radius-20 profile-pic" alt="profile"
+                                         width="40">
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li>
+                                        <a href="#" role="button" data-placement="left" data-toggle="popover"
+                                           data-trigger="focus" data-content="Click to change the cover"
+                                           class="hoverable"
+                                           data-action="edit-cover-image" data-model-id="{{user.id}}"
+                                           data-model="profile"
+                                           data-trigger="hover"><img class="img-responsive"
+                                                                     src="{{user.cover_image_path}}"/></a>
+                                    </li>
+                                    <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a
+                                            href="/community/my"><i
+                                            class="fa fa-info" data-action="check-login" data-user-id="{{user.id}}"></i>&nbsp;My
+                                        Page</a></li>
+                                    <li><a data-action="edit-profile" data-model-id="{{user.id}}"
+                                           data-user-id="{{user.id}}"
+                                           href="#"><i class="fa fa-user"></i>&nbsp;Edit Profile</a></li>
+                                    <li><a data-action="edit-profile-preferences" data-model-id="{{user.id}}"
+                                           data-user-id="{{user.id}}" href="#"><i class="fa fa-cog"></i>&nbsp;Edit
+                                        Preference</a></li>
+                                    <li><a data-action="edit-profile-password" data-model-id="{{user.id}}"
+                                           data-user-id="{{user.id}}" href="#"><i class="fa fa-key"></i>&nbsp;Change
+                                        Password</a></li>
+                                    {% if 'Admin' in user.roles %}
+                                    <li><a href="/admin"><i class="fa fa-dashboard"></i>&nbsp;Admin dashboard</a></li>
+                                    {% endif %}
+                                    <li><a href="/logout"><i class="fa fa-lock"></i> Log Out</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="top-icon"><a href="/community/my" title="Notifications"><i
+                                    class="fa fa-bell"></i></a><span id="public-activity-count">{{public_activity_count}}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="top-icon"><a href="/messaging" title="Messages"><i
+                                    class="fa fa-envelope"></i></a><span id="private-activity-count">{{private_activity_count}}</span>
+                            </div>
+                        </li>
+                        {% endif %}
+                    </ul>
 
+                </div>
+
+                {% if menu.app_name in ['explore', 'community'] %}
+                <div class="container-fluid border-grey-t">
+                    <ul class="nav navbar-nav nav-down">
+                        <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="#"
+                                                                                        data-action="check-login"
+                                                                                        data-user-id="{{user.id}}">My
+                            Page</a>
+                        </li>
+                        <li class="inner-level-dropdown dropdown {% if menu.main_menu == 'activity' %}active{% endif %}">
+                            <a id="subdropdown1" href="#" class="dropdown-toggle">Activities<b class="caret"></b></a>
+                            <ul class="dropdown-menu multi-column columns-3" aria-labelledby="subdropdown1" role="menu">
+                                <div class="row">
+                                    {{activity_menu|safe}}
+                                </div>
+                            </ul>
+                        </li>
+                        <li class="{% if menu.main_menu == 'adventure' %}active{% endif %}"><a
+                                href="/explore/adventure">Adventures</a>
+                        </li>
+                        <li class="{% if menu.main_menu == 'profile' %}active{% endif %}"><a href="/community/profile">Finder</a>
+                        </li>
+                        <li class="{% if menu.main_menu in ['journal', 'article', 'blog'] %}active{% endif %} {{menu.main_menu}}">
+                            <a
+                                    href="/explore/journal">Journal</a></li>
+                        <li class="{% if menu.main_menu == 'discussion' %}active{% endif %}"><a
+                                href="/community/discussion">Discussions</a></li>
+                        <li class="{% if menu.main_menu == 'event' %}active{% endif %}"><a
+                                href="/community/event">Events</a></li>
+                    </ul>
+                </div>
+                {% endif %}
+
+            </div>
+            <!-- /.navbar-collapse -->
         </div>
-        <!-- /.navbar-collapse -->
+    </nav>
+    <div style="min-height: 100%;">
+        {% block body %}{% endblock %}
     </div>
-</nav>
-<div style="min-height: 100%;">
-{% block body %}{% endblock %}
 </div>
-{% if not user %}
+
+
+<footer class="container-fluid p-0">
+
+    {% if not user %}
 
 <section class="container-fluid footer-signup lightgrey-bg">
     <div class="container">
@@ -252,62 +274,58 @@
     </div>
 </section>
 {% endif %}
-<section class="container-fluid footer">
 
-    <div class="col-lg-5 col-md-5 col-sm-6 col-xs-12">
-        <h3>About Fitrangi.com</h3>
+    <section class="col-lg-12 footer">
 
-        <p>Fitrangi.com aims at providing a cohesive online & offline platform to converge
-            together adventure sport lovers, organisers, gear dealers & everyone related to
-            Adventure sports community.</p>
-        <a href="" class="label label-default">About</a>
-        <a href="" class="label label-default">Contact</a>
-        <a href="" class="label label-default">Contrubute</a>
-        <a href="" class="label label-default">Advertise</a>
-        <a href="" class="label label-default">Privacy</a>
-        <a href="" class="label label-default">Terms</a>
+        <div class="col-lg-5 col-md-5 col-sm-6 col-xs-12">
+            <h3>About Fitrangi.com</h3>
 
-    </div>
+            <p>Fitrangi.com aims at providing a cohesive online & offline platform to converge
+                together adventure sport lovers, organisers, gear dealers & everyone related to
+                Adventure sports community.</p>
+            <a href="" class="label label-default">About</a>
+            <a href="" class="label label-default">Contact</a>
+            <a href="" class="label label-default">Contrubute</a>
+            <a href="" class="label label-default">Advertise</a>
+            <a href="" class="label label-default">Privacy</a>
+            <a href="" class="label label-default">Terms</a>
 
-    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-        <h3>Need Help?</h3>
-        <strong>Contact us Via Phone or Email</strong>
+        </div>
 
-        <p><em>Phone :</em> +91-8879921115</p>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <h3>Need Help?</h3>
+            <strong>Contact us Via Phone or Email</strong>
 
-        <p><em>Email :</em> <a href="mailto:info@fitrangi.com">go@fitrangi.com</a></p>
+           <p><em>Phone :</em> +91-8879921115</p>
 
-    </div>
+            <p><em>Email :</em> <a href="mailto:info@fitrangi.com">go@fitrangi.com</a></p>
 
-    <div class="col-lg-4 col-md-4 col-sm-3 col-xs-12 social">
-        <h3 class="my-h3">Follow us</h3>
-        <a href="https://www.facebook.com/Fitrangi" class="fa fa-facebook-square" title="Facebook" target="_blank"></a>
-        <a href="https://twitter.com/FitRangi" class="fa fa-twitter-square" title="Twitter" target="_blank"></a>
-        <a href="#" class="fa fa-rss-square" title="RSS" target="_blank"></a>
-        <!--a href="#" class="fa fa-linkedin-square" title="LinkedIn" target="_blank"></a-->
-        <a href="https://plus.google.com/115019600318035585202/posts" class="fa fa-google-plus-square" title="Google Plus" target="_blank"></a>
-        <a href="https://www.youtube.com/user/Fitrangi" class="fa fa-youtube-square" title="Youtube" target="_blank"></a>
-        <!--a href="#" class="fa fa-vimeo-square" title="Vimeo" target="_blank"></a-->
-        <!--a href="#" class="fa fa-pinterest-square" title="Pinterest" target="_blank"></a-->
+        </div>
 
+        <div class="col-lg-4 col-md-4 col-sm-3 col-xs-12 social">
+            <h3>Follow us</h3>
+            <a href="https://www.facebook.com/Fitrangi" class="fa fa-facebook-square" title="Facebook" target="_blank"></a>
+            <a href="https://twitter.com/FitRangi" class="fa fa-twitter-square" title="Twitter" target="_blank"></a>
+            <a href="#" class="fa fa-rss-square" title="RSS" target="_blank"></a>
+            <a href="https://plus.google.com/115019600318035585202/posts" class="fa fa-google-plus-square"  title="Google Plus" target="_blank"></a>
+            <a href="https://www.youtube.com/user/Fitrangi" class="fa fa-youtube-square" title="Youtube"  target="_blank"></a>
 
-        <p>By Continuing past this page, you agree to
-            Terms of Service.<br>
-            All trademarks are properties
-            of their respective owners.</p>
+            <p>By Continuing past this page, you agree to
+                Terms of Service.<br>
+                All trademarks are properties
+                of their respective owners.</p>
 
-        <p>&copy;2012 Fitrangi<sup>TM</sup>. All right Reserved</p>
+            <p>&copy;2012 Fitrangi<sup>TM</sup>. All right Reserved</p>
 
-        <!--ul class="nav pull-right" style="position:fixed;bottom:0;right:2%;z-index:100;background: #337ab7;font-size:24px;border-top-left-radius:3px;border-top-right-radius:3px;">
-            <li><a href="#" title="Scroll to top"><i class="fa fa-arrow-up"></i></a></li>
-        </ul-->
-
-    </div>
+        </div>
 
 
-</section>
+    </section>
 
-<img id="loadingImage" class="exactCenter" src="/img/loading.gif"/>
+    <img id="loadingImage" class="exactCenter" src="/img/loading.gif"/>
+</footer>
+
+
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
@@ -354,6 +372,7 @@
 
     ga('create', 'UA-59043882-1', 'auto');
     ga('send', 'pageview');
+
 
 
 </script>

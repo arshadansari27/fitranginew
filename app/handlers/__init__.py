@@ -226,7 +226,7 @@ class NodeView(View):
                                 c_type = ICON_VIEW
                             else:
                                 c_type = GRID_VIEW
-                            entity_view =  NodeView.get_collection_card(m_name, c_type, NodeExtractor.factory(m_name).get_single("pk:%s" % id), {})
+                            entity_view =  NodeView.get_collection_card(m_name, ICON_VIEW, NodeExtractor.factory(m_name).get_single("pk:%s" % id), {})
                             context['entity_view'] = entity_view
 
             template = env.get_template(template_path)
