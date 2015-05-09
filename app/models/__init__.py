@@ -58,6 +58,10 @@ def new_object(sender, document, created):
     if created:
         document.on_create()
 
+    from app.models.content import Content
+    if hasattr(document, 'on_save')  and callable(document.on_save):
+        document.on_save()
+
 
 def update_slug(sender, document, type, title):
     if hasattr(document, 'id') and document.id:

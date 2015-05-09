@@ -1,5 +1,7 @@
 from ago import human
 from app.utils import convertLinks
+from bs4 import BeautifulSoup
+import requests, os
 
 __author__ = 'arshad'
 
@@ -83,7 +85,28 @@ class Content(ContentCommon, db.Document):
 
     @property
     def process_content(self):
+        """
+
+        soup = BeautifulSoup(self.content)
+        images = soup.findAll('img')
+        j = 0
+        values = {}
+        for i in images:
+            src = i.attrs['src']
+            rep = 'IMAGE_PATH_' + str(j)
+            i.attrs['src'] = rep
+            values[rep] = src
+            j += 1
+        new_content = str(soup)
+        soup = BeautifulSoup())
+        images = soup.findAll('img')
+        j = 0
+        for i in images:
+            i.attrs['src'] = values.get(i.attrs['src'])
+        return str(soup)
+        """
         return convertLinks(self.content.replace('\n', '<br/>'))
+
 
     @property
     def comments_count(self):
@@ -117,6 +140,33 @@ class Content(ContentCommon, db.Document):
         else:
             ActivityStream.push_content_to_stream(self)
 
+    def on_save(self):
+        soup = BeautifulSoup(self.content)
+        images = soup.findAll('img')
+        for i, image in enumerate(images):
+            src = image.attrs['src']
+            if (src.startswith('/')):
+                continue
+            elif src.startswith('http'):
+                data = requests.get(src).content
+                ext = src.split('/')[-1].split('.')[-1]
+            elif src.startswith('data:'):
+                typo, data = src.split(',')
+                ext = typo.split(';')[0].split('/')[1]
+                data = data.decode('base64')
+            else:
+                raise Exception('Invalid image')
+            base_path = os.getcwd() + '/app/assets'
+            generic_path = '/media/%s/%s' % (self.__class__.__name__.lower(), str(self.id))
+            file_path = "%s/%d.%s" % (generic_path, i, ext)
+            if not os.path.exists(base_path + generic_path):
+                os.makedirs(base_path + generic_path)
+            with open(base_path + file_path, 'wb') as _f:
+                _f.write(data)
+            image.attrs['src'] = file_path
+
+        self.content = str(soup)
+        self.save()
 
 @update_content.apply
 class Post(ContentCommon, db.Document):

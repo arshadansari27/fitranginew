@@ -1,6 +1,8 @@
-
+﻿
 body{
 	font-family: 'roboto', Arial, Helvetica, sans-serif;
+	min-height:100%;
+	position:relative;
 }
 .fitrangi-conversation .contact-section .contact-list::-webkit-scrollbar,
 .fitrangi-conversation .chat-section .chat-messages::-webkit-scrollbar{
@@ -2075,6 +2077,8 @@ ul.my-list-right li:before{
 	margin:0;
 	color:#767676;
 	font-family:'oswald', Arial, Helvetica, sans-serif;
+	height:45px;
+	line-height:1.4;
 }
 .fitrangi-thumb img{
 	max-width:100%; 
@@ -4562,11 +4566,25 @@ section.user-post{
 .product-details-tab > li:last-child {
   border-right:none;
 }
-
-
-
 .tab-content ul.product-features-list li, .tab-content #specification p{
 	line-height:1.7;
 	color:#848484;
 	font-size:14px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
