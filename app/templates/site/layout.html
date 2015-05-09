@@ -55,6 +55,8 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+
+    <script src="/js/autobahn.min.jgz"></script>
     <script src="/appjs/editors/main.js"></script>
     <script src="/appjs/editors/profile-edit.js"></script>
     <script src="/appjs/editors/post-edit.js"></script>
@@ -95,7 +97,7 @@
 
 </head>
 
-<body>
+<body data-logged-in-as="{% if user %}{{user.id}}{% else %}null{% endif %}">
 <div id="fb-root"></div>
 <script>
 
@@ -317,6 +319,7 @@
 <script src="/js/bootstrap-tagsinput.js"></script>
 <script src="/js/jquery.geocomplete.min.js"></script>
 <script src="/appjs/handler.js"></script>
+<script src="/appjs/async.js"></script>
 <script>
     $(function () {
         $('#loadingImage').hide();

@@ -66,10 +66,11 @@ def start_app():
     admin = flask_admin.Admin(app, 'Fitrangi Dashboard',index_view=MyAdminIndexView(), base_template='/admin/base_admin.html')
 
 
+state = os.environ.get('APP_STATE')
 
-
-start_app()
-from app.views.admin import *
-from app.views.site import *
+if not state or state != 'BACK':
+    start_app()
+    from app.views.admin import *
+    from app.views.site import *
 #from app.handlers.examples import *
 

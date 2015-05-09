@@ -195,27 +195,18 @@ class ChatMessage(db.Document):
             if p == profile or not p:
                 continue
             user_list[p] = u['count']
-        print '*' * 100, '\n', user_list
         return user_list
 
     @classmethod
     def get_message_between(cls, profile, another_profile, all=False):
-        chat_timestamp = ChatTimestamp.objects(profile=profile).first()
-
-        if not chat_timestamp:
-            chat_timestamp = ChatTimestamp(profile=profile)
-            chat_timestamp.last_checked = datetime.datetime(2015, 1, 1, 0, 0, 0, 0)
-        if all:
-            chats = list(reversed(ChatMessage.objects(__raw__=dict(profiles={'$all': [profile.id, another_profile.id]})).order_by('-created_timestamp').all()))
-        else:
-            chats = list(reversed(ChatMessage.objects(__raw__=dict(profiles={'$all': [profile.id, another_profile.id]}, created_timestamp={'$gte': chat_timestamp.last_checked})).order_by('-created_timestamp').all()))
+        chats = list(reversed(ChatMessage.objects(__raw__=dict(profiles={'$all': [profile.id, another_profile.id]})).order_by('-created_timestamp').limit(20).all()))
+        _chats = []
         for c in chats:
-            if c.author != profile:
-                c.receiver_read = True
-                c.save()
-
-        chat_timestamp.last_checked = datetime.datetime.now()
-        chat_timestamp.save()
+            if c.author == profile:
+                continue
+            c.receiver_read = True
+            c = c.save()
+            _chats.append(c)
         return chats
 
 

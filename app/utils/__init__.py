@@ -4,16 +4,12 @@ from functools import wraps
 from flask import g, redirect, request, url_for, abort
 from app.settings import MEDIA_FOLDER
 from rake import extract_keywords
-from app.utils.general import get_facets
 from PIL import Image
 import os, datetime, random
 from app import cache
 from bson.son import SON
 
 TAG_RE = re.compile(r'<[^>]+>')
-
-FACETS = get_facets()
-MEMOIZED_FACETS = {}
 
 _link = re.compile(r'(?:(http://)|(www\.))(\S+\b/?)([!"#$%&\'()*+,\-./:;<=>?@[\\\]^_`{|}~]*)(\s|$)', re.I)
 PAGE_LIMIT = 50

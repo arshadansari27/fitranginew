@@ -750,5 +750,4 @@ jQuery(document).ready(function ($) {
         window.App.profile.reset_counter(null, 'private', window.App.profile.update_counter);
      }
 
-    setInterval(window.App.profile.update_counter, 5000);
 });
