@@ -169,6 +169,21 @@ class Node(object):
             return '/img/Profile-Picture.jpg' if isinstance(self, Profile) else None
 
     @property
+    def icon_image_path(self):
+        path = str(self.path_cover_image) if hasattr(self, 'path_cover_image') and self.path_cover_image else '-'
+        if path and len(path) > 0 and os.path.exists(base_path + path):
+            return path
+        path = save_media_to_file(self, 'cover_image', 'cover')
+        if path:
+            self.path_cover_image = path
+            self.save()
+            return path
+        else:
+            from app.models.profile import Profile
+            return '/img/Profile-Picture.jpg' if isinstance(self, Profile) else None
+
+
+    @property
     def gallery_image_list(self):
         gallery_images = [u.image_path(self, i) for i, u in enumerate(self.image_gallery)]
         print '****', gallery_images
