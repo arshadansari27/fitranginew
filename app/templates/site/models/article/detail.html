@@ -27,7 +27,7 @@
 <hr class="clearfix divider">
 
 <section class="container">
-    <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 blogs-content">
+    <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 fitrangi-tags-list">
             <article class="text-left">
                 <span class="fs-20 pr-20 oswald middle">Posted in (Channels and Tags): </span>
@@ -41,17 +41,13 @@
         </div>
         <hr/>
         {% if model.get_videos_list() %}
-        <div class="col-sm-12 thumbnail">
+        <div class="col-md-12 col-sm-12 thumbnail">
             {{model.get_videos_list()|safe}}
         </div>
         <hr/>
         {% endif %}
-        <div clas="row">
-            <div class="col-md-12 col-sm-12">
-                <div class="container-fluid">
-                    {{model.process_content|safe}}
-                </div>
-            </div>
+        <div clas="col-md-12 col-sm-12 thumbnail">
+            {{model.process_content|safe}}
         </div>
         <br/>
         <hr/>
