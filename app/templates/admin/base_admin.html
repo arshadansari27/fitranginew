@@ -108,13 +108,12 @@
         $(document).ready(function(){
           if ($(".geo-complete") != undefined) {
               $(".geo-complete").geocomplete().bind("geocode:result", function (event, result) {
-                console.log("Result: " + JSON.stringify(result));
                 var name = result.formatted_address;
-                var lat = result.geometry.location.k;
-                var lon = result.geometry.location.D;
-                $('input[type="hidden"][name="geo_location_name"]').val(name);
-                $('input[type="hidden"][name="geo_location_lat"]').val(lat);
-                $('input[type="hidden"][name="geo_location_long"]').val(lon);
+			    var lat  = result.geometry.location.A;
+			    var lon  = result.geometry.location.F;
+                $('#geo_location_name').val(name);
+                $('#geo_location_lat').val(lat);
+                $('#geo_location_long').val(lon);
 
               });
           }
