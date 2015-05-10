@@ -32,6 +32,7 @@ cache = Cache(app,config={'CACHE_TYPE': 'simple'})
 admin = None
 api = MongoRest(app)
 app.jinja_env.cache = {}
+#app.config['ASSETS_DEBUG'] = True
 assets = Environment(app)
 
 def start_app():

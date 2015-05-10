@@ -15,9 +15,17 @@
 
     {% assets filters="cssmin", output="app/packed.css", "css/bootstrap.css",
             "css/bootstrap-tagsinput.css", "css/font-awesome.min.css", "css/font-google1.css", "css/font-google2.css",
-            "css/font-google3.css", "css/my-style.css", "css/menus.css", "css/poplr-pro.css", "css/fotorama.css",
-            "css/bootstrap-dialog.min.css", "css/summernote.css", "css/summernote-bs3.css" %}
+            "css/font-google3.css", "css/fotorama.css","css/bootstrap-dialog.min.css", "css/summernote.css", "css/summernote-bs3.css" %}
         <link href="{{ ASSET_URL }}" rel="stylesheet">
+    {% endassets %}
+    {% assets filters="cssmin", output="app/my.css", "css/my-style.css", "css/menus.css", "css/poplr-pro.css" %}
+        <link href="{{ ASSET_URL }}" rel="stylesheet">
+    {% endassets %}
+
+    <script src="/js/jquery.min.js"></script>
+    {% assets filters="jsmin", output="app/my-lib.js",
+        "appjs/editors/main.js", "appjs/editors/profile-edit.js", "appjs/editors/post-edit.js", "appjs/editors/content-edit.js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
     <!--
     <link href="/css/bootstrap-tagsinput.css" rel="stylesheet">
@@ -42,17 +50,13 @@
     {% block header_scripts %}{% endblock %}
     {% block header_css %}{% endblock %}
 
-    <script src="/js/jquery.min.js"></script>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    {% assets filters="jsmin", output="app/packed.js",
-          "appjs/editors/main.js", "appjs/editors/profile-edit.js", "appjs/editors/post-edit.js", "appjs/editors/content-edit.js" %}
-        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-    {% endassets %}
+
     <!--
     <script src="/appjs/editors/main.js"></script>
     <script src="/appjs/editors/profile-edit.js"></script>
@@ -290,23 +294,31 @@
 </footer>
 
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="/js/summernote.js"></script>
-<script src="/js/autobahn.min.jgz"></script>
-<script src="/js/googlemaps.js"></script>
-<script src="/js/fotorama.js"></script>
 <script src="/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap-dialog.min.js"></script>
+<script src="/js/css3-mediaqueries.js"></script>
 <script src="/js/respond.min.js"></script>
 <script src="/js/html5shiv.js"></script>
 <script src="/js/modernizr.custom.85647.js"></script>
-<script src="/js/css3-mediaqueries.js"></script>
-<script src="/js/bootstrap-dialog.min.js"></script>
-<script src="/js/bootstrap-tagsinput.js"></script>
+<script src="/js/fotorama.js"></script>
+<script src="/js/summernote.min.js"></script>
+<script src="/js/autobahn.min.jgz"></script>
 <script src="/js/jquery.geocomplete.min.js"></script>
+<script src="/js/googlemaps.js"></script>
+<!-- Bootstrap core JavaScript
+<script src="/js/bootstrap-tagsinput.js"></script>
+-->
+
+{% assets filters="jsmin", output="app/my-handler.js",
+    "appjs/handler.js", "appjs/async.js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+<!--
 <script src="/appjs/handler.js"></script>
 <script src="/appjs/async.js"></script>
+-->
+
 <script>
     $(function () {
         $('#loadingImage').hide();
