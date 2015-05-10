@@ -6,6 +6,7 @@ from flask.ext.cache import Cache
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.mandrill import Mandrill
 from flask.ext.mongorest import MongoRest
+from flask.ext.assets import Environment
 from app import settings
 from pymongo import read_preferences
 
@@ -31,6 +32,7 @@ cache = Cache(app,config={'CACHE_TYPE': 'simple'})
 admin = None
 api = MongoRest(app)
 app.jinja_env.cache = {}
+assets = Environment(app)
 
 def start_app():
     global admin
