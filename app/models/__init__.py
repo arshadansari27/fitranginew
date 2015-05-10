@@ -116,6 +116,8 @@ def save_media_to_file(obj, attr, name, path_obj=None):
         img = Image.open(image)
         _format = img.format
         _format = _format.lower()
+        if _format == 'ico':
+            _format = 'jpeg'
 
         dir_list = ['media', path_obj.__class__.__name__.lower(), str(path_obj.id)]
         for i in xrange(len(dir_list)):
@@ -172,6 +174,9 @@ class Node(object):
     def cover_image_path_small(self):
         path = self.cover_image_path if self.cover_image_path else None
         if path is None:
+            from app.models.profile import Profile
+            if isinstance(self, Profile):
+                return '/img/Profile-Picture-thumbnail.jpg' if isinstance(self, Profile) else None
             return ''
         steps = path.split('/')
         full_name = steps[-1]
