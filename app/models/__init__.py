@@ -1,7 +1,7 @@
 #from models import *
 import datetime
 from PIL import Image
-
+from fractions import Fraction
 from ago import human
 import cStringIO
 from mongoengine import signals
@@ -167,6 +167,37 @@ class Node(object):
         else:
             from app.models.profile import Profile
             return '/img/Profile-Picture.jpg' if isinstance(self, Profile) else None
+
+    @property
+    def cover_image_path_small(self):
+        path = self.cover_image_path if self.cover_image_path else None
+        if path is None:
+            return ''
+        steps = path.split('/')
+        full_name = steps[-1]
+        ux = full_name.split('.')
+        if len(ux) < 2:
+            print 'Something went wrong with thumbnail image path here....'
+            return ''
+        name, ext = ux[0], ux[1]
+        steps[-1] = name + '-thumbnail.' + ext
+        small_path = '/'.join(steps)
+        if not os.path.exists(small_path):
+            file_path = base_path + path
+            im  = Image.open(file_path)
+            format = im.format
+            x, y = im.size
+            f = Fraction(x, y)
+            num = f.numerator
+            den = f.denominator
+            s = 128 * num / den
+            im.thumbnail((s, 128), Image.ANTIALIAS)
+            im.save(base_path + small_path, format)
+        return small_path
+
+    @property
+    def icon_image_path_small(self):
+        return self.cover_image_path_small
 
     @property
     def icon_image_path(self):

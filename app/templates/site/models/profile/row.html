@@ -1,6 +1,6 @@
 <li class="nav col-sm-6 col-xs-12">
     <article class="fitrangi-profile">
-        <a href="{{model.slug}}"><img src="{{model.cover_image_path}}" class="{% if not model.is_business_profile %}img-circle p-5{% endif %} pull-left" style="height:60px;width:60px;"></a>
+        <a href="{{model.slug}}"><img src="{{model.cover_image_path_small}}" class="{% if not model.is_business_profile %}img-circle p-5{% endif %} pull-left" style="height:60px;width:60px;"></a>
         {% if user %}
             {% if model.id != user.id and model in user.following %}
                 <a data-action="unfollow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" title="Unfollow" class="btn btn-default btn-xs mt-10 blue pull-right"><i class="fa fa-user fs-20"></i><i class="fa fa-check"></i></a>

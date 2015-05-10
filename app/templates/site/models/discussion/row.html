@@ -2,9 +2,9 @@
     <div class="media-left">
       <a href="#">
             {% if model.author and model.author.type and model.author.type|length > 0 and model.author.type[0].name == 'Enthusiast' %}
-            <img class="media-object img-circle img-responsive p-10" src="{{ model.author.cover_image_path }}" width="100"  alt="...">
+            <img class="media-object img-circle img-responsive p-10" src="{{ model.author.cover_image_path_small }}" width="100"  alt="...">
             {% else %}
-            <img class="media-object img-responsive p-10" src="{{ model.author.cover_image_path }}" width="100"  alt="...">
+            <img class="media-object img-responsive p-10" src="{{ model.author.cover_image_path_small }}" width="100"  alt="...">
             {% endif %}
       </a>
     </div>
