@@ -22,11 +22,6 @@
         <link href="{{ ASSET_URL }}" rel="stylesheet">
     {% endassets %}
 
-    <script src="/js/jquery.min.js"></script>
-    {% assets filters="jsmin", output="app/my-lib.js",
-        "appjs/editors/main.js", "appjs/editors/profile-edit.js", "appjs/editors/post-edit.js", "appjs/editors/content-edit.js" %}
-        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-    {% endassets %}
     <!--
     <link href="/css/bootstrap-tagsinput.css" rel="stylesheet">
 
@@ -66,6 +61,12 @@
 </head>
 
 <body data-logged-in-as="{% if user %}{{user.id}}{% else %}null{% endif %}">
+    <script src="/js/jquery.min.js"></script>
+    {% assets filters="jsmin", output="app/my-lib.js",
+        "appjs/editors/main.js", "appjs/editors/profile-edit.js", "appjs/editors/post-edit.js", "appjs/editors/content-edit.js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+
 <div class="wrap-site">
     <div id="fb-root"></div>
     <script>
