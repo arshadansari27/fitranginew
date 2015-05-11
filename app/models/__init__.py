@@ -216,7 +216,7 @@ class Node(object):
             return path
         else:
             from app.models.profile import Profile
-            return '/img/Profile-Picture.jpg' if isinstance(self, Profile) else None
+            return '/img/Profile-Picture2.jpg' if isinstance(self, Profile) else None
 
 
     @property

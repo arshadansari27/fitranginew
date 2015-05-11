@@ -20,6 +20,8 @@ jQuery(document).ready(function ($) {
     };
 
     var show_login_dialog = function() {
+        window.location.href = '/login?target=' + window.location.href;
+        /*
         window.$loginDialog = new BootstrapDialog({
             size: BootstrapDialog.SIZE_WIDE,
             title: "Sign in",
@@ -27,6 +29,7 @@ jQuery(document).ready(function ($) {
         });
         window.$loginDialog.realize();
         window.$loginDialog.open();
+        */
     };
 
     App.show_login = function(){ show_login_dialog(); };

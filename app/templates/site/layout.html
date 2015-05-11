@@ -22,25 +22,6 @@
         <link href="{{ ASSET_URL }}" rel="stylesheet">
     {% endassets %}
 
-    <!--
-    <link href="/css/bootstrap-tagsinput.css" rel="stylesheet">
-
-    <link href="/css/font-awesome.min.css" rel="stylesheet">
-
-    <link href='/css/font-google1.css' rel='stylesheet' type='text/css'>
-    <link href='/css/font-google2.css' rel='stylesheet' type='text/css'>
-    <link href='/css/font-google3.css' rel='stylesheet' type='text/css'>
-
-    <link href="/css/my-style.css" rel="stylesheet">
-    <link href="/css/menus.css" rel="stylesheet">
-    <link href="/css/poplr-pro.css" rel="stylesheet">
-    <link href="/css/fotorama.css" rel="stylesheet">
-
-
-    <link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css"/>
-    <link href="/css/summernote.css" rel="stylesheet" type="text/css"/>
-    <link href="/css/summernote-bs3.css" rel="stylesheet" type="text/css"/>
-    -->
 
     {% block header_scripts %}{% endblock %}
     {% block header_css %}{% endblock %}
@@ -50,18 +31,11 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script src="/js/jquery.min.js"></script>
 
-
-    <!--
-    <script src="/appjs/editors/main.js"></script>
-    <script src="/appjs/editors/profile-edit.js"></script>
-    <script src="/appjs/editors/post-edit.js"></script>
-    <script src="/appjs/editors/content-edit.js"></script>
-    -->
 </head>
 
 <body data-logged-in-as="{% if user %}{{user.id}}{% else %}null{% endif %}">
-    <script src="/js/jquery.min.js"></script>
     {% assets filters="jsmin", output="app/my-lib.js",
         "appjs/editors/main.js", "appjs/editors/profile-edit.js", "appjs/editors/post-edit.js", "appjs/editors/content-edit.js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
@@ -119,25 +93,37 @@
                         </li-->
                     </ul>
                     <ul class="top-icons nav navbar-nav navbar-right pull-right">
-                        <li>
-                            <div class="top-icon"><a class="" href="/community/profile" title="Members"><i
-                                    class="fa fa-users"></i></a></div>
-                        </li>
                         {% if not (user and user.id) %}
                         <li>
-                            <div class="top-icon"><a class="show_login" href="#" title="Login"><i class="fa fa-key"></i></a>
+                            <a class="btn btn-default" href="/community/profile" title="Members"><i  class="fa fa-users"></i>&nbsp; All Members</a>&nbsp;
+                        </li>
+                        <li>
+                            <a class="btn btn-default" href="/login" title="Login"><i class="fa fa-key"></i>&nbsp; Login</a>&nbsp;
+                        </li>
+                        <li>
+                            <a class="btn btn-default" href="/register" title="Register"><i
+                                    class="fa fa-user">+</i>&nbsp; Register</a>&nbsp;
+                        </li>
+                        {% elif user and user.id %}
+                        <li>
+                            <div class="top-icon">
+                                <a href="/community/my" title="Notifications"><i  class="fa fa-bell"></i></a><span id="public-activity-count">{{public_activity_count}}</span>
                             </div>
                         </li>
                         <li>
-                            <div class="top-icon"><a class="show_signup" href="#" title="Register"><i
-                                    class="fa fa-user">+</i></a></div>
+                            <div class="top-icon"><a href="/messaging" title="Messages"><i
+                                    class="fa fa-envelope"></i></a><span id="private-activity-count">{{private_activity_count}}</span>
+                            </div>
                         </li>
-                        {% elif user and user.id %}
+                    </ul>
+                    <ul class="top-icons nav navbar-nav navbar-right pull-right">
+                        <li>
+                            <a class="btn btn-default" href="/community/profile" title="Members"><i  class="fa fa-users"></i>&nbsp; All Members</a>&nbsp;
+                        </li>
                         <li class="dropdown">
-                            <div class="top-icon">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <img src="{{user.cover_image_path}}" class="radius-20 profile-pic" alt="profile"
-                                         width="40">
+                                <a class="btn btn-default" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <img src="{{user.cover_image_path}}" class="" alt="profile"
+                                         height="18">{{user.name}}
                                     <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu pull-right">
@@ -168,18 +154,8 @@
                                     {% endif %}
                                     <li><a href="/logout"><i class="fa fa-lock"></i> Log Out</a></li>
                                 </ul>
-                            </div>
                         </li>
-                        <li>
-                            <div class="top-icon"><a href="/community/my" title="Notifications"><i
-                                    class="fa fa-bell"></i></a><span id="public-activity-count">{{public_activity_count}}</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="top-icon"><a href="/messaging" title="Messages"><i
-                                    class="fa fa-envelope"></i></a><span id="private-activity-count">{{private_activity_count}}</span>
-                            </div>
-                        </li>
+
                         {% endif %}
                     </ul>
 
@@ -295,7 +271,7 @@
 </footer>
 
 
-<script src="/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap.min.js"></script><script src='http://maps.googleapis.com/maps/api/js?v=3&sensor=false&amp;libraries=places'></script>
 <script src="/js/bootstrap-dialog.min.js"></script>
 <script src="/js/css3-mediaqueries.js"></script>
 <script src="/js/respond.min.js"></script>
@@ -303,11 +279,10 @@
 <script src="/js/modernizr.custom.85647.js"></script>
 <script src="/js/fotorama.js"></script>
 <script src="/js/summernote.min.js"></script>
-<script src="/js/autobahn.min.jgz"></script>
-<script src="/js/jquery.geocomplete.min.js"></script>
-<script src="/js/googlemaps.js"></script>
-<!-- Bootstrap core JavaScript
 <script src="/js/bootstrap-tagsinput.js"></script>
+<script src="/js/jquery.geocomplete.min.js"></script>
+<script src="/js/autobahn.min.jgz"></script>
+<!-- Bootstrap core JavaScript
 -->
 
 {% assets filters="jsmin", output="app/my-handler.js",

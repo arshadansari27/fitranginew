@@ -29,7 +29,9 @@ COLLECTION_PATHS = {
     TRIP: 'site/pages/searches/trips',
     "explore": 'site/pages/landings/home',
     "community": 'site/pages/landings/community',
-    'about': 'site/pages/landings/about'
+    'about': 'site/pages/landings/about',
+    'login': 'site/pages/landings/login',
+    'register': 'site/pages/landings/register'
 }
 
 WALL_IMAGE_STYLE = "background:  linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url(%s) no-repeat center center;background-size: cover;"
@@ -294,6 +296,21 @@ class PageManager(object):
         context.update(Page.factory(model_name, 'landing').get_context(context))
         html = template.render(**context)
         return 'Fitrangi: India\'s complete adventure portal. Find what you are looking for', html, context
+
+    @classmethod
+    def get_common_title_and_page(cls, page, **kwargs):
+        from app.views import env
+        if page == 'login':
+            text = 'Login to'
+        elif page == 'register':
+            text = 'Register with'
+        else:
+            raise Exception("Invalid page type")
+        template_path = COLLECTION_PATHS.get(page) + '.html'
+        template = env.get_template(template_path)
+        context = kwargs if kwargs and len(kwargs) > 0 else {}
+        html = template.render(**context)
+        return '%s fitrangi.com' % text, html, context
 
 
 class Page(object):

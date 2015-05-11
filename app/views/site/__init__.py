@@ -1,12 +1,14 @@
+from app.handlers.messaging import send_single_email
 import os, random
 from jinja2 import Template
 import simplejson as json
 from PIL import Image
 from app import app
-from flask import render_template, request, g, redirect, jsonify, url_for
+from flask import render_template, request, g, redirect, jsonify, url_for, session
 from app.handlers.editors import NodeEditor
 from app.handlers import NodeCollectionFactory, NodeExtractor
 from app.models import Node, NodeFactory, ACTIVITY, ADVENTURE, ARTICLE, DISCUSSION, PROFILE, EVENT, TRIP
+from app.models.profile import Profile, ProfileType
 from app.utils.search_helper import listing_helper, node_helper
 from app.utils import login_required, all_tags, convert_query_to_filter
 from app.handlers import  EditorView, NodeView, Page, CollectionView, PageManager
@@ -15,6 +17,64 @@ from app.handlers import (activity_extractor, adventure_extractor, article_extra
 from app.views.site.menus import view_menu
 
 (MODEL_DETAIL_VIEW, MODEL_LIST_ROW_VIEW, MODEL_LIST_GRID_VIEW, MODEL_LIST_POD_VIEW) = ('detail', 'row', 'grid', 'pod')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login_page():
+    if request.method == 'POST':
+        email = request.form.get('email', None)
+        password = request.form.get('password', None)
+        #remember = request.form.get('remember', None)
+        profile = Profile.authenticate(email, password)
+        if profile and profile.id:
+            session['user'] = str(profile.id)
+            return jsonify(dict(status='success', message='Successfully logged in.', node=str(profile.id)))
+        return jsonify(dict(status='error', message='Failed to login. Please try again.'))
+
+    if hasattr(g, 'user') and g.user is not None:
+        return redirect('/explore')
+    from app.views import force_setup_context
+    target = request.args.get('target', None)
+
+    context = force_setup_context({})
+    context['referrer'] = target if target else request.referrer
+    title, card, context = PageManager.get_common_title_and_page('login', **context)
+    context['title'] = title
+    context['card']  = card
+    print '[*] Target', target
+    return render_template('site/layouts/empty_layout.html', **context)
+
+@app.route('/register', methods=['GET', 'POST'])
+def registration():
+    if request.method == 'POST':
+        name = request.form.get('name', None)
+        email = request.form.get('email', None)
+        password = request.form.get('password', None)
+        confirm = request.form.get('confirm', None)
+        if password != confirm:
+            return jsonify(dict(status='error', message='Passwords do not match'))
+        type = ProfileType.objects(name__icontains='subscription').first()
+        if Profile.objects(email__iexact=email, type__nin=[str(type.id)]).first():
+            return jsonify(dict(status='error', message='Email already exists, have you forgotten your password?'))
+        type = ProfileType.objects(name__iexact='Enthusiast').first()
+        profile = Profile(name=name, email=email, type=[type], roles=['Basic User'])
+        profile.password  = password
+        profile.save()
+        if profile and profile.id:
+            session['user'] = str(profile.id)
+            mail_data = render_template('notifications/successfully_registered.html', user=profile)
+            send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=mail_data)
+            return jsonify(dict(status='success', message='Profile created and logged in.', node=str(profile.id)))
+        return jsonify(dict(status='error', message='Failed to register. Please try again.'))
+    if hasattr(g, 'user') and g.user is not None:
+        return redirect('/explore')
+    from app.views import force_setup_context
+    title, card, context = PageManager.get_common_title_and_page('register')
+    context = force_setup_context(context)
+    context['title'] = title
+    context['card']  = card
+    context['referrer'] = request.referrer
+    return render_template('site/layouts/empty_layout.html', **context)
+
 
 
 @app.route('/write/<model_name>')

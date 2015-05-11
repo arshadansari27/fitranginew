@@ -1,0 +1,159 @@
+<section class="container-fluid p-0">
+    <div>
+
+        <!-- Top content -->
+
+
+        <div class="container">
+
+
+            <div class="row-fluid">
+                <div class="col-sm-8 col-md-6 col-md-offset-3 col-sm-offset-2 social-login">
+
+                    <h3 class="light oswald uppercase text-center">Sign In With</h3>
+
+                    <div class="social-login-buttons">
+                        <button type="button" class="btn btn-link-1 btn-link-1-facebook" href="#" onclick="fb_login();"> <i class="fa fa-facebook"></i> Facebook</button>
+
+                        <button type="button" class="btn btn-link-1 btn-link-1-google-plus g-signin" id="signinButton" data-callback="onSignInCallback"
+                    data-clientid="445628400297-si4iclsg5i2imd3parigb643lep5iis7.apps.googleusercontent.com"
+                    data-cookiepolicy="single_host_origin"
+                    data-scope="email profile openid https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.profile">
+                            <i class="fa fa-google-plus"></i> Google Plus
+                        </button>
+                    </div>
+
+                    <h3 class="light text-center">- OR -</h3>
+
+                </div>
+            </div>
+
+
+            <div class="col-sm-8 col-md-6 col-md-offset-3 col-sm-offset-2 form-box">
+
+                <div class="form-head">
+                    <div class="form-heading">
+                        <h3>Login to our site</h3>
+
+                        <p class="lightgrey">enter your username and password to log on:</p>
+                    </div>
+                    <div class="form-icon">
+                        <i class="fa fa-key"></i>
+                    </div>
+
+                </div>
+
+                <div class="form-body">
+                    <div id="error">
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <div id="message"></div>
+                        </div>
+                    </div>
+                    <form id="loginform" action="" method="post" class="login-form" role="form">
+                        <div class="form-group">
+                            <label class="sr-only">Email</label>
+                            <input id="login-username" type="text" required data-validation-required-message="Please enter your email." class="form-control" style="width: 100%" name="username" placeholder="email@xyz.com"/>
+                            <input type="hidden" data-history="{{referrer}}"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only">Password</label>
+                            <input id="login-password" type="password" required data-validation-required-message="Please enter your Password." class="form-control" name="password" style="width: 100%" placeholder="Your Password">
+                        </div>
+
+                        <div class="form-group pull-right">
+
+                            <a href="#" class="show_forgot_password" style="display:inline">Forgot Password?</a></label>
+                        </div>
+
+                        <!--div class="form-group">
+                            <label style="width: inherit; cursor: default; text-align: center;">
+                                <input type="checkbox"> Remember me </label>
+                        </div-->
+
+                        <button id="btn-login1" type="button" class="btn btn-primary" onlick="javascript:alert('wsomthing');"><i class="fa fa-user-md"></i>&nbsp;Sign <strong>In</strong></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+<script>
+    $("#error").hide();
+    $("#btn-login1").click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var email = $('#login-username').val();
+        var password = $("#login-password").val();
+        var remember =  false;
+        $.ajax({
+            type: 'POST',
+            url: '/login',
+            data: {
+                email: email,
+                password: password,
+                remember: remember
+            }
+        }).done(function (msg) {
+            if (msg.status == 'success') {
+                var location = null;
+                if ($('input[data-history]') != undefined && $('input[data-history]').val() != undefined && $('input[data-history]').val().length > 0) {
+                    location = $('input[data-history]').val();
+                } else {
+                    location = '/explore';
+                }
+                window.location.href= location;
+            } else {
+                $("#message").html(msg.message);
+                $("#error").show();
+            }
+        });
+    });
+    $(".show_forgot_password").on('click', function(e) {
+        e.stopPropagation();
+        window.$forgotpasswordDialog = new BootstrapDialog({
+            title: "Forgot Password",
+            message: $('<div></div>').load('/forgot-password-modal'),
+            buttons: [
+                {
+                    label: 'Reset Password',
+                    cssClass: 'btn-primary',
+                    action: function(dialogItself) {
+                        var email = $('#forgot-password-email').val();
+                        console.log("Forgot password: " + email);
+                        $.ajax({
+                            type: 'POST',
+                            url: '/forgot_password',
+                            data: {
+                                email: email
+                            }
+                        }).done(function (msg) {
+                            if (msg.status == 'success') {
+                                $("#success-message").html(msg.message);
+                                $("#fp-success").show();
+                                $("#forgotpassword").hide();
+                                dialogItself.close();
+                            } else {
+                                $("#error-message").html(msg.message);
+                                $("#fp-error").show();
+                            }
+                        });
+                    }
+                },
+                {
+                    label: 'Close',
+                    action: function (dialogItself) {
+                        dialogItself.close();
+                    }
+                }
+            ]
+        });
+        window.$forgotpasswordDialog.realize();
+        window.$forgotpasswordDialog.open();
+        if (window.$loginDialog != undefined || window.$loginDialog != null) {
+            window.$loginDialog.close();
+        }
+    });
+</script>
