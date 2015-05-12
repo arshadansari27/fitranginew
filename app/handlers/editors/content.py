@@ -94,7 +94,7 @@ def __edit(node, type, data):
     obj.save()
     return obj
 
-@response_handler('Successfully published the content', 'Failed to publish')
+@response_handler('Thank you for posting a discussion. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to publish')
 def publish(node, type):
     if not node or not type:
         raise Exception("invalid parameters")
