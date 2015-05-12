@@ -1,7 +1,7 @@
 <div class="{% block grid_size %}col-lg-4 col-md-4 col-sm-6 col-xs-12{% endblock %}">
   <div class="thumbnail">
         {% if model.cover_image_path and  model.cover_image_path|length > 0 %}
-        <a href="{{model.slug}}"><img src="{{model.cover_image_path_small}}" alt="..."></a>
+        <!--a href="{{model.slug}}"><img src="{{model.cover_image_path_small}}" alt="..."></a-->
         {% else %}
         <!--a href="{{model.slug}}"><img src="/images/discussion-banner.jpg" alt="..."></a-->
         {% endif %}
