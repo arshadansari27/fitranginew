@@ -1,24 +1,26 @@
 <div class="{% block grid_size %}col-lg-4 col-md-4 col-sm-6 col-xs-12{% endblock %}">
-    <div class="thumbnail">
-       <a class="text-muted" href="{{model.slug}}"><img src="{{model.cover_image_path_small}}"  alt="..."></a>
+    <div class="thumbnail" style="overflow: auto;">
+       <div style="vertical-align: middle;">
+           <img src="{{model.cover_image_path_small}}"  alt="{{model.name}}" style="width:100%;">
+       </div>
 
         <div class="caption captop">
             <article>
-                <h4>{% set reviews_count=model.reviews_count %}{% if reviews_count > 0 %}{{reviews_count}} Reviews{% else %}Not reviewed yet{% endif %}</h4>
+                <h4>{% set reviews_count=model.reviews_count %}{% if reviews_count > 0 %}{{reviews_count}} Reviews{% else %}Write review{% endif %}</h4>
                 <a href="" class="btn rating-{{model.extremity|lower}}">{{model.extremity}}</a>
             </article>
         </div>
         <div class="caption capbottom">
             {% if user %}
                 {% if not model in user.accomplished_adventure %}
-                    <a href="#" class="btn btn-default" data-action="add-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-check"></span>&nbsp;</a>
+                    <a href="#" class="btn btn-default hoverable" data-action="add-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}" role="button" data-placement="right" data-toggle="popover" data-content="Add to accomplished" data-trigger="hover"><span class="fa fa-check grey"></span>&nbsp; Done</a>
                 {% else %}
-                    <a href="#" class="btn btn-default" data-action="remove-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-check orange"></span>&nbsp;</a>
+                    <a href="#" class="btn btn-default hoverable" data-action="remove-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}" role="button" data-placement="right" data-toggle="popover" data-content="Remove from accomplished" data-trigger="focus"><span class="fa fa-check"></span>&nbsp; Done</a>
                 {% endif %}
                 {% if not model in user.wish_list_adventure %}
-                    <a href="#" class="btn btn-default" data-action="add-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-star"></span> </a>
+                    <a href="#" class="btn btn-default hoverable" data-action="add-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}" role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Add to wish list" data-trigger="hover"><span class="fa fa-star grey"></span>&nbsp; Wish list</a>
                 {% else %}
-                    <a href="#" class="btn btn-default" data-action="remove-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-star orange"></span> </a>
+                    <a href="#" class="btn btn-default hoverable" data-action="remove-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}" role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Remove from wish list" data-trigger="hover"><span class="fa fa-star">&nbsp; Wish list</span> </a>
                 {% endif %}
             {% endif %}
         </div>
