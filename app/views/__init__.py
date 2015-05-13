@@ -63,17 +63,19 @@ def get_menu_selection(request_path):
 
 
 
-    class Menu(object):
-        def __init__(self, top, main, inner):
-            self.app_name = top
-            self.main_menu = main
-            self.inner = inner
-
-        def __repr__(self):
-            return "%s -> %s -> %s" % (self.app_name, self.main_menu, self.inner)
 
     menu = Menu(top, main, inner)
     return menu
+
+class Menu(object):
+    def __init__(self, top, main, inner):
+        self.app_name = top
+        self.main_menu = main
+        self.inner = inner
+
+    def __repr__(self):
+        return "%s -> %s -> %s" % (self.app_name, self.main_menu, self.inner)
+
 
 from .common import *
 from .messaging import *

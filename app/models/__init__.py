@@ -236,15 +236,17 @@ class Node(object):
     def since(self):
         return human(self.created_timestamp, precision=1)
 
-    """
     @property
-    def description(self):
-        return convertLinks(self._description)
+    def name_short(self):
+        if hasattr(self, 'name') and len(self.name) > 40:
+            return self.name[:40] + '...'
+        return self.name
 
-    @description.setter
-    def description(self, new_value):
-        self._description = new_value
-    """
+    @property
+    def title_short(self):
+        if hasattr(self, 'title') and len(self.title) > 35:
+            return self.title[:35] + '...'
+        return self.title
 
     @classmethod
     def get_by_id(cls, id):

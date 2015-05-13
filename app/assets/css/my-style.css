@@ -577,7 +577,8 @@ min-height: 50px;}
 .btn-noti{
 	padding-right:0px !important;
 	border-radius: 10px;
-    background: transparent;
+        background: #D9D9D9;
+	color:#000;
 }
 .btn-noti:hover, .btn-noti:focus{
 	color:#fff;

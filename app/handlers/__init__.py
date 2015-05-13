@@ -422,7 +422,8 @@ class SearchPage(Page):
         elif self.model_name == DISCUSSION:
             featured = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, category='featured').get_card(context)
             latest = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, category='latest').get_card(context)
-            return dict(featured=featured, latest=latest)
+            advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, fixed_size=3).get_card(context)
+            return dict(featured=featured, latest=latest, advertisement_list=advertisement_list)
         elif self.model_name == EVENT:
             return dict(events_list=NodeCollectionFactory.resolve(EVENT, ROW_VIEW).get_card(context))
         elif self.model_name == TRIP:
