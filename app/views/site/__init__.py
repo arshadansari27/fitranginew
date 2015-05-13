@@ -14,7 +14,6 @@ from app.utils import login_required, all_tags, convert_query_to_filter
 from app.handlers import  EditorView, NodeView, Page, CollectionView, PageManager
 from app.handlers import (activity_extractor, adventure_extractor, article_extractor, discussion_extractor,
                             profile_extractor, event_extractor, trip_extractor)
-from app.views.site.menus import view_menu
 
 (MODEL_DETAIL_VIEW, MODEL_LIST_ROW_VIEW, MODEL_LIST_GRID_VIEW, MODEL_LIST_POD_VIEW) = ('detail', 'row', 'grid', 'pod')
 

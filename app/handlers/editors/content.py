@@ -1,8 +1,9 @@
 from app.handlers.editors import NodeEditor, response_handler
 from app.handlers.extractors import NodeExtractor
 from app.models import POST, CHANNEL, DISCUSSION, ARTICLE, Node, NodeFactory
+from app.models.profile import ProfileType, Profile
 from app.models.streams import ActivityStream
-from flask import g, jsonify
+from flask import g, jsonify, render_template
 import os
 
 __author__ = 'arshad'
@@ -105,6 +106,11 @@ def publish(node, type):
         return content
     content.published = True
     content.save()
+    if content.published and not hasattr(content, 'admin_published') and not content.admin_published:
+        profile = Profile.objects(roles__in=['Admin']).first()
+        mail_data = render_template('notifications/content_posted_admin.html', user=profile, content=content)
+        from app.handlers.messaging import send_single_email
+        send_single_email("[Fitrangi] Content awaiting approval", to_list=[profile.email], data=mail_data)
     ActivityStream.push_content_to_stream(content)
     return content
 

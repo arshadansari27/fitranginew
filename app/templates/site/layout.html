@@ -169,11 +169,51 @@
                                                                                         data-user-id="{{user.id}}">My
                             Page</a>
                         </li>
-                        <li class="inner-level-dropdown dropdown {% if menu.main_menu == 'activity' %}active{% endif %}">
+                        <li class="inner-level-dropdown dropdown {% if menu.main_menu in ['activity', 'activities'] %}active{% endif %}">
                             <a id="subdropdown1" href="#" class="dropdown-toggle">Activities<b class="caret"></b></a>
-                            <ul class="dropdown-menu multi-column columns-3" aria-labelledby="subdropdown1" role="menu">
-                                <div class="row">
-                                    {{activity_menu|safe}}
+                            <ul class="dropdown-menu multi-column columns-3" aria-labelledby="subdropdown1" role="menu" style="margin-top: 12px;">
+                                <div class="row" style="padding:10px;">
+                                    <div class="col-sm-4 col-xs-12">
+                                        <ul class="multi-column-dropdown" style="margin: 0; padding: 0px;">
+                                            <li style="text-align: center;"><strong><u>Air Sports</u></strong></li>
+                                            <li class="divider"></li>
+                                            <li class="{% if menu.inner == 'Bungee jumping' %}active{% endif %}"><a href="/explore/activity?name=Bungee jumping">Bungee jumping</a></li>
+                                            <li class="{% if menu.inner == 'Hot Air Ballooning' %}active{% endif %}"><a href="/explore/activity?name=Hot Air Ballooning">Hot Air Ballooning</a></li>
+                                            <li class="{% if menu.inner == 'Paragliding' %}active{% endif %}"><a href="/explore/activity?name=Paragliding">Paragliding</a></li>
+                                            <li class="{% if menu.inner == 'Sky Diving' %}active{% endif %}"><a href="/explore/activity?name=Sky Diving">Sky Diving</a></li>
+                                            <li class="{% if menu.inner == 'Zip Line' %}active{% endif %}"><a href="/explore/activity?name=Zip Line">Zip Line</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-sm-4 col-xs-12">
+                                        <ul class="multi-column-dropdown" style="margin: 0; padding: 0px;">
+                                            <li style="text-align: center;"><strong><u>Water Sports</u></strong></li>
+                                            <li class="divider"></li>
+                                            <li class="{% if menu.inner == 'Kayaking' %}active{% endif %}"><a href="/explore/activity?name=Kayaking">Kayaking</a></li>
+                                            <li class="{% if menu.inner == 'Kite Surfing' %}active{% endif %}"><a href="/explore/activity?name=Kite Surfing">Kite Surfing</a></li>
+                                            <li class="{% if menu.inner == 'Scuba Diving' %}active{% endif %}"><a href="/explore/activity?name=Scuba Diving">Scuba Diving</a></li>
+                                            <li class="{% if menu.inner == 'Snorkelling' %}active{% endif %}"><a href="/explore/activity?name=Snorkelling">Snorkelling</a></li>
+                                            <li class="{% if menu.inner == 'Surfing' %}active{% endif %}"><a href="/explore/activity?name=Surfing">Surfing</a></li>
+                                            <li class="{% if menu.inner == 'Water Rafting' %}active{% endif %}"><a href="/explore/activity?name=Water Rafting">Water Rafting</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-sm-4 col-xs-12">
+                                        <ul class="multi-column-dropdown" style="margin: 0; padding: 0px;">
+                                            <li style="text-align: center;"><strong><u>Land Sports</u></strong></li>
+                                            <li class="divider"></li>
+                                            <li class="{% if menu.inner == 'Skiing' %}active{% endif %}"><a href="/explore/activity?name=Skiing">Skiing</a></li>
+                                            <li class="{% if menu.inner == 'Snowboarding' %}active{% endif %}"><a href="/explore/activity?name=Snowboarding">Snowboarding</a></li>
+                                            <li class="{% if menu.inner == 'Camping' %}active{% endif %}"><a href="/explore/activity?name=Camping">Camping</a></li>
+                                            <li class="{% if menu.inner == 'Canyoning' %}active{% endif %}"><a href="/explore/activity?name=Canyoning">Canyoning</a></li>
+                                            <li class="{% if menu.inner == 'Cycling and Biking' %}active{% endif %}"><a href="/explore/activity?name=Cycling and Biking">Cycling and Biking</a></li>
+                                            <li class="{% if menu.inner == 'Marathons' %}active{% endif %}"><a href="/explore/activity?name=Marathons">Marathons</a></li>
+                                            <li class="{% if menu.inner == 'Mountaineering' %}active{% endif %}"><a href="/explore/activity?name=Mountaineering">Mountaineering</a></li>
+                                            <li class="{% if menu.inner == 'Rappelling and Valley Crossing' %}active{% endif %}"><a href="/explore/activity?name=Rappelling and Valley Crossing">Rappelling and Valley Crossing</a></li>
+                                            <li class="{% if menu.inner == 'Rock Climbing' %}active{% endif %}"><a href="/explore/activity?name=Rock Climbing">Rock Climbing</a></li>
+                                            <li class="{% if menu.inner == 'Trekking and Hiking' %}active{% endif %}"><a href="/explore/activity?name=Trekking and Hiking">Trekking and Hiking</a></li>
+                                            <li class="{% if menu.inner == 'Horse Riding' %}active{% endif %}"><a href="/explore/activity?name=Horse Riding">Horse Riding</a></li>
+                                            <li class="{% if menu.inner == 'Zorbing' %}active{% endif %}"><a href="/explore/activity?name=Zorbing">Zorbing</a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </ul>
                         </li>
