@@ -50,6 +50,8 @@ class Profile(Entity, db.Document):
     uploaded_image_cover = db.BooleanField(default=False)
     public_activity_count = db.IntField(default=0)
     private_activity_count = db.IntField(default=0)
+    owned_by = db.ReferenceField('Profile')
+    managed_by = db.ListField(db.ReferenceField('Profile'))
 
     meta = {
         'indexes': [
@@ -178,3 +180,16 @@ class Profile(Entity, db.Document):
         from app.models.event import Event
         return [u for u in RelationShips.get_joined(self) if isinstance(u, Event)]
 
+    @property
+    def get_managed_profiles(self):
+        return Profile.objects(managed_by__in=self).all()
+
+    @property
+    def get_owned_profiles(self):
+        return Profile.objects(owned_by=self).all()
+
+
+PROFILE_TYPE_ENTHUSIAST = ProfileType.objects(name='Enthusiast').first()
+PROFILE_TYPE_SUBSCRIPTION_ONLY = ProfileType.objects(name='Subscription Only').first()
+PROFILE_TYPE_GEAR_DEALER = ProfileType.objects(name='Gear Dealer').first()
+PROFILE_TYPE_ORGANISER = ProfileType.objects(name='Organizer').first()
