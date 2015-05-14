@@ -199,9 +199,9 @@ class TripAdminView(ModelView):
 class ProfileAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'email', 'featured', 'about', 'location', 'phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image', 'type']
+    form_columns = ['name', 'email', 'featured', 'about', 'location', 'phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image', 'type', 'managed_by']
     column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login', 'type', 'featured')
-    column_filters = ['name', 'email', FilterProfileType('type.id', 'Type')]
+    column_filters = ['name'] #, FilterProfileType('type.id', 'Type')]
     column_searchable_list = ('name', 'email')
     form_overrides = dict(about=SummernoteTextAreaField)
 

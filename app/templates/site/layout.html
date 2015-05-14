@@ -156,6 +156,21 @@
                                     {% if 'Admin' in user.roles %}
                                     <li><a href="/admin"><i class="fa fa-dashboard"></i>&nbsp;Admin dashboard</a></li>
                                     {% endif %}
+                                    {% set managed_profiles = user.managed_profiles %}
+                                    {% if managed_profiles|length > 0 %}
+                                        {% for _profile in managed_profiles %}
+                                            <li><a data-action="switch-profile" data-model-id="{{_profile.id}}"
+                                                data-user-id="{{user.id}}"
+                                                href="#"><i class="fa fa-user"></i>&nbsp;switch user to <strong>{{_profile.name}}</strong></a></li>
+                                        {% endfor %}
+                                    {% endif %}
+                                    {% if user.managed_by|length > 0 %}
+                                        {% for _profile in user.managed_by %}
+                                            <li><a data-action="switch-profile" data-model-id="{{_profile.id}}"
+                                                data-user-id="{{user.id}}"
+                                                href="#"><i class="fa fa-user"></i>&nbsp;switch user to parent <strong>{{_profile.name}}</strong></a></li>
+                                        {% endfor %}
+                                    {% endif %}
                                     <li><a href="/logout"><i class="fa fa-lock"></i> Log Out</a></li>
                                 </ul>
                         </li>

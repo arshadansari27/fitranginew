@@ -75,10 +75,11 @@ class Profile(Entity, db.Document):
     def since(self):
         return human(self.user_since, precision=1)
 
-
+    def __repr__(self):
+        return self.name if self.name else (self.email if self.email else 'No name or email')
 
     def __unicode__(self):
-        return self.name if self.name else (self.email if self.email else 'No name or email')
+        return self.__repr__()
 
     @property
     def password(self):
@@ -181,12 +182,12 @@ class Profile(Entity, db.Document):
         return [u for u in RelationShips.get_joined(self) if isinstance(u, Event)]
 
     @property
-    def get_managed_profiles(self):
-        return Profile.objects(managed_by__in=self).all()
+    def managed_profiles(self):
+        return Profile.objects(managed_by__in=[self.id]).all()
 
     @property
-    def get_owned_profiles(self):
-        return Profile.objects(owned_by=self).all()
+    def owned_profiles(self):
+        return Profile.objects(owned_by=self.id).all()
 
 
 PROFILE_TYPE_ENTHUSIAST = ProfileType.objects(name='Enthusiast').first()

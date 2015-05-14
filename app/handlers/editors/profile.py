@@ -60,8 +60,22 @@ class ProfileEditor(NodeEditor):
             return book_trip(self.action, self.message['name'], self.message['email'], self.message['phone'], self.message['message'], self.message['trip'])
         elif self.command == 'reset-activity-count':
             return reset_activity_count(self.node, self.action)
+        elif self.command == 'switch-profile':
+            return switch_profile(self.node, self.data['profile'])
         else:
             raise Exception('Invalid command')
+
+@response_handler('Successfully switched the user', 'Failed to switch the user')
+def switch_profile(node, profile):
+    from flask import g
+    user = g.user if hasattr(g, 'user') else None
+    if not user: raise Exception('Invalid user')
+    node = Profile.objects(pk=node).first()
+    profile = Profile.objects(pk=profile).first()
+    assert node.id == user.id
+    from flask import session
+    session['user'] = str(profile.id)
+    return node
 
 
 @response_handler('Successfully updated the counter', 'Failed to update the counter')
