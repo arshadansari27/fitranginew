@@ -92,6 +92,7 @@
                         <!--li class="{% if menu.app_name == 'trip'%}active{% endif %}"><a href="/trip">Upcoming Trips</a>
                         </li-->
                     </ul>
+                    {% if user and user.id %}
                     <ul class="top-icons nav navbar-nav navbar-right pull-right">
                         <li>
                             <div class="top-icon">
@@ -104,6 +105,7 @@
                             </div>
                         </li>
                     </ul>
+                    {% endif %}
                     <ul class="nav navbar-nav navbar-right pull-right">
                         <li>
                             <a class="btn-default" href="/community/profile" title="Members"><i  class="fa fa-users"></i>&nbsp; All Members</a>&nbsp;
