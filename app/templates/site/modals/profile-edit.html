@@ -4,11 +4,11 @@
         <form class="fitrangi-form">
             <div class="form-group">
                 <label for="heading">Name</label>
-                <input id="name-edit" type="text" class="form-control" placeholder="Enter name" value="{% if user.name %}{{user.name}}{% endif %}">
+                <input id="name-edit" type="text" class="form-control" placeholder="Enter name" value="{% if user.name and user.name|length > 0 %}{{user.name}}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="heading">Phone</label>
-                <input id="phone-edit" type="text" class="form-control" placeholder="Enter name" value="{% if user.phone %}{{user.phone}}{% endif %}">
+                <input id="phone-edit" type="text" class="form-control" placeholder="Enter name" value="{% if user.phone and user.phone|length > 0  %}{{user.phone}}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="heading">Email</label>
@@ -16,34 +16,34 @@
             </div>
             <div class="form-group">
                 <label for="heading">Location</label>
-                <input id="location-edit" type="text" class="geo-complete form-control" placeholder="Hit enter to auto complete on location" value="{% if user.location %}{{user.location.name}}{% endif %}">
-                <input type="hidden" name="geo_location_name" id="geo_location_name" value="{% if user.location %}{{user.location.name}}{% endif %}"/>
+                <input id="location-edit" type="text" class="geo-complete form-control" placeholder="Hit enter to auto complete on location" value="{% if user.location and user.location|length > 0  %}{{user.location}}{% endif %}">
+                <input type="hidden" name="geo_location_name" id="geo_location_name" value="{% if user.location  and user.location|length > 0  %}{{user.location}}{% endif %}"/>
                 <input type="hidden" name="geo_location_lat" id="geo_location_lat" value="{% if user.location and user.location.geo_location %}{{user.location.geo_location['coordinates'][0]}}{% endif %}"/>
                 <input type="hidden" name="geo_location_long" id="geo_location_long" value="{% if user.location and user.location.get_location %}{{user.location.geo_location['coordinates'][1]}}{% endif %}"/>
             </div>
             <div class="form-group">
                 <label for="heading">Website</label>
-                <input id="website-edit" type="text" class="form-control" placeholder="Enter website link" value="{% if user.website %}{{user.website}}{% endif %}">
+                <input id="website-edit" type="text" class="form-control" placeholder="Enter website link" value="{% if user.website and user.website|length > 0 %}{{user.website}}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="heading">Facebook Profile Link</label>
-                <input id="facebook-edit" type="text" class="form-control" placeholder="Enter facebook profile link" value="{% if user.facebook %}{{user.facebook}}{% endif %}">
+                <input id="facebook-edit" type="text" class="form-control" placeholder="Enter facebook profile link" value="{% if user.facebook and user.facebook|length > 0 %}{{user.facebook}}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="heading">Google+ Profile Link</label>
-                <input id="google-plus-edit" type="text" class="form-control" placeholder="Enter G+ profile link" value="{% if user.google_plus %}{{user.google_plus}}{% endif %}">
+                <input id="google-plus-edit" type="text" class="form-control" placeholder="Enter G+ profile link" value="{% if user.google_plus and user.google_plus|length > 0 %}{{user.google_plus}}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="heading">Linked In Profile Link</label>
-                <input id="linked-in-edit" type="text" class="form-control" placeholder="Enter LinkedIn profile link" value="{% if user.linked_in %}{{user.linked_in}}{% endif %}">
+                <input id="linked-in-edit" type="text" class="form-control" placeholder="Enter LinkedIn profile link" value="{% if user.linked_in and user.linked_in|length > 0 %}{{user.linked_in}}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="heading">Own a blog?</label>
-                <input id="blog-channel-edit" type="text" class="form-control" placeholder="Share the link with us" value="{% if user.blog_channel %}{{user.blog_channel}}{% endif %}">
+                <input id="blog-channel-edit" type="text" class="form-control" placeholder="Share the link with us" value="{% if user.blog_channel and user.blog_channel|length > 0 %}{{user.blog_channel}}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="heading">Own a youtube channel?</label>
-                <input id="youtube-channel-edit" type="text" class="form-control" placeholder="Share the channel link with us" value="{% if user.youtube_channel %}{{user.youtube_channel}}{% endif %}">
+                <input id="youtube-channel-edit" type="text" class="form-control" placeholder="Share the channel link with us" value="{% if user.youtube_channel and user.youtube_channel|length > 0 %}{{user.youtube_channel}}{% endif %}">
             </div>
         </form>
     </div>

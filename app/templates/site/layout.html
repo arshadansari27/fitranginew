@@ -93,21 +93,6 @@
                         </li-->
                     </ul>
                     <ul class="top-icons nav navbar-nav navbar-right pull-right">
-                        {% if not (user and user.id) %}
-                        <li>
-                            <a class="btn btn-default" href="/community/profile" title="Members"><i  class="fa fa-users"></i>&nbsp; All Members</a>&nbsp;
-                        </li>
-                        <li>
-                            <a class="btn btn-default" href="#" title="Business"><i  class="fa fa-user"></i>&nbsp; Own a business</a>&nbsp;
-                        </li>
-                        <li>
-                            <a class="btn btn-default" href="/login" title="Login"><i class="fa fa-key"></i>&nbsp; Login</a>&nbsp;
-                        </li>
-                        <li>
-                            <a class="btn btn-default" href="/register" title="Register"><i
-                                    class="fa fa-user">+</i>&nbsp; Register</a>&nbsp;
-                        </li>
-                        {% elif user and user.id %}
                         <li>
                             <div class="top-icon">
                                 <a href="/community/my" title="Notifications"><i  class="fa fa-bell"></i></a><span id="public-activity-count">{{public_activity_count}}</span>
@@ -119,15 +104,26 @@
                             </div>
                         </li>
                     </ul>
-                    <ul class="top-icons nav navbar-nav navbar-right pull-right">
+                    <ul class="nav navbar-nav navbar-right pull-right">
                         <li>
-                            <a class="btn btn-default" href="/community/profile" title="Members"><i  class="fa fa-users"></i>&nbsp; All Members</a>&nbsp;
+                            <a class="btn-default" href="/community/profile" title="Members"><i  class="fa fa-users"></i>&nbsp; All Members</a>&nbsp;
                         </li>
                         <li>
-                            <a class="btn btn-default" href="#" title="Business"><i  class="fa fa-user"></i>&nbsp; Own a business</a>&nbsp;
+                            <a class="btn-default" href="#" title="Business">Own a business?</a>&nbsp;
                         </li>
+                        {% if not (user and user.id) %}
+
+                        <li>
+                            <a class="btn-default" href="/login" title="Login"><i class="fa fa-key"></i>&nbsp; Login</a>&nbsp;
+                        </li>
+                        <li>
+                            <a class="btn-default" href="/register" title="Register"><i
+                                    class="fa fa-user">+</i>&nbsp; Register</a>&nbsp;
+                        </li>
+                        {% elif user and user.id %}
+
                         <li class="dropdown">
-                                <a class="btn btn-default" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <a class="btn-default" href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <img src="{{user.cover_image_path}}" class="" alt="profile"
                                          height="18">{{user.name}}
                                     <b class="caret"></b>
@@ -161,10 +157,8 @@
                                     <li><a href="/logout"><i class="fa fa-lock"></i> Log Out</a></li>
                                 </ul>
                         </li>
-
                         {% endif %}
                     </ul>
-
                 </div>
 
                 {% if menu.app_name in ['explore', 'community'] %}
