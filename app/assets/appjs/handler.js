@@ -20,6 +20,8 @@ jQuery(document).ready(function ($) {
     };
 
     var show_login_dialog = function() {
+        window.location.href = '/login?target=' + window.location.href;
+        /*
         window.$loginDialog = new BootstrapDialog({
             size: BootstrapDialog.SIZE_WIDE,
             title: "Sign in",
@@ -27,6 +29,7 @@ jQuery(document).ready(function ($) {
         });
         window.$loginDialog.realize();
         window.$loginDialog.open();
+        */
     };
 
     App.show_login = function(){ show_login_dialog(); };
@@ -286,6 +289,26 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    $('body').on('click', '[data-action="switch-profile"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var that = $(e.target);
+        var profile = that.attr('data-model-id');
+        var user = that.attr('data-user-id');
+        console.log('[*] ' + user + ": " + profile);
+        BootstrapDialog.confirm('Do you wish to switch the profile', function(val){
+            console.log('Confirmation: ' + val);
+            if (val== true) {
+            if (profile != undefined && user != undefined) {
+                console.log(profile + ", "+user);
+                App.profile.switch_profile(user, profile, function(){
+                    window.location.reload();
+                });
+            }
+            }
+        });
+
+    });
     $('body').on('click', '[data-action="edit-profile"]', function (e) {
         e.stopPropagation();
         e.preventDefault();

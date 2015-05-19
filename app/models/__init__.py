@@ -1,7 +1,7 @@
 #from models import *
 import datetime
 from PIL import Image
-
+from fractions import Fraction
 from ago import human
 import cStringIO
 from mongoengine import signals
@@ -58,6 +58,10 @@ def new_object(sender, document, created):
     if created:
         document.on_create()
 
+    from app.models.content import Content
+    if hasattr(document, 'on_save')  and callable(document.on_save):
+        document.on_save()
+
 
 def update_slug(sender, document, type, title):
     if hasattr(document, 'id') and document.id:
@@ -112,6 +116,8 @@ def save_media_to_file(obj, attr, name, path_obj=None):
         img = Image.open(image)
         _format = img.format
         _format = _format.lower()
+        if _format == 'ico':
+            _format = 'jpeg'
 
         dir_list = ['media', path_obj.__class__.__name__.lower(), str(path_obj.id)]
         for i in xrange(len(dir_list)):
@@ -165,6 +171,55 @@ class Node(object):
             return '/img/Profile-Picture.jpg' if isinstance(self, Profile) else None
 
     @property
+    def cover_image_path_small(self):
+        path = self.cover_image_path if self.cover_image_path else None
+        if path is None:
+            from app.models.profile import Profile
+            if isinstance(self, Profile):
+                return '/img/Profile-Picture-thumbnail.jpg' if isinstance(self, Profile) else None
+            return ''
+        steps = path.split('/')
+        full_name = steps[-1]
+        ux = full_name.split('.')
+        if len(ux) < 2:
+            print 'Something went wrong with thumbnail image path here....'
+            return ''
+        name, ext = ux[0], ux[1]
+        steps[-1] = name + '-thumbnail.' + ext
+        small_path = '/'.join(steps)
+        if not os.path.exists(small_path):
+            file_path = base_path + path
+            im  = Image.open(file_path)
+            format = im.format
+            x, y = im.size
+            f = Fraction(x, y)
+            num = f.numerator
+            den = f.denominator
+            s = 128 * num / den
+            im.thumbnail((s, 128), Image.ANTIALIAS)
+            im.save(base_path + small_path, format)
+        return small_path
+
+    @property
+    def icon_image_path_small(self):
+        return self.cover_image_path_small
+
+    @property
+    def icon_image_path(self):
+        path = str(self.path_cover_image) if hasattr(self, 'path_cover_image') and self.path_cover_image else '-'
+        if path and len(path) > 0 and os.path.exists(base_path + path):
+            return path
+        path = save_media_to_file(self, 'cover_image', 'cover')
+        if path:
+            self.path_cover_image = path
+            self.save()
+            return path
+        else:
+            from app.models.profile import Profile
+            return '/img/Profile-Picture2.jpg' if isinstance(self, Profile) else None
+
+
+    @property
     def gallery_image_list(self):
         gallery_images = [u.image_path(self, i) for i, u in enumerate(self.image_gallery)]
         print '****', gallery_images
@@ -181,15 +236,17 @@ class Node(object):
     def since(self):
         return human(self.created_timestamp, precision=1)
 
-    """
     @property
-    def description(self):
-        return convertLinks(self._description)
+    def name_short(self):
+        if hasattr(self, 'name') and len(self.name) > 40:
+            return self.name[:40] + '...'
+        return self.name
 
-    @description.setter
-    def description(self, new_value):
-        self._description = new_value
-    """
+    @property
+    def title_short(self):
+        if hasattr(self, 'title') and len(self.title) > 35:
+            return self.title[:35] + '...'
+        return self.title
 
     @classmethod
     def get_by_id(cls, id):

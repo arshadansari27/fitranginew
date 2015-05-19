@@ -48,6 +48,16 @@ $(document).ready(function() {
         App.editor(options, callback);
     };
 
+    App.profile.switch_profile = function(node, profile, callback) {
+        var options = {
+            node: node,
+            data: {profile: profile},
+            type: 'profile',
+            command: 'switch-profile'
+        };
+        App.editor(options, callback);
+    };
+
     App.profile.add_activity_to_favorite = function(node, activity) {
         var options = {
             node: node,

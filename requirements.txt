@@ -30,3 +30,6 @@ Werkzeug==0.9.6
 WTForms==2.0.1
 autobahn[twisted]>=0.10.3
 crossbar==0.10.4
+Flask-Assets<=0.10
+jsmin==2.1.1
+cssmin==0.2.0

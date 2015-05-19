@@ -27,9 +27,10 @@
 <hr class="clearfix divider">
 
 <section class="container">
-    <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 blogs-content">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 fitrangi-tags-list">
-            <article class="text-left">
+    <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="fitrangi-tags-list">
+                <article class="text-left">
                 <span class="fs-20 pr-20 oswald middle">Posted in (Channels and Tags): </span>
                 {% for channel in model.channels %}
                 <a href="#">{{channel.name}}</a>
@@ -37,17 +38,23 @@
                 {% for tag in model.tags %}
                     <a href="#">{{tag}}</a>
                 {% endfor %}
-            </article>
+                </article>
+            </div>
+            <hr/>
+
+            {% if model.get_videos_list() %}
+            <div class="col-md-12 col-sm-12 block">
+                {{model.get_videos_list()|safe}}
+            </div>
+            <hr/>
+            {% endif %}
+            <div clas="col-md-12 col-sm-12 block">
+                {{model.process_content|safe}}
+            </div>
         </div>
         <hr/>
-        {% if model.get_videos_list() %}
-        <div class="col-sm-12 thumbnail">{{model.get_videos_list()|safe}}</div>
-        <hr/>
-        {% endif %}
-        {{model.process_content|safe}}
-        <hr/>
-        <input id="post-filter" type="hidden" data-model="post" data-category="all" data-filter="parent__article__pk" value="{{model.id}}" data-filter-status="fixed" />
-        <div class="">
+        <div class="col-md-12">
+            <input id="post-filter" type="hidden" data-model="post" data-category="all" data-filter="parent__article__pk" value="{{model.id}}" data-filter-status="fixed" />
             {% import 'site/includes/post_box.html' as post %}
             {{ post.show_post_form(model, 'comment') }}
             {{ comments|safe }}

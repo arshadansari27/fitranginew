@@ -178,42 +178,6 @@ def edit_profile_modal():
 def edit_profile_preferences_modal():
     return render_template('site/modals/profile-preferences-edit.html', user=g.user)
 
-@app.route('/login', methods=['POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form.get('email', None)
-        password = request.form.get('password', None)
-        remember = request.form.get('remember', None)
-        profile = Profile.authenticate(email, password)
-        if profile and profile.id:
-            session['user'] = str(profile.id)
-            return jsonify(dict(status='success', message='Successfully logged in.', node=str(profile.id)))
-    return jsonify(dict(status='error', message='Failed to login. Please try again.'))
-
-@app.route('/register', methods=['GET', 'POST'])
-def registration():
-    if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        password = request.form['password']
-        confirm = request.form['confirm']
-        if password != confirm:
-            flash('Passwords do not match', category='danger')
-            return redirect(url_for('registration'))
-        type = ProfileType.objects(name__icontains='subscription').first()
-        if Profile.objects(email__iexact=email, type__nin=[str(type.id)]).first():
-            flash('Email already exists, have you forgotten your password?', category='danger')
-            return redirect(url_for('registration'))
-        type = ProfileType.objects(name__iexact='Enthusiast').first()
-        profile = Profile(name=name, email=email, type=[type], roles=['Basic User'])
-        profile.password  = password
-        profile.save()
-        if profile and profile.id:
-            session['user'] = str(profile.id)
-            mail_data = render_template('notifications/successfully_registered.html', user=profile)
-            send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=mail_data)
-            return jsonify(dict(status='success', message='Profile created and logged in.', node=str(profile.id)))
-    return jsonify(dict(status='error', message='Failed to register. Please try again.'))
 
 @app.route('/forgot_password', methods=['POST'])
 def forgot_password():

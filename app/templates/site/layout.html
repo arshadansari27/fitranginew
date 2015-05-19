@@ -12,38 +12,15 @@
 
     <title>{% if title %}{{title}}{% else %}Fitrangi: India's complete adventure portal{% endif %}</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="/css/bootstrap.css" rel="stylesheet">
-    <link href="/css/bootstrap-tagsinput.css" rel="stylesheet">
 
-    <!-- Fontawesome Icon CSS -->
-    <link href="/css/font-awesome.min.css" rel="stylesheet">
-
-    <!-- Google Font-->
-    <link href='http://fonts.googleapis.com/css?family=Bangers' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Roboto:500,900,400italic,700italic,300,700,300italic,400'
-          rel='stylesheet' type='text/css'>
-
-    <!-- Google Maps Api -->
-    <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
-
-    <!-- Custom CSS -->
-    <link href="/css/my-style.css" rel="stylesheet">
-    <link href="/css/menus.css" rel="stylesheet">
-
-
-    <!-- Popular Profiles CSS -->
-    <link href="/css/poplr-pro.css" rel="stylesheet">
-    <link href="/css/fotorama.css" rel="stylesheet">
-
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/fotorama.js"></script>
-
-    <link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css"/>
-    <link href="/css/summernote.css" rel="stylesheet" type="text/css"/>
-    <link href="/css/summernote-bs3.css" rel="stylesheet" type="text/css"/>
-    <script src="/js/summernote.js"></script>
+    {% assets filters="cssmin", output="app/packed.css", "css/bootstrap.css",
+            "css/bootstrap-tagsinput.css", "css/font-awesome.min.css", "css/font-google1.css", "css/font-google2.css",
+            "css/font-google3.css", "css/fotorama.css","css/bootstrap-dialog.min.css", "css/summernote.css", "css/summernote-bs3.css" %}
+        <link href="{{ ASSET_URL }}" rel="stylesheet">
+    {% endassets %}
+    {% assets filters="cssmin", output="app/my.css", "css/my-style.css", "css/menus.css", "css/poplr-pro.css" %}
+        <link href="{{ ASSET_URL }}" rel="stylesheet">
+    {% endassets %}
 
 
     {% block header_scripts %}{% endblock %}
@@ -54,52 +31,19 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-
-
-    <script src="/js/autobahn.min.jgz"></script>
-    <script src="/appjs/editors/main.js"></script>
-    <script src="/appjs/editors/profile-edit.js"></script>
-    <script src="/appjs/editors/post-edit.js"></script>
-    <script src="/appjs/editors/content-edit.js"></script>
-
-    <style>
-        /* TODO: Remove Later in case it is fixed in my-style css */
-        .blogs-content img {
-            padding: 0px 0px;
-        }
-
-        #share-buttons img {
-            width: 35px;
-            padding: 5px;
-            border: 0;
-            box-shadow: 0;
-            display: inline;
-        }
-
-        .ui-autocomplete {
-            z-index: 5000;
-        }
-
-        .exactCenter {
-            width: 100px;
-            height: 100px;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            margin-top: -50px;
-            margin-left: -50px;
-            z-index: 100000;
-        }
-
-        .pac-container { z-index:20000 !important; }
-
-    </style>
+    <script src="/js/jquery.min.js"></script>
 
 </head>
 
 <body data-logged-in-as="{% if user %}{{user.id}}{% else %}null{% endif %}">
-<div id="fb-root"></div>
-<script>
+    {% assets filters="jsmin", output="app/my-lib.js",
+        "appjs/editors/main.js", "appjs/editors/profile-edit.js", "appjs/editors/post-edit.js", "appjs/editors/content-edit.js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+
+<div class="wrap-site">
+    <div id="fb-root"></div>
+    <script>
 
     (function (d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
@@ -124,121 +68,201 @@
         return t;
     }(document, "script", "twitter-wjs"));
 
-</script>
-<nav class="navbar navbar-default navbar-static-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-8">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/"></a>
-        </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-8">
-
-            <div class="container-fluid">
-                <ul class="nav navbar-nav">
-                    <li class="{% if menu.app_name == 'explore'%}active{% endif %}"><a href="/explore"></a></li>
-                    <!--li class="{% if menu.app_name == 'trip'%}active{% endif %}"><a href="/trip">Upcoming Trips</a>
-                    </li-->
-                </ul>
-                <ul class="top-icons nav navbar-nav navbar-right pull-right">
-                    <li>
-                        <div class="top-icon"><a class="" href="/community/profile" title="Members"><i
-                                class="fa fa-users"></i></a></div>
-                    </li>
-                    {% if not (user and user.id) %}
-                    <li>
-                        <div class="top-icon"><a class="show_login" href="#" title="Login"><i class="fa fa-key"></i></a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="top-icon"><a class="show_signup" href="#" title="Register"><i
-                                class="fa fa-user">+</i></a></div>
-                    </li>
-                    {% elif user and user.id %}
-                    <li class="dropdown">
-                        <div class="top-icon">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="{{user.cover_image_path}}" class="radius-20 profile-pic" alt="profile"
-                                     width="40">
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li>
-                                    <a href="#" role="button" data-placement="left" data-toggle="popover"
-                                       data-trigger="focus" data-content="Click to change the cover" class="hoverable"
-                                       data-action="edit-cover-image" data-model-id="{{user.id}}" data-model="profile"
-                                       data-trigger="hover"><img class="img-responsive"
-                                                                 src="{{user.cover_image_path}}"/></a>
-                                </li>
-                                <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="/community/my"><i
-                                        class="fa fa-info" data-action="check-login" data-user-id="{{user.id}}"></i>&nbsp;My Page</a></li>
-                                <li><a data-action="edit-profile" data-model-id="{{user.id}}" data-user-id="{{user.id}}"
-                                       href="#"><i class="fa fa-user"></i>&nbsp;Edit Profile</a></li>
-                                <li><a data-action="edit-profile-preferences" data-model-id="{{user.id}}"
-                                       data-user-id="{{user.id}}" href="#"><i class="fa fa-cog"></i>&nbsp;Edit
-                                    Preference</a></li>
-                                <li><a data-action="edit-profile-password" data-model-id="{{user.id}}"
-                                       data-user-id="{{user.id}}" href="#"><i class="fa fa-key"></i>&nbsp;Change
-                                    Password</a></li>
-                                {% if 'Admin' in user.roles %}
-                                <li><a href="/admin"><i class="fa fa-dashboard"></i>&nbsp;Admin dashboard</a></li>
-                                {% endif %}
-                                <li><a href="/logout"><i class="fa fa-lock"></i> Log Out</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li><div class="top-icon"><a href="/community/my" title="Notifications"><i class="fa fa-bell"></i></a><span id="public-activity-count">{{public_activity_count}}</span></div></li>
-                    <li>
-                        <div class="top-icon"><a href="/messaging" title="Messages"><i class="fa fa-envelope"></i></a><span id="private-activity-count">{{private_activity_count}}</span>
-                        </div>
-                    </li>
-                    {% endif %}
-                </ul>
-
+    </script>
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-8">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/"></a>
             </div>
 
-            {% if menu.app_name in ['explore', 'community'] %}
-            <div class="container-fluid border-grey-t">
-                <ul class="nav navbar-nav nav-down">
-                    <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="#" data-action="check-login" data-user-id="{{user.id}}">My Page</a>
-                    </li>
-                    <li class="inner-level-dropdown dropdown {% if menu.main_menu == 'activity' %}active{% endif %}">
-                        <a id="subdropdown1" href="#" class="dropdown-toggle">Activities<b class="caret"></b></a>
-                        <ul class="dropdown-menu multi-column columns-3" aria-labelledby="subdropdown1" role="menu">
-                            <div class="row">
-                                {{activity_menu|safe}}
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-8">
+
+                <div class="container-fluid">
+                    <ul class="nav navbar-nav">
+                        <li class="{% if menu.app_name == 'explore'%}active{% endif %}"><a href="/explore"></a></li>
+                        <!--li class="{% if menu.app_name == 'trip'%}active{% endif %}"><a href="/trip">Upcoming Trips</a>
+                        </li-->
+                    </ul>
+                    {% if user and user.id %}
+                    <ul class="top-icons nav navbar-nav navbar-right pull-right">
+                        <li>
+                            <div class="top-icon">
+                                <a href="/community/my" title="Notifications"><i  class="fa fa-bell"></i></a><span id="public-activity-count">{{public_activity_count}}</span>
                             </div>
-                        </ul>
-                    </li>
-                    <li class="{% if menu.main_menu == 'adventure' %}active{% endif %}"><a href="/explore/adventure">Adventures</a>
-                    </li>
-                    <li class="{% if menu.main_menu == 'profile' %}active{% endif %}"><a href="/community/profile">Finder</a>
-                    </li>
-                    <li class="{% if menu.main_menu in ['journal', 'article', 'blog'] %}active{% endif %} {{menu.main_menu}}"><a
-                            href="/explore/journal">Journal</a></li>
-                    <li class="{% if menu.main_menu == 'discussion' %}active{% endif %}"><a
-                            href="/community/discussion">Discussions</a></li>
-                    <li class="{% if menu.main_menu == 'event' %}active{% endif %}"><a
-                            href="/community/event">Events</a></li>
-                </ul>
-            </div>
-            {% endif %}
+                        </li>
+                        <li>
+                            <div class="top-icon"><a href="/messaging" title="Messages"><i
+                                    class="fa fa-envelope"></i></a><span id="private-activity-count">{{private_activity_count}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                    {% endif %}
+                    <ul class="nav navbar-nav navbar-right pull-right">
+                        <li>
+                            <a class="btn-default" href="/community/profile" title="Members"><i  class="fa fa-users"></i>&nbsp; All Members</a>&nbsp;
+                        </li>
+                        <li>
+                            <a class="btn-default" href="#" title="Business">Own a business?</a>&nbsp;
+                        </li>
+                        {% if not (user and user.id) %}
 
+                        <li>
+                            <a class="btn-default" href="/login" title="Login"><i class="fa fa-key"></i>&nbsp; Login</a>&nbsp;
+                        </li>
+                        <li>
+                            <a class="btn-default" href="/register" title="Register"><i
+                                    class="fa fa-user">+</i>&nbsp; Register</a>&nbsp;
+                        </li>
+                        {% elif user and user.id %}
+
+                        <li class="dropdown">
+                                <a class="btn-default" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <img src="{{user.cover_image_path}}" class="" alt="profile"
+                                         height="18">{{user.name}}
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li>
+                                        <a href="#" role="button" data-placement="left" data-toggle="popover"
+                                           data-trigger="focus" data-content="Click to change the cover"
+                                           class="hoverable"
+                                           data-action="edit-cover-image" data-model-id="{{user.id}}"
+                                           data-model="profile"
+                                           data-trigger="hover"><img class="img-responsive"
+                                                                     src="{{user.cover_image_path}}"/></a>
+                                    </li>
+                                    <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a
+                                            href="/community/my"><i
+                                            class="fa fa-info" data-action="check-login" data-user-id="{{user.id}}"></i>&nbsp;My
+                                        Page</a></li>
+                                    <li><a data-action="edit-profile" data-model-id="{{user.id}}"
+                                           data-user-id="{{user.id}}"
+                                           href="#"><i class="fa fa-user"></i>&nbsp;Edit Profile</a></li>
+                                    <li><a data-action="edit-profile-preferences" data-model-id="{{user.id}}"
+                                           data-user-id="{{user.id}}" href="#"><i class="fa fa-cog"></i>&nbsp;Edit
+                                        Preference</a></li>
+                                    <li><a data-action="edit-profile-password" data-model-id="{{user.id}}"
+                                           data-user-id="{{user.id}}" href="#"><i class="fa fa-key"></i>&nbsp;Change
+                                        Password</a></li>
+                                    {% if 'Admin' in user.roles %}
+                                    <li><a href="/admin"><i class="fa fa-dashboard"></i>&nbsp;Admin dashboard</a></li>
+                                    {% endif %}
+                                    {% set managed_profiles = user.managed_profiles %}
+                                    {% if managed_profiles|length > 0 %}
+                                        {% for _profile in managed_profiles %}
+                                            <li><a data-action="switch-profile" data-model-id="{{_profile.id}}"
+                                                data-user-id="{{user.id}}"
+                                                href="#"><i class="fa fa-user"></i>&nbsp;switch user to <strong>{{_profile.name}}</strong></a></li>
+                                        {% endfor %}
+                                    {% endif %}
+                                    {% if user.managed_by|length > 0 %}
+                                        {% for _profile in user.managed_by %}
+                                            <li><a data-action="switch-profile" data-model-id="{{_profile.id}}"
+                                                data-user-id="{{user.id}}"
+                                                href="#"><i class="fa fa-user"></i>&nbsp;switch user to parent <strong>{{_profile.name}}</strong></a></li>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <li><a href="/logout"><i class="fa fa-lock"></i> Log Out</a></li>
+                                </ul>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                {% if menu.app_name in ['explore', 'community'] %}
+                <div class="container-fluid border-grey-t">
+                    <ul class="nav navbar-nav nav-down">
+                        <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="#"
+                                                                                        data-action="check-login"
+                                                                                        data-user-id="{{user.id}}">My
+                            Page</a>
+                        </li>
+                        <li class="inner-level-dropdown dropdown {% if menu.main_menu in ['activity', 'activities'] %}active{% endif %}">
+                            <a id="subdropdown1" href="#" class="dropdown-toggle">Activities<b class="caret"></b></a>
+                            <ul class="dropdown-menu multi-column columns-3" aria-labelledby="subdropdown1" role="menu" style="margin-top: 12px;">
+                                <div class="row" style="padding:10px;">
+                                    <div class="col-sm-4 col-xs-12">
+                                        <ul class="multi-column-dropdown" style="margin: 0; padding: 0px;">
+                                            <li style="text-align: center;"><strong><u>Air Sports</u></strong></li>
+                                            <li class="divider"></li>
+                                            <li class="{% if menu.inner == 'Bungee jumping' %}active{% endif %}"><a href="/explore/activity?name=Bungee jumping">Bungee jumping</a></li>
+                                            <li class="{% if menu.inner == 'Hot Air Ballooning' %}active{% endif %}"><a href="/explore/activity?name=Hot Air Ballooning">Hot Air Ballooning</a></li>
+                                            <li class="{% if menu.inner == 'Paragliding' %}active{% endif %}"><a href="/explore/activity?name=Paragliding">Paragliding</a></li>
+                                            <li class="{% if menu.inner == 'Sky Diving' %}active{% endif %}"><a href="/explore/activity?name=Sky Diving">Sky Diving</a></li>
+                                            <li class="{% if menu.inner == 'Zip Line' %}active{% endif %}"><a href="/explore/activity?name=Zip Line">Zip Line</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-sm-4 col-xs-12">
+                                        <ul class="multi-column-dropdown" style="margin: 0; padding: 0px;">
+                                            <li style="text-align: center;"><strong><u>Water Sports</u></strong></li>
+                                            <li class="divider"></li>
+                                            <li class="{% if menu.inner == 'Kayaking' %}active{% endif %}"><a href="/explore/activity?name=Kayaking">Kayaking</a></li>
+                                            <li class="{% if menu.inner == 'Kite Surfing' %}active{% endif %}"><a href="/explore/activity?name=Kite Surfing">Kite Surfing</a></li>
+                                            <li class="{% if menu.inner == 'Scuba Diving' %}active{% endif %}"><a href="/explore/activity?name=Scuba Diving">Scuba Diving</a></li>
+                                            <li class="{% if menu.inner == 'Snorkelling' %}active{% endif %}"><a href="/explore/activity?name=Snorkelling">Snorkelling</a></li>
+                                            <li class="{% if menu.inner == 'Surfing' %}active{% endif %}"><a href="/explore/activity?name=Surfing">Surfing</a></li>
+                                            <li class="{% if menu.inner == 'Water Rafting' %}active{% endif %}"><a href="/explore/activity?name=Water Rafting">Water Rafting</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-sm-4 col-xs-12">
+                                        <ul class="multi-column-dropdown" style="margin: 0; padding: 0px;">
+                                            <li style="text-align: center;"><strong><u>Land Sports</u></strong></li>
+                                            <li class="divider"></li>
+                                            <li class="{% if menu.inner == 'Skiing' %}active{% endif %}"><a href="/explore/activity?name=Skiing">Skiing</a></li>
+                                            <li class="{% if menu.inner == 'Snowboarding' %}active{% endif %}"><a href="/explore/activity?name=Snowboarding">Snowboarding</a></li>
+                                            <li class="{% if menu.inner == 'Camping' %}active{% endif %}"><a href="/explore/activity?name=Camping">Camping</a></li>
+                                            <li class="{% if menu.inner == 'Canyoning' %}active{% endif %}"><a href="/explore/activity?name=Canyoning">Canyoning</a></li>
+                                            <li class="{% if menu.inner == 'Cycling and Biking' %}active{% endif %}"><a href="/explore/activity?name=Cycling and Biking">Cycling and Biking</a></li>
+                                            <li class="{% if menu.inner == 'Marathons' %}active{% endif %}"><a href="/explore/activity?name=Marathons">Marathons</a></li>
+                                            <li class="{% if menu.inner == 'Mountaineering' %}active{% endif %}"><a href="/explore/activity?name=Mountaineering">Mountaineering</a></li>
+                                            <li class="{% if menu.inner == 'Rappelling and Valley Crossing' %}active{% endif %}"><a href="/explore/activity?name=Rappelling and Valley Crossing">Rappelling and Valley Crossing</a></li>
+                                            <li class="{% if menu.inner == 'Rock Climbing' %}active{% endif %}"><a href="/explore/activity?name=Rock Climbing">Rock Climbing</a></li>
+                                            <li class="{% if menu.inner == 'Trekking and Hiking' %}active{% endif %}"><a href="/explore/activity?name=Trekking and Hiking">Trekking and Hiking</a></li>
+                                            <li class="{% if menu.inner == 'Horse Riding' %}active{% endif %}"><a href="/explore/activity?name=Horse Riding">Horse Riding</a></li>
+                                            <li class="{% if menu.inner == 'Zorbing' %}active{% endif %}"><a href="/explore/activity?name=Zorbing">Zorbing</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </ul>
+                        </li>
+                        <li class="{% if menu.main_menu == 'adventure' %}active{% endif %}"><a
+                                href="/explore/adventure">Adventures</a>
+                        </li>
+                        <li class="{% if menu.main_menu == 'profile' %}active{% endif %}"><a href="/community/profile">Finder</a>
+                        </li>
+                        <li class="{% if menu.main_menu in ['journal', 'article', 'blog'] %}active{% endif %} {{menu.main_menu}}">
+                            <a
+                                    href="/explore/journal">Journal</a></li>
+                        <li class="{% if menu.main_menu == 'discussion' %}active{% endif %}"><a
+                                href="/community/discussion">Discussions</a></li>
+                        <li class="{% if menu.main_menu == 'event' %}active{% endif %}"><a
+                                href="/community/event">Events</a></li>
+                    </ul>
+                </div>
+                {% endif %}
+
+            </div>
+            <!-- /.navbar-collapse -->
         </div>
-        <!-- /.navbar-collapse -->
+    </nav>
+    <div style="min-height: 100%;">
+        {% block body %}{% endblock %}
     </div>
-</nav>
-<div style="min-height: 100%;">
-{% block body %}{% endblock %}
 </div>
-{% if not user %}
+
+
+<footer class="container-fluid p-0">
+
+    {% if not user %}
 
 <section class="container-fluid footer-signup lightgrey-bg">
     <div class="container">
@@ -252,75 +276,82 @@
     </div>
 </section>
 {% endif %}
-<section class="container-fluid footer">
 
-    <div class="col-lg-5 col-md-5 col-sm-6 col-xs-12">
-        <h3>About Fitrangi.com</h3>
+    <section class="col-lg-12 footer">
 
-        <p>Fitrangi.com aims at providing a cohesive online & offline platform to converge
-            together adventure sport lovers, organisers, gear dealers & everyone related to
-            Adventure sports community.</p>
-        <a href="" class="label label-default">About</a>
-        <a href="" class="label label-default">Contact</a>
-        <a href="" class="label label-default">Contrubute</a>
-        <a href="" class="label label-default">Advertise</a>
-        <a href="" class="label label-default">Privacy</a>
-        <a href="" class="label label-default">Terms</a>
+        <div class="col-lg-5 col-md-5 col-sm-6 col-xs-12">
+            <h3>About Fitrangi.com</h3>
 
-    </div>
+            <p>Fitrangi.com aims at providing a cohesive online & offline platform to converge
+                together adventure sport lovers, organisers, gear dealers & everyone related to
+                Adventure sports community.</p>
+            <a href="" class="label label-default">About</a>
+            <a href="" class="label label-default">Contact</a>
+            <a href="" class="label label-default">Contrubute</a>
+            <a href="" class="label label-default">Advertise</a>
+            <a href="" class="label label-default">Privacy</a>
+            <a href="" class="label label-default">Terms</a>
 
-    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-        <h3>Need Help?</h3>
-        <strong>Contact us Via Phone or Email</strong>
+        </div>
 
-        <p><em>Phone :</em> +91-8879921115</p>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <h3>Need Help?</h3>
+            <strong>Contact us Via Phone or Email</strong>
 
-        <p><em>Email :</em> <a href="mailto:info@fitrangi.com">go@fitrangi.com</a></p>
+           <p><em>Phone :</em> +91-8879921115</p>
 
-    </div>
+            <p><em>Email :</em> <a href="mailto:info@fitrangi.com">go@fitrangi.com</a></p>
 
-    <div class="col-lg-4 col-md-4 col-sm-3 col-xs-12 social">
-        <h3 class="my-h3">Follow us</h3>
-        <a href="https://www.facebook.com/Fitrangi" class="fa fa-facebook-square" title="Facebook" target="_blank"></a>
-        <a href="https://twitter.com/FitRangi" class="fa fa-twitter-square" title="Twitter" target="_blank"></a>
-        <a href="#" class="fa fa-rss-square" title="RSS" target="_blank"></a>
-        <!--a href="#" class="fa fa-linkedin-square" title="LinkedIn" target="_blank"></a-->
-        <a href="https://plus.google.com/115019600318035585202/posts" class="fa fa-google-plus-square" title="Google Plus" target="_blank"></a>
-        <a href="https://www.youtube.com/user/Fitrangi" class="fa fa-youtube-square" title="Youtube" target="_blank"></a>
-        <!--a href="#" class="fa fa-vimeo-square" title="Vimeo" target="_blank"></a-->
-        <!--a href="#" class="fa fa-pinterest-square" title="Pinterest" target="_blank"></a-->
+        </div>
 
+        <div class="col-lg-4 col-md-4 col-sm-3 col-xs-12 social">
+            <h3>Follow us</h3>
+            <a href="https://www.facebook.com/Fitrangi" class="fa fa-facebook-square" title="Facebook" target="_blank"></a>
+            <a href="https://twitter.com/FitRangi" class="fa fa-twitter-square" title="Twitter" target="_blank"></a>
+            <a href="#" class="fa fa-rss-square" title="RSS" target="_blank"></a>
+            <a href="https://plus.google.com/115019600318035585202/posts" class="fa fa-google-plus-square"  title="Google Plus" target="_blank"></a>
+            <a href="https://www.youtube.com/user/Fitrangi" class="fa fa-youtube-square" title="Youtube"  target="_blank"></a>
 
-        <p>By Continuing past this page, you agree to
-            Terms of Service.<br>
-            All trademarks are properties
-            of their respective owners.</p>
+            <p>By Continuing past this page, you agree to
+                Terms of Service.<br>
+                All trademarks are properties
+                of their respective owners.</p>
 
-        <p>&copy;2012 Fitrangi<sup>TM</sup>. All right Reserved</p>
+            <p>&copy;2012 Fitrangi<sup>TM</sup>. All right Reserved</p>
 
-        <!--ul class="nav pull-right" style="position:fixed;bottom:0;right:2%;z-index:100;background: #337ab7;font-size:24px;border-top-left-radius:3px;border-top-right-radius:3px;">
-            <li><a href="#" title="Scroll to top"><i class="fa fa-arrow-up"></i></a></li>
-        </ul-->
-
-    </div>
+        </div>
 
 
-</section>
+    </section>
 
-<img id="loadingImage" class="exactCenter" src="/img/loading.gif"/>
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="/js/bootstrap.min.js"></script>
+    <img id="loadingImage" class="exactCenter" src="/img/loading.gif"/>
+</footer>
+
+
+<script src="/js/bootstrap.min.js"></script><script src='http://maps.googleapis.com/maps/api/js?v=3&sensor=false&amp;libraries=places'></script>
+<script src="/js/bootstrap-dialog.min.js"></script>
+<script src="/js/css3-mediaqueries.js"></script>
 <script src="/js/respond.min.js"></script>
 <script src="/js/html5shiv.js"></script>
 <script src="/js/modernizr.custom.85647.js"></script>
-<script src="/js/css3-mediaqueries.js"></script>
-<script src="/js/bootstrap-dialog.min.js"></script>
+<script src="/js/fotorama.js"></script>
+<script src="/js/summernote.min.js"></script>
 <script src="/js/bootstrap-tagsinput.js"></script>
 <script src="/js/jquery.geocomplete.min.js"></script>
+<script src="/js/autobahn.min.jgz"></script>
+<!-- Bootstrap core JavaScript
+-->
+
+{% assets filters="jsmin", output="app/my-handler.js",
+    "appjs/handler.js", "appjs/async.js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+<!--
 <script src="/appjs/handler.js"></script>
 <script src="/appjs/async.js"></script>
+-->
+
 <script>
     $(function () {
         $('#loadingImage').hide();
@@ -354,6 +385,7 @@
 
     ga('create', 'UA-59043882-1', 'auto');
     ga('send', 'pageview');
+
 
 
 </script>

@@ -6,6 +6,7 @@ from flask.ext.cache import Cache
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.mandrill import Mandrill
 from flask.ext.mongorest import MongoRest
+from flask.ext.assets import Environment
 from app import settings
 from pymongo import read_preferences
 
@@ -25,12 +26,18 @@ mandrill = Mandrill(app)
 db = MongoEngine()
 db.init_app(app)
 
-
+print 'DB: ', settings.MONGODB_DB, settings.MONGODB_HOST, settings.MONGODB_PORT
 #from flask.ext import login
 cache = Cache(app,config={'CACHE_TYPE': 'simple'})
 admin = None
 api = MongoRest(app)
 app.jinja_env.cache = {}
+
+ASSETS_DEBUG = os.environ.get('ASSETS_DEBUG', None)
+if ASSETS_DEBUG and ASSETS_DEBUG == 'TRUE':
+    app.config['ASSETS_DEBUG'] = True
+
+assets = Environment(app)
 
 def start_app():
     global admin
@@ -41,7 +48,8 @@ def start_app():
 
     #from app.handlers.views import *
     #from app.handlers.editors import *
-    admin_user = Profile.objects(roles='Admin').first()
+    print Profile.objects.count()
+    admin_user = Profile.objects(roles__in=['Admin']).first()
     if admin_user is None:
         profile = Profile(name='Arshad Ansari', roles=['Admin'], email='arshadansari27@gmail.com')
         profile.password = 'testing'

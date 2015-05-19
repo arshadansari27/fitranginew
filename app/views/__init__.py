@@ -1,7 +1,6 @@
 from app.config import get_activities
 from app.models.profile import Profile
 from app import  app, cache
-from app.views.site import view_menu
 
 __author__ = 'arshad'
 
@@ -22,8 +21,7 @@ def setup_user():
 
 def force_setup_context(context={}):
     user = g.user if hasattr(g, 'user') and g.user is not None else None
-    activity_menu = view_menu()
-    d = dict(user=user, activity_menu=activity_menu, menu=get_menu_selection(request.path))
+    d = dict(user=user, menu=get_menu_selection(request.path))
     if user:
         context['public_activity_count'] = user.public_activity_count if user.public_activity_count else 0
         context['private_activity_count'] = user.private_activity_count if user.private_activity_count else 0
@@ -35,8 +33,7 @@ def force_setup_context(context={}):
 @app.context_processor
 def setup_context():
     user = g.user if hasattr(g, 'user') and g.user is not None else None
-    activity_menu = view_menu()
-    return dict(user=user, activity_menu=activity_menu, menu=get_menu_selection(request.path))
+    return dict(user=user, menu=get_menu_selection(request.path))
 
 #@cache.cached(timeout=3600 * 24)
 def get_menu_selection(request_path):
@@ -62,23 +59,23 @@ def get_menu_selection(request_path):
             break
 
     if '/activity' in request_path:
-        for k, v in get_activities().iteritems():
-            for i, j in v.iteritems():
-                if request_path in j or j in request_path:
-                    inner = i
+        inner = request.args.get('name', None)
 
 
-    class Menu(object):
-        def __init__(self, top, main, inner):
-            self.app_name = top
-            self.main_menu = main
-            self.inner = inner
 
-        def __repr__(self):
-            return "%s -> %s -> %s" % (self.app_name, self.main_menu, self.inner)
 
     menu = Menu(top, main, inner)
     return menu
+
+class Menu(object):
+    def __init__(self, top, main, inner):
+        self.app_name = top
+        self.main_menu = main
+        self.inner = inner
+
+    def __repr__(self):
+        return "%s -> %s -> %s" % (self.app_name, self.main_menu, self.inner)
+
 
 from .common import *
 from .messaging import *

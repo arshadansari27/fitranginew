@@ -29,7 +29,9 @@ COLLECTION_PATHS = {
     TRIP: 'site/pages/searches/trips',
     "explore": 'site/pages/landings/home',
     "community": 'site/pages/landings/community',
-    'about': 'site/pages/landings/about'
+    'about': 'site/pages/landings/about',
+    'login': 'site/pages/landings/login',
+    'register': 'site/pages/landings/register'
 }
 
 WALL_IMAGE_STYLE = "background:  linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url(%s) no-repeat center center;background-size: cover;"
@@ -226,7 +228,7 @@ class NodeView(View):
                                 c_type = ICON_VIEW
                             else:
                                 c_type = GRID_VIEW
-                            entity_view =  NodeView.get_collection_card(m_name, c_type, NodeExtractor.factory(m_name).get_single("pk:%s" % id), {})
+                            entity_view =  NodeView.get_collection_card(m_name, ICON_VIEW, NodeExtractor.factory(m_name).get_single("pk:%s" % id), {})
                             context['entity_view'] = entity_view
 
             template = env.get_template(template_path)
@@ -294,6 +296,21 @@ class PageManager(object):
         context.update(Page.factory(model_name, 'landing').get_context(context))
         html = template.render(**context)
         return 'Fitrangi: India\'s complete adventure portal. Find what you are looking for', html, context
+
+    @classmethod
+    def get_common_title_and_page(cls, page, **kwargs):
+        from app.views import env
+        if page == 'login':
+            text = 'Login to'
+        elif page == 'register':
+            text = 'Register with'
+        else:
+            raise Exception("Invalid page type")
+        template_path = COLLECTION_PATHS.get(page) + '.html'
+        template = env.get_template(template_path)
+        context = kwargs if kwargs and len(kwargs) > 0 else {}
+        html = template.render(**context)
+        return '%s fitrangi.com' % text, html, context
 
 
 class Page(object):
@@ -405,7 +422,8 @@ class SearchPage(Page):
         elif self.model_name == DISCUSSION:
             featured = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, category='featured').get_card(context)
             latest = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, category='latest').get_card(context)
-            return dict(featured=featured, latest=latest)
+            advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, fixed_size=3).get_card(context)
+            return dict(featured=featured, latest=latest, advertisement_list=advertisement_list)
         elif self.model_name == EVENT:
             return dict(events_list=NodeCollectionFactory.resolve(EVENT, ROW_VIEW).get_card(context))
         elif self.model_name == TRIP:
