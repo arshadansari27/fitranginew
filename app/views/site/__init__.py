@@ -1,5 +1,6 @@
 from app.handlers.messaging import send_single_email
 from app import app
+from app.models import STREAM
 from flask import render_template, request, g, redirect, jsonify, url_for, session
 from app.handlers.editors import NodeEditor
 from app.handlers import NodeCollectionFactory, NodeExtractor
@@ -202,6 +203,12 @@ def paged_list():
     extractor = NodeExtractor.factory(model)
     models = extractor.get_list(query, True, page, size)
     html = NodeCollectionFactory.resolve(model, card_type, category, fixed_size=size).only_list(models)
+
+    if hasattr(g, 'user')  and g.user and g.user.id:
+        if model == STREAM and 'pk' in query and str(g.user.id) in query:
+            g.user.public_activity_count = 0
+            g.user.save()
+
     context['user'] = g.user if hasattr(g, 'user') and g.user is not None else None
     last_page=extractor.last_page(query, size)
     err_html = '<div class="jumbotron"><h6>No data available for this category</h6></div>'
