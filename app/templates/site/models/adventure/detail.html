@@ -35,16 +35,16 @@
 
                         <li>
                             {% if not model in user.accomplished_adventure %}
-                                <a href="#" data-action="add-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-check"></span>&nbsp;Done this</a>
+                                <a href="#" data-action="add-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-flag"></span>&nbsp;Done this</a>
                             {% else %}
-                                <a href="#" data-action="remove-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-check green"></span>&nbsp;Undo this</a>
+                                <a href="#" data-action="remove-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-flag green"></span>&nbsp;Undo this</a>
                             {% endif %}
                         </li>
                         <li>
                             {% if not model in user.wish_list_adventure %}
-                            <a href="#" data-action="add-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-star"></span> Add to Wishlist</a>
+                            <a href="#" data-action="add-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-list"></span> Add to Wishlist</a>
                             {% else %}
-                            <a href="#" data-action="remove-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-star yellow"></span> Wishlisted </a>
+                            <a href="#" data-action="remove-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-list yellow"></span> Wishlisted </a>
                             {% endif %}
                         </li>
                         <li><a href="#review_post"><span class="fa fa-edit"></span> Write Review</a></li>
@@ -74,7 +74,7 @@
                 <span class="fa fa-star"></span> <strong>About & Reviews</strong></a></li>
 
             <li class=""><a href="#how-to-reach" role="tab" data-toggle="tab" aria-controls="how-to-reach"
-                            aria-expanded="false">'
+                            aria-expanded="false">
                 <span class="fa fa-road"></span> <strong>How to Reach</strong> </a></li>
 
             <!--li class=""><a href="#nearby-offbeat-stays" role="tab" data-toggle="tab" aria-controls="nearby-offbeat-stays" aria-expanded="false">
