@@ -75,7 +75,7 @@ class EditorView(View):
             model = extractor.get_single("pk:%s;" % str(self.id) )
             if not g.user:
                 raise Exception("where is the user")
-            if model and model.author.id != g.user.id or 'Admin' not in g.user.roles:
+            if model and model.author.id != g.user.id and 'Admin' not in g.user.roles:
                 raise Exception("Invalid User")
         else:
             model = None
