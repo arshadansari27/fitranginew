@@ -4,7 +4,7 @@
         <div class="container">
 
             <div class="col-lg-4 col-md-4 col-sm-4 hidden-xs pull-right user-fav-acti">
-                <h3>Favourites Activities&nbsp;: </h3>
+                {% if model.favorite_ativities|length > 0 %}<h3>Favourites Activities&nbsp;: </h3>{% elif model.id == user.id %}<h3>Find your favorite activities </h3>{% endif %}
                 <div class="row-fluid">
                     {% for acti in model.favorite_activities[0:10] %}
                     {% if acti.icon_image_path %} <a href=""><img src="{{acti.icon_image_path}}" class="thumbnail"></a>{% endif %}
@@ -27,6 +27,7 @@
                     <h4><i class="fa fa-map-marker"></i>&nbsp;{% if model.location %} {{model.location}} {% else %}{% if model.id == user.id %}<a href="#" data-action="edit-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" >Change location</a>{% else %}Location not known{% endif %}{% endif %}</h4>
                     <a href="" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">{{ model.followers|length }} Followers</a>
                     <a href="" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">{{ model.following|length }} Following</a>
+                    {% if model.is_business_profile and not model.admin_approved %}<a href="" class="disabled label p-10 fs-12 uppercase" style="background: darkred;">Awaiting Approval</a>{% endif %}
                 </div>
 
             </div>
@@ -69,6 +70,28 @@
 
     </div>
 </section>
+{% if model.is_business_profile %}
+<section class="container business-details">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 about">
+        <div class="heading"><h3>About</h3></div>
+        {{model.about|safe}}
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 contact">
+        <div class="heading"><h3>Contact</h3></div>
+        <div class="row">
+            {% if model.phone %}<h4><i class="fa fa-phone">:</i>&nbsp;{{model.phone}}</h4> {% endif %}
+            {% if model.email %}<h4><i class="fa fa-at">:</i>&nbsp;<a href="">{{model.email}}</a></h4> {% endif %}
+            {% if model.website %}<h4><i class="fa fa-globe">:</i>&nbsp;<a href="">{{model.website}}</a></h4> {% endif %}
+            {% if model.location %}<h4><i class="fa fa-map-marker">:</i>&nbsp;{{model.location}}</a></h4> {% endif %}
+            {% if model.facebook %}<h4><i class="fa fa-facebook">:</i>&nbsp;{{model.facebook}}</a></h4> {% endif %}
+            {% if model.google_plus %} <h4><i class="fa fa-google-plus">:</i>&nbsp;{{model.google_plus}}</a></h4> {% endif %}
+            {% if model.linked_in %} <h4><i class="fa fa-linkedin">:</i>&nbsp;{{model.linked_in}}</a></h4> {% endif %}
+            {% if model.blog_channel %}<h4><i class="fa fa-rss">:</i>&nbsp;{{model.blog_channel}}</a></h4> {% endif %}
+            {% if model.youtube_channel %}<h4><i class="fa fa-youtube">:</i>&nbsp;{{model.youtube_channel}}</a></h4> {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
 <section class="container-fluid p-0">
     <div role="tabpanel" data-example-id="togglable-tabs">
 

@@ -347,6 +347,26 @@ class ApprovalContentAdminView(ModelView):
             return self.model.objects(__raw__=q)
         return None
 
+class ApprovalProfileAdminView(ModelView):
+    can_create = False
+    can_edit = True
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
+    form_columns = ['name', 'description', 'managed_by', 'about', 'website', 'phone', 'email', 'facebook', 'linked_in', 'google_plus', 'blog_channel', 'youtube_channel', 'cover_image','admin_approved']
+    column_list = ('anme', 'description', 'managed_by', 'admin_approved', 'cover_image')
+    form_overrides = dict(description=SummernoteTextAreaField, content=SummernoteTextAreaField)
+
+    def is_accessible(self):
+        if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
+            return True
+        return False
+
+    def get_query(self):
+        if 'Admin' in g.user.roles:
+            q = {'admin_approved': False}
+            return self.model.objects(__raw__=q)
+        return None
+
 
 class PreferenceView(flask_admin.BaseView):
 
@@ -496,6 +516,7 @@ class RestrictedAdminView(ModelView):
 admin.add_view(ApprovalContentAdminView(Article, name='Article', endpoint='approval.article', category="Approvals"))
 #admin.add_view(ApprovalContentAdminView(Blog, name='Blog', endpoint='approval.blog', category="Approvals"))
 admin.add_view(ApprovalContentAdminView(Discussion, name='Discussion', endpoint='approval.discussion', category="Approvals"))
+admin.add_view(ApprovalProfileAdminView(Profile, name='Business Profile', endpoint='approval.business_profile', category="Approvals"))
 admin.add_view(ProfileAdminView(Profile, category="Administration"))
 admin.add_view(ActivityAdminView(Activity, category="Administration"))
 admin.add_view(AdventureAdminView(Adventure, category="Administration"))
