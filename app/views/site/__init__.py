@@ -1,19 +1,12 @@
 from app.handlers.messaging import send_single_email
-import os, random
-from jinja2 import Template
-import simplejson as json
-from PIL import Image
 from app import app
 from flask import render_template, request, g, redirect, jsonify, url_for, session
 from app.handlers.editors import NodeEditor
 from app.handlers import NodeCollectionFactory, NodeExtractor
 from app.models import Node, NodeFactory, ACTIVITY, ADVENTURE, ARTICLE, DISCUSSION, PROFILE, EVENT, TRIP
 from app.models.profile import Profile, ProfileType
-from app.utils.search_helper import listing_helper, node_helper
-from app.utils import login_required, all_tags, convert_query_to_filter
-from app.handlers import  EditorView, NodeView, Page, CollectionView, PageManager
-from app.handlers import (activity_extractor, adventure_extractor, article_extractor, discussion_extractor,
-                            profile_extractor, event_extractor, trip_extractor)
+from app.utils import login_required, all_tags
+from app.handlers import  EditorView, PageManager
 
 (MODEL_DETAIL_VIEW, MODEL_LIST_ROW_VIEW, MODEL_LIST_GRID_VIEW, MODEL_LIST_POD_VIEW) = ('detail', 'row', 'grid', 'pod')
 
@@ -73,8 +66,6 @@ def registration():
     context['card']  = card
     context['referrer'] = request.referrer
     return render_template('site/layouts/empty_layout.html', **context)
-
-
 
 @app.route('/write/<model_name>')
 @app.route('/write/<model_name>/<model_id>')
@@ -241,7 +232,6 @@ def ajax_options():
     results = (str_to_use % u for u in options)
     return ''.join(results)
 
-
 @app.route('/names')
 def ajax_names():
     model_name = request.args.get('model_name', '')
@@ -256,8 +246,6 @@ def ajax_names():
         options = (getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     results = (u for u in options)
     return ','.join(results)
-
-
 
 @app.route('/buttons')
 def ajax_buttons():
@@ -288,6 +276,32 @@ def model_view(slug):
     context['title']    = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
     return render_template('site/pages/commons/view.html', **context)
 
+@app.route('/edit-profile')
+def edit_profile():
+    if not hasattr(g, 'user') and not g.user:
+        return 'Forbidden', 403
+    from app.views import force_setup_context
+    title, card, context    = PageManager.get_edit_title_and_page('profile', query="pk:%s;" % str(g.user.id))
+    context                 = force_setup_context(context)
+    context['card']         = card
+    context['title']        = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
+    return render_template('site/pages/commons/view.html', **context)
+
+@app.route('/manage-profile')
+def manage_profile():
+    if not hasattr(g, 'user') and not g.user:
+        return 'Forbidden', 403
+    from app.views import force_setup_context
+    pk              = request.args.get('pk', None)
+    is_business     = request.args.get('business', None)
+    if not pk or len(pk) is 0:
+        pk = 'NOT_FOUND'
+
+    title, card, context    = PageManager.get_edit_title_and_page('profile', query='pk:%s;' % pk, is_business=is_business)
+    context                 = force_setup_context(context)
+    context['card']         = card
+    context['title']        = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
+    return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/editors/invoke', methods=['POST'])
 def edit_invoke():

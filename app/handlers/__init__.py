@@ -238,6 +238,17 @@ class NodeView(View):
             print e.message
             return ''
 
+    @classmethod
+    def get_editable_card(cls, model_name, model, context={}):
+        from app.views import env
+        from app.views import force_setup_context
+        template_path = 'site/models/' + model_name + '/edit.html'
+        template = env.get_template(template_path)
+        context = force_setup_context(context)
+        context['model'] = model
+        print '[*] Context: ', context
+        return template.render(**context)
+
 
     @classmethod
     def get_detail_card(cls, model_name, model, context={}):
@@ -268,6 +279,24 @@ class PageManager(object):
         context.update(Page.factory(model_name, 'detail').get_context(context))
         title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s complete adventure portal')
         return title, NodeView.get_detail_card(model_name, model, context), context
+
+    @classmethod
+    def get_edit_title_and_page(cls, model_name, **kwargs):
+        query = kwargs.get('query', None)
+        user = kwargs.get('user', None)
+        is_business = kwargs.get('is_business', None)
+        assert query is not None
+        try:
+            model = NodeExtractor.factory(model_name).get_single(query)
+        except Exception, e:
+            if str(e.message) == 'NOT_FOUND is not a valid ObjectId':
+                model = None
+            else:
+                raise e
+        context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), is_business=is_business)
+        context.update(Page.factory(model_name, 'edit').get_context(context))
+        title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s complete adventure portal')
+        return title, NodeView.get_editable_card(model_name, model, context), context
 
     @classmethod
     def get_search_title_and_page(cls, model_name, **kwargs):
@@ -323,7 +352,9 @@ class Page(object):
 
     @classmethod
     def factory(self, model_name, type):
-        if type == 'detail':
+        if type == 'edit':
+            return profile_edit_page
+        elif type == 'detail':
             if model_name == ACTIVITY:
                 return activity_detail_page
             elif model_name == ADVENTURE:
@@ -477,6 +508,14 @@ class DetailPage(Page):
             other_trips = NodeCollectionFactory.resolve(TRIP, GRID_ROW_VIEW, category="other", fixed_size=4).get_card(context)
             return dict(discussions=discussions, other_trips=other_trips)
 
+class EditPage(Page):
+
+    def __init__(self, model_name):
+        super(EditPage, self).__init__(model_name)
+
+    def get_context(self, context):
+        return {}
+
 
 explore_landing_page    = LandingPage('explore')
 community_landing_page  = LandingPage('community')
@@ -495,3 +534,5 @@ profile_detail_page     = DetailPage(PROFILE)
 article_detail_page     = DetailPage(ARTICLE)
 discussion_detail_page  = DetailPage(DISCUSSION)
 trip_detail_page        = DetailPage(TRIP)
+
+profile_edit_page       = EditPage(PROFILE)

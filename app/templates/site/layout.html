@@ -110,17 +110,21 @@
                         <li>
                             <a class="btn-default" href="/community/profile" title="Members"><i  class="fa fa-users"></i>&nbsp; All Members</a>&nbsp;
                         </li>
-                        <li>
-                            <a class="btn-default" href="#" title="Business">Own a business?</a>&nbsp;
-                        </li>
-                        {% if not (user and user.id) %}
 
+                        <li>
+                            {% if user and user.managed_profiles|length == 0 and user.managed_by|length == 0 %}
+                            <a class="btn-default" href="/manage-profile?business=true" title="Business">Own a business?</a>&nbsp;
+                            {% else %}
+                            <a class="btn-default" href="#" title="Business" data-action="ask-to-login">Own a business?</a>&nbsp;
+                            {% endif %}
+                        </li>
+
+                        {% if not (user and user.id) %}
                         <li>
                             <a class="btn-default" href="/login" title="Login"><i class="fa fa-key"></i>&nbsp; Login</a>&nbsp;
                         </li>
                         <li>
-                            <a class="btn-default" href="/register" title="Register"><i
-                                    class="fa fa-user">+</i>&nbsp; Register</a>&nbsp;
+                            <a class="btn-default" href="/register" title="Register"><i class="fa fa-user">+</i>&nbsp; Register</a>&nbsp;
                         </li>
                         {% elif user and user.id %}
 

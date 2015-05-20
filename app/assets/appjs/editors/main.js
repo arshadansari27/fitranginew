@@ -72,12 +72,15 @@ jQuery(document).ready(function($){
 
     App.uploader = function(dialogRef) {
         var data = new FormData();
-        jQuery.each(jQuery('input[type=file]')[0].files, function(i, file) {
+        console.log("RUnning file uploader");
+        jQuery.each(dialogRef.getModalBody().find('input[type=file]')[0].files, function(i, file) {
             data.append('file-'+i, file);
+            console.log(i + "-" + JSON.stringify(file));
         });
         if (data.length == 0) {
             return;
         }
+        console.log("RUnning file uploader");
         dialogRef.enableButtons(false);
         dialogRef.setClosable(false);
         dialogRef.getModalBody().prepend('<img class="loading-icon" src="/img/loading.gif">');
@@ -109,6 +112,8 @@ jQuery(document).ready(function($){
                 $('.alert').html('<div class="alert-message">Failed to upload the image, try again later.</div>');
                 $('.alert').addClass('alert-warning');
                 $('.alert').show();
+                dialogRef.enableButtons(true);
+                dialogRef.setClosable(true);
             }
         });
     };

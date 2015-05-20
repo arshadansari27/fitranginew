@@ -309,10 +309,91 @@ jQuery(document).ready(function ($) {
         });
 
     });
-    $('body').on('click', '[data-action="edit-profile"]', function (e) {
+
+    $('body').on('click', '[data-action="ask-to-login"]', function(e){
+        e.stopPropagation();
+        e.preventDefault();
+        BootstrapDialog.show({
+            message: '<div class="text-center"><h3>Please login!</h3><p>You must have personal account inorder to add your organization!</p></div>',
+            buttons: [
+                {
+                    label: 'Close',
+                    cssClass: 'btn-primary',
+                    action: function(dialog) {
+                        dialog.close();
+                    }
+                }
+            ]
+        });
+    });
+
+    $('body').on('click', '[data-action="save-profile"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
 
+        var id, name, phone, location, website, facebook, google_plus, linked_in, youtube_channel, blog_channel, location_lat, location_long, about;
+        id              = $('#profile-id').val();
+        name            = $('#name-edit').val();
+        phone           = $('#phone-edit').val();
+        location        = $('#geo_location_name').val();
+        location_lat    = $('#geo_location_lat').val();
+        location_long   = $('#geo_location_long').val();
+        website         = $('#website-edit').val();
+        facebook        = $('#facebook-edit').val();
+        google_plus     = $('#google-plus-edit').val();
+        linked_in       = $('#linked-in-edit').val();
+        youtube_channel = $('#youtube-channel-edit').val();
+        blog_channel    = $('#blog-channel-edit').val();
+        about           = $('#about-edit').val();
+        email           = $('#email-edit').val();
+        type            = $('#type-edit').val();
+        if (id == undefined || id.length == 0) {
+            App.profile.register_complete_profile({
+                    name: name,
+                    email: email,
+                    type: type,
+                    phone: phone,
+                    location: location,
+                    location_lat: location_lat,
+                    location_long: location_long,
+                    website:website,
+                    facebook: facebook,
+                    google_plus: google_plus,
+                    linked_in: linked_in,
+                    youtube_channel: youtube_channel,
+                    blog_channel: blog_channel,
+                    about: about
+                }, function(data){
+                    BootstrapDialog.alert({title: data.status, message: data.message});
+                    setTimeout(2000, function(){ window.location.href='/explore';})
+                }
+            );
+        } else {
+            App.profile.edit_profile(id, {
+                name: name,
+                phone: phone,
+                location: location,
+                location_lat: location_lat,
+                location_long: location_long,
+                website:website,
+                facebook: facebook,
+                google_plus: google_plus,
+                linked_in: linked_in,
+                youtube_channel: youtube_channel,
+                blog_channel: blog_channel,
+                about: about
+            }, function(data){
+                BootstrapDialog.alert({title: data.status, message: data.message});
+            });
+        }
+    });
+
+
+    $('body').on('click', '[data-action="edit-profile"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        window.location.href = '/edit-profile';
+        if(true) return;
         BootstrapDialog.show({
             title: 'Edit Profile',
             message: $('<div></div>').load('/edit-profile-modal'),
@@ -328,7 +409,7 @@ jQuery(document).ready(function ($) {
                     cssClass: 'btn-primary',
                     action: function(dialog){
                         dialog.getModalBody().find('.alert').remove();
-                        var id, name, phone, location, website, facebook, google_plus, linked_in, youtube_channel, blog_channel, location_lat, location_long;
+                        var id, name, phone, location, website, facebook, google_plus, linked_in, youtube_channel, blog_channel, location_lat, location_long, about;
                         id              = $('#profile-id').val();
                         name            = $('#name-edit').val();
                         phone           = $('#phone-edit').val();
@@ -341,6 +422,11 @@ jQuery(document).ready(function ($) {
                         linked_in       = $('#linked-in-edit').val();
                         youtube_channel = $('#youtube-channel-edit').val();
                         blog_channel    = $('#blog-channel-edit').val();
+                        if ($('#about-edit') != undefined) {
+                            about       = $('#about-edit').val();
+                        } else {
+                            about       = '';
+                        }
                         App.profile.edit_profile(id, {
                             name: name,
                             phone: phone,
@@ -352,7 +438,8 @@ jQuery(document).ready(function ($) {
                             google_plus: google_plus,
                             linked_in: linked_in,
                             youtube_channel: youtube_channel,
-                            blog_channel: blog_channel
+                            blog_channel: blog_channel,
+                            about: about
                         }, function(data){
                             show_dialog_message(dialog, data.status, data.message);
                             if (data.status == 'success') {
@@ -536,7 +623,18 @@ jQuery(document).ready(function ($) {
     });
 
     if ($('.summernote') != undefined) {
-        $('.summernote').summernote({height: 400});
+        //$('.summernote').summernote({height: 400});
+        $('.summernote').each(function(){
+            var $textArea = $(this);
+
+            $textArea.summernote({
+                height: 400,
+                onkeyup: function (e) {
+                    $textArea.val($(this).code());
+                    $textArea.change(); //To update any action binded on the control
+                }
+            });
+        });
     }
     function postToFeed(title, desc, url, image) {
         var obj = {method: 'feed', link: 'http://www.fitrangi.com' + url, picture: 'http://www.fitrangi.com/' + image, name: title, description: desc};

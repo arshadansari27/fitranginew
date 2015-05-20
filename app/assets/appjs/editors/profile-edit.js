@@ -309,6 +309,15 @@ $(document).ready(function() {
         App.editor(options, callback);
     };
 
+    App.profile.register_complete_profile= function(options, callback) {
+        var options = {
+            data: options,
+            type: 'profile',
+            command: 'register-business-profile'
+        };
+        App.editor(options, callback);
+    };
+
     App.profile.subscribe = function(name, email, callback) {
         var options = {
             data: {name: name, email: email},

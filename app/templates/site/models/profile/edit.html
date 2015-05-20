@@ -1,0 +1,95 @@
+<section class="container" xmlns="http://www.w3.org/1999/html" style="margin-bottom: 60px;">
+    <form class="fitrangi-form">
+        <input type="hidden" id="profile-id" value="{{model.id}}"/>
+        <input type="hidden" id="is-business" value="{% if is_business %}true{% else %}false{% endif %}"/>
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                <div class="form-group">
+                    <label for="heading">Name<span class="red">*</span></label>
+                    <input id="name-edit" type="text" class="form-control" placeholder="Enter name" value="{% if model.name and model.name|length > 0 %}{{model.name}}{% endif %}">
+                </div>
+                <div class="form-group">
+                    <label for="heading">Phone<span class="red">*</span></label>
+                    <input id="phone-edit" type="text" class="form-control" placeholder="Enter phone" value="{% if model.phone and model.phone|length > 0  %}{{model.phone}}{% endif %}">
+                </div>
+                <div class="form-group">
+                    <label for="heading">Email<span class="red">*</span></label>
+                    <input id="email-edit" type="email" class="form-control" {% if model and model.id%}disabled{%endif %} placeholder="Enter email" value="{{model.email}}">
+                </div>
+                <div class="form-group">
+                    <label for="heading">Location<span class="red">*</span></label>
+                    <input id="location-edit" type="text" class="geo-complete form-control" placeholder="Hit enter to auto complete on location" value="{% if model.location and model.location|length > 0  %}{{model.location}}{% endif %}">
+                    <input type="hidden" name="formatted_address" id="geo_location_name" value="{% if model.location  and model.location|length > 0  %}{{model.location}}{% endif %}"/>
+                    <input type="hidden" name="lat" id="geo_location_lat" value="{% if model.location and model.geo_location %}{{model.geo_location['coordinates'][0]}}{% endif %}"/>
+                    <input type="hidden" name="lng" id="geo_location_long" value="{% if model.location and model.geo_location %}{{model.geo_location['coordinates'][1]}}{% endif %}"/>
+                </div>
+                {% if is_business %}
+                <div class="form-group">
+                    <label for="heading">Business Type<span class="red">*</span></label>
+                    <select id="type-edit" class="form-control" placeholder="Select business type">
+                        <option value="Organizer">Organizer</option>
+                        <option value="Gear Dealer">Gear Dealer</option>
+                    </select>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                {% if model and model.id %}
+                    <a href="#" role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Click to change" class="hoverable" data-action="edit-cover-image" data-model-id="{{model.id}}" data-model="profile" data-trigger="hover"><img src="{% if not model.cover_image_path or model.cover_image_path|length == 0%}/img/Profile-Picture.jpg{% else %}{{model.cover_image_path}}{% endif %}" alt="" class="center-block text-center img-thumbnail img-responsive"></a>
+                {% else %}
+                    <img src="{% if not model.cover_image_path or model.cover_image_path|length == 0%}/img/Profile-Picture.jpg{% else %}{{model.cover_image_path}}{% endif %}" alt="" class="center-block text-center img-thumbnail img-responsive">
+                {% endif %}
+            </div>
+
+        </div>
+        <div class="row">
+            <h3 class="text-center">--more--</h3><br/>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+            <div class="form-group">
+                <label for="heading">About me<span class="red">*</span></label>
+                <textarea id="about-edit" row="5" type="text" class="form-control summernote" placeholder="Tell us about yourself">
+                    {% if model.about and model.about|length > 0 %}{{model.about}}{% endif %}
+                </textarea>
+            </div>
+            <div class="form-group">
+                <label for="heading">Website</label>
+                <input id="website-edit" type="text" class="form-control" placeholder="Enter website link" value="{% if model.website and model.website|length > 0 %}{{model.website}}{% endif %}">
+            </div>
+            <div class="form-group">
+                <label for="heading">Facebook Profile Link</label>
+                <input id="facebook-edit" type="text" class="form-control" placeholder="Enter facebook profile link" value="{% if model.facebook and model.facebook|length > 0 %}{{model.facebook}}{% endif %}">
+            </div>
+            <div class="form-group">
+                <label for="heading">Google+ Profile Link</label>
+                <input id="google-plus-edit" type="text" class="form-control" placeholder="Enter G+ profile link" value="{% if model.google_plus and model.google_plus|length > 0 %}{{model.google_plus}}{% endif %}">
+            </div>
+            <div class="form-group">
+                <label for="heading">Linked In Profile Link</label>
+                <input id="linked-in-edit" type="text" class="form-control" placeholder="Enter LinkedIn profile link" value="{% if model.linked_in and model.linked_in|length > 0 %}{{model.linked_in}}{% endif %}">
+            </div>
+            <div class="form-group">
+                <label for="heading">Own a blog?</label>
+                <input id="blog-channel-edit" type="text" class="form-control" placeholder="Share the link with us" value="{% if model.blog_channel and model.blog_channel|length > 0 %}{{model.blog_channel}}{% endif %}">
+            </div>
+            <div class="form-group">
+                <label for="heading">Own a youtube channel?</label>
+                <input id="youtube-channel-edit" type="text" class="form-control" placeholder="Share the channel link with us" value="{% if model.youtube_channel and model.youtube_channel|length > 0 %}{{model.youtube_channel}}{% endif %}">
+            </div>
+            <div class="form-actions pull-right">
+                <button class="btn btn-primary" data-action="save-profile">Save</button>
+                <button id="back-button" class="btn btn-info">Back</button>
+            </div>
+        </div>
+    </form>
+
+</section>
+<script>
+    $(document).ready(function(){
+        $('#back-button').on('click', function(e){ window.history.back(); });
+
+        $(".geo-complete").geocomplete({details: "form"});
+    });
+</script>
+

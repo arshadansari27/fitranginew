@@ -50,6 +50,8 @@ class ProfileEditor(NodeEditor):
             return edit_type(self.action, self.node, self.message['type'])
         elif self.command == 'register-profile':
             return register_profile(self.data)
+        elif self.command == 'register-business-profile':
+            return register_business_profile(self.data)
         elif self.command == 'business-profile-edit':
             return business_profile_edit(self.action, self.node)
         elif self.command == 'role-edit':
@@ -100,11 +102,14 @@ def edit_profile(profile, data):
     for k, v in data.iteritems():
         if not hasattr(node, k) or k == 'email' or k == 'location' or k.startswith('location'):
             continue
+        v = v.strip()
         setattr(node, k, v)
+        print 'K [%s]: V [%s]' % (k, v)
 
     location        = data.get('location', None)
     location_lat    = data.get('location_lat', None)
     location_long   = data.get('location_long', None)
+    print 'Location [%s]: [%s, %s]' % (location, location_lat, location_long)
     if location is not None and len(location) > 0:
         node.location = location
         node.geo_location = [float(location_lat), float(location_long)]
@@ -287,6 +292,39 @@ def register_profile(data):
         html = template.render(**context)
         send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=html)
     return profile
+
+@response_handler('Successfully registered the business profile, awaiting admin approval', 'Failed to register', login_required=True)
+def register_business_profile(data):
+    name, email= data['name'], data['email']
+    _type, about, website, google_plus, linked_in, facebook = data['type'], data['about'], data['website'], data['google_plus'], data['linked_in'], data['facebook']
+
+    subscription_type = ProfileType.objects(name__icontains='subscription').first()
+    if Profile.objects(email__iexact=email, type__nin=[str(subscription_type.id)]).first():
+        raise Exception('Profile already exists')
+
+    type = ProfileType.objects(name__iexact=_type).first()
+    profile = Profile.objects(email__iexact=email).first()
+    if not profile:
+        profile = Profile.create(name=name, email=email, type=[type], roles=['Basic User'], about=about if about else '', website=website if website else '',
+                                 facebook=facebook if facebook else '', linked_in=linked_in if linked_in else '', google_plus=google_plus if google_plus else '')
+    else:
+        raise Exception('Profile already added by someone')
+    profile.password = 'default-password@789'
+    profile.is_business_profile = True
+    profile.admin_approved = False
+    profile.save()
+
+    if profile and profile.id:
+        from app.views import env
+        session['user'] = str(profile.id)
+        template_path = 'notifications/successfully_registered.html'
+        template = env.get_template(template_path)
+        context = {}
+        context['user']  = profile
+        html = template.render(**context)
+        send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=html)
+    return profile
+
 
 
 @response_handler('Successfully updated business status', 'Failed to update business status')

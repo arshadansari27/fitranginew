@@ -52,12 +52,20 @@ class Profile(Entity, db.Document):
     private_activity_count = db.IntField(default=0)
     owned_by = db.ReferenceField('Profile')
     managed_by = db.ListField(db.ReferenceField('Profile'))
+    admin_approved = db.BooleanField(default=False)
+
 
     meta = {
         'indexes': [
             {'fields': ['email', 'slug', 'name'], 'unique': False, 'sparse': False, 'types': False },
         ],
     }
+
+    @property
+    def is_admin_approved_business_profile(self):
+        if hasattr(self, 'admin_approved') and self.admin_approved:
+            return True
+        return False
 
     def increment_public_activity_count(self):
         if not hasattr(self, 'public_activity_count'):

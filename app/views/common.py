@@ -28,6 +28,7 @@ def image_uploader_dialog():
 				height=originalImgHeight)
         return jsonify(response)
     except Exception, e:
+        print '*' * 10, e
         raise e
 
 @app.route('/dialog/crop_image', methods=['POST'])
