@@ -297,6 +297,13 @@ def register_profile(data):
 def register_business_profile(data):
     name, email= data['name'], data['email']
     _type, about, website, google_plus, linked_in, facebook = data['type'], data['about'], data['website'], data['google_plus'], data['linked_in'], data['facebook']
+    logged_in_user = data['logged_in']
+
+    user = Profile.objects(pk=logged_in_user).first()
+    if not user:
+        raise Exception("Not logged in")
+
+
 
     subscription_type = ProfileType.objects(name__icontains='subscription').first()
     if Profile.objects(email__iexact=email, type__nin=[str(subscription_type.id)]).first():
@@ -312,11 +319,12 @@ def register_business_profile(data):
     profile.password = 'default-password@789'
     profile.is_business_profile = True
     profile.admin_approved = False
+    profile.managed_by.append(user)
     profile.save()
 
     if profile and profile.id:
         from app.views import env
-        session['user'] = str(profile.id)
+        #session['user'] = str(profile.id)
         template_path = 'notifications/successfully_registered.html'
         template = env.get_template(template_path)
         context = {}
@@ -324,7 +332,6 @@ def register_business_profile(data):
         html = template.render(**context)
         send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=html)
     return profile
-
 
 
 @response_handler('Successfully updated business status', 'Failed to update business status')

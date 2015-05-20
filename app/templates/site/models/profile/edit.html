@@ -1,5 +1,6 @@
 <section class="container" xmlns="http://www.w3.org/1999/html" style="margin-bottom: 60px;">
     <form class="fitrangi-form">
+        <input type="hidden" id="logged-in-id" value="{% if user %}{{user.id}}{% endif %}"/>
         <input type="hidden" id="profile-id" value="{{model.id}}"/>
         <input type="hidden" id="is-business" value="{% if is_business %}true{% else %}false{% endif %}"/>
         <div class="row">

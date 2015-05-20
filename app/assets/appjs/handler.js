@@ -333,6 +333,7 @@ jQuery(document).ready(function ($) {
 
         var id, name, phone, location, website, facebook, google_plus, linked_in, youtube_channel, blog_channel, location_lat, location_long, about;
         id              = $('#profile-id').val();
+        logged_in        = $('#logged-in-id').val();
         name            = $('#name-edit').val();
         phone           = $('#phone-edit').val();
         location        = $('#geo_location_name').val();
@@ -347,6 +348,7 @@ jQuery(document).ready(function ($) {
         about           = $('#about-edit').val();
         email           = $('#email-edit').val();
         type            = $('#type-edit').val();
+
         if (id == undefined || id.length == 0) {
             App.profile.register_complete_profile({
                     name: name,
@@ -362,10 +364,11 @@ jQuery(document).ready(function ($) {
                     linked_in: linked_in,
                     youtube_channel: youtube_channel,
                     blog_channel: blog_channel,
-                    about: about
+                    about: about,
+                    logged_in: logged_in
                 }, function(data){
                     BootstrapDialog.alert({title: data.status, message: data.message});
-                    setTimeout(2000, function(){ window.location.href='/explore';})
+                    setTimeout(0, function(){ window.location.href='/explore';})
                 }
             );
         } else {

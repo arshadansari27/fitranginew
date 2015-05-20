@@ -165,7 +165,7 @@
                                         {% for _profile in managed_profiles %}
                                             <li><a data-action="switch-profile" data-model-id="{{_profile.id}}"
                                                 data-user-id="{{user.id}}"
-                                                href="#"><i class="fa fa-user"></i>&nbsp;switch user to <strong>{{_profile.name}}</strong></a></li>
+                                                href="#"><i class="fa fa-user"></i>&nbsp;<strong>{{_profile.name}}</strong>&nbsp; (switch user)</a></li>
                                         {% endfor %}
                                     {% endif %}
                                     {% if user.managed_by|length > 0 %}
