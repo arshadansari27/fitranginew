@@ -441,6 +441,54 @@ min-height: 50px;}
 	font-size: 13px;
 }
 }
+
+.btn-head{
+  font-size: 13px;
+  border: 1px solid #0F75BC;
+  color: #0F75BC !important;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 6px;
+  margin-right: 5px;
+  display: inline-block;
+  padding: 8px !important;
+  border-radius:3px;
+  
+  -webkit-transition: all 0.2s linear 0s;
+  -moz-transition: all 0.2s linear 0s;
+  -o-transition: all 0.2s linear 0s;
+  -ms-transition: all 0.2s linear 0s;
+  transition: all 0.2s linear 0s;
+  
+}
+.btn-head:hover, .btn-head:focus{
+	background:#0F75BC !important;
+	color:#FFF !important;
+}
+
+.business-pro-btn{
+  font-size: 13px;
+  border: 1px solid #7A7B7C;
+  color: #0F75BC;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 6px;
+  margin-right: 5px;
+  display: inline-block;
+  padding: 8px !important;
+  border-radius:7px 0 0 7px;
+  
+  -webkit-transition: all 0.2s linear 0s;
+  -moz-transition: all 0.2s linear 0s;
+  -o-transition: all 0.2s linear 0s;
+  -ms-transition: all 0.2s linear 0s;
+  transition: all 0.2s linear 0s;
+}
+.business-pro-btn:hover, .business-pro-btn:focus{
+	background:#7A7B7C !important;
+	color:#FFF !important;
+}
+
 /*---------------------------------- COLOR END --------------------------------------*/
 
 /*------------ EXTRA STYLE START (It will be Modify with Layout Manually)-----------*/
@@ -577,8 +625,7 @@ min-height: 50px;}
 .btn-noti{
 	padding-right:0px !important;
 	border-radius: 10px;
-        background: #D9D9D9;
-	color:#000;
+    background: transparent;
 }
 .btn-noti:hover, .btn-noti:focus{
 	color:#fff;
@@ -752,7 +799,7 @@ min-height: 50px;}
 	color: #1375b4;
 } 
 .navbar-nav{
-	padding:20px 15px;
+	padding:20px 15px 0;
 }
 .nav-down{
   	padding: 12px 0;

@@ -107,29 +107,21 @@
                     </ul>
                     {% endif %}
                     <ul class="nav navbar-nav navbar-right pull-right">
-                        <li>
-                            <a class="btn-default" href="/community/profile" title="Members"><i  class="fa fa-users"></i>&nbsp; All Members</a>&nbsp;
-                        </li>
+	                        <li>
+                                {% if user and user.managed_profiles|length == 0 and user.managed_by|length == 0 %}
+                                <a class="business-pro-btn" href="/manage-profile?business=true" title="Business">Create business Profile</a>&nbsp;
+                                {% else %}
+                                <a class="business-pro-btn" href="#" title="Business" data-action="ask-to-login">Create business Profile</a>&nbsp;
+                                {% endif %}
+                            </li>
+	                        <li><a class="btn-head" href="/community/profile" title="Members">Members</a></li>
+                            {% if not (user and user.id) %}
+                            <li><a class="btn-head" href="/login" title="Login">Login</a></li>
+                            <li><a class="btn-head" href="/register" title="Register">Register</a></li>
+                            {% elif user and user.id %}
 
-                        <li>
-                            {% if user and user.managed_profiles|length == 0 and user.managed_by|length == 0 %}
-                            <a class="btn-default" href="/manage-profile?business=true" title="Business">Own a business?</a>&nbsp;
-                            {% else %}
-                            <a class="btn-default" href="#" title="Business" data-action="ask-to-login">Own a business?</a>&nbsp;
-                            {% endif %}
-                        </li>
-
-                        {% if not (user and user.id) %}
-                        <li>
-                            <a class="btn-default" href="/login" title="Login"><i class="fa fa-key"></i>&nbsp; Login</a>&nbsp;
-                        </li>
-                        <li>
-                            <a class="btn-default" href="/register" title="Register"><i class="fa fa-user">+</i>&nbsp; Register</a>&nbsp;
-                        </li>
-                        {% elif user and user.id %}
-
-                        <li class="dropdown">
-                                <a class="btn-default" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <li class="dropdown">
+                                <a class="btn-head" href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <img src="{{user.cover_image_path}}" class="" alt="profile"
                                          height="18">{{user.name}}
                                     <b class="caret"></b>
@@ -177,8 +169,9 @@
                                     {% endif %}
                                     <li><a href="/logout"><i class="fa fa-lock"></i> Log Out</a></li>
                                 </ul>
-                        </li>
-                        {% endif %}
+                            </li>
+
+                            {% endif %}
                     </ul>
                 </div>
 

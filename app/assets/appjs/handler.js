@@ -292,7 +292,7 @@ jQuery(document).ready(function ($) {
     $('body').on('click', '[data-action="switch-profile"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
-        var that = $(e.target);
+        var that = $('[data-action="switch-profile"]');
         var profile = that.attr('data-model-id');
         var user = that.attr('data-user-id');
         console.log('[*] ' + user + ": " + profile);
