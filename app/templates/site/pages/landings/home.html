@@ -102,10 +102,7 @@
 <div class="container">
 
 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 who-joined-community">
-<h2>Take a look at who has just joined</h2>
-
-
-
+    <h2>Take a look at who has just joined</h2>
     <div class="row">
         {{profile|safe}}
     </div>
@@ -121,7 +118,7 @@
     <input id="discussion-admin-published-filter" type="hidden" data-model="discussion" data-filter="admin_published" value="bool|True" data-filter-status="fixed"/>
     {{discussion|safe}}
 </div>
-<button data-action="add-discussion" data-user-id="{{user.id}}" type="button" class="btn btn-primary mb-10 pull-left">Add a Discussion</button>
+<a data-action="add-discussion" data-user-id="{{user.id}}" class="btn btn-primary mb-10 pull-left">Add a Discussion</a>
 <a href="/community/discussion" class="btn btn-primary mb-10 pull-right">View all</a>
 
 </div>
