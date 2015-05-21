@@ -1,7 +1,7 @@
 from app.handlers.messaging import send_single_email
 from app import app
 from app.models import STREAM
-from flask import render_template, request, g, redirect, jsonify, url_for, session
+from flask import render_template, request, g, redirect, jsonify, url_for, session, flash
 from app.handlers.editors import NodeEditor
 from app.handlers import NodeCollectionFactory, NodeExtractor
 from app.models import Node, NodeFactory, ACTIVITY, ADVENTURE, ARTICLE, DISCUSSION, PROFILE, EVENT, TRIP
@@ -20,6 +20,8 @@ def login_page():
         profile = Profile.authenticate(email, password)
         if profile and profile.id:
             session['user'] = str(profile.id)
+            if not hasattr(profile, 'location') or not profile.location or len(profile.location) is 0:
+                flash('Please update your location by clicking <a href="/edit-profile">here</a>')
             return jsonify(dict(status='success', message='Successfully logged in.', node=str(profile.id)))
         return jsonify(dict(status='error', message='Failed to login. Please try again.'))
 
