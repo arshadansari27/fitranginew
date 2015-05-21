@@ -10,3 +10,4 @@ media/
 venv/
 node.pid
 .webassets-cache/
+app/assets/app
