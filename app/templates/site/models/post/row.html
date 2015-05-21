@@ -10,7 +10,11 @@
                 <small class="pull-right">Posted {{model.since}}</small>
             </h5>
         </div>
-
+        {% if False and model.author.id == user.id %}
+        <div class="media-right">
+             <a href="#" data-action="delete-content" data-model-id="{{model.id}}" data-user-id="{{user.id}}" data-author-id="{{model.author.id}}" class="close" data-dismiss="alert">&times;</a>
+        </div>
+        {% endif %}
     </div>
     <div data-model-id="{{model.id}}" data-container="comments" class="post-content container-fluid">
         {% if model.video_embed and model.video_embed|length > 0 %}
