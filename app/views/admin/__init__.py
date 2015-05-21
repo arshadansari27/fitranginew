@@ -1,5 +1,6 @@
 from flask.ext.admin import BaseView, expose, AdminIndexView
 from flask.ext.admin.menu import MenuLink
+from app.models import NodeFactory
 from markupsafe import Markup
 from wtforms import fields, widgets, form
 from mongoengine import Q
@@ -16,7 +17,7 @@ from app.models.profile import Profile, ProfileType
 from app.models.streams import ActivityStream, ChatMessage
 from app.models.content import Content, Channel, Comment, Article, Post, PostVote, Discussion, Advertisement
 from app.models.activity import Activity
-from app.models.adventure import Adventure, Location
+from app.models.adventure import Adventure
 from app.models.event import Event
 from app.models.trip import Trip
 from app.models.relationships import RelationShips
@@ -24,8 +25,8 @@ import mongoengine
 from mongoengine import Q
 from flask.ext.admin.contrib.mongoengine.filters import BooleanEqualFilter, FilterLike, BaseMongoEngineFilter
 
-from flask.ext.admin.contrib.mongoengine.ajax import QueryAjaxModelLoader
-from flask.ext.admin.model.ajax import DEFAULT_PAGE_SIZE
+#from flask.ext.admin.contrib.mongoengine.ajax import QueryAjaxModelLoader
+#from flask.ext.admin.model.ajax import DEFAULT_PAGE_SIZE
 from app import app
 
 @app.context_processor
@@ -39,14 +40,6 @@ class FilterAdventure(BaseMongoEngineFilter):
     def apply(self, query, value):
         adventure = Adventure.objects(name__icontains=value).first()
         return query.filter(adventures__iexact=[adventure.id])
-
-    def operation(self):
-        return 'is'
-
-class FilterLocation(BaseMongoEngineFilter):
-    def apply(self, query, value):
-        location = Location.objects(name__icontains=value).first()
-        return query.filter(location__iexact=location.id)
 
     def operation(self):
         return 'is'
@@ -75,7 +68,7 @@ class FilterProfileType(BaseMongoEngineFilter):
     def operation(self):
         return 'is'
 
-
+'''
 class TagAjaxModelLoader(QueryAjaxModelLoader):
     """
     """
@@ -105,7 +98,7 @@ class TagAjaxModelLoader(QueryAjaxModelLoader):
             query = query.skip(offset)
 
         return [u.name for u in query.limit(limit).all()]
-
+'''
 class SummernoteTextAreaWidget(widgets.TextArea):
     def __call__(self, field, **kwargs):
         kwargs.setdefault('class_', 'summernote')
@@ -156,8 +149,8 @@ class ActivityAdminView(ModelView):
 class AdventureAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'about', 'location', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image', 'activities']
-    column_list = ('name', 'description', 'cover_image')
+    form_columns = ['name', 'description', 'about', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image', 'activities']
+    column_list = ('name', 'description', 'cover_image', 'location')
     column_filters = ['name', FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name',)
     form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField)
@@ -167,13 +160,24 @@ class AdventureAdminView(ModelView):
             return True
         return False
 
+    def _location_formatter(view, context, model, name):
+        url = '/admin/location_update?model_id=%s&model_type=%s&back=%s' % (str(model.id), model.__class__.__name__, '/admin/adventure/')
+        if model.location:
+            text = '%s<br/><a href="%s">Change</a>' % (model.location, url)
+        else:
+            text = '<a href="%s">Set Location</a>' % url
+
+        return Markup(text)
+
+    column_formatters = {'location': _location_formatter}
+
 
 class EventAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'about', 'scheduled_date', 'location', 'organizer','cover_image', 'external_link']
-    column_list = ('name', 'description', 'organizer', 'cover_image')
-    column_filters = ['name', FilterLocation('location', 'Location')]
+    form_columns = ['name', 'description', 'about', 'scheduled_date', 'organizer','cover_image', 'external_link']
+    column_list = ('name', 'description', 'organizer', 'cover_image', 'location')
+    column_filters = ['name']
     column_searchable_list = ('name', )
     form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField)
 
@@ -181,12 +185,23 @@ class EventAdminView(ModelView):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
             return True
         return False
+
+    def _location_formatter(view, context, model, name):
+        url = '/admin/location_update?model_id=%s&model_type=%s&back=%s' % (str(model.id), model.__class__.__name__, '/admin/event/')
+        if model.location:
+            text = '%s<br/><a href="%s">Change</a>' % (model.location, url)
+        else:
+            text = '<a href="%s">Set Location</a>' % url
+
+        return Markup(text)
+
+    column_formatters = {'location': _location_formatter}
 
 
 class TripAdminView(ModelView):
-    form_columns = ['name', 'description', 'about', 'location', 'starting_from', 'price', 'currency', 'discount_percentage', 'organizer',  'activities', 'difficulty_rating', 'registration', 'start_date', 'end_date', 'schedule', 'things_to_carry', 'inclusive', 'exclusive', 'others', 'comments', 'enquiries', 'announcements', 'cover_image']
-    column_list = ('name', 'description', 'organizer', 'cover_image')
-    column_filters = ['name', FilterAdventure('adventure.id', 'Adventure'), FilterActivities('activities.id', 'Activity'), FilterLocation('starting_from.id', 'Start Location')]
+    form_columns = ['name', 'description', 'about', 'starting_from', 'price', 'currency', 'discount_percentage', 'organizer',  'activities', 'difficulty_rating', 'registration', 'start_date', 'end_date', 'schedule', 'things_to_carry', 'inclusive', 'exclusive', 'others', 'announcements', 'cover_image']
+    column_list = ('name', 'description', 'organizer', 'cover_image', 'location')
+    column_filters = ['name', FilterAdventure('adventure.id', 'Adventure'), FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name', )
     form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField)
 
@@ -194,13 +209,25 @@ class TripAdminView(ModelView):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
             return True
         return False
+
+    def _location_formatter(view, context, model, name):
+        url = '/admin/location_update?model_id=%s&model_type=%s&back=%s' % (str(model.id), model.__class__.__name__, '/admin/trip/')
+        if model.location:
+            text = '%s<br/><a href="%s">Change</a>' % (model.location, url)
+        else:
+            text = '<a href="%s">Set Location</a>' % url
+
+        return Markup(text)
+
+    column_formatters = {'location': _location_formatter}
+
 
 
 class ProfileAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'email', 'featured', 'about', 'location', 'phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image', 'type', 'managed_by']
-    column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login', 'type', 'featured')
+    form_columns = ['name', 'email', 'featured', 'about', 'phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image', 'type', 'managed_by']
+    column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login', 'type', 'featured', 'location')
     column_filters = ['name'] #, FilterProfileType('type.id', 'Type')]
     column_searchable_list = ('name', 'email')
     form_overrides = dict(about=SummernoteTextAreaField)
@@ -209,6 +236,19 @@ class ProfileAdminView(ModelView):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
             return True
         return False
+
+    def _location_formatter(view, context, model, name):
+        url = '/admin/location_update?model_id=%s&model_type=%s&back=%s' % (str(model.id), model.__class__.__name__, '/admin/profile/')
+        if model.location:
+            text = '%s<br/><a href="%s">Change</a>' % (model.location, url)
+        else:
+            text = '<a href="%s">Set Location</a>' % url
+
+        return Markup(text)
+
+    column_formatters = {'location': _location_formatter}
+
+
 
 class CommentAdminView(ModelView):
     can_create = False
@@ -411,40 +451,23 @@ class ChangePasswordView(flask_admin.BaseView):
 
     def is_visible(self):
         return False
-
-
+'''
 class LocationAdminView(ModelView):
-    column_list = ('name', 'geo_location')
-    column_sortable_list = ('name')
+    column_list = ('name', 'location', 'geo_location')
+    column_sortable_list = ('name', 'location')
 
-    column_searchable_list = ('name',)
+    column_searchable_list = ('name', 'location')
 
     form = LocationForm
-    #form_overrides = dict(name=GeoCompleteTextInputField)
     form_widget_args = dict(name={'class': 'geo-complete'})
 
-    """
-    def get_list(self, *args, **kwargs):
-        count, data = super(LocationAdminView, self).get_list(*args, **kwargs)
+    def get_query(self):
+        model_id = request.args.get('model_id', None)
+        model_type = request.args.get('model_type', None)
+        model_class = NodeFactory.get_class_by_name(model_type)
 
+        return model_class.objects
 
-        # Grab user names
-        query = {'_id': {'$in': [x['user_id'] for x in data]}}
-        users = db.user.find(query, fields=('name',))
-
-        # Contribute user names to the models
-        users_map = dict((x['_id'], x['name']) for x in users)
-
-        for item in data:
-            item['user_name'] = users_map.get(item['user_id'])
-        return count, data
-
-    # Contribute list of user choices to the forms
-    def _feed_user_choices(self, form):
-        users = db.user.find(fields=('name',))
-        form.user_id.choices = [(str(x['_id']), x['name']) for x in users]
-        return form
-    """
 
     def edit_form(self, obj):
         form = super(LocationAdminView, self).edit_form(obj)
@@ -468,7 +491,41 @@ class LocationAdminView(ModelView):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
             return True
         return False
+'''
+class LocationSettingAdminView(flask_admin.BaseView):
 
+    @flask_admin.expose('/', methods=['GET', 'POST'])
+    def set_location(self):
+        form = LocationForm()
+        model_id = request.args.get('model_id')
+        model_type = request.args.get('model_type')
+        back = request.args.get('back', request.referrer)
+        model_class = NodeFactory.get_class_by_name(model_type)
+
+        model = model_class.objects(pk=model_id).first()
+        if request.method == 'POST':
+            model.location = request.form.get('formatted_address', '')
+            lat = float(request.form.get('lat'))
+            long = float(request.form.get('lng'))
+            model.geo_location = [lat, long]
+            model.save()
+            flash('Profiled updated successfully', category='success')
+        if model.location:
+            form.formatted_address.data = model.location
+            form.location.data = model.location
+        if model.geo_location:
+            if type(model.geo_location) == list:
+                lat = model.geo_location[0]
+                lng = model.geo_location[1]
+            else:
+                lat = model.geo_location['coordinates'][0]
+                lng = model.geo_location['coordinates'][1]
+            form.lat.data =  str(lat)
+            form.lng.data =  str(lng)
+        return self.render('/admin/my_custom/location.html', model=model, form=form, action_name='Update Location', settings='profile', back_to_url=back)
+
+    def is_visible(self):
+        return False
 
 
 class ProfileSettingAdminView(flask_admin.BaseView):
@@ -519,12 +576,12 @@ admin.add_view(ApprovalContentAdminView(Discussion, name='Discussion', endpoint=
 admin.add_view(ApprovalProfileAdminView(Profile, name='Business Profile', endpoint='approval.business_profile', category="Approvals"))
 admin.add_view(ProfileAdminView(Profile, category="Administration"))
 admin.add_view(ActivityAdminView(Activity, category="Administration"))
+admin.add_view(LocationSettingAdminView(name='Location Update', endpoint='location_update'))
 admin.add_view(AdventureAdminView(Adventure, category="Administration"))
 admin.add_view(RestrictedAdminView(Advertisement, category="Administration"))
 
 
 admin.add_view(ContentAdminView(Article, category="Editorial"))
-#admin.add_view(ContentAdminView(Blog, category="Editorial"))
 admin.add_view(ContentAdminView(Discussion, category="Editorial"))
 admin.add_view(PostAdminView(Post, category="Editorial"))
 admin.add_view(PostForContentAdminView(Post, name="Posts on content", endpoint="content_post_admin_view"))
@@ -533,7 +590,7 @@ admin.add_view(EventAdminView(Event, category="Organizers"))
 admin.add_view(TripAdminView(Trip, category="Organizers"))
 
 admin.add_view(RestrictedAdminView(ProfileType, category="Tools"))
-admin.add_view(LocationAdminView(Location, category="Tools"))
+#admin.add_view(LocationAdminView(Location, category="Tools"))
 admin.add_view(ChannelAdminView(Channel, category="Tools"))
 admin.add_view(PreferenceView(name='Preference', endpoint='settings.preference', category="Settings"))
 admin.add_view(ChangePasswordView(name='Change Password', endpoint='settings.password', category="Settings"))

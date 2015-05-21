@@ -4,7 +4,7 @@ from app.models import ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST,
     PROFILE_TYPE, ADVERTISEMENT, CHANNEL, NodeFactory
 from app.models.streams import ActivityStream
 from app.models.activity import Activity
-from app.models.adventure import Adventure, Location
+from app.models.adventure import Adventure
 from app.models.content import Article, Post, Discussion, Advertisement, Channel
 from app.models.event import Event
 from app.models.profile import Profile, ProfileType
@@ -147,8 +147,6 @@ class NodeExtractor(object):
             return stream_extractor
         elif model_name == RELATIONSHIPS:
             return relationship_extractor
-        elif model_name == LOCATION:
-            return location_extractor
         elif model_name == PROFILE_TYPE:
             return profile_type_extractor
         elif model_name == ADVERTISEMENT:
@@ -163,7 +161,6 @@ activity_extractor = NodeExtractor(ACTIVITY)
 advertisement_extractor = NodeExtractor(ADVERTISEMENT)
 channel_extractor = NodeExtractor(CHANNEL)
 profile_type_extractor = NodeExtractor(PROFILE_TYPE)
-location_extractor = NodeExtractor(LOCATION)
 article_extractor = NodeExtractor(ARTICLE)
 discussion_extractor = NodeExtractor(DISCUSSION)
 post_extractor = NodeExtractor(POST)

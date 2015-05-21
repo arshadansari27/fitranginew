@@ -317,7 +317,7 @@ class NodeFactory(object):
     @classmethod
     def get_class_by_name(cls, name):
         from app.models.activity import Activity
-        from app.models.adventure import Adventure, Location
+        from app.models.adventure import Adventure
         from app.models.content import Content, Discussion, Channel, Post, Article, Advertisement
         from app.models.event import Event
         from app.models.store import Product
@@ -334,7 +334,6 @@ class NodeFactory(object):
         elif name == PROFILE: return Profile
         elif name == PRODUCT: return Product
         elif name == ARTICLE: return Article
-        elif name == LOCATION: return Location
         elif name == POST: return Post
         elif name == DISCUSSION: return Discussion
         elif name == CHANNEL: return Channel

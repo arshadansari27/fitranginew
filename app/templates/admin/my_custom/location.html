@@ -10,6 +10,9 @@
 {% endblock %}
 
 {% block body %}
+    Name: {{model.name}} &nbsp;&nbsp;<a class="btn btn-link" href="{{back_to_url}}">Go Back</a>
+    <hr/>
+    <img src="{{model.cover_image_path_small}}"/>
     <hr/>
     {% call lib.form_tag(form) %}
         {{ lib.render_form_fields(form, form_opts=form_opts) }}
@@ -20,5 +23,10 @@
 {% block tail %}
   {{ super() }}
   {{ lib.form_js() }}
-
+  <script language="javascript">
+      $(document).ready(function(){
+          $('input[type="text"]').addClass('geo-complete');
+          $(".geo-complete").geocomplete({details: "form"});
+      });
+  </script>
 {% endblock %}

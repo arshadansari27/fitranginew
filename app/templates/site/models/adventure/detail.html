@@ -120,10 +120,10 @@
         <div class="container">
             <h4>How to Reach</h4>
             {% if model.location %}
-                <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span> {{model.location.name}}</h4>
+                <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span> {{model.location}}</h4>
                 <div class="tab-details">
                     <div class="thumbnail">
-                        <center><iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyC2G0kvBLJBEnBCUPf053z6mL5tgbWON5o&q={{model.location.name}}&zoom=7" width="60%" height="400" frameborder="0" style="border:0"></iframe></center>
+                        <center><iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyC2G0kvBLJBEnBCUPf053z6mL5tgbWON5o&q={{model.location}}&zoom=7" width="60%" height="400" frameborder="0" style="border:0"></iframe></center>
                     </div>
                 </div>
                 <hr class="divider clearfix">
@@ -289,17 +289,17 @@
         </section>
 
         <article class="border-grey-b">
-            {% if not model.location %}
+            {% if True or not model.location %}
             <h5 class="grey">Other Adventures</h5>
             {% else %}
             <h5 class="grey">Other Adventure to do Near</h5>
-            <h4 class="blue">{{model.location.name}}</h4>
+            <h4 class="blue">{{model.location}}</h4>
             {% endif %}
         </article>
         <div class="adventure fitrangi-thumb">
             <input id="adventure-not-same-filter" type="hidden" data-category="all" data-model="adventure" data-filter="id__ne" value="{{model.id}}"/>
             {% if model.location %}
-            <input id="adventure-location-filter" type="hidden" data-category="all" data-model="adventure" data-filter="location__location__id" value="{{model.location.id}}"/>
+            <!--input id="adventure-location-filter" type="hidden" data-category="all" data-model="adventure" data-filter="location__near" value="{{model.geo_location}}"/-->
             {% endif %}
             {{other_adventure_list|safe}}
         </div>

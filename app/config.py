@@ -1,5 +1,5 @@
 from app.models.activity import Activity
-from app.models.adventure import Location, Adventure
+from app.models.adventure import Adventure
 from app.models.content import Channel
 from app.models.profile import Profile, ProfileType
 
@@ -112,7 +112,7 @@ configuration = {
             "display": "Adventures",
             "placement": "main",
             "view": "/explore/adventures",
-            'facets': [('activities', Activity), ('location', Location), ('extremity_level', int)]
+            'facets': [('activities', Activity), ('location', None), ('extremity_level', int)]
         },
         {
             "name": "trip",
@@ -140,7 +140,7 @@ configuration = {
             "display": "Event",
             "placement": "main",
             "view": "/community/events",
-            'facets': [('location', Location), ('organizer', Profile)]
+            'facets': [('location', None), ('organizer', Profile)]
         },
         {
             "name": "trending",

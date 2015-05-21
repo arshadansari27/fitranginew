@@ -10,7 +10,7 @@ from app.handlers.extractors import NodeExtractor, article_extractor, advertisem
 from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, POST, STREAM, Node, ADVERTISEMENT
 from app.models.streams import ActivityStream
 from app.models.content import Content, Post, Article, Discussion
-from app.models.adventure import Adventure, Location
+from app.models.adventure import Adventure
 from app.models.activity import Activity
 from app.models.event import Event
 from app.models.trip import Trip
