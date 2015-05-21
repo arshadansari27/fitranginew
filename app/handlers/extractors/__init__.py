@@ -30,8 +30,8 @@ class NodeExtractor(object):
         self.model_class = NodeFactory.get_class_by_name(model_name)
         self.init_filters = init_filters
 
-    def get_list(self, query, paged, page, size):
-        query_set = self.get_query(query)
+    def get_list(self, query, paged, page, size, sort=None):
+        query_set = self.get_query(query, sort=sort)
         if paged:
             page = int(page)
             size = int(size)
@@ -50,15 +50,20 @@ class NodeExtractor(object):
     def get_single(self, query):
         return self.get_query(query).first()
 
-    def last_page(self, query, size):
-        query_set = self.get_query(query)
+    def last_page(self, query, size, sort=None):
+        query_set = self.get_query(query, sort=sort)
         count = query_set.count()
         page = (count / int(size)) + 1
         return page
 
-    def get_query(self, query):
+    def get_query(self, query, sort=None):
         use_filters = convert_query_to_filter(query)
-        filters = self.init_filters
+        if sort:
+            sorters = convert_query_to_filter(sort)
+        else:
+            sorters = {}
+        filters = dict((u, v) for u, v in self.init_filters.iteritems())
+        print 'Pre', self.model_class.__name__, use_filters, sorters, filters
         merge = []
         if len(use_filters) > 0:
             filters = {}
@@ -82,7 +87,13 @@ class NodeExtractor(object):
                     assert len(fields) >= 3
                     relationship = fields[1]
                     from_node_type = fields[2]
-                    from_node = NodeExtractor.factory(from_node_type).get_single('pk:%s' % v)
+                    if len(fields) is 4:
+                        qry = fields[3]
+                    elif len(fields) is 5:
+                        qry = fields[3] + '__' + fields[4]
+                    else:
+                        qry = 'pk'
+                    from_node = NodeExtractor.factory(from_node_type).get_single('%s:%s' % (qry, v))
                     nodes = RelationShips.get_by_query(from_node, relationship)
                     filters['id__in'] = [u.id for u in nodes if u is not None and hasattr(u, 'id')]
                 elif '__' in k:
@@ -119,8 +130,13 @@ class NodeExtractor(object):
                     for m, k, v in to_add:
                         del filters[m]
                         filters[k].append(v)
-        print filters
+        if sorters and len(sorters) > 0:
+            if sorters.has_key('location_lat')  and sorters.has_key('location_lng'):
+                filters['geo_location__near'] = {"type": "Point", "coordinates": [float(sorters['location_lat']), float(sorters['location_lng'])]}
+                filters['geo_location__max_distance'] = 100000
+        print 'Post: ', self.model_class.__name__, filters
         return self.model_class.objects(**filters).order_by('-created_timestamp')
+
 
     @classmethod
     def factory(cls, model_name):

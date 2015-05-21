@@ -709,10 +709,39 @@ jQuery(document).ready(function ($) {
         return query;
     };
 
-    App.fitler_to_query = query_from_filters;
+    var query_from_sorters = function(model, category) {
+        var query = '';
+        $('[data-sorter][data-model="' + model + '"]').each(function(j, sorter_element) {
+            var sorter_category     = $(sorter_element).attr('data-category');
+            var sorter_key          = $(sorter_element).attr('data-sorter');
+            //var sorter_type         = $(sorter_element).attr('data-sorter-type');
+
+            var sorter_value        = $(sorter_element).val();
+
+            if (sorter_category != undefined && sorter_category != category) {
+                return;
+            }
+            if (sorter_value == undefined || sorter_value == null || sorter_value.length == 0 || sorter_value == '--') {
+                return;
+            }
+            /*
+            if (sorter_type != undefined && sorter_type.length > 0){
+                sorter_value = sorter_type + '|' + sorter_value;
+            }
+            */
+
+            query += sorter_key+ ":"  + sorter_value+ ';';
+        });
+
+        return query;
+    };
+
+    App.filter_to_query = query_from_filters;
+    App.sorter_to_query = query_from_sorters;
 
     var load_model = function(options, callback) {
         var query       = options.query;
+        var sort_query  = options.sort_query;
         var page        = options.page;
         var size        = options.size;
 
@@ -720,7 +749,7 @@ jQuery(document).ready(function ($) {
         var card_type   = options.card_type;
         var category    = options.category;
 
-        var url = '/listings?model_view=' + model + '&card_type=' + card_type + '&page=' + page + '&query=' + query + '&size=' + size + '&category=' + category;
+        var url = '/listings?model_view=' + model + '&card_type=' + card_type + '&page=' + page + '&query=' + query + '&size=' + size + '&category=' + category+'&sort=' + sort_query;
         console.log('[*] Loading models from URL: ' + url);
         $.ajax({
                 url: url
@@ -745,9 +774,11 @@ jQuery(document).ready(function ($) {
         var size        = 24;
 
         var query       = query_from_filters(model, category);
+        var sort_query  = query_from_sorters(model, category);
 
         var options = {
             query: query,
+            sort_query: sort_query,
             page: page,
             size: size,
             model: model,
@@ -780,12 +811,14 @@ jQuery(document).ready(function ($) {
         var card_type   = $(elem).attr('data-card-type');
 
         var query = query_from_filters(model, category);
+        var sort_query  = query_from_sorters(model, category);
 
         var page = 1;
         var $sizeContainer = $('[data-type="size"][data-model="'+model+'"][data-category="' + category + '"][data-card-type="' + card_type + '"]');
         var size = ($sizeContainer != undefined && $sizeContainer.length > 0)? $sizeContainer.val(): 24;
         var options = {
             query: query,
+            sort_query: sort_query,
             page: page,
             size: size,
             model: model,
@@ -847,6 +880,23 @@ jQuery(document).ready(function ($) {
             }
             $(filter_element).val('');
         });
+
+        without_category_selector = '[data-sorter][data-model="' + model + '"]';
+        with_category_selector = '[data-sorter][data-model="' + model + '"][data-category="' + category + '"]';
+        selector = null;
+        if (category == undefined) {
+            selector = without_category_selector;
+        } else {
+            selector = with_category_selector;
+        }
+        $(selector).each(function(j, sorter_element) {
+            var is_fixed = $(sorter_element).attr('data-sorter-status');
+            if (is_fixed != undefined && is_fixed=='fixed') {
+                return;
+            }
+            $(sorter_element).val('');
+        });
+
 
 
         without_category_selector = '[data-type="model-container"][data-model="' + model + '"]';

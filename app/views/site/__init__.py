@@ -196,14 +196,17 @@ def list_trip():
 @app.route("/listings")
 def paged_list():
     query       = request.args.get('query', None)
+    sort        = request.args.get('sort', None)
     size        = request.args.get('size', 12)
     page        = request.args.get('page', 1)
     model       = request.args.get('model_view', None)
     card_type   = request.args.get('card_type', None)
     category    = request.args.get('category', 'all')
     context = {}
+    print 'Query Info rec: ', query
+    print 'Sort Info rec: ', sort
     extractor = NodeExtractor.factory(model)
-    models = extractor.get_list(query, True, page, size)
+    models = extractor.get_list(query, True, page, size, sort=sort)
     html = NodeCollectionFactory.resolve(model, card_type, category, fixed_size=size).only_list(models)
 
     if hasattr(g, 'user')  and g.user and g.user.id:
@@ -212,7 +215,7 @@ def paged_list():
             g.user.save()
 
     context['user'] = g.user if hasattr(g, 'user') and g.user is not None else None
-    last_page=extractor.last_page(query, size)
+    last_page=extractor.last_page(query, size, sort=sort)
     err_html = '<div class="jumbotron"><h6>No data available for this category</h6></div>'
     if page is 1 and page is last_page and len(html) is 0:
         html = err_html

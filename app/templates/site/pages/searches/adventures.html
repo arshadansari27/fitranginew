@@ -24,20 +24,11 @@
             </div>
 
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
-
-                <input id="location-filter" data-category="all" data-model="adventure" data-filter="location__location__name" list="location" placeholder="FILTER BY LOCATION">
-                <datalist id="location">
-                    <option value="">
-                </datalist>
-                <script>
-                    $(document).ready(function(){
-                        $.ajax({
-                            url: '/options?model_name=location&attr=name'
-                        }).done(function (data) {
-                            $('#location').append(data);
-                        });
-                    });
-                </script>
+                <input class="geo-complete" placeholder="SORT BY LOCATION" data-sorter="location" data-category="all" data-model="adventure">
+                <form>
+                    <input type="hidden" id="location-sorter-lat" name="lat" id="lat" data-category="all" data-model="adventure" data-sorter="location_lat"/>
+                    <input type="hidden" id="location-sorter-lng" name="lng" id="lng" data-category="all" data-model="adventure" data-sorter="location_lng"/>
+                </form>
             </div>
 
             <div class="col-lg-offset-4 col-md-offset-4">
@@ -63,20 +54,16 @@
  <script>
     $(document).ready(function(){
         window.App.filter('activity-filter');
-        window.App.filter('location-filter');
+        //window.App.filter('location-filter');
+        window.App.sorter('location-sorter-lat');
+        window.App.sorter('location-sorter-lng');
+        $('.geo-complete').geocomplete({details: 'form'});
     });
 </script>
 {% if filters.get('activities__activity__name') %}
   <script>
     $(document).ready(function(){
         $('#activity-filter').val('{{filters.get("activities__activity__name")}}');
-    });
-</script>
-{% endif %}
- {% if filters.get('location__location__name') %}
-  <script>
-    $(document).ready(function(){
-        $('#location-filter').val('{{filters.get("location__location__name")}}');
     });
 </script>
 {% endif %}

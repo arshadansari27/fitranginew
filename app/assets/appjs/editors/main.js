@@ -70,6 +70,21 @@ jQuery(document).ready(function($){
 
     };
 
+    App.sorter = function(id) {
+        var input = $('#' + id);
+        var category = input.attr('data-category');
+        if (category == null || category == undefined || category.length == 0) category = 'all';
+        var model = input.attr('data-model');
+        var sorters = model + '-' + category;
+
+        window.sorters = window.sorters || {};
+        window.sorters[sorters] = window.sorters[sorters] || [];
+
+        var sorters_list = window.sorters[sorters];
+        console.log('Adding sorter for [' + model + '] [' + category + ']: ' + id);
+        sorters_list.push(id);
+    }
+
     App.uploader = function(dialogRef) {
         var data = new FormData();
         console.log("RUnning file uploader");

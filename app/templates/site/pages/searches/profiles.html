@@ -20,7 +20,7 @@
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 fitrangi-datalist">
-                 <input id="activity-filter" data-category="all" data-model="profile" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
+                 <input id="activity-filter" data-category="all" data-model="profile" data-filter="relationship__favorited_by__activity__name__iexact" list="activity" placeholder="FILTER BY ACTIVITY">
                 <datalist id="activity">
                     <option value="">
                 </datalist>
@@ -37,20 +37,11 @@
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 fitrangi-datalist">
-
-                <input id="location-filter" data-category="all" data-model="profile" data-filter="location__location__name" list="location" placeholder="FILTER BY LOCATION">
-                <datalist id="location">
-                    <option value="">
-                </datalist>
-                <script>
-                    $(document).ready(function(){
-                        $.ajax({
-                            url: '/options?model_name=location&attr=name'
-                        }).done(function (data) {
-                            $('#location').append(data);
-                        });
-                    });
-                </script>
+                <input class="geo-complete" placeholder="SORT BY LOCATION" data-sorter="location" data-category="all" data-model="profile">
+                <form>
+                    <input type="hidden" id="location-sorter-lat" name="lat" id="lat" data-category="all" data-model="profile" data-sorter="location_lat"/>
+                    <input type="hidden" id="location-sorter-lng" name="lng" id="lng" data-category="all" data-model="profile" data-sorter="location_lng"/>
+                </form>
             </div>
 
 
@@ -104,9 +95,11 @@
     $(document).ready(function(){
         var App = window.App;
         App.filter('category-filter');
-        App.filter('location-filter');
         App.filter('activity-filter');
         App.filter('name-filter');
+        App.sorter('location-sorter-lat');
+        App.sorter('location-sorter-lng');
+        $('.geo-complete').geocomplete({details: 'form'});
     });
 </script>
 
