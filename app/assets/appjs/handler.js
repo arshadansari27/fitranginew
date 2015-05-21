@@ -32,6 +32,31 @@ jQuery(document).ready(function ($) {
         */
     };
 
+    var shorten_title = function(){
+        var containers = '[data-type="model-container"][data-model="discussion"][data-card-type="row"]';
+        var max_width = 0;
+        $(containers).each(function(i, elem) {
+            var w = $(elem).width();
+            max_width = (w > max_width)? w: max_width;
+        });
+        max_width = parseInt(max_width);
+        doc_width = 0.5 * parseInt($(document).width());
+        console.log('[*] ' + max_width + ', ' + doc_width);
+
+
+        $(".discussion-row-heading").each(function(i, elem){
+
+            var title = "";
+            if (max_width > doc_width){
+                title = $(elem).attr('data-text-full');
+            } else {
+                title = $(elem).attr('data-text-short');
+            }
+            $(elem).html(title);
+        });
+
+    };
+
     App.show_login = function(){ show_login_dialog(); };
 
     $('body').on('click', '[data-action="check-login"]', function(e){
@@ -702,6 +727,7 @@ jQuery(document).ready(function ($) {
         }).done(function (data) {
             if (data.status == 'success') {
                 callback(data);
+                shorten_title();
             } else {
                 console.log('Nothing to load...');
             }
@@ -876,5 +902,6 @@ jQuery(document).ready(function ($) {
         window.App.profile.reset_counter(null, 'private', window.App.profile.update_counter);
      }
      */
+
 
 });

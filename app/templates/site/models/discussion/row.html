@@ -1,4 +1,4 @@
-<li class="media" style="margin-top:1px;">
+<li id="{{model.id}}-container" class="media" style="margin-top:1px;">
     <div class="media-left">
       <a href="#">
             {% if model.author and model.author.type and model.author.type|length > 0 and model.author.type[0].name == 'Enthusiast' %}
@@ -10,7 +10,7 @@
     </div>
 
     <div class="media-body">
-      <h4 class="media-heading"><a href="{{model.slug}}">{{model.title_short}}</a></h4>
+      <h4 class="media-heading"><a class="discussion-row-heading" href="{{model.slug}}" data-text-short="{{model.title_short}}" data-text-full="{{model.title}}"></a></h4>
     </div>
 
     <div class="media-right">
@@ -18,4 +18,9 @@
         <a href=""><span class="fa fa-tag"></span> {% for t in model.tags%}{{t}}{% if not loop.last %}, {% endif %}{% endfor %}</a>
         <a class="">{{model.since}}</a>
     </div>
+    <script>
+        $(document).ready(function(){
+
+        });
+    </script>
 </li>
