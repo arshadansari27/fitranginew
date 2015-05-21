@@ -17,9 +17,15 @@ class ContentEditor(NodeEditor):
 
     def _invoke(self):
         if  self.command == 'add':
-            return add(self.type, self.data)
+            if self.type == 'article':
+                return add_content(self.type, self.data)
+            else:
+                return add_discussion(self.type, self.data)
         elif self.command == 'edit':
-            return edit(self.node, self.type, self.data)
+            if self.type == 'article':
+                return edit(self.node, self.type, self.data)
+            else:
+                return edit(self.node, self.type, self.data)
         elif self.command == 'delete':
             return delete(self.node, self.type)
         elif self.command == 'publish':
@@ -48,7 +54,11 @@ def get_or_create_content(type, id=None):
         return node
 
 @response_handler('Successfully added the content', 'Failed to add content')
-def add(type, data):
+def add_content(type, data):
+    return __edit(None, type, data)
+
+@response_handler('Thank you for posting the discussion. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to add content')
+def add_discussion(type, data):
     return __edit(None, type, data)
 
 
@@ -95,7 +105,7 @@ def __edit(node, type, data):
     obj.save()
     return obj
 
-@response_handler('Thank you for posting a discussion. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to publish')
+@response_handler('Thank you for posting the content. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to publish')
 def publish(node, type):
     if not node or not type:
         raise Exception("invalid parameters")
