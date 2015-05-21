@@ -4,7 +4,7 @@
         <div class="container">
 
             <div class="col-lg-4 col-md-4 col-sm-4 hidden-xs pull-right user-fav-acti">
-                {% if model.favorite_ativities|length > 0 %}<h3>Favourites Activities&nbsp;: </h3>{% elif model.id == user.id %}<h3>Find your favorite activities </h3>{% endif %}
+                {% if model.favorite_activities|length > 0 %}<h3>Favourites Activities&nbsp;: </h3>{% elif model.id == user.id %}<h3>Find your favorite activities </h3>{% endif %}
                 <div class="row-fluid">
                     {% for acti in model.favorite_activities[0:10] %}
                     {% if acti.icon_image_path %} <a href=""><img src="{{acti.icon_image_path}}" class="thumbnail"></a>{% endif %}
