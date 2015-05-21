@@ -13,14 +13,14 @@
         <div class="caption capbottom">
             {% if user %}
                 {% if not model in user.accomplished_adventure %}
-                    <a href="#" class="btn btn-default hoverable" data-action="add-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}" role="button" data-placement="right" data-toggle="popover" data-content="Add to accomplished" data-trigger="hover"><span class="fa fa-check grey"></span>&nbsp; </a>
+                    <a href="#" class="btn btn-default hoverable" data-action="add-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}" role="button" data-placement="right" data-toggle="popover" data-content="Add to accomplished" data-trigger="hover"><span class="fa fa-flag grey"></span>&nbsp; </a>
                 {% else %}
-                    <a href="#" class="btn btn-default hoverable" data-action="remove-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}" role="button" data-placement="right" data-toggle="popover" data-content="Remove from accomplished" data-trigger="focus"><span class="fa fa-check"></span>&nbsp; </a>
+                    <a href="#" class="btn btn-default hoverable" data-action="remove-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}" role="button" data-placement="right" data-toggle="popover" data-content="Remove from accomplished" data-trigger="focus"><span class="fa fa-flag green"></span>&nbsp; </a>
                 {% endif %}
                 {% if not model in user.wish_list_adventure %}
-                    <a href="#" class="btn btn-default hoverable" data-action="add-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}" role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Add to wish list" data-trigger="hover"><span class="fa fa-star grey"></span>&nbsp; </a>
+                    <a href="#" class="btn btn-default hoverable" data-action="add-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}" role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Add to wish list" data-trigger="hover"><span class="fa fa-list grey"></span>&nbsp; </a>
                 {% else %}
-                    <a href="#" class="btn btn-default hoverable" data-action="remove-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}" role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Remove from wish list" data-trigger="hover"><span class="fa fa-star">&nbsp; </span> </a>
+                    <a href="#" class="btn btn-default hoverable" data-action="remove-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}" role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Remove from wish list" data-trigger="hover"><span class="fa fa-list green">&nbsp; </span> </a>
                 {% endif %}
             {% endif %}
         </div>

@@ -106,7 +106,7 @@ def publish(node, type):
         return content
     content.published = True
     content.save()
-    if content.published and not hasattr(content, 'admin_published') and not content.admin_published:
+    if content.published and (not hasattr(content, 'admin_published') or not content.admin_published):
         profile = Profile.objects(roles__in=['Admin']).first()
         mail_data = render_template('notifications/content_posted_admin.html', user=profile, content=content)
         from app.handlers.messaging import send_single_email
