@@ -130,7 +130,7 @@ class Profile(Entity, db.Document):
         if profile and profile.password == hashlib.md5(password).hexdigest():
             if profile.user_since is None:
                 profile.user_since = datetime.datetime.now()
-            profile.save()
+                profile.save()
             return profile
         else:
             return False
