@@ -168,10 +168,13 @@ def list_profile():
 def my_profile():
     if not hasattr(g, 'user') or g.user is None:
         return redirect(url_for('community_mail'))
+    slug = g.user.slug
+    """
     title, card, context = PageManager.get_detail_title_and_page(PROFILE, query='pk:%s;' % g.user.id)
     context['card'] = card
     context['title'] = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
-    return render_template('site/pages/commons/view.html', **context)
+    """
+    return redirect(slug)#render_template('site/pages/commons/view.html', **context)
 
 @app.route("/community/event")
 def list_event():
