@@ -798,6 +798,8 @@ jQuery(document).ready(function ($) {
                 btn_load_more.hide();
             }
             btn_load_more.next('[data-type="page"]').val(page + 1);
+            $('.hoverable').popover();
+
         });
 
 
@@ -831,6 +833,7 @@ jQuery(document).ready(function ($) {
                 $(load_more).hide();
             }
             $(load_more).next().val(page + 1);
+            $('.hoverable').popover();
         });
     };
 
@@ -951,5 +954,5 @@ jQuery(document).ready(function ($) {
      }
      */
 
-
+     $('.hoverable').popover();
 });
