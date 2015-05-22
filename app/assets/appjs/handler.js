@@ -47,7 +47,7 @@ jQuery(document).ready(function ($) {
         $(".discussion-row-heading").each(function(i, elem){
 
             var title = "";
-            if (max_width > doc_width){
+            if (max_width > doc_width || max_width == 0 || max_width == '0'){
                 title = $(elem).attr('data-text-full');
             } else {
                 title = $(elem).attr('data-text-short');
