@@ -2389,11 +2389,21 @@ ul.pagination li a{
   border-bottom: 1px solid #eaeaea;
   padding-bottom: 5px;
 }
-.join-community h2, .who-joined-community h2, .trending-discussion h2{
+.join-community h2 {
   font-family: 'oswald', Arial, Helvetica, sans-serif;
   letter-spacing:1px;
   font-weight:700;
   color: #7F7F7F;
+  padding:10px 0;
+  border-bottom:1px solid #dedede;
+  text-align:center;
+}
+
+.who-joined-community h2, .trending-discussion h2{
+  font-family: 'oswald', Arial, Helvetica, sans-serif;
+  letter-spacing:1px;
+  font-weight:700;
+  color: #0F75BC;
   padding:10px 0;
   border-bottom:1px solid #dedede;
   text-align:center;
