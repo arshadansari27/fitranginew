@@ -19,6 +19,13 @@ jQuery(document).ready(function ($) {
         }
     };
 
+    App.scroll_to_container = function(){
+        console.log('Scrolling down');
+        $('html, body').animate({
+            scrollTop: $('#model-container-section').offset().top
+        }, 1000);
+    };
+
     var show_login_dialog = function() {
         window.location.href = '/login?target=' + window.location.href;
         /*
@@ -858,7 +865,7 @@ jQuery(document).ready(function ($) {
         $(selector).each(function(i, elem){
             initiate_model_loading(elem);
         });
-
+        App.scroll_to_container();
     });
 
     var resetSearch = '[data-filter-submit="reset"]';
