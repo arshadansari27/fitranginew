@@ -110,8 +110,6 @@
 	                        <li>
                                 {% if user and user.managed_profiles|length == 0 and user.managed_by|length == 0 %}
                                 <a class="business-pro-btn" href="/manage-profile?business=true" title="Business">Create business Profile</a>&nbsp;
-                                {% else %}
-                                <a class="business-pro-btn" href="#" title="Business" data-action="ask-to-login">Create business Profile</a>&nbsp;
                                 {% endif %}
                             </li>
 	                        <li><a class="btn-head" href="/community/profile" title="Members">Members</a></li>
