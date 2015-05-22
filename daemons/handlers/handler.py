@@ -45,12 +45,22 @@ class AppSession(ApplicationSession):
     def onJoin(self, details):
 
 
-        def notification_counts(user):
-            print("Notification count request by user [{}]".format(user))
+        def notification_counts(user, reset_stream, reset_messaging):
+            print("[*] Notification count request by user [{}]".format(user))
             profile = Profile.objects(pk=user).first()
             if not profile:
                 return {}
             CONCURRENT_USERS[str(profile.id)] = datetime.datetime.now()
+
+            if reset_stream in [1, "1"]:
+                profile.public_activity_count = 0
+                profile = profile.save()
+                print '[*] Resetting Profile Public Activity Count'
+            if reset_messaging in [1, "1"]:
+                profile.private_activity_count = 0
+                profile = profile.save()
+                print '[*] Resetting Profile Private Activity Count'
+
             return dict(public_activity_count=profile.public_activity_count, private_activity_count=profile.private_activity_count)
 
 

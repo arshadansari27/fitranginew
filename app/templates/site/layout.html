@@ -35,7 +35,7 @@
 
 </head>
 
-<body data-logged-in-as="{% if user %}{{user.id}}{% else %}null{% endif %}">
+<body data-logged-in-as="{% if user %}{{user.id}}{% else %}null{% endif %}" data-logged-in-url="{% if user %}{{user.slug}}{%endif%}">
     {% assets filters="jsmin", output="app/my-lib.js",
         "appjs/editors/main.js", "appjs/editors/profile-edit.js", "appjs/editors/post-edit.js", "appjs/editors/content-edit.js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>

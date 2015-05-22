@@ -2,7 +2,22 @@ $(document).ready(function() {
          // the URL of the WAMP Router (Crossbar.io)
          //
          var attr = $('body').attr('data-logged-in-as');
+         var url = $('body').attr('data-logged-in-url');
+         var loc = window.location.href;
+
+         var reset_message_counter = false;
+         var reset_stream_counter = false;
+         if (loc.indexOf('/messaging') > -1) {
+            reset_message_counter = true;
+         }
+         if (loc.indexOf(url) > -1) {
+            reset_stream_counter = true;
+         }
+
+         console.log("Reset Counters Message["+reset_message_counter+"], Stream["+reset_stream_counter+"]")
+
          var logged_in_user = attr;
+
 
          var reset_users_messages = function(){
 
@@ -41,16 +56,25 @@ $(document).ready(function() {
 
                 console.log("Connected");
 
-                notification_timer = setInterval(function () {
-                    session.call('com.fitrangi.notifications', [user]).then(
+                var notification_call_func = function() {
+                    session.call('com.fitrangi.notifications', [user, (reset_stream_counter)?'1':'0', (reset_message_counter)?'1':'0']).then(
                         function (res) {
                             console.log("notifications_count() result:", res);
+
+                            $("#public-activity-count").html(res.public_activity_count);
+                            $("#private-activity-count").html(res.private_activity_count);
                         },
                         function (err) {
                             console.log("notifications_count() error:", err);
                         }
                     );
+                };
+
+
+                notification_timer = setInterval(function () {
+                    notification_call_func();
                 }, 30000);
+                notification_call_func();
 
                 var App = window.App || {}
                 window.App.messaging = window.App.messaging || {};
@@ -68,7 +92,7 @@ $(document).ready(function() {
                         var notification    = user_list[keys[i]].notifications;
                         var badge = '.';
                         if (notification != undefined && parseInt(notification) > 0) {
-                            badge = '<span class="badge">'+notification+'</span>';
+                            badge = '<span class="badge">new</span>';
                         }
                         var selected_style = 'style="background-color:lightgrey;"';
                         if (window.App.messaging.selected_user != id) {
@@ -96,7 +120,7 @@ $(document).ready(function() {
                     window.App.messaging.user_notification[selected_user] = 0
                     var notification_badge = $('[id="user-notification-'+selected_user+'"]');
                     if (notification_badge!=undefined && notification_badge.length > 0) {
-                        notification_badge.html('&nbsp;.&nbsp;');
+                        notification_badge.html('&nbsp;&nbsp;');
                     }
 
                     var user_data = window.App.messaging.user_list[selected_user];
