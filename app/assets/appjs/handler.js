@@ -158,7 +158,6 @@ jQuery(document).ready(function ($) {
         e.stopPropagation();
         e.preventDefault();
         App.content.publish($(this).attr('data-model-id'), 'article', function (data) {
-            BootstrapDialog.alert(data.message);
             if (data.status == 'success') {
                 window.location.reload();
             }
@@ -169,7 +168,6 @@ jQuery(document).ready(function ($) {
         e.stopPropagation();
         e.preventDefault();
         App.content.unpublish($(this).attr('data-model-id'), 'article', function (data) {
-            BootstrapDialog.alert(data.message);
             if (data.status == 'success') {
                 window.location.reload();
             }

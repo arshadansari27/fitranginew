@@ -3,7 +3,7 @@ from app.handlers.extractors import NodeExtractor
 from app.models import POST, CHANNEL, DISCUSSION, ARTICLE, Node, NodeFactory
 from app.models.profile import ProfileType, Profile
 from app.models.streams import ActivityStream
-from flask import g, jsonify, render_template
+from flask import g, jsonify, render_template, flash
 import os
 
 __author__ = 'arshad'
@@ -39,6 +39,7 @@ class ContentEditor(NodeEditor):
 def delete(node, type):
     node = get_or_create_content(type, node)
     node.delete()
+    flash('Deleted the post')
     return node
 
 

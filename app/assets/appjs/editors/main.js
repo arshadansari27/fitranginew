@@ -30,9 +30,7 @@ jQuery(document).ready(function($){
     		    if (callback != null){
                     callback(data);
                 } else {
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 1000);
+                    setTimeout(function() { window.location.reload();}, 1000);
                 }
     		},
     		contentType: "application/json",

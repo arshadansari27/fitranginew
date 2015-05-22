@@ -1,8 +1,8 @@
 <section class="container write-blog">
-    <div class="alert alert-info fade in">
+    <!--div class="alert alert-info fade in">
         <a class="close" data-dismiss="alert" href="#">&times;</a>
         <p class="alert-message"></p>
-    </div>
+    </div-->
     <div class="heading text-center">
         <h2>{% if model_name == 'article' %}Write an artile or blog{% else %}Start a discussion {% endif %}</h2>
     </div>
@@ -64,22 +64,22 @@
             </div>
             {% if model and model_name == 'article' %}
             <div class="form-group">
-                <label for="published">Published</label>
+                <label for="published">Is published?</label>
                 {% if model.published %}
-                <i class="fa fa-check-circle-o fa-2x green"></i>
+                <i class="fa fa-check-circle-o green">Yes</i>
                 {% else %}
-                <i class="fa fa-times-circle-o fa-2x blue"></i>
+                <i class="fa fa-times-circle-o orange">No</i>
                 {% endif %}
             </div>
             {% endif %}
 
             {% if model %}
             <div class="form-group">
-                <label for="published">Published by Admin</label>
+                <label for="published">Is published by Admin?</label>
                 {% if model.admin_published %}
-                <i class="fa fa-check-circle-o fa-2x green"></i>
+                <i class="fa fa-check-circle-o green">Yes</i>
                 {% else %}
-                <i class="fa fa-times-circle-o fa-2x blue"></i>
+                <i class="fa fa-times-circle-o orange">No</i>
                 {% endif %}
             </div>
             {% endif %}
@@ -88,7 +88,11 @@
             <br/>
             <div class="form-action-control">
                 <button type="button" data-action="go-back" class="btn fitrangi-btn">Back</button>
+                {% if model_name == 'article' %}
                 <button type="button" data-action="save" class="btn fitrangi-btn blue">Save</button>
+                {% else %}
+                <button type="button" data-action="save" class="btn fitrangi-btn blue">Submit</button>
+                {% endif %}
                 {% if model and model_name == 'article'%}
                     {% if model.published %}
                         <button type="button" data-action="unpublish-article" data-model-id="{{model.id}}" class="btn fitrangi-btn red">Unpublish</button>
@@ -109,7 +113,8 @@
 
         var model = '{{model.id}}';
         var type = '{{model_name}}';
-        $('.alert').hide();
+        setTimeout(function() { $('.alert').hide(); }, 10000);
+
 
         var App = window.App;
         var editor = App.content;
@@ -143,18 +148,23 @@
             var video_link = $('[data-name="video-link"]').val();
             var tags = tags;
             if (id != undefined && id.length > 0) {
-                console.log('Edit content: ' + id + "->");
                 editor.edit(id, type, title, description, video_link, cover_image, channels, tags, content, function(data){
-                    $('.alert').show();
-                    $('.alert-message').html(data.message);
+                    if (data.status == 'success'){
+                        window.location.reload();
+                    } else {
+                        $('.alert').show();
+                        $('.alert').append(data.message);
+                    }
                 })
             } else {
                 console.log('Add content: ->');
                 editor.add(type, title, description, video_link, cover_image, channels, tags, content, function(data){
-                    $('.alert').show();
-                    $('.alert-message').html(data.message);
+
                     if (data.status == 'success') {
                         window.location.href = '/write/' + type + '/' + data.node;
+                    } else {
+                        $('.alert').show();
+                        $('.alert').append(data.message);
                     }
                 });
             }
@@ -258,5 +268,8 @@
                 ]
             });
         });
+
+        setTimeout(function() { console.log('Scrolling to top'); window.scrollTo(0, 0); }, 2000);
+
     });
 </script>
