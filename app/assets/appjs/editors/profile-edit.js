@@ -3,7 +3,7 @@
  */
 $(document).ready(function() {
     console.log('profile-editor.js');
-    var App = window.App;
+    var App = window.App || {};
     App.profile = App.profile || {};
 
     App.profile.reset_counter = function(node, action, callback) {
@@ -13,6 +13,19 @@ $(document).ready(function() {
             type: 'profile',
             command: 'reset-activity-count'
         }
+        App.editor(options, callback);
+    };
+
+    App.profile.report_not_ok = function(node, node_type, user_id, callback) {
+        var options = {
+            node: node,
+            data: {
+                user_id: user_id,
+                node_type: node_type
+            },
+            type: 'profile',
+            command: 'not-ok'
+        };
         App.editor(options, callback);
     };
 

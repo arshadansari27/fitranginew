@@ -38,8 +38,7 @@ jQuery(document).ready(function ($) {
         window.$loginDialog.open();
         */
     };
-
-    var shorten_title = function(){
+ var shorten_title = function(){
         var containers = '[data-type="model-container"][data-model="discussion"][data-card-type="row"]';
         var max_width = 0;
         $(containers).each(function(i, elem) {
@@ -318,6 +317,28 @@ jQuery(document).ready(function ($) {
             }
         });
     });
+
+    $('body').on('click', '[data-action="not-ok"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var that = this;
+        BootstrapDialog.confirm("Are you sure you want to report this?", function (ip) {
+            if (ip == true) {
+                var model_id = $(that).attr('data-model-id');
+                var model_type = $(that).attr('data-model');
+                var user_id = $(that).attr('data-user-id');
+                console.log(Object.keys(App));
+                console.log(Object.keys(App.editor));
+                App.profile.report_not_ok(model_id, model_type, user_id, function (data) {
+                    BootstrapDialog.alert(data.message);
+                    if (data.status == 'success') {
+                        window.location.reload();
+                    }
+                });
+            }
+        });
+    });
+
 
     $('body').on('click', '[data-action="switch-profile"]', function (e) {
         e.stopPropagation();

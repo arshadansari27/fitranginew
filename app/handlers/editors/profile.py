@@ -20,6 +20,8 @@ class ProfileEditor(NodeEditor):
             return edit_profile(self.node, self.data)
         elif self.command == 'subscribe':
             return subscribe(self.data)
+        elif self.command == 'not-ok':
+            return report_not_ok(self.node, self.data['node_type'], self.data['user_id'])
         elif self.command == 'cover-image-edit':
             return edit_cover_image(self.node, self.data)
         elif self.command == 'change-password':
@@ -125,6 +127,18 @@ def subscribe(data):
         type = ProfileType.objects(name__iexact='Subscription Only').first()
         node = Profile(email=email, type=[type])
         node.save()
+    return node
+
+@response_handler('Thank you for the help in reporting. Admin will review and mark the status as appropriate.', 'Failed to report', login_required=True)
+def report_not_ok(node, node_type, user_id):
+    assert node is not None and node_type is not None and user_id is not None
+    node = NodeFactory.get_class_by_name(node_type).get_by_id(node)
+    print '[*]', node
+    user = Profile.objects(pk=user_id).first()
+    print '[*]', user
+    assert node is not None and user is not None
+    node.not_ok_count += 1
+    node.save()
     return node
 
 

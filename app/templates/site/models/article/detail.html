@@ -4,13 +4,13 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h2>{{model.title}} </h2>
 	            <div class="media">
-    	            <center><img src="{{model.author.cover_image_path}}" class="img-circle text-center" width="48"></center>
+    	            <center><a href="{{model.author.slug}}"><img src="{{model.author.cover_image_path}}" class="img-circle text-center" width="48"></a></center>
                     <br/>
                     <h4>by {{model.author.name}}</h4>&nbsp;|&nbsp;
     	            <h4>{{model.since}}</h4>&nbsp;|&nbsp;
                     <h4>{{model.comments_count}}&nbsp;Comments</h4>&nbsp;|&nbsp;
                     <h4>{{model.views}}&nbsp;Views</h4>
-
+                    {% if user %}<h6><a href="#" class="btn btn-link uppercase red" data-action="not-ok" data-model="article" data-model-id="{{model.id}}" data-user-id="{{user.id}}">Report as Not Ok</a></h6>{% endif %}
 	            </div>
             </div>
             <br/>

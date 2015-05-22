@@ -393,7 +393,7 @@ class ApprovalProfileAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
     form_columns = ['name', 'description', 'managed_by', 'about', 'website', 'phone', 'email', 'facebook', 'linked_in', 'google_plus', 'blog_channel', 'youtube_channel', 'cover_image','admin_approved']
-    column_list = ('anme', 'description', 'managed_by', 'admin_approved', 'cover_image')
+    column_list = ('name', 'description', 'managed_by', 'admin_approved', 'cover_image')
     form_overrides = dict(description=SummernoteTextAreaField, content=SummernoteTextAreaField)
 
     def is_accessible(self):
@@ -406,6 +406,23 @@ class ApprovalProfileAdminView(ModelView):
             q = {'admin_approved': False}
             return self.model.objects(__raw__=q)
         return None
+
+class NotOkAdminView(ModelView):
+    can_create = False
+    can_edit = True
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
+    form_columns = ['slug', 'not_ok_count']
+    column_list = ('slug', 'cover_image')
+
+    def is_accessible(self):
+        if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
+            return True
+        return False
+
+    def get_query(self):
+        q = {'not_ok_count': {'$exists': 1, "$gt": 0}}
+        return self.model.objects(__raw__=q)
 
 
 class PreferenceView(flask_admin.BaseView):
@@ -588,6 +605,12 @@ admin.add_view(PostForContentAdminView(Post, name="Posts on content", endpoint="
 
 admin.add_view(EventAdminView(Event, category="Organizers"))
 admin.add_view(TripAdminView(Trip, category="Organizers"))
+
+admin.add_view(NotOkAdminView(Profile, category="Flag Content", endpoint='flagged.profile'))
+admin.add_view(NotOkAdminView(Adventure, category="Flag Content", endpoint='flagged.adventure'))
+admin.add_view(NotOkAdminView(Article, category="Flag Content", endpoint='flagged.article'))
+admin.add_view(NotOkAdminView(Discussion, category="Flag Content", endpoint='flagged.discussion'))
+
 
 admin.add_view(RestrictedAdminView(ProfileType, category="Tools"))
 #admin.add_view(LocationAdminView(Location, category="Tools"))

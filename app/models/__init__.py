@@ -155,6 +155,7 @@ class Node(object):
     created_timestamp = db.DateTimeField(default=datetime.datetime.now)
     modified_timestamp = db.DateTimeField(default=datetime.datetime.now)
     slug = db.StringField()
+    not_ok_count = db.IntField(default=0)
 
     @property
     def cover_image_path(self):
