@@ -102,8 +102,8 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <h4 class="oswald pl-10 pt-15">{{model.name}} : Discussion</h4>
                                 <div class="pull-right">
-                                    <button type="button" class="btn btn-primary">Add a Discussion</button>
-                                    <button type="button" class="btn btn-primary">Go to Discussion</button>
+                                    <a href="#" class="btn btn-primary" data-user-id="{% if user %}{{user.id}}{% endif %}" data-action="add-discussion">Add a Discussion</a>
+                                    <a href="/community/discussion" class="btn btn-primary">Go to Discussion</a>
                                 </div>
                             </div>
                         </section>
@@ -120,7 +120,7 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <h4 class="oswald pl-10 pt-15">{{model.name}}: Popular from journal</h4>
                                 <div class="pull-right">
-                                    <button type="button" class="btn btn-primary">Go to Journal</button>
+                                    <a href="/explore/journal" class="btn btn-primary">Go to Journal</a>
                                 </div>
                                 <br/>
                             </div>

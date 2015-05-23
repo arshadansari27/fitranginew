@@ -28,8 +28,8 @@ def login_page():
     if hasattr(g, 'user') and g.user is not None:
         return redirect('/explore')
     from app.views import force_setup_context
-    target = request.args.get('target', None)
 
+    target = request.args.get('target', '/explore')
     context = force_setup_context({})
     context['referrer'] = target if target else request.referrer
     title, card, context = PageManager.get_common_title_and_page('login', **context)
