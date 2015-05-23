@@ -5,12 +5,26 @@ from app.models.profile import Profile, ProfileType
 
 __author__ = 'arshad'
 
-from flask import render_template, g, request, jsonify, send_file, flash, redirect, url_for, session
+from flask import render_template, g, request, jsonify, send_file, flash, redirect, url_for, session, make_response
 from app.utils import login_required
 from app import app
 from StringIO import StringIO
 from PIL import Image
 import random, os
+
+
+@app.route('/user-csv-download')
+def download_csv():
+    if not hasattr(g, 'user') or g.user is None or 'Admin' not in g.user.roles:
+        return 'Forbidden', 403
+    csv = []
+    profiles = Profile.objects.all()
+    for p in profiles:
+        csv.append(",".join([p.name if p.name else '', p.email, p.type[0].name if p.type and len(p.type) > 0 and p.type[0] is not None else '']))
+    data = '\n'.join(csv)
+    response = make_response(data)
+    response.headers["Content-Disposition"] = "attachment; filename=users.csv"
+    return response
 
 @app.route('/dialog/upload_image', methods=['POST'])
 @login_required
