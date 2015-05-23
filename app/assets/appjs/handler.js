@@ -865,7 +865,6 @@ jQuery(document).ready(function ($) {
             category: category,
             card_type: card_type
         };
-        console.log('[*]' + JSON.stringify(options));
         var load_more = $('button[data-action="load-more"][data-model="' +  model + '"][data-card-type="' + card_type + '"][data-category="'+ category + '"]');
         load_model(options,function(data){
             $(elem).html(data.html);
