@@ -688,6 +688,12 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    var clean_pasted_html = function(original) {
+        u = document.createElement('div');
+        u.innerHTML = original;
+        return u.innerText;
+    };
+
     if ($('.summernote') != undefined) {
         //$('.summernote').summernote({height: 400});
         $('.summernote').each(function(){
@@ -698,6 +704,18 @@ jQuery(document).ready(function ($) {
                 onkeyup: function (e) {
                     $textArea.val($(this).code());
                     $textArea.change(); //To update any action binded on the control
+                },
+                onpaste: function(e) {
+                    var thisNote = $(this);
+                    var updatePastedText = function(someNote){
+                        var original = someNote.code();
+                        var cleaned = clean_pasted_html(original); //this is where to call whatever clean function you want. I have mine in a different file, called CleanPastedHTML.
+                        someNote.code('').html(cleaned); //this sets the displayed content editor to the cleaned pasted code.
+                    };
+                    setTimeout(function () {
+                        //the function is called before the text is really pasted.
+                        updatePastedText(thisNote);
+                    }, 10);
                 }
             });
         });
