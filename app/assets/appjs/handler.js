@@ -694,15 +694,37 @@ jQuery(document).ready(function ($) {
         return u.innerText;
     };
 
+    var summernote_image_upload = function(file, editor, welEditable) {
+            data = new FormData();
+            data.append("file-0", file);
+            jQuery.ajax({
+                url: '/dialog/upload_image?permanent=True',
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function(data){
+                    editor.insertImage(welEditable, data.url);
+                },
+                error: function(data) {
+                    BootstrapDialog.alert('Something went wrong when uploading the file.');
+                }
+            });
+    };
+
     if ($('.summernote') != undefined) {
         //$('.summernote').summernote({height: 400});
         $('.summernote').each(function(){
             var $textArea = $(this);
-
             $textArea.summernote({
                 height: 400,
+                onImageUpload: function(files, editor, welEditable) {
+                    summernote_image_upload(files[0], editor, welEditable);
+                },
                 onkeyup: function (e) {
-                    $textArea.val($(this).code());
+                    var code = $(this).code();
+                    $textArea.val(code);
                     $textArea.change(); //To update any action binded on the control
                 },
                 onpaste: function(e) {

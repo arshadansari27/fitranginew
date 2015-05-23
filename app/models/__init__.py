@@ -277,7 +277,7 @@ class Entity(Node):
 
     @property
     def process_about(self):
-        return convertLinks(self.about)
+        return self.about
 
     def __unicode__(self): return self.name
 

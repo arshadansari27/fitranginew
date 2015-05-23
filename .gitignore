@@ -11,3 +11,4 @@ venv/
 node.pid
 .webassets-cache/
 app/assets/app
+content-images/

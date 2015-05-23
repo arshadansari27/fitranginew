@@ -12,6 +12,7 @@ from StringIO import StringIO
 from PIL import Image
 import random, os
 
+FOLDER = os.getcwd() + '/content-images'
 
 @app.route('/user-csv-download')
 def download_csv():
@@ -32,12 +33,23 @@ def image_uploader_dialog():
     _id = str(random.randint(9999999999999, 999999999999999999))
     try:
         f = request.files['file-0']
-        path = os.getcwd() + '/tmp/' + _id
+        perm = False
+        if not request.args.get('permanent', False):
+            path = os.getcwd() + '/tmp/' + _id
+        else:
+            if not os.path.exists(FOLDER):
+                os.makedirs(FOLDER)
+            perm = True
+            path = FOLDER + '/' + _id
         f.save(path)
         i = Image.open(path)
         originalImgWidth , originalImgHeight = i.size
+        if not perm:
+            url =  "/temp_image/%s" % str(_id)
+        else:
+            url =  "/perm_image/%s" % str(_id)
         response = dict(status="success",
-				url="/temp_image/%s" % str(_id),
+				url=url,
 				width=originalImgWidth,
 				height=originalImgHeight)
         return jsonify(response)
@@ -81,9 +93,16 @@ def image_cropper_dialog():
     return jsonify(dict(status='success', url='/temp_image/%s' % str(_id)))
 
 @app.route('/temp_image/<id>')
-@login_required
 def get_image_temp(id):
     f = Image.open(os.getcwd() + '/tmp/' + id)
+    buffer = StringIO()
+    f.save(buffer, f.format)
+    buffer.seek(0)
+    return send_file(buffer, mimetype='image/' + f.format, add_etags=False, conditional=True)
+
+@app.route('/perm_image/<id>')
+def get_image_perm(id):
+    f = Image.open(FOLDER + '/' + id)
     buffer = StringIO()
     f.save(buffer, f.format)
     buffer.seek(0)

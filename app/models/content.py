@@ -105,7 +105,7 @@ class Content(ContentCommon, db.Document):
             i.attrs['src'] = values.get(i.attrs['src'])
         return str(soup)
         """
-        return convertLinks(self.content.replace('\n', '<br/>'))
+        return self.content
 
 
     @property
