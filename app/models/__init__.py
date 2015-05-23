@@ -235,7 +235,11 @@ class Node(object):
 
     @property
     def since(self):
-        return human(self.created_timestamp, precision=1)
+        value = human(self.created_timestamp, precision=1)
+        if 'microseconds' in value:
+            return 'just now'
+        else:
+            return value
 
     @property
     def name_short(self):
