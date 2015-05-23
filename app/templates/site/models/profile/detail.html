@@ -132,7 +132,7 @@
         <div class="container">
             <div id="myTabContent" class="tab-content">
                 <div role="tabpanel" class="tab-pane fade active in" id="my-stream" aria-labelledby="my-stream">
-                    <section class="container-fluid">
+                    <section class="container-fluid" id="my-stream-data">
                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
                             <input type="hidden" id="my-stream-filter" data-model="stream" data-filter="profile" data-category="my" value="{{model.id}}" data-filter-status="fixed"/>
                             {% if model.id == user.id %}
