@@ -441,7 +441,7 @@ class SearchPage(Page):
 
     def get_context(self, context):
         if self.model_name == ADVENTURE:
-            return dict(adventure_list=NodeCollectionFactory.resolve(ADVENTURE, GRID_VIEW).get_card(context))
+            return dict(count=Adventure.objects.count(), adventure_list=NodeCollectionFactory.resolve(ADVENTURE, GRID_VIEW).get_card(context))
         elif self.model_name == PROFILE:
             return dict(profiles_list=NodeCollectionFactory.resolve(PROFILE, ROW_VIEW).get_card(context))
         elif self.model_name == ARTICLE:
