@@ -28,8 +28,12 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
                 <input class="geo-complete" placeholder="SORT BY LOCATION" data-sorter="location" data-category="all" data-model="adventure">
                 <form>
-                    <input type="hidden" id="location-sorter-lat" name="lat" id="lat" data-category="all" data-model="adventure" data-sorter="location_lat"/>
-                    <input type="hidden" id="location-sorter-lng" name="lng" id="lng" data-category="all" data-model="adventure" data-sorter="location_lng"/>
+                    <input type="hidden" id="location-sorter-lat" name="lat" data-category="all" data-model="adventure" data-sorter="location_lat"/>
+                    <input type="hidden" id="location-sorter-lng" name="lng" data-category="all" data-model="adventure" data-sorter="location_lng"/>
+                    <input type="hidden" id="location-sorter-locality" name="locality_short" data-category="all" data-model="adventure" data-sorter="location_locality"/>
+                    <input type="hidden" id="location-sorter-region2" name="administrative_area_level_2" data-category="all" data-model="adventure" data-sorter="location_region2"/>
+                    <input type="hidden" id="location-sorter-region1" name="administrative_area_level_1" data-category="all" data-model="adventure" data-sorter="location_region1"/>
+                    <input type="hidden" id="location-sorter-country" name="country_short" data-category="all" data-model="adventure" data-sorter="location_country"/>
                 </form>
             </div>
 
@@ -59,6 +63,10 @@
         //window.App.filter('location-filter');
         window.App.sorter('location-sorter-lat');
         window.App.sorter('location-sorter-lng');
+        window.App.sorter('location-sorter-locality');
+        window.App.sorter('location-sorter-region2');
+        window.App.sorter('location-sorter-region1');
+        window.App.sorter('location-sorter-country');
         $('.geo-complete').geocomplete({details: 'form'});
     });
 </script>

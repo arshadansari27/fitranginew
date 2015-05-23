@@ -131,9 +131,18 @@ class NodeExtractor(object):
                         del filters[m]
                         filters[k].append(v)
         if sorters and len(sorters) > 0:
-            if sorters.has_key('location_lat')  and sorters.has_key('location_lng'):
+            if sorters.has_key('location_lat') and sorters.has_key('location_lng'):
                 filters['geo_location__near'] = {"type": "Point", "coordinates": [float(sorters['location_lat']), float(sorters['location_lng'])]}
-                filters['geo_location__max_distance'] = 100000
+                max_distance = 50000
+                if sorters.has_key('location_locality') and len(sorters['location_locality']) > 0:
+                    max_distance *= 1
+                elif sorters.has_key('location_region2') and len(sorters['location_region2']) > 0:
+                    max_distance *= 10
+                elif sorters.has_key('location_region1') and len(sorters['location_region1']) > 0:
+                    max_distance *= 100
+                elif sorters.has_key('location_country') and len(sorters['location_country']) > 0:
+                    max_distance *= 1000
+                filters['geo_location__max_distance'] = max_distance
         print 'Post: ', self.model_class.__name__, filters
         return self.model_class.objects(**filters).order_by('-created_timestamp')
 
