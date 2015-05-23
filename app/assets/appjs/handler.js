@@ -126,7 +126,19 @@ jQuery(document).ready(function ($) {
         window.$signupDialog.open();
     });
 
-
+    $('body').on('click', '[data-action="delete-post"]', function(e){
+        e.stopPropagation();
+        if ($(this).attr('data-user-id') != undefined && $(this).attr('data-user-id').length > 0){
+           var user_id = $(this).attr('data-user-id');
+           var author_id = $(this).attr('data-author-id');
+           var model_id = $(this).attr('data-model-id');
+           if (user_id != author_id) {
+                BootstrapDialog.alert('Cannot delete the post, since you are not the author of the post.');
+                return;
+           }
+           App.post.delete(model_id, function(){ window.location.reload(); });
+        }
+    });
 
     $('body').on('click', '[data-action="add-discussion"]', function (e) {
         e.stopPropagation();
