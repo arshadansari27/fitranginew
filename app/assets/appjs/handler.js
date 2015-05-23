@@ -868,6 +868,9 @@ jQuery(document).ready(function ($) {
         var load_more = $('button[data-action="load-more"][data-model="' +  model + '"][data-card-type="' + card_type + '"][data-category="'+ category + '"]');
         load_model(options,function(data){
             $(elem).html(data.html);
+            if (data.has_data == 1 || data.has_data == '1') {
+                $('[data-model="'+ model +'"][data-category="'+category+'"].help-info ').hide();
+            }
             if (data.last_page <= 1 && load_more != undefined)  {
                 $(load_more).hide();
             }

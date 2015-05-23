@@ -160,24 +160,43 @@
 
                 <div role="tabpanel" class="tab-pane fade" id="adventure-done" aria-labelledby="adventure-done">
                     <input id="accomplished-adventure-filter" data-category="accomplished" data-model="adventure" data-filter="relationship__accomplished__profile" type="hidden" value="{{model.id}}" data-filter-status="fixed">
-
+                    {% if user and model.id == user.id %}
+                    <div class="jumbotron help-info" data-category="accomplished" data-model="adventure">
+                        <h5>Mark adventures as done to see them here. Create your adventure portfolio for the rest of the world to see!</h5>
+                    </div>
+                    {% endif %}
                     {{accomplished_adventure_list|safe}}
 
                 </div><!--Tab Pane End-->
 
                 <div role="tabpanel" class="tab-pane fade" id="my-wishlist" aria-labelledby="my-wishlist">
                     <input id="wish-list-adventure-filter" data-category="wishlisted" data-model="adventure" data-filter="relationship__wishlisted__profile" type="hidden" value="{{model.id}}" data-filter-status="fixed">
+                    {% if user and model.id == user.id %}
+                    <div class="jumbotron help-info" data-category="wishlisted" data-model="adventure">
+                        <h5>Would you like to experience new adventures and keep track of the ones you still have to do? Add them to your wishlist and track them here</h5>
+                    </div>
+                    {% endif %}
                     {{wish_listed_adventure_list|safe}}
 
                 </div><!--Tab Pane End-->
 
                 <div role="tabpanel" class="tab-pane fade" id="following" aria-labelledby="following">
                     <input id="profile-following-filter" data-category="following" data-model="profile" data-filter="relationship__follows__profile" type="hidden" value="{{model.id}}" data-filter-status="fixed">
+                    {% if user and model.id == user.id %}
+                    <div class="jumbotron help-info" data-category="following" data-model="profile">
+                        <h5>See who follows you here! Make a difference by inspiring others in the community!</h5>
+                    </div>
+                    {% endif %}
                     {{following_list|safe}}
                 </div><!--Tab Pane End-->
 
                 <div role="tabpanel" class="tab-pane fade" id="follower" aria-labelledby="follower">
                     <input id="profile-follower-filter" data-category="follower" data-model="profile" data-filter="relationship__followed_by__profile" type="hidden" value="{{model.id}}" data-filter-status="fixed">
+                    {% if user and model.id == user.id %}
+                    <div class="jumbotron help-info" data-category="follower" data-model="profile">
+                        <h5>Follow other profiles to see what they have been upto lately!</h5>
+                    </div>
+                    {% endif %}
                     {{follower_list|safe}}
                 </div><!--Tab Pane End-->
 
@@ -187,13 +206,22 @@
 
                 <div role="tabpanel" class="tab-pane fade" id="journals" aria-labelledby="journals">
                     <input id="article-filter" data-category="all" data-model="article" data-filter="author" type="hidden" value="{{model.id}}" data-filter-status="fixed">
+                    {% if user and model.id == user.id %}
+                    <div class="jumbotron help-info" data-category="all" data-model="article">
+                        <h5>Do you relish writing about your adventures and trips? Let the world see and learn from your experience</h5>
+                    </div>
+                    {% endif %}
                     {{article_list|safe}}
                 </div><!--Tab Pane End-->
 
 
                 <div role="tabpanel" class="tab-pane fade discussion" id="discussions" aria-labelledby="discussions">
                     <input id="discussion-filter" data-category="all" data-model="discussion" data-filter="author" type="hidden" value="{{model.id}}" data-filter-status="fixed">
-
+                    {% if user and model.id == user.id %}
+                    <div class="jumbotron help-info" data-category="all" data-model="discussion">
+                        <h5>Add a new discussion and track them from here. Contribute the knowledge with the community.</h5>
+                    </div>
+                    {% endif %}
                     {{discussion_list|safe}}
 
                 </div><!--Tab Pane End-->

@@ -219,10 +219,12 @@ def paged_list():
 
     context['user'] = g.user if hasattr(g, 'user') and g.user is not None else None
     last_page=extractor.last_page(query, size, sort=sort)
-    err_html = '<div class="jumbotron"><h6>No data available for this category</h6></div>'
-    if page is 1 and page is last_page and len(html) is 0:
+    err_html = '<div class="jumbotron result-not-found"><h6>No content associated with category was found!</h6></div>' if '/profile/' not in request.referrer else ''
+    has_data = 1
+    if len(html) is 0:
         html = err_html
-    return jsonify(status='success', html=html, last_page=last_page)
+        has_data = 0
+    return jsonify(status='success', html=html, last_page=last_page, has_data=has_data)
 
 @app.route('/notifications-count')
 def get_notifications_count():
