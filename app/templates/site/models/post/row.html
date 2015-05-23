@@ -1,10 +1,10 @@
 <section class="col-lg-12 col-xs-12 user-post thumbnail">
     <div class="container-fluid media" style="margin-top:0px;">
         <div class="media-left">
-            <img src="{{model.author.cover_image_path_small}}" class="img-rounded" width="48">
+            <a href="{{model.author.slug}}"><img src="{{model.author.cover_image_path_small}}" class="img-rounded" width="48"></a>
         </div>
         <div class="media-body">
-            <h3>{{model.author.name}}</h3>
+            <h3><a href="{{model.author.slug}}" style="color:#00C4A6;">{{model.author.name}}</a></h3>
             <h5>
                 <i class="fa fa-map-marker"></i> {% if model.author.location.name %}{{model.author.location.name}}{% else %}Unknown{% endif %}
                 <small class="pull-right">Posted {{model.since}}</small>
