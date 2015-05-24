@@ -22,16 +22,18 @@ def login_page():
             session['user'] = str(profile.id)
             if not hasattr(profile, 'location') or not profile.location or len(profile.location) is 0:
                 flash('Please update your location by clicking <a href="/edit-profile">here</a>')
-            return jsonify(dict(status='success', message='Successfully logged in.', node=str(profile.id)))
+            response = dict(status='success', message='Successfully logged in.', node=str(profile.id), my_page=profile.slug)
+            print '[*] Login', response
+            return jsonify(response)
         return jsonify(dict(status='error', message='Failed to login. Please try again.'))
 
     if hasattr(g, 'user') and g.user is not None:
-        return redirect('/explore')
+        return redirect(g.user.slug)
     from app.views import force_setup_context
 
-    target = request.args.get('target', '/explore')
+    target = request.args.get('target', '')
     context = force_setup_context({})
-    context['referrer'] = target if target else request.referrer
+    context['referrer'] = target if target else ''
     title, card, context = PageManager.get_common_title_and_page('login', **context)
     context['title'] = title
     context['card']  = card

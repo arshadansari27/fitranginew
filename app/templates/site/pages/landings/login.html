@@ -101,6 +101,8 @@
                 var location = null;
                 if ($('input[data-history]') != undefined && $('input[data-history]').val() != undefined && $('input[data-history]').val().length > 0) {
                     location = $('input[data-history]').val();
+                } else if (msg.my_page != undefined && msg.my_page.length > 0) {
+                    location = msg.my_page;
                 } else {
                     location = '/explore';
                 }
