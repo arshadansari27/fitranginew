@@ -42,10 +42,10 @@
                 <form>
                     <input type="hidden" id="location-sorter-lat" name="lat" id="lat" data-category="all" data-model="profile" data-sorter="location_lat"/>
                     <input type="hidden" id="location-sorter-lng" name="lng" id="lng" data-category="all" data-model="profile" data-sorter="location_lng"/>
-                    <input type="hidden" id="location-sorter-locality" name="locality_short" data-category="all" data-model="adventure" data-sorter="location_locality"/>
-                    <input type="hidden" id="location-sorter-region2" name="administrative_area_level_2" data-category="all" data-model="adventure" data-sorter="location_region2"/>
-                    <input type="hidden" id="location-sorter-region1" name="administrative_area_level_1" data-category="all" data-model="adventure" data-sorter="location_region1"/>
-                    <input type="hidden" id="location-sorter-country" name="country_short" data-category="all" data-model="adventure" data-sorter="location_country"/>
+                    <input type="hidden" id="location-sorter-locality" name="locality_short" data-category="all" data-model="profile" data-sorter="location_locality"/>
+                    <input type="hidden" id="location-sorter-region2" name="administrative_area_level_2" data-category="all" data-model="profile" data-sorter="location_region2"/>
+                    <input type="hidden" id="location-sorter-region1" name="administrative_area_level_1" data-category="all" data-model="profile" data-sorter="location_region1"/>
+                    <input type="hidden" id="location-sorter-country" name="country_short" data-category="all" data-model="profile" data-sorter="location_country"/>
                 </form>
             </div>
 
@@ -108,7 +108,7 @@
         App.sorter('location-sorter-region2');
         App.sorter('location-sorter-region1');
         App.sorter('location-sorter-country');
-        $('.geo-complete').geocomplete({details: 'form'});
+
     });
 </script>
 

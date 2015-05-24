@@ -822,7 +822,7 @@ jQuery(document).ready(function ($) {
 
             query += sorter_key+ ":"  + sorter_value+ ';';
         });
-
+        console.log('[*] Sorter Query: ' + query);
         return query;
     };
 
@@ -1029,15 +1029,7 @@ jQuery(document).ready(function ($) {
         initiate_model_loading(elem);
     });
 
-     $(".geo-complete").geocomplete()
-		  .bind("geocode:result", function(event, result){
-			console.log("Result: " + JSON.stringify(result));
-			var name = result.formatted_address;
-			var lat  = result.geometry.location.lat || result.geometry.location.A;
-			var lon  = result.geometry.location.lng || result.geometry.location.F;
-			console.log(name + ', ' + lat + ', ' + lon);
-			$('[data-type="geo-complete"]').val(name + "|" + lat +'|' + lon);
-     });
+    $('.geo-complete').geocomplete({details: 'form'});
 
      /*
      if (window.location.href.indexOf('/my') != -1) {
