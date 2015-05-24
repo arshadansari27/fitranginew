@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="col-lg-9 col-md-4 col-sm-4 col-xs-12 name-location">
-                    <h2>{{ model.name }} {% if user %}<small><a href="#" class="btn btn-link uppercase red" data-action="not-ok" data-model="profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}">Report as Not Ok</a></small>{% endif %}</h2>
+                    <h2>{{ model.name }} {% if user and model.id != user.id %}<small><a href="#" class="btn btn-link uppercase red" data-action="not-ok" data-model="profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}">Report as Not Ok</a></small>{% endif %}</h2>
                     <h4><i class="fa fa-map-marker"></i>&nbsp;{% if model.location %} {{model.location}} {% else %}{% if model.id == user.id %}<a href="#" data-action="edit-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" >Change location</a>{% else %}Location not known{% endif %}{% endif %}</h4>
                     <a href="#" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">{{ model.followers|length }} Followers</a>
                     <a href="#" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">{{ model.following|length }} Following</a>
