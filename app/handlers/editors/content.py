@@ -38,15 +38,18 @@ class ContentEditor(NodeEditor):
 @response_handler('Successfully deleted the post', 'Failed to remove the post')
 def delete(node, type):
     node = get_or_create_content(type, node)
+    print '[*] Deleting node:', node
     node.delete()
     flash('Deleted the post')
     return node
 
 
 def get_or_create_content(type, id=None):
-
+    print '[*] Get content: ', type, id
     if id:
         node = NodeExtractor.factory(type).get_single('pk:%s;' % str(id))
+        if not node:
+            raise Exception("Node not found!")
         return node
     else:
         cls = NodeFactory.get_class_by_name(type)

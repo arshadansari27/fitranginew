@@ -314,10 +314,10 @@ jQuery(document).ready(function ($) {
     $('body').on('click', '[data-action="delete-article"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
+        var that = this;
         BootstrapDialog.confirm("Are you sure you want to delete", function (ip) {
             if (ip == true) {
-                App.content.delete($(this).attr('data-model-id'), 'article', function (data) {
-                    BootstrapDialog.alert(data.message);
+                App.content.delete($(that).attr('data-model-id'), 'article', function (data) {
                     if (data.status == 'success') {
                         if (window.location.href.search('write/') == 0) {
                             window.history.back();
