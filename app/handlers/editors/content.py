@@ -121,10 +121,13 @@ def publish(node, type):
     content.published = True
     content.save()
     if content.published and (not hasattr(content, 'admin_published') or not content.admin_published):
-        profile = Profile.objects(roles__in=['Admin']).first()
-        mail_data = render_template('notifications/content_posted_admin.html', user=profile, content=content)
+        profile = Profile.objects(roles__in=['Admin']).all()
         from app.handlers.messaging import send_single_email
-        send_single_email("[Fitrangi] Content awaiting approval", to_list=[profile.email], data=mail_data)
+        for p in profile:
+            if not p or not p.email:
+                continue
+            mail_data = render_template('notifications/content_posted_admin.html', user=p, content=content)
+            send_single_email("[Fitrangi] Content awaiting approval", to_list=[profile.email], data=mail_data)
     ActivityStream.push_content_to_stream(content)
     return content
 
