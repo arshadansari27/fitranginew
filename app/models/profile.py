@@ -3,7 +3,7 @@ from app.models.relationships import RelationShips
 __author__ = 'arshad'
 
 from mongoengine import *
-from app.models import update_content, Entity, db, new_object
+from app.models import update_content, Entity, db, new_object, Location
 from activity import Activity
 from adventure import Adventure
 import datetime, hashlib
@@ -16,14 +16,12 @@ class ProfileType(db.Document):
 
 @new_object.apply
 @update_content.apply
-class Profile(Entity, db.Document):
+class Profile(Entity, db.Document, Location):
     featured = db.BooleanField(default=False)
     is_subscription_only = db.BooleanField(default=False)
     subscription_date = db.DateTimeField(default=datetime.datetime.now)
     email = db.StringField(unique=True)
     passwd = db.StringField()
-    location = db.StringField()
-    geo_location = db.PointField()
     location_typed = db.StringField()
     phone = db.StringField()
     website = db.StringField()

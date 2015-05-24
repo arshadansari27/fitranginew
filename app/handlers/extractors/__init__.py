@@ -136,12 +136,16 @@ class NodeExtractor(object):
                 max_distance = 50000
                 if sorters.has_key('location_locality') and len(sorters['location_locality']) > 0:
                     max_distance *= 1
+                    filters['city'] = sorters['location_locality']
                 elif sorters.has_key('location_region2') and len(sorters['location_region2']) > 0:
                     max_distance *= 10
+                    filters['region'] = sorters['location_region2']
                 elif sorters.has_key('location_region1') and len(sorters['location_region1']) > 0:
                     max_distance *= 100
+                    filters['state'] = sorters['location_region1']
                 elif sorters.has_key('location_country') and len(sorters['location_country']) > 0:
                     max_distance *= 1000
+                    filters['country'] = sorters['location_country']
                 filters['geo_location__max_distance'] = max_distance
         print 'Post: ', self.model_class.__name__, filters
         return self.model_class.objects(**filters).order_by('-created_timestamp')

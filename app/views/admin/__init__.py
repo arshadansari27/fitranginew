@@ -524,7 +524,15 @@ class LocationSettingAdminView(flask_admin.BaseView):
             model.location = request.form.get('formatted_address', '')
             lat = float(request.form.get('lat'))
             long = float(request.form.get('lng'))
+            city = request.form.get('locality_short')
+            region = request.form.get('administrative_area_level_2')
+            state = request.form.get('administrative_area_level_1')
+            country = request.form.get('country_short')
             model.geo_location = [lat, long]
+            model.city = city
+            model.state = state
+            model.region = region
+            model.country = country
             model.save()
             flash('Profiled updated successfully', category='success')
         if model.location:
@@ -539,6 +547,10 @@ class LocationSettingAdminView(flask_admin.BaseView):
                 lng = model.geo_location['coordinates'][1]
             form.lat.data =  str(lat)
             form.lng.data =  str(lng)
+            form.locality_short.data = model.city
+            form.administrative_area_level_2.data = model.region
+            form.administrative_area_level_1.data = model.state
+            form.country_short.data = model.country
         return self.render('/admin/my_custom/location.html', model=model, form=form, action_name='Update Location', settings='profile', back_to_url=back)
 
     def is_visible(self):

@@ -2,13 +2,11 @@ from app.models.relationships import RelationShips
 
 __author__ = 'arshad'
 
-from app.models import update_content, Entity, db
+from app.models import update_content, Entity, db, Location
 
 @update_content.apply
-class Adventure(Entity, db.Document):
+class Adventure(Entity, db.Document, Location):
     best_season = db.ListField(db.StringField(choices=['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']))
-    location = db.StringField()
-    geo_location = db.PointField()
     nearby_stay = db.ListField(db.StringField())
     nearby_eat = db.ListField(db.StringField())
     nearby_station = db.ListField(db.StringField())

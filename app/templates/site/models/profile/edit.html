@@ -23,6 +23,10 @@
                     <input type="hidden" name="formatted_address" id="geo_location_name" value="{% if model.location  and model.location|length > 0  %}{{model.location}}{% endif %}"/>
                     <input type="hidden" name="lat" id="geo_location_lat" value="{% if model.location and model.geo_location %}{{model.geo_location['coordinates'][0]}}{% endif %}"/>
                     <input type="hidden" name="lng" id="geo_location_long" value="{% if model.location and model.geo_location %}{{model.geo_location['coordinates'][1]}}{% endif %}"/>
+                    <input type="hidden" name="locality_short" id="geo_city" value="{% if model.location and model.city %}{{model.city}}{% endif %}"/>
+                    <input type="hidden" name="administrative_area_level_2" id="geo_region" value="{% if model.location and model.region %}{{model.region}}{% endif %}"/>
+                    <input type="hidden" name="administrative_area_level_1" id="geo_state" value="{% if model.location and model.state %}{{model.state}}{% endif %}"/>
+                    <input type="hidden" name="country_short" id="geo_country" value="{% if model.location and model.country %}{{model.country}}{% endif %}"/>
                 </div>
                 {% if is_business %}
                 <div class="form-group">

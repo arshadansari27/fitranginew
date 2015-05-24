@@ -283,6 +283,14 @@ class Entity(Node):
 
     def __repr__(self): return self.name
 
+class Location(object):
+    location = db.StringField()
+    geo_location = db.PointField()
+    city = db.StringField()
+    region = db.StringField()
+    state = db.StringField()
+    country = db.StringField()
+
 class ExternalNetwork(object):
     external_name = db.StringField()
     external_link = db.StringField()

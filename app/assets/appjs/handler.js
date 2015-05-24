@@ -402,6 +402,10 @@ jQuery(document).ready(function ($) {
         location        = $('#geo_location_name').val();
         location_lat    = $('#geo_location_lat').val();
         location_long   = $('#geo_location_long').val();
+        city            = $('#geo_city').val();
+        region          = $('#geo_region').val();
+        state           = $('#geo_state').val();
+        country         = $('#geo_country').val();
         website         = $('#website-edit').val();
         facebook        = $('#facebook-edit').val();
         google_plus     = $('#google-plus-edit').val();
@@ -428,7 +432,11 @@ jQuery(document).ready(function ($) {
                     youtube_channel: youtube_channel,
                     blog_channel: blog_channel,
                     about: about,
-                    logged_in: logged_in
+                    logged_in: logged_in,
+                    city: city,
+                    region: region,
+                    state: state,
+                    country: country
                 }, function(data){
                     BootstrapDialog.alert({title: data.status, message: data.message});
                     setTimeout(0, function(){ window.location.href='/explore';})
@@ -447,7 +455,11 @@ jQuery(document).ready(function ($) {
                 linked_in: linked_in,
                 youtube_channel: youtube_channel,
                 blog_channel: blog_channel,
-                about: about
+                about: about,
+                city: city,
+                region: region,
+                state: state,
+                country: country
             }, function(data){
                 BootstrapDialog.alert({title: data.status, message: data.message});
             });

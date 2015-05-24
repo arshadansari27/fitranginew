@@ -53,3 +53,7 @@ class LocationForm(Form):
     formatted_address = HiddenField()
     lat = HiddenField()
     lng = HiddenField()
+    locality_short = HiddenField()
+    administrative_area_level_2 = HiddenField()
+    administrative_area_level_1 = HiddenField()
+    country_short = HiddenField()
