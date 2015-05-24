@@ -62,7 +62,7 @@
                     var content = $.parseHTML($('#content-box2').html());
                     var content_list = []
                     $.each(content, function( i, el ) {
-
+                        var tag = el.tagName;
                         var elem_txt = $(el).html();
                         console.log('[->]' + elem_txt);
                         if (elem_txt == undefined || elem_txt.length == 0)  {
@@ -93,8 +93,7 @@
                             }
                             u = i + 1
                         }
-                        content_list.push(elem_txt);
-                        console.log('[<-]' + elem_txt);
+                        content_list.push('<'+tag+'>' + elem_txt + '</'+tag+'>');
                     });
                     $('#content-box').html(content_list.join(''))
                 });
