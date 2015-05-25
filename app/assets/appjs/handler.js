@@ -192,7 +192,6 @@ jQuery(document).ready(function ($) {
         });
     });
 
-
     $('body').on('click', '[data-action="add-adventure-wishlist"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -308,6 +307,25 @@ jQuery(document).ready(function ($) {
             }
         }
 
+    });
+
+    $('body').on('click', '[data-action="delete-discussion"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var that = this;
+        BootstrapDialog.confirm("Are you sure you want to delete", function (ip) {
+            if (ip == true) {
+                App.content.delete($(that).attr('data-model-id'), 'discussion', function (data) {
+                    if (data.status == 'success') {
+                        if (window.location.href.search('write/') == 0) {
+                            window.history.back();
+                        } else {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
     });
 
 

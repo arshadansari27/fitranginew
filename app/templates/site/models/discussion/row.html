@@ -1,4 +1,7 @@
 <li id="{{model.id}}-container" class="media" style="margin-top:1px;">
+    {% if model.author.id == user.id %}
+        <a href="#" data-action="delete-discussion" data-model-id="{{model.id}}" data-user-id="{{user.id}}" data-author-id="{{model.author.id}}" class="close pull-right">[&times;]&nbsp;</a>
+    {% endif %}
     <div class="media-left">
       <a href="#">
             {% if model.author and model.author.type and model.author.type|length > 0 and model.author.type[0].name == 'Enthusiast' %}
@@ -14,7 +17,7 @@
     </div>
 
     <div class="media-right">
-    	<a href=""><span class="fa fa-comment"></span> {{model.comments_count}}</a>
+        <a href=""><span class="fa fa-comment"></span> {{model.comments_count}}</a>
         <a href=""><span class="fa fa-tag"></span> {% for t in model.tags%}{{t}}{% if not loop.last %}, {% endif %}{% endfor %}</a>
         <a class="">{{model.since}}</a>
     </div>
