@@ -40,17 +40,14 @@ def get_menu_selection(request_path):
     top, main, inner = None, None, None
 
     menu_args = [
-        ('/activity', ('explore', 'activity')),
-        ('/adventure', ('explore', 'adventure')),
-        ('/article', ('explore', 'journal')),
-        ('/blog', ('explore', 'journal')),
-        ('/journal', ('explore', 'journal')),
-        ('/profile', ('community', 'profile')),
-        ('/discussion', ('community', 'discussion')),
-        ('/event', ('community', 'event')),
-        ('/trip', ('trip', None)),
-        ('/explore', ('explore', None)),
-        ('/community', ('community', None))
+        ('/activities', ('explore', 'activity')),
+        ('/adventures', ('explore', 'adventure')),
+        ('/journals', ('explore', 'journal')),
+        ('/profiles', ('community', 'profile')),
+        ('/discussions', ('community', 'discussion')),
+        ('/events', ('community', 'event')),
+        ('/trips', ('trip', None)),
+        ('/', ('explore', None))
     ]
 
     for k, v in menu_args:

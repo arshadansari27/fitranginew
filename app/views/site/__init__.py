@@ -89,11 +89,11 @@ def editor(model_name, model_id=None):
             raise e
     return render_template('site/pages/commons/view.html', **context)
 
-@app.route("/")
-def act_home():
-    return redirect('/explore')
-
 @app.route("/explore")
+def act_home():
+    return redirect('/')
+
+@app.route("/")
 def home():
     title, card, context = PageManager.get_landing_title_and_page('explore', user=g.user if hasattr(g, 'user') else None)
     context['title'] = title
@@ -107,25 +107,23 @@ def about():
     context['card'] = card
     return render_template('site/pages/commons/view.html', **context)
 
+"""
 @app.route("/community")
 def community_mail():
     title, card, context = PageManager.get_landing_title_and_page('community', user=g.user if hasattr(g, 'user') else None)
     context['title'] = title
     context['card'] = card
     return render_template('site/pages/commons/view.html', **context)
+"""
 
-@app.route("/explore/activity")
+@app.route("/activities")
 def activity_view():
     name = request.args.get('name')
-    if name:
-        title, card, context = PageManager.get_detail_title_and_page(ACTIVITY, query="name__iexact:%s;" % name)
-        context['title'] = title
-        context['card'] = card
-        return render_template('site/pages/commons/view.html', **context)
-    else:
-        return 'Not found', 404
+    query="name__iexact:%s;" % name
+    node = NodeExtractor.factory(ACTIVITY).get_single(query)
+    return redirect(node.slug)
 
-@app.route("/explore/adventure")
+@app.route("/adventures")
 def list_adventure():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
@@ -135,7 +133,7 @@ def list_adventure():
     context['card'] = card
     return render_template('site/pages/commons/view.html', **context)
 
-@app.route('/explore/journal')
+@app.route('/journals')
 def list_journal():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
@@ -145,7 +143,7 @@ def list_journal():
     context['card'] = card
     return render_template('site/pages/commons/view.html', **context)
 
-@app.route('/community/discussion')
+@app.route('/discussions')
 def list_discussion():
     from app.views import force_setup_context
     query = request.args.get('query', '')
@@ -156,7 +154,7 @@ def list_discussion():
     context['title'] = 'Discussion @ Fitrangi'
     return render_template('site/pages/commons/view.html', **context)
 
-@app.route("/community/profile")
+@app.route("/profiles")
 def list_profile():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
@@ -178,7 +176,7 @@ def my_profile():
     """
     return redirect(slug)#render_template('site/pages/commons/view.html', **context)
 
-@app.route("/community/event")
+@app.route("/events")
 def list_event():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
@@ -188,7 +186,7 @@ def list_event():
     context['card'] = card
     return render_template('site/pages/commons/view.html', **context)
 
-@app.route("/trip")
+@app.route("/trips")
 def list_trip():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
