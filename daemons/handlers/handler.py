@@ -93,6 +93,7 @@ class AppSession(ApplicationSession):
                 if initial and m == initial:
                     continue
                 data = dict(id=str(m.id), image=m.cover_image_path, name=m.name, notifications=str(v))
+                print '[*] Sending User ', m.name, ' with notifications: ', v, ' for user', user.name
                 _user_list.append(data)
 
             user_list = []

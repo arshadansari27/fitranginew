@@ -90,9 +90,10 @@ $(document).ready(function() {
                         var name            = user_list[keys[i]].name;
                         var image           = user_list[keys[i]].image;
                         var notification    = user_list[keys[i]].notifications;
-                        var badge = '.';
+                        var badge = '&nbsp;';
+                        console.log('Loading user [' + name + '] [' + notification + ']');
                         if (notification != undefined && parseInt(notification) > 0) {
-                            badge = '<span class="badge">new</span>';
+                            badge = '<span class="badge">' +notification+'</span>';
                         }
                         var selected_style = 'style="background-color:lightgrey;"';
                         if (window.App.messaging.selected_user != id) {
@@ -152,6 +153,7 @@ $(document).ready(function() {
                             '</li>';
                     }
                     $('.messages').html(html);
+                    $(".chat-messages").animate({ scrollTop: $('.chat-messages')[0].scrollHeight}, 1000);
                 };
 
                 var update_single_message = function(result) {
@@ -192,6 +194,7 @@ $(document).ready(function() {
                             '</li>';
                     }
                     $('.messages').append(html);
+                    $(".chat-messages").animate({ scrollTop: $('.chat-messages')[0].scrollHeight}, 1000);
                 };
 
 
@@ -218,7 +221,6 @@ $(document).ready(function() {
 
 
                 var message_received = function on_message(args) {
-                    console.log(args);
                     update_message_list(args[0]);
                 }
 

@@ -172,7 +172,7 @@ class ChatMessage(db.Document):
     # Only two profiles
     @classmethod
     def create_message(cls, from_profile, to_profile, mesg):
-        message = ChatMessage(profiles=sorted([from_profile, to_profile]), message=mesg, author=from_profile)
+        message = ChatMessage(profiles=sorted([from_profile, to_profile]), message=mesg, author=from_profile, receiver_read=False)
         message.save()
         ActivityStream.push_message_to_stream(to_profile, message)
         return message
@@ -187,14 +187,16 @@ class ChatMessage(db.Document):
         pipeline = []
         pipeline.append({'$unwind': '$profiles'})
         pipeline.append({'$match': {'_id': {'$in': ids}}})
-        cond = {'$cond': { 'if': { '$eq': [ "receiver_read", False] }, 'then': 1, 'else': 0 }}
+        cond = {'$cond': { 'if': { '$eq': ["$receiver_read", False]}, 'then': 1, 'else': 0 }}
         pipeline.append({'$group': {'_id': '$profiles', 'count': {'$sum':cond}}})
         result = ChatMessage._get_collection().aggregate(pipeline)['result']
+        print '[**]', result
         for u in result:
             p = Profile.objects(id=u['_id']).first()
             if p == profile or not p:
                 continue
             user_list[p] = u['count']
+            print p, u['count']
         return user_list
 
     @classmethod
