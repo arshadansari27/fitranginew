@@ -1084,7 +1084,6 @@ jQuery(document).ready(function ($) {
             }
         }
      }
-    });
 
      $('.hoverable').popover();
      setTimeout(function() { $('.alert').hide(); }, 10000);
