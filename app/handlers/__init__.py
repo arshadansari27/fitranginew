@@ -310,7 +310,7 @@ class PageManager(object):
         context = force_setup_context(context)
         context.update(Page.factory(model_name, 'search').get_context(context))
         html = template.render(**context)
-        return 'Fitrangi: India\'s complete adventure portal. Find what you are looking for', html, context
+        return 'Fitrangi: India\'s complete adventure portal', html, context
 
     @classmethod
     def get_landing_title_and_page(cls, model_name, **kwargs):
@@ -324,7 +324,7 @@ class PageManager(object):
         context = force_setup_context(context)
         context.update(Page.factory(model_name, 'landing').get_context(context))
         html = template.render(**context)
-        return 'Fitrangi: India\'s complete adventure portal. Find what you are looking for', html, context
+        return 'Fitrangi: India\'s complete adventure portal', html, context
 
     @classmethod
     def get_common_title_and_page(cls, page, **kwargs):
