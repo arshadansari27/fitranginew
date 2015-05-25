@@ -4733,7 +4733,14 @@ section.user-post{
 .userprofile-banner .user-pro {
   overflow: hidden;
  width:290px !important;
-  height:270px !important;
+  height:270px ;
+  padding:0;
+  border: 5px solid #FFF;
+}
+.userprofile-banner .user-pro img{
+  	margin:0;
+	width:100%;
+    height: 350px;
 }
 
 /*@media(min-width:1024px){
@@ -4745,10 +4752,17 @@ section.user-post{
 }*/
 @media (min-width: 1024px){
 .userprofile-banner .user-pro {
-overflow: hidden;
-width: 280px!important;
-height: 260px!important;
-margin: 0px 5px;
+	overflow: hidden;
+	width: 280px!important;
+	height: 240px;
+	margin: 0px 5px;
+	padding: 0px;
+  	border: 5px solid #FFF;
+}
+.userprofile-banner .user-pro img{
+	margin:0;
+	width:100%;
+    height: 350px;
 }
 }
 @media(max-width:991px){
@@ -4756,6 +4770,13 @@ margin: 0px 5px;
   overflow: hidden;
   width:190px !important;
   height:210px !important;
+  padding:0;
+  border: 5px solid #FFF;
+}
+.userprofile-banner .user-pro img{
+	margin:0;
+	width:100%;
+    height: 350px;
 }
 }
 
