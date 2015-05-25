@@ -1058,6 +1058,34 @@ jQuery(document).ready(function ($) {
      }
      */
 
+     $('.owl-carousel').owlCarousel({
+         loop:true,
+        margin:10,
+	    nav:false,
+	    autoplay:true,
+        autoplayTimeout:3000,
+	    autoplayHoverPause:true,
+        responsiveClass:true,
+        responsive:{
+            0:{
+                items:1,
+                nav:false,
+			    loop:true,
+            },
+            767:{
+                items:1,
+                nav:false,
+			    loop:true,
+            },
+            1000:{
+                items:2,
+                nav:true,
+                loop:true,
+            }
+        }
+     }
+    });
+
      $('.hoverable').popover();
      setTimeout(function() { $('.alert').hide(); }, 10000);
 });
