@@ -1083,7 +1083,7 @@ jQuery(document).ready(function ($) {
                 loop:true,
             }
         }
-     }
+     });
 
      $('.hoverable').popover();
      setTimeout(function() { $('.alert').hide(); }, 10000);
