@@ -17,7 +17,7 @@ from app.models.trip import Trip
 from app.models.profile import Profile, ProfileType
 
 ICON_VIEW, GRID_VIEW, ROW_VIEW, GRID_ROW_VIEW, DETAIL_VIEW = 'icon', "grid", "row", "grid-row", "detail"
-
+GENERIC_TITLE = 'Fitrangi.com - India\'s Complete Adventure Portal'
 COLLECTION_PATHS = {
     STREAM: 'site/pages/searches/streams',
     ADVENTURE: 'site/pages/searches/adventures',
@@ -310,7 +310,8 @@ class PageManager(object):
         context = force_setup_context(context)
         context.update(Page.factory(model_name, 'search').get_context(context))
         html = template.render(**context)
-        return 'Fitrangi: India\'s complete adventure portal', html, context
+
+        return GENERIC_TITLE, html, context
 
     @classmethod
     def get_landing_title_and_page(cls, model_name, **kwargs):
@@ -324,7 +325,7 @@ class PageManager(object):
         context = force_setup_context(context)
         context.update(Page.factory(model_name, 'landing').get_context(context))
         html = template.render(**context)
-        return 'Fitrangi: India\'s complete adventure portal', html, context
+        return GENERIC_TITLE, html, context
 
     @classmethod
     def get_common_title_and_page(cls, page, **kwargs):
