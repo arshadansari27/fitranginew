@@ -38,7 +38,7 @@ def login_page():
     title, card, context = PageManager.get_common_title_and_page('login', **context)
     context['title'] = title
     context['card']  = card
-    context['cdn_url'] = CDN_URL
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     print '[*] Target', target
 
     return render_template('site/layouts/empty_layout.html', **context)
@@ -73,7 +73,7 @@ def registration():
     context['title'] = title
     context['card']  = card
     context['referrer'] = request.referrer
-    context['cdn_url'] = CDN_URL
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/layouts/empty_layout.html', **context)
 
 @app.route('/write/<model_name>')
@@ -85,7 +85,7 @@ def editor(model_name, model_id=None):
     context = force_setup_context({})
     try:
         card = EditorView(model_name, model_id).get_card()
-        context['cdn_url'] = CDN_URL
+        context['cdn_url'] = CDN_URL if USE_CDN else ''
         context['card'] = card
     except Exception, e:
         if e.message == 'Invalid User':
@@ -103,7 +103,7 @@ def home():
     title, card, context = PageManager.get_landing_title_and_page('explore', user=g.user if hasattr(g, 'user') else None)
     context['title'] = title
     context['card'] = card
-    context['cdn_url'] = CDN_URL
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/about')
@@ -111,7 +111,7 @@ def about():
     title, card, context = PageManager.get_landing_title_and_page('about', user=g.user if hasattr(g, 'user') else None)
     context['title'] = title
     context['card'] = card
-    context['cdn_url'] = CDN_URL
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
 """
@@ -138,7 +138,7 @@ def list_adventure():
     title, card, context = PageManager.get_search_title_and_page(ADVENTURE, query=query)
     context['title'] = title
     context['card'] = card
-    context['cdn_url'] = CDN_URL
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/journals')
@@ -149,7 +149,7 @@ def list_journal():
     title, card, context = PageManager.get_search_title_and_page(ARTICLE, query=query)
     context['title'] = 'Articles and Blogs @ Fitrangi'
     context['card'] = card
-    context['cdn_url'] = CDN_URL
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/discussions')
@@ -161,7 +161,7 @@ def list_discussion():
     title, card, context = PageManager.get_search_title_and_page(DISCUSSION, query=query)
     context['card'] = card
     context['title'] = 'Discussion @ Fitrangi'
-    context['cdn_url'] = CDN_URL
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/profiles")
@@ -172,7 +172,7 @@ def list_profile():
     title, card, context = PageManager.get_search_title_and_page(PROFILE, query=query)
     context['card'] = card
     context['title'] = 'Profile Finder'
-    context['cdn_url'] = CDN_URL
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/community/my")
@@ -194,7 +194,7 @@ def list_event():
         query = None
     title, card, context = PageManager.get_search_title_and_page(EVENT, query=query)
     context['title'] = title
-    context['cdn_url'] = CDN_URL
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     context['card'] = card
     return render_template('site/pages/commons/view.html', **context)
 
@@ -206,7 +206,7 @@ def list_trip():
     title, card, context = PageManager.get_search_title_and_page(TRIP, query=query)
     context['title'] = title
     context['card'] = card
-    context['cdn_url'] = CDN_URL
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/listings")
@@ -307,7 +307,7 @@ def model_view(slug):
     title, card, context = PageManager.get_detail_title_and_page(model_type, query="slug__iexact:%s;" % value)
     context['card']     = card
     context['title']    = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
-    context['cdn_url'] = CDN_URL
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/edit-profile')
@@ -319,7 +319,7 @@ def edit_profile():
     context                 = force_setup_context(context)
     context['card']         = card
     context['title']        = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
-    context['cdn_url'] = CDN_URL
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/manage-profile')
@@ -336,7 +336,7 @@ def manage_profile():
     context                 = force_setup_context(context)
     context['card']         = card
     context['title']        = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
-    context['cdn_url'] = CDN_URL
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/editors/invoke', methods=['POST'])

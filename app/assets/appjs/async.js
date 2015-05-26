@@ -91,9 +91,14 @@ $(document).ready(function() {
                         var image           = user_list[keys[i]].image;
                         var notification    = user_list[keys[i]].notifications;
                         var badge = '&nbsp;';
-                        console.log('Loading user [' + name + '] [' + notification + ']');
                         if (notification != undefined && parseInt(notification) > 0) {
-                            badge = '<span class="badge">' +notification+'</span>';
+                            if (selected_user != undefined && selected_user != null){
+                                window.App.messaging.user_notification[selected_user] = 0
+                                badge = '<span class="badge">&nbsp;</span>';
+                            } else {
+                                badge = '<span class="badge">' +notification+'</span>';
+                            }
+
                         }
                         var selected_style = 'style="background-color:lightgrey;"';
                         if (window.App.messaging.selected_user != id) {
@@ -117,7 +122,6 @@ $(document).ready(function() {
 
                     if (selected_user == undefined || selected_user == null) return;
 
-                    window.App.messaging.user_notification[selected_user] = window.App.messaging.user_notification[selected_user] || 0
                     window.App.messaging.user_notification[selected_user] = 0
                     var notification_badge = $('[id="user-notification-'+selected_user+'"]');
                     if (notification_badge!=undefined && notification_badge.length > 0) {
