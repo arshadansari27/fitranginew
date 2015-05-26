@@ -16,10 +16,10 @@
     {% assets filters="cssmin", output="app/packed-new.css", "css/bootstrap.css", "css/owl.carousel.css",
             "css/bootstrap-tagsinput.css", "css/font-awesome.min.css", "css/font-google1.css", "css/font-google2.css",
             "css/font-google3.css", "css/fotorama.css","css/bootstrap-dialog.min.css", "css/summernote.css", "css/summernote-bs3.css" %}
-        <link href="{{ASSET_URL}}" rel="stylesheet">
+        <link href="{{cdn_url}}{{ASSET_URL}}" rel="stylesheet">
     {% endassets %}
     {% assets filters="cssmin", output="app/my.css", "css/my-style.css", "css/menus.css", "css/poplr-pro.css" %}
-        <link href="{{ASSET_URL}}" rel="stylesheet">
+        <link href="{{cdn_url}}{{ASSET_URL}}" rel="stylesheet">
     {% endassets %}
 
 
@@ -38,7 +38,7 @@
 <body data-logged-in-as="{% if user %}{{user.id}}{% else %}null{% endif %}" data-logged-in-url="{% if user %}{{user.slug}}{%endif%}">
     {% assets filters="jsmin", output="app/my-lib.js",
         "appjs/editors/main.js", "appjs/editors/profile-edit.js", "appjs/editors/post-edit.js", "appjs/editors/content-edit.js" %}
-        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        <script type="text/javascript" src="{{cdn_url}}{{ ASSET_URL }}"></script>
     {% endassets %}
 
 <div class="wrap-site">
