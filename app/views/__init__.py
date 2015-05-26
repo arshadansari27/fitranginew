@@ -27,9 +27,9 @@ def force_setup_context(context={}):
     if user:
         context['public_activity_count'] = user.public_activity_count if user.public_activity_count else 0
         context['private_activity_count'] = user.private_activity_count if user.private_activity_count else 0
-        context['cdn_url'] = CDN_URL if USE_CDN else ''
     for k, v in d.iteritems():
         context[k] = v
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return context
 
 
