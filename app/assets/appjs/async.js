@@ -82,6 +82,8 @@ $(document).ready(function() {
                 window.App.messaging.update_users = function() {
                     $('#user-list').html('');
                     var html = '';
+                    window.App.messaging.selected_user = window.App.messaging.selected_user || null;
+                    var selected_user = window.App.messaging.selected_user;
                     window.App.messaging.user_list = window.App.messaging.user_list || {};
                     var user_list = window.App.messaging.user_list;
                     var keys = Object.keys(window.App.messaging.user_list);
