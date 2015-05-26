@@ -96,7 +96,7 @@ $(document).ready(function() {
                         if (notification != undefined && parseInt(notification) > 0) {
                             if (selected_user != undefined && selected_user != null){
                                 window.App.messaging.user_notification[selected_user] = 0
-                                badge = '<span class="badge">&nbsp;</span>';
+                                badge = '<span class="">&nbsp;</span>';
                             } else {
                                 badge = '<span class="badge">' +notification+'</span>';
                             }
