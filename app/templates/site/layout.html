@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <link rel="icon" href="{{cdn_url}}/images/favicon.ico">
+    <link rel="icon" href="{{url_for('static', filename='/images/favicon.ico')}}">
 
     <title>{% if title %}{{title}}{% else %}Fitrangi: India's complete adventure portal{% endif %}</title>
 
@@ -16,10 +16,10 @@
     {% assets filters="cssmin", output="app/packed.css", "css/bootstrap.css", "css/owl.carousel.css",
             "css/bootstrap-tagsinput.css", "css/font-awesome.min.css", "css/font-google1.css", "css/font-google2.css",
             "css/font-google3.css", "css/fotorama.css","css/bootstrap-dialog.min.css", "css/summernote.css", "css/summernote-bs3.css" %}
-        <link href="{{cdn_url}}{{ ASSET_URL }}" rel="stylesheet">
+        <link href="{{ASSET_URL}}" rel="stylesheet">
     {% endassets %}
     {% assets filters="cssmin", output="app/my.css", "css/my-style.css", "css/menus.css", "css/poplr-pro.css" %}
-        <link href="{{cdn_url}}{{ ASSET_URL }}" rel="stylesheet">
+        <link href="{{ASSET_URL}}" rel="stylesheet">
     {% endassets %}
 
 

@@ -14,3 +14,4 @@ TEMPLATE_FOLDER = os.getcwd() + '/' + TEMPLATE_FOLDER
 MEDIA_FOLDER = os.getcwd() + '/app/assets/media/'
 
 CDN_URL='http://d3q5zq83v3a4xj.cloudfront.net'
+CDN_DOMAIN ='d3q5zq83v3a4xj.cloudfront.net'

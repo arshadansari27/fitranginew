@@ -12,6 +12,7 @@ from flask import g, redirect, request, url_for, abort
 from jinja2 import Environment, FileSystemLoader
 from app.settings import TEMPLATE_FOLDER
 from app.settings import CDN_URL
+from app import USE_CDN
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
 
@@ -26,7 +27,7 @@ def force_setup_context(context={}):
     if user:
         context['public_activity_count'] = user.public_activity_count if user.public_activity_count else 0
         context['private_activity_count'] = user.private_activity_count if user.private_activity_count else 0
-        context['cdn_url'] = CDN_URL
+        context['cdn_url'] = CDN_URL if USE_CDN else ''
     for k, v in d.iteritems():
         context[k] = v
     return context
@@ -35,7 +36,7 @@ def force_setup_context(context={}):
 @app.context_processor
 def setup_context():
     user = g.user if hasattr(g, 'user') and g.user is not None else None
-    return dict(user=user, menu=get_menu_selection(request.path))
+    return dict(user=user, menu=get_menu_selection(request.path), cdn_url=CDN_URL if USE_CDN else '')
 
 #@cache.cached(timeout=3600 * 24)
 def get_menu_selection(request_path):

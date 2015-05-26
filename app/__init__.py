@@ -3,6 +3,7 @@ import flask_admin
 from flask.ext.admin import AdminIndexView, expose
 from flask import Flask, g
 from flask.ext.cache import Cache
+from flask.ext.cdn import CDN
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.mandrill import Mandrill
 from flask.ext.mongorest import MongoRest
@@ -22,6 +23,10 @@ app.config['MONGODB_SETTINGS'] = {
 }
 app.config['MANDRILL_API_KEY'] = 'AW8kuRPFtDyZpOrgSf-0BQ'
 app.config['MANDRILL_DEFAULT_FROM'] = 'noreply@fitrangi.com'
+app.config['CDN_DOMAIN'] = settings.CDN_DOMAIN
+app.config['FLASK_ASSETS_USE_CDN']=True
+CDN(app)
+
 mandrill = Mandrill(app)
 db = MongoEngine()
 db.init_app(app)

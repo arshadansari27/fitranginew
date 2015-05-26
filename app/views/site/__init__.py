@@ -1,5 +1,5 @@
 from app.handlers.messaging import send_single_email
-from app import app
+from app import app, USE_CDN
 from app.models import STREAM
 from flask import render_template, request, g, redirect, jsonify, url_for, session, flash
 from app.handlers.editors import NodeEditor
