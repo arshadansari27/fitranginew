@@ -72,6 +72,7 @@
 
 
     </script>
+    {%  block nav %}
     <nav class="navbar navbar-default navbar-static-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -252,6 +253,7 @@
             <!-- /.navbar-collapse -->
         </div>
     </nav>
+    {%  endblock %}
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             <div class="alert alert-info alert-dismissible" role="alert">

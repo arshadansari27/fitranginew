@@ -91,25 +91,23 @@
         <form class="form-inline">
             <div class="form-group">
                 <label class="my-h3">Be Adventureous. Be Fitrangi! Join us by Registering right now.</label>
-                <button type="button" class="btn btn-primary show_signup">Register</button>
-                <button type="button" class="btn btn-primary show_subscribe">Subscribe</button>
+                <a class="btn btn-primary" href="/register">Register</a>
+                <a class="btn btn-primary show_subscribe">Subscribe</a>
             </div>
         </form>
     </div>
 </section>
 {% endif %}
 
-    <section class="col-lg-12 footer">
+    <section class="col-lg-12 col-md-12 col-sm-12 col-xs-12 footer">
 
         <div class="col-lg-5 col-md-5 col-sm-6 col-xs-12">
             <h3>About Fitrangi.com</h3>
 
-            <p>Fitrangi.com aims at providing a cohesive online & offline platform to converge
-                together adventure sport lovers, organisers, gear dealers & everyone related to
-                Adventure sports community.</p>
+            <p>Fitrangi.com aims at providing a cohesive platform to converge together Adventure community.</p>
             <a href="" class="label label-default">About</a>
             <a href="" class="label label-default">Contact</a>
-            <a href="" class="label label-default">Contrubute</a>
+            <a href="" class="label label-default">Contribute</a>
             <a href="" class="label label-default">Advertise</a>
             <a href="" class="label label-default">Privacy</a>
             <a href="" class="label label-default">Terms</a>
@@ -118,12 +116,7 @@
 
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
             <h3>Need Help?</h3>
-            <strong>Contact us Via Phone or Email</strong>
-
-           <p><em>Phone :</em> +91-8879921115</p>
-
-            <p><em>Email :</em> <a href="mailto:info@fitrangi.com">go@fitrangi.com</a></p>
-
+            <p>Write to us at <em><a href="mailto:info@fitrangi.com">go@fitrangi.com</a></em></p>
         </div>
 
         <div class="col-lg-4 col-md-4 col-sm-3 col-xs-12 social">
@@ -134,35 +127,33 @@
             <a href="https://plus.google.com/115019600318035585202/posts" class="fa fa-google-plus-square"  title="Google Plus" target="_blank"></a>
             <a href="https://www.youtube.com/user/Fitrangi" class="fa fa-youtube-square" title="Youtube"  target="_blank"></a>
 
-            <p>By Continuing past this page, you agree to
-                Terms of Service.<br>
-                All trademarks are properties
-                of their respective owners.</p>
-
-            <p>&copy;2012 Fitrangi<sup>TM</sup>. All right Reserved</p>
+            <p>By Continuing past this page, you agree to Terms of Service.<br>
+                All trademarks are properties of their respective owners.</p>
+            <p>&copy;2015 Fitrangi<sup>TM</sup>. All rights reserved.</p>
 
         </div>
 
 
     </section>
 
-    <img id="loadingImage" class="exactCenter" src="/img/loading.gif"/>
+    <img id="loadingImage" class="exactCenter" src="{{url_for('static', filename='img/loading.gif')}}"/>
 </footer>
 
 
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/bootstrap-dialog.min.js"></script>
-<script src="/js/css3-mediaqueries.js"></script>
-<script src="/js/respond.min.js"></script>
-<script src="/js/html5shiv.js"></script>
-<script src="/js/modernizr.custom.85647.js"></script>
-<script src="/js/fotorama.js"></script>
-<script src="/js/summernote.min.js"></script>
-<script src="/js/autobahn.min.jgz"></script>
-<script src="/js/jquery.geocomplete.min.js"></script>
-<script src="/js/googlemaps.js"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+<script src='http://maps.googleapis.com/maps/api/js?v=3&sensor=false&amp;libraries=places'></script>
+<script src="{{url_for('static', filename='js/bootstrap-dialog.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/css3-mediaqueries.js')}}"></script>
+<script src="{{url_for('static', filename='js/respond.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/html5shiv.js')}}"></script>
+<script src="{{url_for('static', filename='js/modernizr.custom.85647.js')}}"></script>
+<script src="{{url_for('static', filename='js/fotorama.js')}}"></script>
+<script src="{{url_for('static', filename='js/summernote.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/bootstrap-tagsinput.js')}}"></script>
+<script src="{{url_for('static', filename='js/jquery.geocomplete.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/autobahn.min.jgz')}}"></script>
+<script src="{{url_for('static', filename='js/owl.carousel.js')}}"></script>
 <!-- Bootstrap core JavaScript
-<script src="/js/bootstrap-tagsinput.js"></script>
 -->
 
 {% assets filters="jsmin", output="app/my-handler.js",
