@@ -26,7 +26,6 @@ mandrill = Mandrill(app)
 db = MongoEngine()
 db.init_app(app)
 
-print 'DB: ', settings.MONGODB_DB, settings.MONGODB_HOST, settings.MONGODB_PORT
 #from flask.ext import login
 cache = Cache(app,config={'CACHE_TYPE': 'simple'})
 admin = None
@@ -36,9 +35,9 @@ app.jinja_env.cache = {}
 ASSETS_DEBUG = os.environ.get('ASSETS_DEBUG', None)
 if ASSETS_DEBUG and ASSETS_DEBUG == 'TRUE':
     app.config['ASSETS_DEBUG'] = True
-    USE_CDN = False
-else:
     USE_CDN = True
+else:
+    USE_CDN = False
 
 assets = Environment(app)
 

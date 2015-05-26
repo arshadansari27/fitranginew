@@ -178,6 +178,8 @@ class Node(object):
     def cover_image_path_small(self):
         from app import USE_CDN
         path = self.cover_image_path if self.cover_image_path else None
+        if CDN_URL in path:
+            path = path.replace(CDN_URL, '')
         if path is None:
             from app.models.profile import Profile
             if isinstance(self, Profile):

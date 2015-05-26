@@ -11,6 +11,7 @@ from flask import g, redirect, request, url_for, abort
 
 from jinja2 import Environment, FileSystemLoader
 from app.settings import TEMPLATE_FOLDER
+from app.settings import CDN_URL
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
 
@@ -25,6 +26,7 @@ def force_setup_context(context={}):
     if user:
         context['public_activity_count'] = user.public_activity_count if user.public_activity_count else 0
         context['private_activity_count'] = user.private_activity_count if user.private_activity_count else 0
+        context['cdn_url'] = CDN_URL
     for k, v in d.iteritems():
         context[k] = v
     return context
