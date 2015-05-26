@@ -36,6 +36,9 @@ app.jinja_env.cache = {}
 ASSETS_DEBUG = os.environ.get('ASSETS_DEBUG', None)
 if ASSETS_DEBUG and ASSETS_DEBUG == 'TRUE':
     app.config['ASSETS_DEBUG'] = True
+    USE_CDN = False
+else:
+    USE_CDN = True
 
 assets = Environment(app)
 

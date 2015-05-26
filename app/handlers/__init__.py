@@ -4,6 +4,8 @@ import sys, traceback, random
 
 from flask import g
 from app.utils import convert_query_to_filter
+from app.settings import CDN_URL
+from app import USE_CDN
 from app.handlers.extractors import NodeExtractor, article_extractor, advertisement_extractor, adventure_extractor, \
     activity_extractor, discussion_extractor, profile_type_extractor, event_extractor, profile_extractor, \
     trip_extractor, post_extractor, stream_extractor
@@ -36,19 +38,24 @@ COLLECTION_PATHS = {
 
 WALL_IMAGE_STYLE = "background:  linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url(%s) no-repeat center center;background-size: cover;"
 
+if USE_CDN:
+    prepend = CDN_URL
+else:
+    prepend = ''
+
 WALL_IMAGE_NAMES = {
     ACTIVITY: dict(detail=lambda u: u.cover_image_path, search='', landing=''),
     STREAM: dict(detail=lambda u: None, search='', landing=''),
-    ADVENTURE: dict(detail=lambda u: u.cover_image_path, search='/images/adventure-banner.jpg', landing=''),
-    PROFILE: dict(detail=lambda u: '/images/userprofile-banner.jpg', search='/images/finder-banner.jpg', landing=''),
+    ADVENTURE: dict(detail=lambda u: u.cover_image_path, search='%s/images/adventure-banner.jpg' % prepend, landing=''),
+    PROFILE: dict(detail=lambda u: '%s/images/userprofile-banner.jpg' % prepend, search='%s/images/finder-banner.jpg' % prepend, landing=''),
     POST: dict(detail=lambda u: None, search='', landing=''),
-    DISCUSSION: dict(detail=lambda u: u.cover_image_path if u.cover_image_path and len(u.cover_image_path) > 0 else '/images/discussion-banner.jpg', search='/images/discussion-banner.jpg', landing=''),
-    EVENT: dict(detail=lambda u: u.cover_image_path, search='/images/events-banner.jpg', landing=''),
-    ARTICLE: dict(detail=lambda u: u.cover_image_path, search='/images/journal-banner.jpg', landing=''),
-    TRIP: dict(detail=lambda u: u.cover_image_path, search='/images/adventure-trips-banner.jpg', landing=''),
-    "explore": dict(detail=lambda u: None, search=None, landing='/images/home-banner.jpg'),
-    "community": dict(detail=lambda u: None, search=None, landing='/images/community-banner.jpg'),
-    "about": dict(detail=lambda u: None, search=None, landing='/images/home-banner.jpg'),
+    DISCUSSION: dict(detail=lambda u: u.cover_image_path if u.cover_image_path and len(u.cover_image_path) > 0 else '%s/images/discussion-banner.jpg' % prepend, search='%s/images/discussion-banner.jpg' % prepend, landing=''),
+    EVENT: dict(detail=lambda u: u.cover_image_path, search='%s/images/events-banner.jpg' % prepend, landing=''),
+    ARTICLE: dict(detail=lambda u: u.cover_image_path, search='%s/images/journal-banner.jpg' % prepend, landing=''),
+    TRIP: dict(detail=lambda u: u.cover_image_path, search='%s/images/adventure-trips-banner.jpg' % prepend, landing=''),
+    "explore": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
+    "community": dict(detail=lambda u: None, search=None, landing='%s/images/community-banner.jpg' % prepend),
+    "about": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
 }
 
 class View(object):

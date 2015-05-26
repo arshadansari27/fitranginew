@@ -12,3 +12,5 @@ MONGODB_DB   = 'adventure2'
 TEMPLATE_FOLDER = 'app/templates'
 TEMPLATE_FOLDER = os.getcwd() + '/' + TEMPLATE_FOLDER
 MEDIA_FOLDER = os.getcwd() + '/app/assets/media/'
+
+CDN_URL='http://d3q5zq83v3a4xj.cloudfront.net'
