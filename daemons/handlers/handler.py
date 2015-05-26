@@ -46,7 +46,6 @@ class AppSession(ApplicationSession):
 
 
         def notification_counts(user, reset_stream, reset_messaging):
-            print("[*] Notification count request by user [{}]".format(user))
             profile = Profile.objects(pk=user).first()
             if not profile:
                 return {}
@@ -55,11 +54,9 @@ class AppSession(ApplicationSession):
             if reset_stream in [1, "1"]:
                 profile.public_activity_count = 0
                 profile = profile.save()
-                print '[*] Resetting Profile Public Activity Count'
             if reset_messaging in [1, "1"]:
                 profile.private_activity_count = 0
                 profile = profile.save()
-                print '[*] Resetting Profile Private Activity Count'
 
             return dict(public_activity_count=profile.public_activity_count, private_activity_count=profile.private_activity_count)
 
@@ -93,7 +90,6 @@ class AppSession(ApplicationSession):
                 if initial and m == initial:
                     continue
                 data = dict(id=str(m.id), image=m.cover_image_path, name=m.name, notifications=str(v))
-                print '[*] Sending User ', m.name, ' with notifications: ', v, ' for user', user.name
                 _user_list.append(data)
 
             user_list = []

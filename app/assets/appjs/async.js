@@ -119,10 +119,10 @@ $(document).ready(function() {
 
                     window.App.messaging.selected_user = window.App.messaging.selected_user || null;
                     var selected_user = window.App.messaging.selected_user;
-
                     if (selected_user == undefined || selected_user == null) return;
+                    window.App.messaging.user_notification = window.App.messaging.user_notification || {};
+                    window.App.messaging.user_notification[selected_user] = 0;
 
-                    window.App.messaging.user_notification[selected_user] = 0
                     var notification_badge = $('[id="user-notification-'+selected_user+'"]');
                     if (notification_badge!=undefined && notification_badge.length > 0) {
                         notification_badge.html('&nbsp;&nbsp;');
