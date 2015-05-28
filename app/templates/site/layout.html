@@ -34,10 +34,10 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <script src="{{url_for('static', filename='js/jquery.min.js')}}"></script>
-
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.min.js"></script>
 </head>
 
-<body data-logged-in-as="{% if user %}{{user.id}}{% else %}null{% endif %}" data-logged-in-url="{% if user %}{{user.slug}}{%endif%}">
+<body data-logged-in-as="{% if user %}{{user.id}}{% else %}null{% endif %}" data-logged-in-url="{% if user %}{{user.slug}}{%endif%}" ng-app="myApp">
     {% assets filters="jsmin", output="app/my-lib.js",
         "appjs/editors/main.js", "appjs/editors/profile-edit.js", "appjs/editors/post-edit.js", "appjs/editors/content-edit.js" %}
         <script type="text/javascript" src="{{cdn_url}}{{ ASSET_URL }}"></script>
@@ -96,15 +96,15 @@
                         </li-->
                     </ul>
                     {% if user and user.id %}
-                    <ul class="top-icons nav navbar-nav navbar-right pull-right">
+                    <ul class="top-icons nav navbar-nav navbar-right pull-right" ng-controller="NotificationCtrl">
                         <li>
                             <div class="top-icon">
-                                <a href="{{user.slug}}#my-stream-data" title="Notifications"><i  class="fa fa-bell"></i></a><span id="public-activity-count">{{public_activity_count}}</span>
+                                <a href="{{user.slug}}#my-stream-data" title="Notifications"><i  class="fa fa-bell"></i></a><span>{% raw %}{{public_activity_count}}{% endraw %}</span>
                             </div>
                         </li>
                         <li>
                             <div class="top-icon"><a href="/messaging" title="Messages"><i
-                                    class="fa fa-envelope"></i></a><span id="private-activity-count">{{private_activity_count}}</span>
+                                    class="fa fa-envelope"></i></a><span>{% raw %}{{private_activity_count}}{% endraw %}</span>
                             </div>
                         </li>
                     </ul>
@@ -346,14 +346,9 @@
 -->
 
 {% assets filters="jsmin", output="app/my-handler.js",
-    "appjs/handler.js", "appjs/async.js" %}
+    "appjs/handler.js", "appjs/async.js", "appjs/angular-generic.js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}
-
-<!--
-<script src="/appjs/handler.js"></script>
-<script src="/appjs/async.js"></script>
--->
 
 <script>
     $(function () {

@@ -6,7 +6,7 @@ from flask import render_template, g, request, jsonify
 from app.models.streams import ChatMessage
 from app.models.profile import Profile
 
-@app.route("/messaging")
+@app.route("/messaging2")
 @login_required
 def messaging():
     load_user = request.args.get('load-user', None)
@@ -22,6 +22,24 @@ def messaging():
     context['card'] = view
     context['title'] = 'Fitrangi - Messaging'
     return render_template('site/pages/commons/view.html', **context)
+
+@app.route("/messaging")
+@login_required
+def messaging2():
+    load_user = request.args.get('load-user', None)
+    if load_user:
+        load_user = Profile.objects(pk=load_user).first()
+    from app.views import force_setup_context
+    context = force_setup_context({})
+    context['initial'] = load_user
+    from app.views import env
+    template_path = 'site/layouts/chat2.html'
+    template = env.get_template(template_path)
+    view = template.render(**context)
+    context['card'] = view
+    context['title'] = 'Fitrangi - Messaging'
+    return render_template('site/pages/commons/view2.html', **context)
+
 
 @app.route('/messaging/create-message', methods=['POST'])
 def create_message():

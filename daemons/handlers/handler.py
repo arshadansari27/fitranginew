@@ -66,16 +66,26 @@ class AppSession(ApplicationSession):
             recipient = Profile.objects(pk=to_user).first()
             message = ChatMessage.create_message(author, recipient, message)
 
-            data = dict(id=to_user, image=author.cover_image_path, name=author.name, notifications=1, messages=[dict(my=True, author=user, recipient=to_user, message=message.message, image=author.cover_image_path, time=message.since)])
-            data2 = dict(id=str(author.id), image=author.cover_image_path, name=author.name, notifications=1, messages=[dict(my=False, author=user, recipient=to_user, message=message.message, image=author.cover_image_path, time=message.since)])
-            if CONCURRENT_USERS.has_key(to_user) and (datetime.datetime.now() - CONCURRENT_USERS[to_user]).seconds < 30:
+            data = dict(id=to_user, image=author.cover_image_path, name=author.name, notifications='', messages=[dict(whose='my', author=user, recipient=to_user, message=message.message, image=author.cover_image_path, time=message.since)])
+            data2 = dict(id=str(author.id), image=author.cover_image_path, name=author.name, notifications=1, messages=[dict(whose='friend', my=False, author=user, recipient=to_user, message=message.message, image=author.cover_image_path, time=message.since)])
+            if CONCURRENT_USERS.has_key(to_user):
                 self.publish('com.fitrangi.messaging.listener.%s' % to_user, data2)
 
             return data
 
+        def mark_read(user, and_user):
+            user = Profile.objects(pk=user).first()
+            and_user = Profile.objects(pk=and_user).first()
+            messages = ChatMessage.get_unread_message_between(user, and_user)
+            for message in messages:
+                message.receiver_read = True
+                message.save()
+
+
         def get_messages(user, initial=None):
 
             user = Profile.objects(pk=user).first()
+            CONCURRENT_USERS[str(user.id)] = datetime.datetime.now()
             if not user:
                 return None
             messages = ChatMessage.get_user_list(user)
@@ -89,13 +99,13 @@ class AppSession(ApplicationSession):
             for m, v in messages.iteritems():
                 if initial and m == initial:
                     continue
-                data = dict(id=str(m.id), image=m.cover_image_path, name=m.name, notifications=str(v))
+                data = dict(id=str(m.id), image=m.cover_image_path, name=m.name, notifications=str(v) if int(v) > 0 else '')
                 _user_list.append(data)
 
             user_list = []
             for z in _user_list:
                 messages = ChatMessage.get_message_between(user, Profile.objects(pk=z['id']).first(), all=True)
-                messages = [dict(my=True if u.author == user else False, image=u.author.cover_image_path, message=u.message, time=u.since) for u in messages]
+                messages = [dict(whose='my' if u.author == user else 'friend', image=u.author.cover_image_path, message=u.message, time=u.since) for u in messages]
                 all = dict(messages=messages)
                 for _k, _v in z.iteritems():
                     all[_k] = _v
@@ -111,4 +121,7 @@ class AppSession(ApplicationSession):
 
         reg5 = yield self.register(get_messages, 'com.fitrangi.messaging.all')
         print("procedure get_messages() registered: {}".format(reg5))
+
+        reg6  = yield self.register(mark_read, 'com.fitrangi.messaging.mark-read')
+        print("procedure get_messages() registered: {}".format(reg6))
 

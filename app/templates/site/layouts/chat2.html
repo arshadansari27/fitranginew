@@ -1,0 +1,102 @@
+<section class="container fitrangi-conversation"  ng-controller="ChatCtrl">
+{% raw %}
+<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 contact-section">
+    <div class="profile online">
+        <a href="#" class="pull-left">
+            <figure class="profile-picture">
+                <img src="{% endraw %}{{user.cover_image_path}}{% raw %}" class="img-circle img-responsive" alt="User Name">
+            </figure>
+        </a>
+        <h5>{% endraw %}{{user.name}}{% raw %}</h5>
+
+        <div class="btn-group">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+
+                <span class="online">Online</span>
+                <span class="busy">Busy</span>
+                <span class="away">Away</span>
+                <span class="offline">Offline</span>
+                <span class="caret"></span>
+
+            </a>
+            <!--ul class="dropdown-menu status-dropdown default" role="menu">
+                <li><a data-status="online"><span class="label label-status label-online">&nbsp;</span> Online</a></li>
+                <li><a data-status="busy"><span class="label label-status label-busy">&nbsp;</span> Busy</a></li>
+                <li><a data-status="away"><span class="label label-status label-away">&nbsp;</span> Away</a></li>
+                <li><a data-status="offline"><span class="label label-status label-offline">&nbsp;</span> Offline</a>
+                </li>
+            </ul-->
+        </div>
+
+    </div>
+
+    <div class="contact-list">
+
+        <div class="contact contact-list-element" id="contact-{{ contact.id }}" ng-repeat="contact in messages">
+
+            <a href class="pull-left" ng-click="selectUser(contact.id)">
+                <figure><img class="img-circle img-responsive" alt="" src="{{ contact.image }}" ng-click="selectUser(contact.id)"></figure>
+                <h5 ng-click="selectUser(contact.id)"><a href>{{ contact.name }}</a></h5><small>&nbsp; <span class="badge" ng-if="contact.notifications  != ''">{{ contact.notifications }}</span> &nbsp;</small>
+            </a>
+        </div>
+    </div>
+
+</div>
+<!--col4 End -->
+
+<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 chat-section">
+
+    <div class="profile online">
+        <div class="current-chat">
+
+        <a href="#" class="pull-left">
+            <figure class="profile-picture">
+                <img id="user-image" src="{{ selected_user.image }}" class="img-circle img-responsive">
+            </figure>
+        </a>
+        <h5 id="user-name">{{ selected_user.name }}</h5>
+        </div>
+    </div>
+
+    <div class="chat-messages">
+        <ul class="messages">
+            <li class="{{ message.whose }}-message clearfix" ng-repeat="message in selected_user.messages">
+                <figure class="profile-picture">
+                    <img src="{{ message.image }}" class="img-circle img-responsive" alt="">
+                </figure>
+                <div class="message"> {{ message.message }}<div class="time">{{ message.since }}</div></div>
+            </li>
+
+        </ul>
+    </div>
+
+    <div class="write-message">
+        <form class="row">
+
+            <div class="form-group col-xs-1">
+                <div class="btn-group dropup">
+                    <a class="attachment" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-arrow-right"></i>
+
+                    </a>
+                </div>
+            </div>
+
+
+            <div class="form-group col-xs-10">
+                <textarea ng-model="txt_message" ng-enter="send_message()" class="form-control" placeholder="Write message"></textarea>
+            </div>
+
+            <div class="form-group col-xs-1 sent">
+                <a ng-click="send_message()" href="#"><i class="fa fa-paper-plane"></i></a>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+<!--col8 End -->
+
+</section>
+
+{% endraw %}

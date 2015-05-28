@@ -200,8 +200,29 @@ class ChatMessage(db.Document):
         return user_list
 
     @classmethod
+    def get_unread_message_between(cls, profile, another_profile):
+        dct = {
+            '$and': [{
+                'profiles': {'$all': [profile.id, another_profile.id]}
+                },
+                {
+                    '$or': [
+                        {
+                            "receiver_read": {"$exists": False}
+                        },
+                        {
+                            "receiver_read": False
+                        }
+                    ]
+                }
+            ]
+        }
+        chats = list(ChatMessage.objects(__raw__=dct).order_by('-created_timestamp').all())
+        return reversed([c for c in chats if not hasattr(c, 'receiver_read') or c.receiver_read is False])
+
+    @classmethod
     def get_message_between(cls, profile, another_profile, all=False):
-        chats = list(reversed(ChatMessage.objects(__raw__=dict(profiles={'$all': [profile.id, another_profile.id]})).order_by('-created_timestamp').limit(20).all()))
+        chats = list(reversed(ChatMessage.objects(__raw__=dict(profiles={'$all': [profile.id, another_profile.id]})).order_by('-created_timestamp').all()))
         _chats = []
         for c in chats:
             if c.author == profile:
