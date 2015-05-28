@@ -71,6 +71,7 @@ def add(data):
         ActivityStream.push_review_to_stream(post)
     else:
         ActivityStream.push_stream_post_to_stream(post)
+    parent.save()
     return post
 
 @response_handler('Successfully voted on post', 'Failed to vote')
