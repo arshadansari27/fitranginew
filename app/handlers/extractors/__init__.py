@@ -145,7 +145,7 @@ class NodeExtractor(object):
                     max_distance = 50000
                     filters['geo_location__max_distance'] = max_distance
         print 'Post: ', self.model_class.__name__, filters
-        return self.model_class.objects(**filters).order_by('-created_timestamp')
+        return self.model_class.objects(**filters).order_by('-modified_timestamp')
 
 
     @classmethod

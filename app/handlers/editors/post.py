@@ -4,7 +4,7 @@ from app.models import POST, CHANNEL
 from app.models.content import Post, Comment
 from app.models.streams import ActivityStream
 from flask import g, jsonify
-import os
+import os, datetime
 
 __author__ = 'arshad'
 
@@ -71,7 +71,9 @@ def add(data):
         ActivityStream.push_review_to_stream(post)
     else:
         ActivityStream.push_stream_post_to_stream(post)
-    parent.save()
+    if parent:
+        parent.modified_timestamp = datetime.datetime.now()
+        parent.save()
     return post
 
 @response_handler('Successfully voted on post', 'Failed to vote')
