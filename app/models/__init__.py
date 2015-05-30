@@ -301,6 +301,7 @@ class Location(object):
     region = db.StringField()
     state = db.StringField()
     country = db.StringField()
+    zipcode = db.StringField()
 
 class ExternalNetwork(object):
     external_name = db.StringField()

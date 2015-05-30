@@ -3809,13 +3809,29 @@ section.user-post{
 	border-bottom:3px solid #F2F2F2;
 	padding:13px 20px;
 }
-.fitrangi-form input:focus, .fitrangi-form input:active, .fitrangi-form textarea:focus, .fitrangi-form textarea:active{
+.fitrangi-form select{
+	height:50px;
+	border:none;
+	border-radius: 0px;
+	-webkit-box-shadow: none;
+  	box-shadow: none;
+	border-bottom:3px solid #F2F2F2;
+	padding:13px 20px;
+}
+.fitrangi-form input:focus, .fitrangi-form input:active,
+.fitrangi-form textarea:focus, .fitrangi-form textarea:active,
+.fitrangi-form select:focus, .fitrangi-form select:active{
 	box-shadow:none;
 	-webkit-box-shadow:none;
 	border-bottom:3px solid #dadada;
 }
 
-
+.fitrangi-form .radio input[type="radio"], .fitrangi-form .radio-inline input[type="radio"],
+.fitrangi-form .checkbox input[type="checkbox"], .fitrangi-form .checkbox-inline input[type="checkbox"]{
+  position: absolute;
+  margin-left: -20px;
+  margin-top: -15px;
+}
 
 /*--------------------- FITRANGI PROFILE START------------------------------*/
 /*fitrangi-profile replaced by fitrangi-pro remove fitrangi-profile on the end*/
@@ -5006,6 +5022,33 @@ button.btn {
 
 .edit-business{
 	margin:20px auto;
+}
+.edit-business .title{
+  font-family: oswald,Arial,Helvetica,sans-serif;
+  font-size: 30px;
+  color: #0F75BC;
+  text-align: left;
+  text-shadow: 0 1px 0 #333;
+  -webkit-text-shadow: 0 1px 0 #333;
+  -moz-text-shadow: 0 1px 0 #333;
+  -ms-text-shadow: 0 1px 0 #333;
+  border-bottom: 1px solid #bababa;
+  padding: 10px 20px;
+}
+.edit-business .form-group .input-group .input-group-addon{
+	background:transparent;
+	border:none;
+	font-size:24px;
+}
+.edit-business .form-group .input-group .input-group-addon .fa{
+	color:#1075BC;
+}
+.edit-business .form-group .input-group .input-group-addon:hover .fa{
+	color:#333;
+}
+
+.edit-business .specialities-list{
+	list-style:none;
 }
 .label-as-badge {
     border-radius: 1em;

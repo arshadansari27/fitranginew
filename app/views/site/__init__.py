@@ -311,6 +311,7 @@ def model_view(slug):
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/edit-profile')
+@login_required
 def edit_profile():
     if not hasattr(g, 'user') and not g.user:
         return 'Forbidden', 403
@@ -323,16 +324,17 @@ def edit_profile():
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/manage-profile')
+@login_required
 def manage_profile():
     if not hasattr(g, 'user') and not g.user:
         return 'Forbidden', 403
+    pk = request.args.get('pk', None)
+    if pk:
+        query = 'pk:%s;' % pk
+    else:
+        query = None
     from app.views import force_setup_context
-    pk              = request.args.get('pk', None)
-    is_business     = request.args.get('business', None)
-    if not pk or len(pk) is 0:
-        pk = 'NOT_FOUND'
-
-    title, card, context    = PageManager.get_edit_title_and_page('profile', query='pk:%s;' % pk, is_business=is_business)
+    title, card, context    = PageManager.get_edit_title_and_page('profile', query=query, business=True)
     context                 = force_setup_context(context)
     context['card']         = card
     context['title']        = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"

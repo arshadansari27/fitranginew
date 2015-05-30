@@ -291,16 +291,19 @@ class PageManager(object):
     def get_edit_title_and_page(cls, model_name, **kwargs):
         query = kwargs.get('query', None)
         user = kwargs.get('user', None)
-        is_business = kwargs.get('is_business', None)
-        assert query is not None
-        try:
-            model = NodeExtractor.factory(model_name).get_single(query)
-        except Exception, e:
-            if str(e.message) == 'NOT_FOUND is not a valid ObjectId':
+        is_business = kwargs.get('business', None)
+        if query:
+            try:
+                model = NodeExtractor.factory(model_name).get_single(query)
+            except Exception, e:
                 model = None
-            else:
-                raise e
-        context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), is_business=is_business)
+        else:
+            model = None
+
+        if model:
+            context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), is_business=any([model.is_business_profile, len(model.managed_by) > 0]))
+        else:
+            context = dict(parent=None, user=user, query=None, filters=None, is_business=is_business)
         context.update(Page.factory(model_name, 'edit').get_context(context))
         title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s complete adventure portal')
         return title, NodeView.get_editable_card(model_name, model, context), context

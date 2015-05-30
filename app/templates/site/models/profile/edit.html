@@ -1,100 +1,660 @@
-<section class="container" xmlns="http://www.w3.org/1999/html" style="margin-bottom: 60px;">
-    <form class="fitrangi-form">
-        <input type="hidden" id="logged-in-id" value="{% if user %}{{user.id}}{% endif %}"/>
-        <input type="hidden" id="profile-id" value="{{model.id}}"/>
-        <input type="hidden" id="is-business" value="{% if is_business %}true{% else %}false{% endif %}"/>
-        <div class="row">
-            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+{% if is_business %}
+    <section class="container edit-business">
+
+
+        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+            <h2 class="title">Enter Basic Information</h2>
+
+            <form class="fitrangi-form">
+                <input type="hidden" data-name="logged-in-id" value="{% if user %}{{ user.id }}{% endif %}"/>
+                <input type="hidden" data-name="profile-id" value="{{ model.id }}"/>
+                <input type="hidden" data-name="is-business" value="{% if is_business %}true{% else %}false{% endif %}"/>
+
                 <div class="form-group">
-                    <label for="heading">Name<span class="red">*</span></label>
-                    <input id="name-edit" type="text" class="form-control" placeholder="Enter name" value="{% if model.name and model.name|length > 0 %}{{model.name}}{% endif %}">
+                    <label for="heading">Organisation Name<span class="red">*</span></label>
+                    <input data-name="name-edit" type="text" class="form-control" placeholder="Enter Organization Name"  value="{% if model.name and model.name|length > 0 %}{{ model.name }}{% endif %}">
                 </div>
+
                 <div class="form-group">
-                    <label for="heading">Phone<span class="red">*</span></label>
-                    <input id="phone-edit" type="text" class="form-control" placeholder="Enter phone" value="{% if model.phone and model.phone|length > 0  %}{{model.phone}}{% endif %}">
+                    <label for="heading">Office Address (Head Office)</label>
+                    <textarea data-name="address-edit" class="form-control" placeholder="Enter Office address" rows="3">{% if model.address and model.address|length > 0 %}{{ model.address }}{% endif %}</textarea>
                 </div>
-                <div class="form-group">
-                    <label for="heading">Email<span class="red">*</span></label>
-                    <input id="email-edit" type="email" class="form-control" {% if model and model.id%}disabled{%endif %} placeholder="Enter email" value="{{model.email}}">
-                </div>
-                <div class="form-group">
-                    <label for="heading">Location<span class="red">*</span></label>
-                    <input id="location-edit" type="text" class="geo-complete form-control" placeholder="Hit enter to auto complete on location" value="{% if model.location and model.location|length > 0  %}{{model.location}}{% endif %}">
-                    <input type="hidden" name="formatted_address" id="geo_location_name" value="{% if model.location  and model.location|length > 0  %}{{model.location}}{% endif %}"/>
-                    <input type="hidden" name="lat" id="geo_location_lat" value="{% if model.location and model.geo_location %}{{model.geo_location['coordinates'][0]}}{% endif %}"/>
-                    <input type="hidden" name="lng" id="geo_location_long" value="{% if model.location and model.geo_location %}{{model.geo_location['coordinates'][1]}}{% endif %}"/>
-                    <input type="hidden" name="locality_short" id="geo_city" value="{% if model.location and model.city %}{{model.city}}{% endif %}"/>
-                    <input type="hidden" name="administrative_area_level_2" id="geo_region" value="{% if model.location and model.region %}{{model.region}}{% endif %}"/>
-                    <input type="hidden" name="administrative_area_level_1" id="geo_state" value="{% if model.location and model.state %}{{model.state}}{% endif %}"/>
-                    <input type="hidden" name="country_short" id="geo_country" value="{% if model.location and model.country %}{{model.country}}{% endif %}"/>
-                </div>
-                {% if is_business %}
+
+
                 <div class="form-group">
                     <label for="heading">Business Type<span class="red">*</span></label>
-                    <select id="type-edit" class="form-control" placeholder="Select business type">
+                    <select data-name="type-edit" class="form-control" placeholder="Select business type">
                         <option value="Organizer">Organizer</option>
                         <option value="Gear Dealer">Gear Dealer</option>
                     </select>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="heading">City / State / Country <span class="red">*</span></label>
+                            <input data-name="location-edit" type="text" class="geo-complete form-control"
+                               placeholder="Enter Location" value="{% if model.location and model.location|length > 0 %}{{ model.location }}{% endif %}">
+                            <input type="hidden" name="formatted_address" data-name="geo_location_name" value="{% if model.location  and model.location|length > 0 %}{{ model.location }}{% endif %}"/>
+                            <input type="hidden" name="lat" data-name="geo_location_lat" value="{% if model.location and model.geo_location %}{{ model.geo_location['coordinates'][0] }}{% endif %}"/>
+                            <input type="hidden" name="lng" data-name="geo_location_long" value="{% if model.location and model.geo_location %}{{ model.geo_location['coordinates'][1] }}{% endif %}"/>
+                            <input type="hidden" name="locality_short" data-name="geo_city" value="{% if model.location and model.city %}{{ model.city }}{% endif %}"/>
+                            <input type="hidden" name="administrative_area_level_2" data-name="geo_region" value="{% if model.location and model.region %}{{ model.region }}{% endif %}"/>
+                            <input type="hidden" name="administrative_area_level_1" data-name="geo_state" value="{% if model.location and model.state %}{{ model.state }}{% endif %}"/>
+                            <input type="hidden" name="country_short" data-name="geo_country" value="{% if model.location and model.country %}{{ model.country }}{% endif %}"/>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="heading">Pincode / Zipcode</label>
+                            <input data-name="zipcode-edit" type="text" class="form-control" placeholder="Enter Pincode"  value="{% if model.zipcode and model.zipcode|length >0 %}{{ model.zipcode }}{% endif %}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label for="heading">Phone No.<span class="red">*</span></label>
+                            <div class="">
+                                <input data-name="phone-edit" type="text" class="form-control" placeholder="Enter Phone No. (required)"  value="{% if model.phone and model.phone|length > 0 %}{{ model.phone }}{% endif %}">
+                            </div>
+                            <div class="">
+                                <input data-name="phone-alternate-edit" type="text" class="form-control" placeholder="Enter Alternative Phone No. (optional)"  value="{% if model.alternative_phone and model.alternative_phone|length > 0 %}{{ model.alternative_phone }}{% endif %}">
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label for="heading">Email<span class="red">*</span></label>
+
+                            <div class="">
+                                <input data-name="email-edit" type="email" class="form-control" placeholder="Enter Email (required)" value="{{ model.email }}">
+                            </div>
+                            <div class="">
+                                <input data-name="email-alternate-edit" type="email" class="form-control" placeholder="Enter Alternative Email (optional)" value="{% if model.alternative_email and model.alternative_email|length > 0 %}{{ model.alternative_email }}{% endif %}">
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <!--a class="btn btn-primary pull-right btn-sm">Add Branch Address <i
+                            class="fa fa-plus-circle"></i></a-->
+                </div>
+
+
+                <div class="form-group">
+                    <label for="heading">Website</label>
+                    <input data-name="website-edit" type="text" class="form-control" placeholder="Enter Website"  value="{% if model.website and model.website|length > 0 %}{{ model.website }}{% endif %}">
+                </div>
+
+
+                <div class="form-group">
+                    <label for="heading">About You</label>
+                    <textarea data-name="about-edit" class="form-control" placeholder="Enter about yourself" rows="3">{% if model.about and model.about|length > 0 %}{{ model.about }}{% endif %}</textarea>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="heading"><i class="fa fa-facebook"></i> Facebook Url</label>
+                            <input data-name="facebook-edit" type="text" class="form-control" placeholder="Enter facebook url"
+                                   value="{% if model.facebook and model.facebook|length > 0 %}{{ model.facebook }}{% endif %}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="heading"><i class="fa fa-twitter"></i> Twitter Url</label>
+                            <input data-name="twitter-edit" type="text" class="form-control"
+                                   placeholder="Enter youtube url" value="{% if model.twitter and model.twitter|length > 0 %}{{ model.twitter }}{% endif %}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="heading"><i class="fa fa-youtube"></i> Youtube Url</label>
+                            <input data-name="youtube-channel-edit" type="text" class="form-control"
+                                   placeholder="Enter youtube url" value="
+                            {% if model.youtube_channel and model.youtube_channel|length > 0 %}{{ model.youtube_channel }}{% endif %}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="heading"><i class="fa fa-google-plus"></i> Google+ Url</label>
+                            <input data-name="google-plus-edit" type="text" class="form-control" placeholder="Enter G+ profile link"
+                                   value="{% if model.google_plus and model.google_plus|length > 0 %}{{ model.google_plus }}{% endif %}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="heading"><i class="fa fa-linkedin"></i> Linked In Url</label>
+                            <input data-name="linked-in-edit" type="text" class="form-control"
+                                   placeholder="Enter linkedIn url" value="
+                            {% if model.linked_in and model.linked_in|length > 0 %}{{ model.linked_in }}{% endif %}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="heading"><i class="fa fa-rss"></i> Company Blog</label>
+                            <input data-name="blog-channel-edit" type="text" class="form-control" placeholder="Enter blog link"
+                                   value="{% if model.blog_channel and model.blog_channel|length > 0 %}{{ model.blog_channel }}{% endif %}">
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <h4 class="blue oswald uppercase">Select your Speacialities</h4>
+
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <ul class="specialities-list">
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Trekking & Hiking" {%  if 'Trekking & Hiking' in model.interest_in_activities %}checked{% endif %}> Trekking & Hiking
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Rock Climbing" {%  if 'Rock Climbing' in model.interest_in_activities %}checked{% endif %}> Rock Climbimg
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Rapelling & Valley Crossing" {%  if 'Rapelling & Valley Crossing' in model.interest_in_activities %}checked{% endif %}> Rapelling & Valley Crossing
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Camping" {%  if 'Camping' in model.interest_in_activities %}checked{% endif %}> Camping
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Mountaineering" {%  if 'Mountaineering' in model.interest_in_activities %}checked{% endif %}> Mountaineering
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Canyoning" {%  if 'Canyoning' in model.interest_in_activities %}checked{% endif %}> Canyoning
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Marathons" {%  if 'Marathons' in model.interest_in_activities %}checked{% endif %}> Marathons
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Cycling & Biking" {%  if 'Cycling & Biking' in model.interest_in_activities %}checked{% endif %}> Cycling & Biking
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Offbeat Activities" {%  if 'Offbeat Activities' in model.interest_in_activities %}checked{% endif %}> Offbeat Activities
+                                    </label>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <div class="col-md-4">
+                        <ul class="specialities-list">
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Paragliding" {%  if 'Paragliding' in model.interest_in_activities %}checked{% endif %}> Paragliding
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Parasailing" {%  if 'Parasailing' in model.interest_in_activities %}checked{% endif %}> Parasailing
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Paramotoring" {%  if 'Paramotoring' in model.interest_in_activities %}checked{% endif %}> Paramotoring
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Skydiving" {%  if 'Skydiving' in model.interest_in_activities %}checked{% endif %}> Skydiving
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Bungee Jumping" {%  if 'Bungee Jumping' in model.interest_in_activities %}checked{% endif %}> Bungee Jumping
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Handgliding" {%  if 'Handgliding' in model.interest_in_activities %}checked{% endif %}> Handgliding
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Hot Air Ballooning" {%  if 'Hot Air Ballooning' in model.interest_in_activities %}checked{% endif %}> Hot Air Ballooning
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Zipline" {%  if 'Zipline' in model.interest_in_activities %}checked{% endif %}> Zipline
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-4">
+                        <ul class="specialities-list">
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Water Rafting" {%  if 'Water Rafting' in model.interest_in_activities %}checked{% endif %}> Water Rafting
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Kayaking" {%  if 'Kayaking' in model.interest_in_activities %}checked{% endif %}> Kayaking
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Snorkelling" {%  if 'Snorkelling' in model.interest_in_activities %}checked{% endif %}> Snorkelling
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Scuba Diving" {%  if 'Scuba Diving' in model.interest_in_activities %}checked{% endif %}> Scuba Diving
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Surfing" {%  if 'Surfing' in model.interest_in_activities %}checked{% endif %}> Surfing
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Kite Surfing" {%  if 'Kite Surfing' in model.interest_in_activities %}checked{% endif %}> Kite Surfing
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <ul class="specialities-list">
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Skiing" {%  if 'Skiing' in model.interest_in_activities %}checked{% endif %}> Skiing
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" data-name="activities" value="Snowboarding" {%  if 'Snowboarding' in model.interest_in_activities %}checked{% endif %}> Snowboarding
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!--a class="btn btn-primary pull-right btn-sm">Other Activities apart from above <i
+                            class="fa fa-plus-circle"></i></a-->
+
+                </div>
+
+                {% if not model %}
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" data-name="terms"> I accept the terms and conditions as per the agreement.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" data-name="authority"> I am the administrator / manager / representative
+                        </label>
+                    </div>
+                </div>
                 {% endif %}
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+                <form class="form-group">
+                    <hr/>
+                    <button class="btn btn-primary" data-action="save-business-profile">Submit</button>
+                    <button id="back-button" class="btn btn-info">Back</button>
+                </form>
+
+            </form>
+        </div>
+        <!--Col9 End-->
+
+
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <div class="row">
+
+
+                <!--form class="form">
+                  <div class="form-group">
+                    <div class="input-group">
+                      <input type="text" class="form-control no-radius" placeholder="Search Organiser's">
+                      <div class="input-group-addon blue-bg white"><span class="fa fa-search"></span></div>
+                    </div>
+                  </div>
+                </form-->
+                <br/>
+                <br/>
+                <br/>
+                <br/>
                 {% if model and model.id %}
-                    <a href="#" role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Click to change" class="hoverable" data-action="edit-cover-image" data-model-id="{{model.id}}" data-model="profile" data-trigger="hover"><img src="{% if not model.cover_image_path or model.cover_image_path|length == 0%}/img/Profile-Picture.jpg{% else %}{{model.cover_image_path}}{% endif %}" alt="" class="center-block text-center img-thumbnail img-responsive"></a>
+                    <a href="#" role="button" data-placement="right" data-toggle="popover" data-trigger="focus"
+                       data-content="Click to change" class="hoverable" data-action="edit-cover-image"
+                       data-model-id="{{ model.id }}" data-model="profile" data-trigger="hover"><img
+                            src="{% if not model.cover_image_path or model.cover_image_path|length == 0 %}/img/Profile-Picture.jpg{% else %}{{ model.cover_image_path }}{% endif %}"
+                            alt="" class="center-block text-center img-thumbnail img-responsive"></a>
                 {% else %}
-                    <img src="{% if not model.cover_image_path or model.cover_image_path|length == 0%}/img/Profile-Picture.jpg{% else %}{{model.cover_image_path}}{% endif %}" alt="" class="center-block text-center img-thumbnail img-responsive">
+                    <img src="{% if not model.cover_image_path or model.cover_image_path|length == 0 %}/img/Profile-Picture.jpg{% else %}{{ model.cover_image_path }}{% endif %}"
+                         alt="" class="center-block text-center img-thumbnail img-responsive">
                 {% endif %}
+
+
             </div>
-
         </div>
-        <div class="row">
-            <h3 class="text-center">--more--</h3><br/>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <!--Col3 End-->
 
-            <div class="form-group">
-                <label for="heading">About me<span class="red">*</span></label>
-                <textarea id="about-edit" row="5" type="text" class="form-control summernote" placeholder="Tell us about yourself">
-                    {% if model.about and model.about|length > 0 %}{{model.about}}{% endif %}
+    </section>
+{% else %}
+    <section class="container" xmlns="http://www.w3.org/1999/html" style="margin-bottom: 60px;">
+        <form class="fitrangi-form">
+            <input type="hidden" id="logged-in-id" value="{% if user %}{{ user.id }}{% endif %}"/>
+            <input type="hidden" id="profile-id" value="{{ model.id }}"/>
+            <input type="hidden" id="is-business" value="{% if is_business %}true{% else %}false{% endif %}"/>
+
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                    <div class="form-group">
+                        <label for="heading">Name<span class="red">*</span></label>
+                        <input id="name-edit" type="text" class="form-control" placeholder="Enter name"
+                               value="{% if model.name and model.name|length > 0 %}{{ model.name }}{% endif %}">
+                    </div>
+                    <div class="form-group">
+                        <label for="heading">Phone<span class="red">*</span></label>
+                        <input id="phone-edit" type="text" class="form-control" placeholder="Enter phone"
+                               value="{% if model.phone and model.phone|length > 0 %}{{ model.phone }}{% endif %}">
+                    </div>
+                    <div class="form-group">
+                        <label for="heading">Email<span class="red">*</span></label>
+                        <input id="email-edit" type="email" class="form-control"
+                               {% if model and model.id %}disabled{% endif %} placeholder="Enter email"
+                               value="{{ model.email }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="heading">Location<span class="red">*</span></label>
+                        <input id="location-edit" type="text" class="geo-complete form-control"
+                               placeholder="Hit enter to auto complete on location" value="
+                                {% if model.location and model.location|length > 0 %}{{ model.location }}{% endif %}">
+                        <input type="hidden" name="formatted_address" id="geo_location_name" value="
+                                {% if model.location  and model.location|length > 0 %}{{ model.location }}{% endif %}"/>
+                        <input type="hidden" name="lat" id="geo_location_lat" value="
+                                {% if model.location and model.geo_location %}{{ model.geo_location['coordinates'][0] }}{% endif %}"/>
+                        <input type="hidden" name="lng" id="geo_location_long" value="
+                                {% if model.location and model.geo_location %}{{ model.geo_location['coordinates'][1] }}{% endif %}"/>
+                        <input type="hidden" name="locality_short" id="geo_city"
+                               value="{% if model.location and model.city %}{{ model.city }}{% endif %}"/>
+                        <input type="hidden" name="administrative_area_level_2" id="geo_region"
+                               value="{% if model.location and model.region %}{{ model.region }}{% endif %}"/>
+                        <input type="hidden" name="administrative_area_level_1" id="geo_state"
+                               value="{% if model.location and model.state %}{{ model.state }}{% endif %}"/>
+                        <input type="hidden" name="country_short" id="geo_country"
+                               value="{% if model.location and model.country %}{{ model.country }}{% endif %}"/>
+                    </div>
+                    {% if is_business %}
+                        <div class="form-group">
+                            <label for="heading">Business Type<span class="red">*</span></label>
+                            <select id="type-edit" class="form-control" placeholder="Select business type">
+                                <option value="Organizer">Organizer</option>
+                                <option value="Gear Dealer">Gear Dealer</option>
+                            </select>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    {% if model and model.id %}
+                        <a href="#" role="button" data-placement="right" data-toggle="popover" data-trigger="focus"
+                           data-content="Click to change" class="hoverable" data-action="edit-cover-image"
+                           data-model-id="{{ model.id }}" data-model="profile" data-trigger="hover"><img
+                                src="{% if not model.cover_image_path or model.cover_image_path|length == 0 %}/img/Profile-Picture.jpg{% else %}{{ model.cover_image_path }}{% endif %}"
+                                alt="" class="center-block text-center img-thumbnail img-responsive"></a>
+                    {% else %}
+                        <img src="{% if not model.cover_image_path or model.cover_image_path|length == 0 %}/img/Profile-Picture.jpg{% else %}{{ model.cover_image_path }}{% endif %}"
+                             alt="" class="center-block text-center img-thumbnail img-responsive">
+                    {% endif %}
+                </div>
+
+            </div>
+            <div class="row">
+                <h3 class="text-center">--more--</h3><br/>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                <div class="form-group">
+                    <label for="heading">About me<span class="red">*</span></label>
+                <textarea id="about-edit" row="5" type="text" class="form-control summernote"
+                          placeholder="Tell us about yourself">
+                    {% if model.about and model.about|length > 0 %}{{ model.about }}{% endif %}
                 </textarea>
+                </div>
+                <div class="form-group">
+                    <label for="heading">Website</label>
+                    <input id="website-edit" type="text" class="form-control" placeholder="Enter website link"
+                           value="{% if model.website and model.website|length > 0 %}{{ model.website }}{% endif %}">
+                </div>
+                <div class="form-group">
+                    <label for="heading">Facebook Profile Link</label>
+                    <input id="facebook-edit" type="text" class="form-control" placeholder="Enter facebook profile link"
+                           value="{% if model.facebook and model.facebook|length > 0 %}{{ model.facebook }}{% endif %}">
+                </div>
+                <div class="form-group">
+                    <label for="heading">Google+ Profile Link</label>
+                    <input id="google-plus-edit" type="text" class="form-control" placeholder="Enter G+ profile link"
+                           value="{% if model.google_plus and model.google_plus|length > 0 %}{{ model.google_plus }}{% endif %}">
+                </div>
+                <div class="form-group">
+                    <label for="heading">Linked In Profile Link</label>
+                    <input id="linked-in-edit" type="text" class="form-control"
+                           placeholder="Enter LinkedIn profile link" value="
+                            {% if model.linked_in and model.linked_in|length > 0 %}{{ model.linked_in }}{% endif %}">
+                </div>
+                <div class="form-group">
+                    <label for="heading">Own a blog?</label>
+                    <input id="blog-channel-edit" type="text" class="form-control" placeholder="Share the link with us"
+                           value="
+                                   {% if model.blog_channel and model.blog_channel|length > 0 %}{{ model.blog_channel }}{% endif %}">
+                </div>
+                <div class="form-group">
+                    <label for="heading">Own a youtube channel?</label>
+                    <input id="youtube-channel-edit" type="text" class="form-control"
+                           placeholder="Share the channel link with us" value="
+                            {% if model.youtube_channel and model.youtube_channel|length > 0 %}{{ model.youtube_channel }}{% endif %}">
+                </div>
+                <div class="form-actions pull-right">
+                    <button class="btn btn-primary" data-action="save-profile">Save</button>
+                    <button id="back-button" class="btn btn-info">Back</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="heading">Website</label>
-                <input id="website-edit" type="text" class="form-control" placeholder="Enter website link" value="{% if model.website and model.website|length > 0 %}{{model.website}}{% endif %}">
-            </div>
-            <div class="form-group">
-                <label for="heading">Facebook Profile Link</label>
-                <input id="facebook-edit" type="text" class="form-control" placeholder="Enter facebook profile link" value="{% if model.facebook and model.facebook|length > 0 %}{{model.facebook}}{% endif %}">
-            </div>
-            <div class="form-group">
-                <label for="heading">Google+ Profile Link</label>
-                <input id="google-plus-edit" type="text" class="form-control" placeholder="Enter G+ profile link" value="{% if model.google_plus and model.google_plus|length > 0 %}{{model.google_plus}}{% endif %}">
-            </div>
-            <div class="form-group">
-                <label for="heading">Linked In Profile Link</label>
-                <input id="linked-in-edit" type="text" class="form-control" placeholder="Enter LinkedIn profile link" value="{% if model.linked_in and model.linked_in|length > 0 %}{{model.linked_in}}{% endif %}">
-            </div>
-            <div class="form-group">
-                <label for="heading">Own a blog?</label>
-                <input id="blog-channel-edit" type="text" class="form-control" placeholder="Share the link with us" value="{% if model.blog_channel and model.blog_channel|length > 0 %}{{model.blog_channel}}{% endif %}">
-            </div>
-            <div class="form-group">
-                <label for="heading">Own a youtube channel?</label>
-                <input id="youtube-channel-edit" type="text" class="form-control" placeholder="Share the channel link with us" value="{% if model.youtube_channel and model.youtube_channel|length > 0 %}{{model.youtube_channel}}{% endif %}">
-            </div>
-            <div class="form-actions pull-right">
-                <button class="btn btn-primary" data-action="save-profile">Save</button>
-                <button id="back-button" class="btn btn-info">Back</button>
-            </div>
-        </div>
-    </form>
+        </form>
 
-</section>
+    </section>
+{% endif %}
 <script>
-    $(document).ready(function(){
-        $('#back-button').on('click', function(e){ window.history.back(); });
+    $(document).ready(function () {
+        $('#back-button').on('click', function (e) {
+            window.history.back();
+        });
 
         $(".geo-complete").geocomplete({details: "form"});
+
+        $('[data-action="save-business-profile"]').on('click', function(e){
+            e.stopPropagation();
+            var logged_in_user = $('[data-name="logged-in-id"]').val();
+            var profile_id = $('[data-name="profile-id"]').val();
+            var is_business = true;
+            var name = $('[data-name="name-edit"]').val();
+            var address = $('[data-name="address-edit"]').val();
+            var type = $('[data-name="type-edit"]').val();
+            var location = $('[data-name="geo_location_name"]').val();
+            var lat = $('[data-name="geo_location_lat"]').val();
+            var lng = $('[data-name="geo_location_long"]').val();
+            var city = $('[data-name="geo_city"]').val();
+            var region = $('[data-name="geo_region"]').val();
+            var state = $('[data-name="geo_state"]').val();
+            var country = $('[data-name="geo_country"]').val();
+            var zipcode = $('[data-name="zipcode-edit"]').val();
+            var phone = $('[data-name="phone-edit"]').val();
+            var alternative_phone = $('[data-name="phone-alternate-edit"]').val();
+            var email = $('[data-name="email-edit"]').val();
+            var alternative_email = $('[data-name="email-alternate-edit"]').val();
+            var website = $('[data-name="website-edit"]').val();
+            var about = $('[data-name="about-edit"]').val();
+            var facebook = $('[data-name="facebook-edit"]').val();
+            var twitter = $('[data-name="twitter-edit"]').val();
+            var youtube = $('[data-name="youtube-channel-edit"]').val();
+            var gplus = $('[data-name="google-plus-edit"]').val();
+            var linked_in = $('[data-name="linked-in-edit"]').val();
+            var blog = $('[data-name="blog-channel-edit"]').val();
+            var activities = [];
+            $('[data-name="activities"]:checked').each(function(i, elem) {
+                console.log(i + " " + elem);
+                activities.push($(elem).val());
+            });
+            var profile_editor = window.App.profile;
+            var data = {
+                logged_in_user: logged_in_user,
+                name: name,
+                address: address,
+                type: type,
+                location: location,
+                lat: lat,
+                lng: lng,
+                city: city,
+                region: region,
+                state: state,
+                country: country,
+                zipcode: zipcode,
+                phone: phone,
+                alternative_phone: alternative_phone,
+                email: email,
+                alternative_email: alternative_email,
+                website: website,
+                about: about,
+                facebook: facebook,
+                twitter: twitter,
+                youtube: youtube,
+                google_plus: gplus,
+                linked_in: linked_in,
+                blog: blog,
+                activities: activities
+            };
+            if ($('[data-name="terms"]:checked') != undefined && $('[data-name="terms"]').length > 0 && $('[data-name="terms"]:checked').length == 0) {
+                BootstrapDialog.alert('Please accept terms and conditions');
+                return;
+            }
+            if($('[data-name="authority"]:checked') != undefined && $('[data-name="authority"]').length > 0 && $('[data-name="authority"]:checked').length == 0) {
+                BootstrapDialog.alert('Confirm if you are the representative authority of the said business.');
+                return;
+            }
+            if(name == undefined || name.length == 0) {
+                BootstrapDialog.alert('Name is required field');
+                return;
+            }
+            if(address == undefined || address.length == 0) {
+                BootstrapDialog.alert('Address is required field');
+                return;
+            }
+            if(location == undefined || location.length == 0) {
+                BootstrapDialog.alert('Location is required field');
+                return;
+            }
+            if(zipcode == undefined || zipcode.length == 0) {
+                BootstrapDialog.alert('Zipcode/Pincode is required field');
+                return;
+            }
+            if(phone == undefined || phone.length == 0) {
+                BootstrapDialog.alert('There must be at least one phone number given');
+                return;
+            }
+            if(email == undefined || email.length == 0) {
+                BootstrapDialog.alert('There must be at least one email given');
+                return;
+            }
+            if(activities == undefined || activities.length == 0) {
+                BootstrapDialog.alert('There must be at least one activity selected');
+                return;
+            }
+
+            if (profile_id == undefined || profile_id.length == 0) {
+                console.log('Sending data' + JSON.stringify(data));
+                profile_editor.business_profile_register(data, function (_data) {
+                    if (_data.status == 'success') {
+                        var url = window.location.href;
+                        if (url.indexOf('?') == -1) {
+                            window.location.href = window.location.href + '?pk=' + _data.node;
+                        } else {
+                            window.location.href = window.location.href + '&pk=' + _data.node;
+                        }
+                    } else {
+                        $(".alert").html(data.message);
+                        $('.alert').show();
+                        setTimeout(function(){
+                            $('.alert').hide();
+                        }, 10000);
+                    }
+                });
+            } else {
+                profile_editor.business_profile_edit(profile_id, data, function (_data) {
+                    if (_data.status == 'success') {
+                        window.location.reload();
+                    } else {
+                        $(".alert").html(data.message);
+                        $('.alert').show();
+                        setTimeout(function(){
+                            $('.alert').hide();
+                        }, 10000);
+                    }
+                })
+            }
+        });
     });
 </script>
 

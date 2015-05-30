@@ -21,9 +21,10 @@ class Profile(Entity, db.Document, Location):
     is_subscription_only = db.BooleanField(default=False)
     subscription_date = db.DateTimeField(default=datetime.datetime.now)
     email = db.StringField(unique=True)
+    alternative_email = db.StringField()
     passwd = db.StringField()
-    location_typed = db.StringField()
     phone = db.StringField()
+    alternative_phone = db.StringField()
     website = db.StringField()
     facebook = db.StringField()
     twitter = db.StringField()
@@ -50,6 +51,8 @@ class Profile(Entity, db.Document, Location):
     private_activity_count = db.IntField(default=0)
     owned_by = db.ReferenceField('Profile')
     managed_by = db.ListField(db.ReferenceField('Profile'))
+    interest_in_activities = db.ListField(db.StringField())
+    address = db.StringField()
     admin_approved = db.BooleanField(default=False)
 
 

@@ -322,9 +322,9 @@ $(document).ready(function() {
         App.editor(options, callback);
     };
 
-    App.profile.register_complete_profile= function(options, callback) {
+    App.profile.business_profile_register = function(data, callback) {
         var options = {
-            data: options,
+            data: data,
             type: 'profile',
             command: 'register-business-profile'
         };
@@ -340,14 +340,14 @@ $(document).ready(function() {
         App.editor(options, callback);
     };
 
-    App.profile.business_profile_edit= function(node, data) {
+    App.profile.business_profile_edit= function(node, data, callback) {
         var options = {
             node: node,
             data: data,
             type: 'profile',
             command: 'business-profile-edit'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
     App.profile.edit_role= function(node, role) {
