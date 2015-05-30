@@ -11,7 +11,7 @@
             </article>
         </div>
         <div class="caption capbottom">
-            {% if user %}
+            {% if user and not user.is_business_profile %}
                 {% if not model in user.accomplished_adventure %}
                     <button type="button" class="btn btn-default hoverable" data-action="add-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"  role="button" data-placement="left" data-toggle="popover" data-content="Done this" data-trigger="hover"><span class="fa fa-flag grey"></span>&nbsp; </button>
                 {% else %}
