@@ -4,7 +4,7 @@
         <div class="container">
 
             <div class="col-lg-4 col-md-4 col-sm-4 hidden-xs pull-right user-fav-acti">
-                {% if model.favorite_activities|length > 0 %}<h3>Favourite Activities&nbsp;: </h3>{% elif model.id == user.id %}<h3>Add your favorite activities </h3>{% endif %}
+                {% if model.favorite_activities|length > 0 %}<h3>{%  if model.is_business_profile %}Specialized Activities{% else %}Favourite Activities{% endif %}&nbsp;: </h3>{% elif model.id == user.id %}<h3>Add your favorite activities </h3>{% endif %}
                 <div class="row-fluid">
                     {% for acti in model.favorite_activities[0:10] %}
                     {% if acti.icon_image_path %} <a href="{{acti.slug}}"><img src="{{acti.icon_image_path}}" class="thumbnail"></a>{% endif %}
@@ -74,16 +74,25 @@
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 contact">
         <div class="heading"><h3>Contact</h3></div>
-        <div class="row">
+        <div class="row-fluid">
             {% if model.phone %}<h4><i class="fa fa-phone">:</i>&nbsp;{{model.phone}}</h4> {% endif %}
             {% if model.email %}<h4><i class="fa fa-at">:</i>&nbsp;<a href="">{{model.email}}</a></h4> {% endif %}
             {% if model.website %}<h4><i class="fa fa-globe">:</i>&nbsp;<a href="">{{model.website}}</a></h4> {% endif %}
-            {% if model.location %}<h4><i class="fa fa-map-marker">:</i>&nbsp;{{model.location}}</a></h4> {% endif %}
             {% if model.facebook %}<h4><i class="fa fa-facebook">:</i>&nbsp;{{model.facebook}}</a></h4> {% endif %}
             {% if model.google_plus %} <h4><i class="fa fa-google-plus">:</i>&nbsp;{{model.google_plus}}</a></h4> {% endif %}
             {% if model.linked_in %} <h4><i class="fa fa-linkedin">:</i>&nbsp;{{model.linked_in}}</a></h4> {% endif %}
             {% if model.blog_channel %}<h4><i class="fa fa-rss">:</i>&nbsp;{{model.blog_channel}}</a></h4> {% endif %}
             {% if model.youtube_channel %}<h4><i class="fa fa-youtube">:</i>&nbsp;{{model.youtube_channel}}</a></h4> {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center">
+                <h4 class="border-grey-b pb-5 darkgrey"><i class="fa fa-map-marker">:</i> Address</h4>
+                <p>{{model.address}}</p>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center">
+                <h4 class="border-grey-b pb-5 darkgrey"><i class="fa fa-map-marker">:</i> City/Region and Zipcode</h4>
+                <p>{{ model.city}}, {{ model.region }}, {{ model.state }}, {{ model.country }}, {{ model.zipcode }}</p>
+            </div>
         </div>
     </div>
 </section>
@@ -98,6 +107,7 @@
                     <li class="active"><a href="#my-stream"  role="tab" data-toggle="tab" aria-controls="my-stream" aria-expanded="false">
                         <span class="fa fa-spinner"></span> <strong>My Stream</strong></a></li>
 
+                    {% if not model.is_business_profile %}
                     <li class=""><a href="#adventure-done"  role="tab" data-toggle="tab" aria-controls="adventure-done" aria-expanded="false">
                         <span class="fa fa-flag"></span> <strong>Adventure Done</strong> </a></li>
 
@@ -106,6 +116,7 @@
 
                     <!--li class=""><a href="#photos-videos" role="tab" data-toggle="tab" aria-controls="photos-videos" aria-expanded="false">
                         <span class="fa fa-star"></span> <strong>Photos/Videos</strong> </a></li-->
+                    {%  endif %}
                     <li class=""><a href="#following" role="tab" data-toggle="tab" aria-controls="following" aria-expanded="false">
                         <span class="fa fa-group"></span> <strong>Following</strong> </a></li>
                     <li class=""><a href="#follower" role="tab" data-toggle="tab" aria-controls="follower" aria-expanded="false">

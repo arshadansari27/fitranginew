@@ -33,7 +33,7 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
                     <ul class="nav nav-pills nav-justified">
-
+                        {% if not user or not user.is_business_profile %}
                         <li>
                             {% if not model in user.accomplished_adventure %}
                                 <a href="#" data-action="add-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-flag"></span>&nbsp;Done this</a>
@@ -48,6 +48,7 @@
                             <a href="#" data-action="remove-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-list yellow"></span> Wishlisted </a>
                             {% endif %}
                         </li>
+                        {% endif %}
                         <li><a href="#review_post"><span class="fa fa-edit"></span> Write Review</a></li>
                     </ul>
 
