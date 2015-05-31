@@ -154,14 +154,14 @@
                                     <li><a href="/admin"><i class="fa fa-dashboard"></i>&nbsp;Admin dashboard</a></li>
                                     {% endif %}
                                     {% set managed_profiles = user.managed_profiles %}
-                                    {% if managed_profiles|length > 0 %}
+                                    {% if not user.is_business_profile and managed_profiles|length > 0 %}
                                         {% for _profile in managed_profiles %}
                                             <li><a data-action="switch-profile" data-model-id="{{_profile.id}}"
                                                 data-user-id="{{user.id}}"
                                                 href="#"><i class="fa fa-user"></i>&nbsp;<strong>{{_profile.name}}</strong>&nbsp; (switch user)</a></li>
                                         {% endfor %}
                                     {% endif %}
-                                    {% if user.managed_by|length > 0 %}
+                                    {% if user.is_business_profile and user.managed_by|length > 0 %}
                                         {% for _profile in user.managed_by %}
                                             <li><a data-action="switch-profile" data-model-id="{{_profile.id}}"
                                                 data-user-id="{{user.id}}"
