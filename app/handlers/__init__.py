@@ -53,7 +53,7 @@ WALL_IMAGE_NAMES = {
     EVENT: dict(detail=lambda u: u.cover_image_path, search='%s/images/events-banner.jpg' % prepend, landing=''),
     ARTICLE: dict(detail=lambda u: u.cover_image_path, search='%s/images/journal-banner.jpg' % prepend, landing=''),
     TRIP: dict(detail=lambda u: u.cover_image_path, search='%s/images/adventure-trips-banner.jpg' % prepend, landing=''),
-    "explore": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
+    "explore": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner2.jpg' % prepend),
     "community": dict(detail=lambda u: None, search=None, landing='%s/images/community-banner.jpg' % prepend),
     "about": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
 }
