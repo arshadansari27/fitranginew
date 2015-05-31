@@ -162,11 +162,10 @@
                                         {% endfor %}
                                     {% endif %}
                                     {% if user.is_business_profile and user.managed_by|length > 0 %}
-                                        {% for _profile in user.managed_by %}
+                                        {% set _profile = user.managed_by[0] %}
                                             <li><a data-action="switch-profile" data-model-id="{{_profile.id}}"
                                                 data-user-id="{{user.id}}"
-                                                href="#"><i class="fa fa-user"></i>&nbsp;switch user to parent <strong>{{_profile.name}}</strong></a></li>
-                                        {% endfor %}
+                                                href="#"><i class="fa fa-user"></i>&nbsp;<strong>{{_profile.name}}&nbsp;(switch user)</strong></a></li>
                                     {% endif %}
                                     <li><a href="/logout"><i class="fa fa-lock"></i> Log Out</a></li>
                                 </ul>
