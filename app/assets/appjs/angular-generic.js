@@ -34,7 +34,6 @@ function NotificationCtrl($scope) {
     var reset_message_counter = (loc.indexOf('/messaging') > -1)? true: false;
     var reset_stream_counter = (loc.indexOf(url) > -1)? true:false;
 
-    var reset_stream_counter = (window.location.href.indexOf('/') > -1)?true:false;
 
     var checkNotifications = function() {
         var notification_timer = setInterval(function () {
