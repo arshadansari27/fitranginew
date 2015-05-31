@@ -24,8 +24,9 @@
                 <div class="form-group">
                     <label for="heading">Business Type<span class="red">*</span></label>
                     <select data-name="type-edit" class="form-control" placeholder="Select business type">
-                        <option value="Organizer">Organizer</option>
-                        <option value="Gear Dealer">Gear Dealer</option>
+                        {% for _type in  profile_types %}
+                            <option value="{{ _type.name }}" {% if _type in model.type  %}selected{% endif %}>{{ _type.name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
 

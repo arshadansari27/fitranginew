@@ -254,6 +254,7 @@ class NodeView(View):
         context = force_setup_context(context)
         context['model'] = model
         print '[*] Context: ', context
+        context['profile_types'] = [u for u in ProfileType.objects.all() if u.name != 'Enthusiast']
         return template.render(**context)
 
 
@@ -304,6 +305,7 @@ class PageManager(object):
             context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), is_business=any([model.is_business_profile, len(model.managed_by) > 0]))
         else:
             context = dict(parent=None, user=user, query=None, filters=None, is_business=is_business)
+
         context.update(Page.factory(model_name, 'edit').get_context(context))
         title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s complete adventure portal')
         return title, NodeView.get_editable_card(model_name, model, context), context
@@ -524,7 +526,7 @@ class EditPage(Page):
         super(EditPage, self).__init__(model_name)
 
     def get_context(self, context):
-        return {}
+        return {} #dict(profiles_types=ProfileType.objects.all())
 
 
 explore_landing_page    = LandingPage('explore')
