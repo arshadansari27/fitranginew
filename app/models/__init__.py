@@ -171,7 +171,13 @@ class Node(object):
                 img = path
             else:
                 from app.models.profile import Profile
-                img = '/img/Profile-Picture.jpg' if isinstance(self, Profile) else None
+                if isinstance(self, Profile):
+                    if self.is_business_profile:
+                        img = '/img/Profile-Picture1.jpg'
+                    else:
+                        img = '/img/Profile-Picture2.jpg'
+                else:
+                    img = None
         return img if not USE_CDN else "%s%s" % (CDN_URL, img)
 
     @property
