@@ -6,10 +6,15 @@
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                 <div class="favourite">
                     <img src="{{model.icon_image_path}}" class="img-rounded img-responsive" style="background: white;">
-                    {% if model in user.favorite_activities %}
-                    <a href="#" data-type="activity" data-action="remove-activity-favorite" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><h3><i class="fa fa-check"></i>Added to Favourites</h3></a>
+                    {% if user.is_business_profile %}
+                        {% set what_activity='Specialization' %}
                     {% else %}
-                    <a href="#" data-type="activity" data-action="add-activity-favorite" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><h3>Add to Favourites</h3></a>
+                        {% set what_activity='Favorites' %}
+                    {% endif %}
+                    {% if model in user.favorite_activities %}
+                    <a href="#" data-type="activity" data-action="remove-activity-favorite" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><h3><i class="fa fa-check"></i>Added to {{ what_activity }}</h3></a>
+                    {% else %}
+                    <a href="#" data-type="activity" data-action="add-activity-favorite" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><h3>Add to {{ what_activity }}</h3></a>
                     {% endif %}
                 </div>
             </div>
