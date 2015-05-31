@@ -27,7 +27,7 @@
                             var channel_list = data.split(',');
                             var channels = '';
                             for(var i = 0; i < channel_list.length; i++) {
-                                if (channel_list[i] != null && channel_list[i].length > 0) channels += '<a href="/explore/journal?query=channels__channel__name:'+ channel_list[i]+ ';" >'+ channel_list[i]+ '</a>';
+                                if (channel_list[i] != null && channel_list[i].length > 0) channels += '<a href="/journals?query=channels__channel__name:'+ channel_list[i]+ ';" >'+ channel_list[i]+ '</a>';
                             }
                             $('#channel-list').append(channels);
                         });
