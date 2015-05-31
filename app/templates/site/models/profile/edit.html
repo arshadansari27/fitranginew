@@ -25,7 +25,9 @@
                     <label for="heading">Business Type<span class="red">*</span></label>
                     <select data-name="type-edit" class="form-control" placeholder="Select business type">
                         {% for _type in  profile_types %}
+                            {% if not _type.name == 'Subscription Only' %}
                             <option value="{{ _type.name }}" {% if _type in model.type  %}selected{% endif %}>{{ _type.name }}</option>
+                            {% endif  %}
                         {% endfor %}
                     </select>
                 </div>
