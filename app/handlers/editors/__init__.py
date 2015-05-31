@@ -30,7 +30,7 @@ def response_handler(success, failure, login_required=True):
                     return dict(status='error', message='Please login before making requests')
             try:
                 node = f(*kargs, **kwargs)
-                flash(success)
+                #flash(success)
                 return dict(status='success', message=success, node=str(node.id))
             except Exception, e:
 

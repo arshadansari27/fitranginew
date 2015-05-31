@@ -197,42 +197,162 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
         var user = $(this).attr('data-user-id');
         var model = $(this).attr('data-model-id');
-        App.profile.add_adventure_to_wish_list(user, model);
+        var that = $(this);
+        var html = '';
+        if (that.html().indexOf('Add to') > -1) {
+            html = '<span class="fa fa-list yellow"></span>&nbsp;Wishlisted';
+        } else {
+            html = '<span class="fa fa-list yellow"></span>&nbsp;';
+        }
+        App.profile.add_adventure_to_wish_list(user, model, function(data){
+            if(data.status == 'success') {
+                that.html(html);
+                that.attr('data-content', 'Remove from wishlist');
+                that.attr('data-action', 'remove-adventure-wishlist');
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
     });
     $('body').on('click', '[data-action="remove-adventure-wishlist"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
         var user = $(this).attr('data-user-id');
         var model = $(this).attr('data-model-id');
-        App.profile.remove_adventure_from_wish_list(user, model);
+        var that = $(this);
+        var html = '';
+        if (that.html().indexOf('Wishlisted') > -1) {
+            html = '<span class="fa fa-list grey"></span>&nbsp;Add to Wishlist';
+        } else {
+            html = '<span class="fa fa-list grey"></span>&nbsp;';
+        }
+        App.profile.remove_adventure_from_wish_list(user, model, function(data){
+            if(data.status == 'success') {
+                that.html(html);
+                that.attr('data-content', 'Add to wishlist');
+                that.attr('data-action', 'add-adventure-wishlist');
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
     });
     $('body').on('click', '[data-action="add-adventure-accomplished"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
         var user = $(this).attr('data-user-id');
         var model = $(this).attr('data-model-id');
-        App.profile.add_adventure_to_done(user, model);
+        var that = $(this);
+        var html = '';
+        if (that.html().indexOf('this') > -1) {
+            html = '<span class="fa fa-flag green"></span>&nbsp;Undo this';
+        } else {
+            html = '<span class="fa fa-flag green"></span>&nbsp;';
+        }
+        App.profile.add_adventure_to_done(user, model, function(data){
+            if(data.status == 'success') {
+                that.html(html);
+                that.attr('data-content', 'Undo this');
+                that.attr('data-action', 'remove-adventure-accomplished');
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
     });
     $('body').on('click', '[data-action="remove-adventure-accomplished"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
         var user = $(this).attr('data-user-id');
+
         var model = $(this).attr('data-model-id');
-        App.profile.remove_adventure_from_done(user, model);
+        var that = $(this);
+        var html = '';
+        if (that.html().indexOf('this') > -1) {
+            html = '<span class="fa fa-flag grey"></span>&nbsp;Done this';
+        } else {
+            html = '<span class="fa fa-flag grey"></span>&nbsp;';
+        }
+        App.profile.remove_adventure_from_done(user, model, function(data){
+            if(data.status == 'success') {
+                that.html(html);
+                that.attr('data-content', 'Done this');
+                that.attr('data-action', 'add-adventure-accomplished');
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
     });
     $('body').on('click', '[data-action="add-activity-favorite"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
         var user = $(this).attr('data-user-id');
         var model = $(this).attr('data-model-id');
-        App.profile.add_activity_to_favorite(user, model);
+        var that = $(this);
+        var text_added = '';
+        var text_add = '';
+        if (that.html().indexOf('Specialization') > 0) {
+            text_added = '<h3><i class="fa fa-check"></i>Added to Specialization</h3>';
+            text_add = '<h3>Add to Specialization</h3>';
+        } else {
+            text_added = '<h3><i class="fa fa-check"></i>Added to Favorites</h3>';
+            text_add = '<h3>Add to Favorites</h3>';
+        }
+
+        App.profile.add_activity_to_favorite(user, model, function(data){
+            if(data.status == 'success') {
+                that.html(text_added);
+                that.attr('data-action', 'remove-activity-favorite');
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
     });
     $('body').on('click', '[data-action="remove-activity-favorite"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
         var user = $(this).attr('data-user-id');
         var model = $(this).attr('data-model-id');
-        App.profile.remove_activity_from_favorite(user, model);
+        var that = $(this);
+        var text_added = '';
+        var text_add = '';
+        if (that.html().indexOf('Specialization') > 0) {
+            text_added = '<h3><i class="fa fa-check"></i>Added to Specialization</h3>';
+            text_add = '<h3>Add to Specialization</h3>';
+        } else {
+            text_added = '<h3><i class="fa fa-check"></i>Added to Favorites</h3>';
+            text_add = '<h3>Add to Favorites</h3>';
+        }
+        App.profile.remove_activity_from_favorite(user, model, function(data){
+            if(data.status == 'success') {
+                that.attr('data-action', 'add-activity-favorite');
+                that.html(text_add);
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
     });
     $('body').on('click', '[data-action="follow-profile"]', function (e) {
 
@@ -240,14 +360,50 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
         var user = $(this).attr('data-user-id');
         var model = $(this).attr('data-model-id');
-        App.profile.add_profile_to_follow(user, model);
+        var that = $(this);
+        App.profile.add_profile_to_follow(user, model, function(data){
+            if(data.status == 'success') {
+                that.attr('data-action', 'unfollow-profile');
+                var html = '';
+                if (that.html().indexOf('fa-plus') > -1) {
+                    html = '<i class="fa fa-user fs-20 blue"></i><i class="fa fa-check blue"></i>';
+                } else {
+                    html = '<i class="fa fa-user blue"></i> Unfollow'
+                }
+                that.html(html);
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
     });
     $('body').on('click', '[data-action="unfollow-profile"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
         var user = $(this).attr('data-user-id');
         var model = $(this).attr('data-model-id');
-        App.profile.remove_profile_from_follow(user, model);
+        var that = $(this);
+        App.profile.remove_profile_from_follow(user, model, function(data){
+            if(data.status == 'success') {
+                var html = ''
+                if (that.html().indexOf('fa-check') > -1) {
+                    html = '<i class="fa fa-user fs-20 grey"></i><i class="fa fa-plus grey"></i>'
+                } else {
+                    html = '<i class="fa fa-user grey"></i> Follow';
+                }
+                that.html(html);
+                that.attr('data-action', 'follow-profile');
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
     });
     $('body').on('click', '[data-action="add-trip-joined"]', function (e) {
         e.stopPropagation();
