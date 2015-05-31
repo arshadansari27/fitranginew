@@ -163,6 +163,11 @@
                                     {% endif %}
                                     {% if user.is_business_profile and user.managed_by|length > 0 %}
                                         {% set _profile = user.managed_by[0] %}
+                                        {% for p in user.managed_by %}
+                                            {% if p.id != user.id %}
+                                                {% set _profile = p %}
+                                            {% endif %}
+                                        {% endfor %}
                                             <li><a data-action="switch-profile" data-model-id="{{_profile.id}}"
                                                 data-user-id="{{user.id}}"
                                                 href="#"><i class="fa fa-user"></i>&nbsp;<strong>{{_profile.name}}&nbsp;(switch user)</strong></a></li>
