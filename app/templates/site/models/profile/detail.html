@@ -40,6 +40,12 @@
                                 <a  data-action="follow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-user grey"></i> Follow</a>
                             {% endif %}
                             <a href="/messaging?load-user={{model.id}}" class="btn btn-default col-lg-6 col-xs-12 text-center"><i class="fa fa-envelope-o"></i> Send Message</a>
+                        {% else %}
+                            {% if model.id != user.id and model in user.following %}
+                                <a  data-action="unfollow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-12 col-xs-12 text-center"><i class="fa fa-user blue"></i> Unfollow</a>
+                            {% else %}
+                                <a  data-action="follow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-12 col-xs-12 text-center"><i class="fa fa-user grey"></i> Follow</a>
+                            {% endif %}
                         {% endif %}
                     {% else %}
                         <a data-action="edit-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-users"></i> Edit</a>
