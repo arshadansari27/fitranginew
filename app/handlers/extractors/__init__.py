@@ -5,7 +5,7 @@ from app.models import ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST,
 from app.models.streams import ActivityStream
 from app.models.activity import Activity
 from app.models.adventure import Adventure
-from app.models.content import Article, Post, Discussion, Advertisement, Channel
+from app.models.content import Article, Post, Discussion, Advertisement, Channel, Content
 from app.models.event import Event
 from app.models.profile import Profile, ProfileType
 from app.models.relationships import RelationShips
@@ -144,8 +144,11 @@ class NodeExtractor(object):
                     filters['geo_location__near'] = {"type": "Point", "coordinates": [float(sorters['location_lat']), float(sorters['location_lng'])]}
                     max_distance = 50000
                     filters['geo_location__max_distance'] = max_distance
-        print 'Post: ', self.model_class.__name__, filters
-        return self.model_class.objects(**filters).order_by('-modified_timestamp')
+        if Content in self.model_class.__bases__:
+            order_by = '-modified_timestamp'
+        else:
+            order_by = '-created_timestamp'
+        return self.model_class.objects(**filters).order_by(order_by)
 
 
     @classmethod
