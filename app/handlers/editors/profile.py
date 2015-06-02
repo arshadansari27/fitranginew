@@ -20,6 +20,8 @@ class ProfileEditor(NodeEditor):
             return edit_profile(self.node, self.data)
         elif self.command == 'subscribe':
             return subscribe(self.data)
+        elif self.command == 'not-ok':
+            return report_not_ok(self.node, self.data['node_type'], self.data['user_id'])
         elif self.command == 'cover-image-edit':
             return edit_cover_image(self.node, self.data)
         elif self.command == 'change-password':
@@ -50,8 +52,10 @@ class ProfileEditor(NodeEditor):
             return edit_type(self.action, self.node, self.message['type'])
         elif self.command == 'register-profile':
             return register_profile(self.data)
+        elif self.command == 'register-business-profile':
+            return register_business_profile(self.data)
         elif self.command == 'business-profile-edit':
-            return business_profile_edit(self.action, self.node)
+            return update_business_profile(self.node, self.data)
         elif self.command == 'role-edit':
             return edit_role(self.action, self.node, self.message['role'])
         elif self.command == 'deactivate-profile':
@@ -100,11 +104,14 @@ def edit_profile(profile, data):
     for k, v in data.iteritems():
         if not hasattr(node, k) or k == 'email' or k == 'location' or k.startswith('location'):
             continue
+        v = v.strip()
         setattr(node, k, v)
+        print 'K [%s]: V [%s]' % (k, v)
 
     location        = data.get('location', None)
     location_lat    = data.get('location_lat', None)
     location_long   = data.get('location_long', None)
+    print 'Location [%s]: [%s, %s]' % (location, location_lat, location_long)
     if location is not None and len(location) > 0:
         node.location = location
         node.geo_location = [float(location_lat), float(location_long)]
@@ -120,6 +127,18 @@ def subscribe(data):
         type = ProfileType.objects(name__iexact='Subscription Only').first()
         node = Profile(email=email, type=[type])
         node.save()
+    return node
+
+@response_handler('Thank you for the help in reporting. Admin will review and mark the status as appropriate.', 'Failed to report', login_required=True)
+def report_not_ok(node, node_type, user_id):
+    assert node is not None and node_type is not None and user_id is not None
+    node = NodeFactory.get_class_by_name(node_type).get_by_id(node)
+    print '[*]', node
+    user = Profile.objects(pk=user_id).first()
+    print '[*]', user
+    assert node is not None and user is not None
+    node.not_ok_count += 1
+    node.save()
     return node
 
 
@@ -288,6 +307,132 @@ def register_profile(data):
         send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=html)
     return profile
 
+@response_handler('Successfully registered the business profile, awaiting admin approval', 'Failed to register', login_required=True)
+def register_business_profile(data):
+    by_user = data['logged_in_user']
+    assert by_user is not None
+    type, phone, alternative_phone = data['type'], data['phone'], data['alternative_phone']
+    name, email, alternative_email = data['name'], data['email'], data['alternative_email']
+    about, website, google_plus, linked_in, facebook, twitter = data['about'], data['website'], data['google_plus'], data['linked_in'], data['facebook'], data['twitter']
+    youtube, blog, activities = data['youtube'], data['blog'], data['activities']
+    address, location, lat, lng, city, region, state, country, zipcode = data['address'], data['location'], data['lat'], data['lng'], data['city'], data['region'], data['state'], data['country'], data['zipcode']
+
+    user = Profile.objects(pk=by_user).first()
+    if not user:
+        raise Exception("Not logged in")
+
+
+
+    subscription_type = ProfileType.objects(name__icontains='subscription').first()
+    if Profile.objects(email__iexact=email, type__nin=[str(subscription_type.id)]).first():
+        raise Exception('Profile already exists')
+
+    type = ProfileType.objects(name__iexact=type.strip()).first()
+    profile = Profile.objects(email__iexact=email.strip()).first()
+    if lat:
+        lat = lat.strip()
+    if lng:
+        lng = lng.strip()
+    if lat and len(lat)>0 and lng and len(lng) >0:
+        geo_location = [float(lat), float(lng)]
+    else:
+        geo_location = None
+    if not profile:
+        profile = Profile.create(
+            name=name.strip(), email=email.strip(), address=address.strip(), type=[type], alternative_email=alternative_email.strip(), phone=phone.strip(), alternative_phone=alternative_phone.strip(),
+            roles=['Basic User'], about=about.strip(), location=location.strip(), city=city.strip(), region=region.strip(), state=state.strip(), country=country.strip(),
+            website=website.strip(), twitter=twitter.strip(), youtube_channel=youtube.strip(), blog_channel=blog.strip(), zipcode=zipcode.strip(), geo_location=geo_location,
+            facebook=facebook.strip(), linked_in=linked_in.strip(), google_plus=google_plus.strip())
+    else:
+        raise Exception('Profile already added by someone')
+
+    for activity in activities:
+        act = Activity.objects(name__iexact=activity.strip()).first()
+        if act and not act in profile.favorite_activities:
+            RelationShips.favorite(profile, act)
+        if activity and len(activity) > 0 and activity not in profile.interest_in_activities:
+            profile.interest_in_activities.append(activity.strip())
+    profile.password = 'default-password@789'
+    profile.is_business_profile = True
+    profile.admin_approved = False
+    profile.managed_by.append(user)
+    profile.save()
+
+    if profile and profile.id:
+        from app.views import env
+        #session['user'] = str(profile.id)
+        template_path = 'notifications/successfully_registered.html'
+        template = env.get_template(template_path)
+        context = {}
+        context['user']  = profile
+        html = template.render(**context)
+        send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=html)
+    return profile
+
+@response_handler('Successfully updated the profile', 'Failed to update', login_required=True)
+def update_business_profile(node, data):
+    by_user, profile_id = data['logged_in_user'], node
+    assert profile_id is not None and by_user is not None
+    type, phone, alternative_phone = data['type'], data['phone'], data['alternative_phone']
+    name, email, alternative_email = data['name'], data['email'], data['alternative_email']
+    about, website, google_plus, linked_in, facebook, twitter = data['about'], data['website'], data['google_plus'], data['linked_in'], data['facebook'], data['twitter']
+    youtube, blog, activities = data['youtube'], data['blog'], data['activities']
+    address, location, lat, lng, city, region, state, country, zipcode = data['address'], data['location'], data['lat'], data['lng'], data['city'], data['region'], data['state'], data['country'], data['zipcode']
+
+    user = Profile.objects(pk=by_user).first()
+    if not user:
+        raise Exception("Not logged in")
+
+    type = ProfileType.objects(name__iexact=type.strip()).first()
+    profile = Profile.objects(email__iexact=email.strip()).first()
+    if not profile:
+        raise Exception("Profile does not exists")
+    if lat:
+        lat = lat.strip()
+    if lng:
+        lng = lng.strip()
+    if lat and len(lat)>0 and lng and len(lng) >0:
+        geo_location = [float(lat), float(lng)]
+    else:
+        geo_location = None
+    profile.name=name.strip()
+    profile.email=email.strip()
+    profile.type=[type]
+    profile.alternative_email=alternative_email.strip()
+    profile.phone=phone.strip()
+    profile.alternative_phone=alternative_phone.strip()
+    profile.about=about.strip()
+    profile.location=location.strip()
+    profile.city=city.strip()
+    profile.region=region.strip()
+    profile.geo_location = geo_location
+    profile.state=state.strip()
+    profile.country=country.strip()
+    profile.zipcode=zipcode.strip()
+    profile.website=website.strip()
+    profile.twitter=twitter.strip()
+    profile.youtube_channel=youtube.strip()
+    profile.blog_channel=blog.strip()
+    profile.facebook=facebook.strip()
+    profile.linked_in=linked_in.strip()
+    profile.google_plus=google_plus.strip()
+    profile.address = address.strip()
+
+    for activity in activities:
+        act = Activity.objects(name__iexact=activity.strip()).first()
+        if act:
+            if act in profile.favorite_activities:
+                continue
+            RelationShips.favorite(profile, act)
+        if activity in profile.interest_in_activities:
+            continue
+        profile.interest_in_activities.append(activity.strip())
+    profile.is_business_profile = True
+    if user not in profile.managed_by:
+        profile.managed_by.append(user)
+    profile.save()
+
+    return profile
 
 @response_handler('Successfully updated business status', 'Failed to update business status')
 def business_profile_edit(action, profile):

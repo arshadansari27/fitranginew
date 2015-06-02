@@ -3,7 +3,7 @@ from app.handlers.extractors import NodeExtractor
 from app.models import POST, CHANNEL, DISCUSSION, ARTICLE, Node, NodeFactory
 from app.models.profile import ProfileType, Profile
 from app.models.streams import ActivityStream
-from flask import g, jsonify, render_template
+from flask import g, jsonify, render_template, flash
 import os
 
 __author__ = 'arshad'
@@ -17,9 +17,15 @@ class ContentEditor(NodeEditor):
 
     def _invoke(self):
         if  self.command == 'add':
-            return add(self.type, self.data)
+            if self.type == 'article':
+                return add_content(self.type, self.data)
+            else:
+                return add_discussion(self.type, self.data)
         elif self.command == 'edit':
-            return edit(self.node, self.type, self.data)
+            if self.type == 'article':
+                return edit(self.node, self.type, self.data)
+            else:
+                return edit(self.node, self.type, self.data)
         elif self.command == 'delete':
             return delete(self.node, self.type)
         elif self.command == 'publish':
@@ -29,17 +35,20 @@ class ContentEditor(NodeEditor):
         else:
             raise Exception('Invalid command')
 
-@response_handler('Successfully deleted the post', 'Failed to remove the post')
+@response_handler('Successfully deleted', 'Failed to delete')
 def delete(node, type):
     node = get_or_create_content(type, node)
     node.delete()
+    flash('Delete successful')
     return node
 
 
 def get_or_create_content(type, id=None):
-
+    print '[*] Get content: ', type, id
     if id:
         node = NodeExtractor.factory(type).get_single('pk:%s;' % str(id))
+        if not node:
+            raise Exception("Node not found!")
         return node
     else:
         cls = NodeFactory.get_class_by_name(type)
@@ -48,7 +57,11 @@ def get_or_create_content(type, id=None):
         return node
 
 @response_handler('Successfully added the content', 'Failed to add content')
-def add(type, data):
+def add_content(type, data):
+    return __edit(None, type, data)
+
+@response_handler('Thank you for posting the discussion. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to add content')
+def add_discussion(type, data):
     return __edit(None, type, data)
 
 
@@ -95,7 +108,7 @@ def __edit(node, type, data):
     obj.save()
     return obj
 
-@response_handler('Thank you for posting a discussion. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to publish')
+@response_handler('Thank you for posting the content. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to publish')
 def publish(node, type):
     if not node or not type:
         raise Exception("invalid parameters")
@@ -106,11 +119,17 @@ def publish(node, type):
         return content
     content.published = True
     content.save()
-    if content.published and not hasattr(content, 'admin_published') and not content.admin_published:
-        profile = Profile.objects(roles__in=['Admin']).first()
-        mail_data = render_template('notifications/content_posted_admin.html', user=profile, content=content)
+    if content.published and (not hasattr(content, 'admin_published') or not content.admin_published):
+        profile = Profile.objects(roles__in=['Admin']).all()
         from app.handlers.messaging import send_single_email
-        send_single_email("[Fitrangi] Content awaiting approval", to_list=[profile.email], data=mail_data)
+        if not profile or len(profile) is 0:
+            print '[*] Publish Mail: Unable to send email to admin'
+        for p in profile:
+            if not p or not p.email or p.email != 'fitrangi@gmail.com':
+                continue
+            mail_data = render_template('notifications/content_posted_admin.html', user=p, content=content)
+            send_single_email("[Fitrangi] Content awaiting approval", to_list=[profile.email], data=mail_data)
+            print '[*] Publish Mail: Sending mail to %s' % p.name
     ActivityStream.push_content_to_stream(content)
     return content
 

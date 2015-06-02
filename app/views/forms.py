@@ -1,8 +1,28 @@
 __author__ = 'arshad'
 
 from wtforms import Form, PasswordField, BooleanField, SelectField, TextAreaField
-from wtforms.fields import TextAreaField, HiddenField
+from wtforms.fields import TextAreaField, HiddenField, TextField
 from wtforms.widgets import TextInput
+from wtforms.fields import StringField
+from wtforms.widgets import TextInput
+
+class ClassedWidgetMixin(object):
+    """Adds the field's name as a class
+    when subclassed with any WTForms Field type.
+
+    Has not been tested - may not work."""
+    def __init__(self, *args, **kwargs):
+        super(ClassedWidgetMixin, self).__init__(*args, **kwargs)
+
+    def __call__(self, field, **kwargs):
+        c = kwargs.pop('class', '') or kwargs.pop('class_', '')
+        kwargs['class'] = u'geo_complete'
+        return super(ClassedWidgetMixin, self).__call__(field, **kwargs)
+
+# An example
+class ClassedTextInput(ClassedWidgetMixin, TextInput):
+    pass
+
 
 class ChangePasswordForm(Form):
     current_password = PasswordField()
@@ -29,7 +49,11 @@ class ProfileForm(Form):
     blog_channel = TextAreaField()
 
 class LocationForm(Form):
-    name = TextAreaField()
-    geo_location_name = HiddenField()
-    geo_location_lat = HiddenField()
-    geo_location_long = HiddenField()
+    location = StringField()
+    formatted_address = HiddenField()
+    lat = HiddenField()
+    lng = HiddenField()
+    locality_short = HiddenField()
+    administrative_area_level_2 = HiddenField()
+    administrative_area_level_1 = HiddenField()
+    country_short = HiddenField()

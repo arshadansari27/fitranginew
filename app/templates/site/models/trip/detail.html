@@ -1,6 +1,6 @@
 <section class="container-fluid p1">
     <div class="adventures-trips-banner" style="{{background_cover}}">
-
+        {% include 'site/includes/img-hider.html'%}
         <div class="container">
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -327,11 +327,11 @@
 
         <div class="row fitrangi-trips">
             <div class="heading">
-                <h4>Similar Trips</h4>
+                <h4>Other Trips</h4>
             </div>
             <input id="trip-not-same-filter" type="hidden" data-category="other" data-model="trip" data-filter="id__ne" value="{{model.id}}"/>
             {% if model.location %}
-            <input id="trip-location-filter" type="hidden" data-category="all" data-model="trip" data-filter="location__location__id" value="{{model.location.id}}"/>
+            <!--input id="trip-location-filter" type="hidden" data-category="all" data-model="trip" data-filter="location__location__id" value="{{model.location.id}}"/-->
             {% endif %}
             {{other_trips|safe}}
         </div>

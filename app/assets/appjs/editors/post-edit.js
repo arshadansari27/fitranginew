@@ -58,9 +58,4 @@ $(document).ready(function() {
         App.editor(options, callback);
     };
 
-    App.post.delete = function(node, callback) {
-        console.log('Not implemented');
-    };
-
-
 });

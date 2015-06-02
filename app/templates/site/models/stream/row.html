@@ -3,11 +3,11 @@
     <div class="">
 
     <div class="media-left">
-        <img src="{{model.profile.cover_image_path_small}}" class="img-circle p-5" style="height:60px; width: 60px;">
+        <a href="{{model.profile.slug}}"><img src="{{model.profile.cover_image_path_small}}" class="img-circle p-5" style="height:60px; width: 60px;"></a>
     </div>
     <div class="media-body">
         <h3>
-                {{model.profile.name}} &nbsp;<br/>
+                <a href="{{model.profile.slug}}" style="color:#00C4A6;">{{model.profile.name}} &nbsp;</a><br/>
         </h3>
         <h4>{{ model.action_display }}</h4>
     </div>
@@ -28,7 +28,7 @@
                         {% endif %}
                         {% if object.cover_image_path %}
                             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                            <a href="#"><img class="img-responsive img-thumbnail" src="{{object.cover_image_path_small}}" alt=""></a>
+                            <a href="{% if object.slug %}{{object.slug}}{% endif %}"><img class="img-responsive img-thumbnail" src="{{object.cover_image_path_small}}" alt=""></a>
                             </div>
                         {% endif %}
                         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">

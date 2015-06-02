@@ -65,16 +65,9 @@
             <div class="form-group col-xs-1">
                 <div class="btn-group dropup">
                     <a class="attachment" data-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-paperclip"></i>
+                        <i class="fa fa-arrow-right"></i>
 
                     </a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a><i class="fa fa-music"></i></a></li>
-                        <li class="divider"></li>
-                        <li><a><i class="fa fa-video-camera"></i></a></li>
-                        <li class="divider"></li>
-                        <li><a><i class="fa fa-image"></i></a></li>
-                    </ul>
                 </div>
             </div>
 
@@ -106,10 +99,19 @@
         window.App.messaging.selected_user  = initial;
         window.App.messaging.initial_user   = initial;
 
+        $('[data-context="message"]').on('keydown', function(event){
+            if(event.keyCode==13){
+                $('a[data-action="chat-send"]').trigger('click');
+            }
+        });
 
         $('a[data-action="chat-send"]').on('click', function(e){
             e.preventDefault();
             e.stopPropagation();
+            send_message();
+        });
+
+        var send_message = function(){
             var author = $('body').attr('data-logged-in-as');
             if (author == undefined)  {
                 console.log("User is not logged in " + author);
@@ -117,8 +119,8 @@
             var recipient = $('.messages').attr('data-user-id');
             var message = $('[data-context="message"][data-action="chat-send"]').val();
             window.App.messaging.send(message, recipient);
-            $('[data-context="message"][data-action="chat-send"]').val('');
-        });
+            $('[data-context="message"]').val('');
+        }
 
         $('body').on('click', '.contact', function(e){
             e.stopPropagation();

@@ -22,7 +22,7 @@
   {{ lib.form_js() }}
   <script language="javascript">
       $(document).ready(function(){
-          $("textarea").addClass('span8');
+          $(".geo-complete").geocomplete({details: "form"});
       });
   </script>
 {% endblock %}

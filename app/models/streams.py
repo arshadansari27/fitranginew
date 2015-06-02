@@ -172,7 +172,7 @@ class ChatMessage(db.Document):
     # Only two profiles
     @classmethod
     def create_message(cls, from_profile, to_profile, mesg):
-        message = ChatMessage(profiles=sorted([from_profile, to_profile]), message=mesg, author=from_profile)
+        message = ChatMessage(profiles=sorted([from_profile, to_profile]), message=mesg, author=from_profile, receiver_read=False)
         message.save()
         ActivityStream.push_message_to_stream(to_profile, message)
         return message
@@ -187,19 +187,42 @@ class ChatMessage(db.Document):
         pipeline = []
         pipeline.append({'$unwind': '$profiles'})
         pipeline.append({'$match': {'_id': {'$in': ids}}})
-        cond = {'$cond': { 'if': { '$eq': [ "receiver_read", False] }, 'then': 1, 'else': 0 }}
+        cond = {'$cond': { 'if': { '$eq': ["$receiver_read", False]}, 'then': 1, 'else': 0 }}
         pipeline.append({'$group': {'_id': '$profiles', 'count': {'$sum':cond}}})
         result = ChatMessage._get_collection().aggregate(pipeline)['result']
+        print '[**]', result
         for u in result:
             p = Profile.objects(id=u['_id']).first()
             if p == profile or not p:
                 continue
             user_list[p] = u['count']
+            print p, u['count']
         return user_list
 
     @classmethod
+    def get_unread_message_between(cls, profile, another_profile):
+        dct = {
+            '$and': [{
+                'profiles': {'$all': [profile.id, another_profile.id]}
+                },
+                {
+                    '$or': [
+                        {
+                            "receiver_read": {"$exists": False}
+                        },
+                        {
+                            "receiver_read": False
+                        }
+                    ]
+                }
+            ]
+        }
+        chats = list(ChatMessage.objects(__raw__=dct).order_by('-created_timestamp').all())
+        return reversed([c for c in chats if not hasattr(c, 'receiver_read') or c.receiver_read is False])
+
+    @classmethod
     def get_message_between(cls, profile, another_profile, all=False):
-        chats = list(reversed(ChatMessage.objects(__raw__=dict(profiles={'$all': [profile.id, another_profile.id]})).order_by('-created_timestamp').limit(20).all()))
+        chats = list(reversed(ChatMessage.objects(__raw__=dict(profiles={'$all': [profile.id, another_profile.id]})).order_by('-created_timestamp').all()))
         _chats = []
         for c in chats:
             if c.author == profile:

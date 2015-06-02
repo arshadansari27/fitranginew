@@ -4,8 +4,8 @@ from app.models import ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST,
     PROFILE_TYPE, ADVERTISEMENT, CHANNEL, NodeFactory
 from app.models.streams import ActivityStream
 from app.models.activity import Activity
-from app.models.adventure import Adventure, Location
-from app.models.content import Article, Post, Discussion, Advertisement, Channel
+from app.models.adventure import Adventure
+from app.models.content import Article, Post, Discussion, Advertisement, Channel, Content
 from app.models.event import Event
 from app.models.profile import Profile, ProfileType
 from app.models.relationships import RelationShips
@@ -30,8 +30,8 @@ class NodeExtractor(object):
         self.model_class = NodeFactory.get_class_by_name(model_name)
         self.init_filters = init_filters
 
-    def get_list(self, query, paged, page, size):
-        query_set = self.get_query(query)
+    def get_list(self, query, paged, page, size, sort=None):
+        query_set = self.get_query(query, sort=sort)
         if paged:
             page = int(page)
             size = int(size)
@@ -50,15 +50,20 @@ class NodeExtractor(object):
     def get_single(self, query):
         return self.get_query(query).first()
 
-    def last_page(self, query, size):
-        query_set = self.get_query(query)
+    def last_page(self, query, size, sort=None):
+        query_set = self.get_query(query, sort=sort)
         count = query_set.count()
         page = (count / int(size)) + 1
         return page
 
-    def get_query(self, query):
+    def get_query(self, query, sort=None):
         use_filters = convert_query_to_filter(query)
-        filters = self.init_filters
+        if sort:
+            sorters = convert_query_to_filter(sort)
+        else:
+            sorters = {}
+        filters = dict((u, v) for u, v in self.init_filters.iteritems())
+        print 'Pre', self.model_class.__name__, use_filters, sorters, filters
         merge = []
         if len(use_filters) > 0:
             filters = {}
@@ -82,7 +87,13 @@ class NodeExtractor(object):
                     assert len(fields) >= 3
                     relationship = fields[1]
                     from_node_type = fields[2]
-                    from_node = NodeExtractor.factory(from_node_type).get_single('pk:%s' % v)
+                    if len(fields) is 4:
+                        qry = fields[3]
+                    elif len(fields) is 5:
+                        qry = fields[3] + '__' + fields[4]
+                    else:
+                        qry = 'pk'
+                    from_node = NodeExtractor.factory(from_node_type).get_single('%s:%s' % (qry, v))
                     nodes = RelationShips.get_by_query(from_node, relationship)
                     filters['id__in'] = [u.id for u in nodes if u is not None and hasattr(u, 'id')]
                 elif '__' in k:
@@ -119,8 +130,26 @@ class NodeExtractor(object):
                     for m, k, v in to_add:
                         del filters[m]
                         filters[k].append(v)
-        print filters
-        return self.model_class.objects(**filters).order_by('-created_timestamp')
+        if sorters and len(sorters) > 0:
+            if sorters.has_key('location_lat') and sorters.has_key('location_lng'):
+                if sorters.has_key('location_locality') and len(sorters['location_locality']) > 0:
+                    filters['city__iexact'] = sorters['location_locality']
+                elif sorters.has_key('location_region2') and len(sorters['location_region2']) > 0:
+                    filters['region__iexact'] = sorters['location_region2']
+                elif sorters.has_key('location_region1') and len(sorters['location_region1']) > 0:
+                    filters['state__iexact'] = sorters['location_region1']
+                elif sorters.has_key('location_country') and len(sorters['location_country']) > 0:
+                    filters['country__iexact'] = sorters['location_country']
+                else:
+                    filters['geo_location__near'] = {"type": "Point", "coordinates": [float(sorters['location_lat']), float(sorters['location_lng'])]}
+                    max_distance = 50000
+                    filters['geo_location__max_distance'] = max_distance
+        if Content in self.model_class.__bases__:
+            order_by = '-modified_timestamp'
+        else:
+            order_by = '-created_timestamp'
+        return self.model_class.objects(**filters).order_by(order_by)
+
 
     @classmethod
     def factory(cls, model_name):
@@ -147,8 +176,6 @@ class NodeExtractor(object):
             return stream_extractor
         elif model_name == RELATIONSHIPS:
             return relationship_extractor
-        elif model_name == LOCATION:
-            return location_extractor
         elif model_name == PROFILE_TYPE:
             return profile_type_extractor
         elif model_name == ADVERTISEMENT:
@@ -163,7 +190,6 @@ activity_extractor = NodeExtractor(ACTIVITY)
 advertisement_extractor = NodeExtractor(ADVERTISEMENT)
 channel_extractor = NodeExtractor(CHANNEL)
 profile_type_extractor = NodeExtractor(PROFILE_TYPE)
-location_extractor = NodeExtractor(LOCATION)
 article_extractor = NodeExtractor(ARTICLE)
 discussion_extractor = NodeExtractor(DISCUSSION)
 post_extractor = NodeExtractor(POST)

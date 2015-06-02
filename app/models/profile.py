@@ -3,7 +3,7 @@ from app.models.relationships import RelationShips
 __author__ = 'arshad'
 
 from mongoengine import *
-from app.models import update_content, Entity, db, new_object
+from app.models import update_content, Entity, db, new_object, Location
 from activity import Activity
 from adventure import Adventure
 import datetime, hashlib
@@ -16,16 +16,15 @@ class ProfileType(db.Document):
 
 @new_object.apply
 @update_content.apply
-class Profile(Entity, db.Document):
+class Profile(Entity, db.Document, Location):
     featured = db.BooleanField(default=False)
     is_subscription_only = db.BooleanField(default=False)
     subscription_date = db.DateTimeField(default=datetime.datetime.now)
     email = db.StringField(unique=True)
+    alternative_email = db.StringField()
     passwd = db.StringField()
-    location = db.StringField()
-    geo_location = db.PointField()
-    location_typed = db.StringField()
     phone = db.StringField()
+    alternative_phone = db.StringField()
     website = db.StringField()
     facebook = db.StringField()
     twitter = db.StringField()
@@ -52,12 +51,22 @@ class Profile(Entity, db.Document):
     private_activity_count = db.IntField(default=0)
     owned_by = db.ReferenceField('Profile')
     managed_by = db.ListField(db.ReferenceField('Profile'))
+    interest_in_activities = db.ListField(db.StringField())
+    address = db.StringField()
+    admin_approved = db.BooleanField(default=False)
+
 
     meta = {
         'indexes': [
             {'fields': ['email', 'slug', 'name'], 'unique': False, 'sparse': False, 'types': False },
         ],
     }
+
+    @property
+    def is_admin_approved_business_profile(self):
+        if hasattr(self, 'admin_approved') and self.admin_approved:
+            return True
+        return False
 
     def increment_public_activity_count(self):
         if not hasattr(self, 'public_activity_count'):
@@ -122,7 +131,7 @@ class Profile(Entity, db.Document):
         if profile and profile.password == hashlib.md5(password).hexdigest():
             if profile.user_since is None:
                 profile.user_since = datetime.datetime.now()
-            profile.save()
+                profile.save()
             return profile
         else:
             return False

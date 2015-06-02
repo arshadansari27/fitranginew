@@ -4,7 +4,7 @@
         <div class="container">
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <a data-user-id="{{user.id}}" data-action="add-article" href="#" class="btn btn-primary btn-lg  m-5">Write Blog</a>
+                <a data-user-id="{{user.id}}" data-action="add-article" href="#" class="btn btn-primary btn-lg  m-5">Write a blog</a>
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 pull-right">
                     <div class="input-group">
                         <input id="name-filter" data-filter="title__icontains" data-model="article" type="text" class="input-lg no-radius p-20" placeholder="Search by Name">
@@ -14,7 +14,7 @@
             </div>
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 fitrangi-tags-list">
-                <h2>Featured Tags</h2>
+                <h2>Featured Tag's</h2>
                 <article class="text-center" id="channel-list">
                     <a href="/explore/journal">All</a>
                 </article>
@@ -27,7 +27,7 @@
                             var channel_list = data.split(',');
                             var channels = '';
                             for(var i = 0; i < channel_list.length; i++) {
-                                if (channel_list[i] != null && channel_list[i].length > 0) channels += '<a href="/explore/journal?query=channels__channel__name:'+ channel_list[i]+ ';" >'+ channel_list[i]+ '</a>';
+                                if (channel_list[i] != null && channel_list[i].length > 0) channels += '<a href="/journals?query=channels__channel__name:'+ channel_list[i]+ ';" >'+ channel_list[i]+ '</a>';
                             }
                             $('#channel-list').append(channels);
                         });
@@ -48,7 +48,7 @@
                             var tag_list = data.split(',');
                             var tags = '';
                             for(var i = 0; i < tag_list.length; i++) {
-                                if (tag_list[i] != null && tag_list[i].length > 0) tags += '<a href="/explore/journal?query=tags:'+ tag_list[i]+ ';" >'+ tag_list[i]+ '</a>';
+                                if (tag_list[i] != null && tag_list[i].length > 0) tags += '<a href="/journals?query=tags:'+ tag_list[i]+ ';" >'+ tag_list[i]+ '</a>';
                             }
                             $('#tag-list').append(tags);
                         });
@@ -58,7 +58,7 @@
         </div>
     </div>
 </section>
-<section class="container-fluid p-0">
+<section  id="model-container-section" class="container-fluid p-0">
 <div role="tabpanel" data-example-id="togglable-tabs">
 
 <div class="border-grey-t border-grey-b h-56">
@@ -68,7 +68,7 @@
                 <span class="fa fa-home"></span> <strong>Home</strong></a></li>
 
             <li class=""><a href="#top-blogs" role="tab" data-toggle="tab" aria-controls="top-blogs"
-                            aria-expanded="false">'
+                            aria-expanded="false">
                 <span class="fa fa-certificate"></span> <strong>Top Blogs</strong> </a></li>
 
             <li class=""><a href="#my-blogs" role="tab" data-toggle="tab" aria-controls="my-blogs"

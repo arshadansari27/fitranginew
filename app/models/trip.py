@@ -7,7 +7,8 @@ from app import utils
 
 @update_content.apply
 class Trip(Entity, ExternalNetwork, Charge, db.Document):
-    starting_from = db.ReferenceField('Location')
+    starting_from = db.StringField()
+    geo_starting_from = db.PointField()
     organizer = db.ReferenceField('Profile')
     activities = db.ListField(db.ReferenceField('Activity'))
     adventure = db.ReferenceField('Adventure')
@@ -23,7 +24,8 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document):
     comments = db.ListField(db.ReferenceField('Post'))
     enquiries = db.ListField(db.EmbeddedDocumentField(BookingEnquiry))
     announcements = db.ListField(db.StringField())
-    location = db.ReferenceField('Location')
+    location = db.StringField()
+    geo_location = db.PointField()
 
     meta = {
         'indexes': [

@@ -2,6 +2,7 @@
     <div class="adventure-banner"
          style="{{background_cover}}">
 
+        {% include 'site/includes/img-hider.html'%}
         <div class="container">
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 season text-right primary">
@@ -21,9 +22,9 @@
                     <article>
                         <h4>{% set reviews_count = model.reviews_count %}{% if reviews_count > 0 %}{{reviews_count}} Reviews: {% else %} Not Reviewed yet {%
                             endif %}</h4>
-                        <a href=""
+                        <!--a href=""
                            class="btn rating-{% if model.extremity_level %}{{model.extremity_level|lower}}{% else%}easy{% endif %}">{%
-                            if model.extremity_level %}{{model.extremity_level}}{% else %}No Rating Yet{% endif %}</a>
+                            if model.extremity_level %}{{model.extremity_level}}{% else %}No Rating Yet{% endif %}</a-->
                     </article>
 
                 </div>
@@ -32,21 +33,22 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
                     <ul class="nav nav-pills nav-justified">
-
+                        {% if not user or not user.is_business_profile %}
                         <li>
                             {% if not model in user.accomplished_adventure %}
-                                <a href="#" data-action="add-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-check"></span>&nbsp;Done this</a>
+                                <a href="#" data-action="add-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-flag"></span>&nbsp;Done this</a>
                             {% else %}
-                                <a href="#" data-action="remove-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-check green"></span>&nbsp;Undo this</a>
+                                <a href="#" data-action="remove-adventure-accomplished" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-flag green"></span>&nbsp;Undo this</a>
                             {% endif %}
                         </li>
                         <li>
                             {% if not model in user.wish_list_adventure %}
-                            <a href="#" data-action="add-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-star"></span> Add to Wishlist</a>
+                            <a href="#" data-action="add-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-list"></span> Add to Wishlist</a>
                             {% else %}
-                            <a href="#" data-action="remove-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-star yellow"></span> Wishlisted </a>
+                            <a href="#" data-action="remove-adventure-wishlist" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-list yellow"></span> Wishlisted </a>
                             {% endif %}
                         </li>
+                        {% endif %}
                         <li><a href="#review_post"><span class="fa fa-edit"></span> Write Review</a></li>
                     </ul>
 
@@ -62,7 +64,7 @@
 </section>
 
 
-<section class="container-fluid p-0">
+<section class="container-fluid p-0" id="adventure-review-area">
 <div role="tabpanel" data-example-id="togglable-tabs">
 
 <div class="border-grey-t border-grey-b h-56">
@@ -74,7 +76,7 @@
                 <span class="fa fa-star"></span> <strong>About & Reviews</strong></a></li>
 
             <li class=""><a href="#how-to-reach" role="tab" data-toggle="tab" aria-controls="how-to-reach"
-                            aria-expanded="false">'
+                            aria-expanded="false">
                 <span class="fa fa-road"></span> <strong>How to Reach</strong> </a></li>
 
             <!--li class=""><a href="#nearby-offbeat-stays" role="tab" data-toggle="tab" aria-controls="nearby-offbeat-stays" aria-expanded="false">
@@ -120,10 +122,10 @@
         <div class="container">
             <h4>How to Reach</h4>
             {% if model.location %}
-                <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span> {{model.location.name}}</h4>
+                <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span> {{model.location}}</h4>
                 <div class="tab-details">
                     <div class="thumbnail">
-                        <center><iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyC2G0kvBLJBEnBCUPf053z6mL5tgbWON5o&q={{model.location.name}}&zoom=7" width="60%" height="400" frameborder="0" style="border:0"></iframe></center>
+                        <center><iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyC2G0kvBLJBEnBCUPf053z6mL5tgbWON5o&q={{model.location}}&zoom=7" width="60%" height="400" frameborder="0" style="border:0"></iframe></center>
                     </div>
                 </div>
                 <hr class="divider clearfix">
@@ -289,17 +291,17 @@
         </section>
 
         <article class="border-grey-b">
-            {% if not model.location %}
+            {% if True or not model.location %}
             <h5 class="grey">Other Adventures</h5>
             {% else %}
             <h5 class="grey">Other Adventure to do Near</h5>
-            <h4 class="blue">{{model.location.name}}</h4>
+            <h4 class="blue">{{model.location}}</h4>
             {% endif %}
         </article>
         <div class="adventure fitrangi-thumb">
             <input id="adventure-not-same-filter" type="hidden" data-category="all" data-model="adventure" data-filter="id__ne" value="{{model.id}}"/>
             {% if model.location %}
-            <input id="adventure-location-filter" type="hidden" data-category="all" data-model="adventure" data-filter="location__location__id" value="{{model.location.id}}"/>
+            <!--input id="adventure-location-filter" type="hidden" data-category="all" data-model="adventure" data-filter="location__near" value="{{model.geo_location}}"/-->
             {% endif %}
             {{other_adventure_list|safe}}
         </div>

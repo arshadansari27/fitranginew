@@ -4,10 +4,10 @@
         <div class="container">
 
             <div class="col-lg-4 col-md-4 col-sm-4 hidden-xs pull-right user-fav-acti">
-                <h3>Favourites Activities&nbsp;: </h3>
+                {% if model.favorite_activities|length > 0 %}<h3>{%  if model.is_business_profile %}Specialized Activities{% else %}Favourite Activities{% endif %}&nbsp;: </h3>{% elif model.id == user.id %}<h3>Add your favorite activities </h3>{% endif %}
                 <div class="row-fluid">
-                    {% for acti in model.favorite_activities[0:10] %}
-                    {% if acti.icon_image_path %} <a href=""><img src="{{acti.icon_image_path}}" class="thumbnail"></a>{% endif %}
+                    {% for acti in model.favorite_activities %}
+                    {% if acti.icon_image_path %} <a href="{{acti.slug}}"><img src="{{acti.icon_image_path}}" class="thumbnail"></a>{% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -15,18 +15,15 @@
             <div class="row">
 
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 user-pro">
-                    {% if user and model.id == user.id %}
-                    <a href="#" role="button" data-placement="right" data-toggle="popover" data-trigger="focus" data-content="Click to change" class="hoverable" data-action="edit-cover-image" data-model-id="{{model.id}}" data-model="profile" data-trigger="hover"><img src="{% if not model.cover_image_path or model.cover_image_path|length == 0%}/img/Profile-Picture.jpg{% else %}{{model.cover_image_path}}{% endif %}" alt="" class="center-block text-center img-thumbnail img-responsive"></a>
-                    {% else %}
-                    <img src="{% if not model.cover_image_path or model.cover_image_path|length == 0%}/img/Profile-Picture.jpg{% else %}{{model.cover_image_path}}{% endif %}" alt="" class="center-block text-center img-thumbnail img-responsive">
-                    {% endif %}
+                    <img src="{% if not model.cover_image_path or model.cover_image_path|length == 0%}/img/Profile-Picture2.jpg{% else %}{{model.cover_image_path}}{% endif %}" alt="" class="center-block text-center img-responsive">
                 </div>
 
                 <div class="col-lg-9 col-md-4 col-sm-4 col-xs-12 name-location">
-                    <h2>{{ model.name }}</h2>
+                    <h2>{{ model.name }} {% if user and model.id != user.id %}<small><a href="#" class="btn btn-link uppercase red" data-action="not-ok" data-model="profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}">Report as Not Ok</a></small>{% endif %}</h2>
                     <h4><i class="fa fa-map-marker"></i>&nbsp;{% if model.location %} {{model.location}} {% else %}{% if model.id == user.id %}<a href="#" data-action="edit-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" >Change location</a>{% else %}Location not known{% endif %}{% endif %}</h4>
-                    <a href="" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">{{ model.followers|length }} Followers</a>
-                    <a href="" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">{{ model.following|length }} Following</a>
+                    <a href="#" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">{{ model.followers|length }} Followers</a>
+                    <a href="#" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">{{ model.following|length }} Following</a>
+                    {% if model.is_business_profile and not model.admin_approved %}<a href="" class="disabled label p-10 fs-12 uppercase" style="background: darkred;">Awaiting Approval</a>{% endif %}
                 </div>
 
             </div>
@@ -36,29 +33,36 @@
 
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 user-button">
                     {% if user.id != model.id %}
-                    {% if model.id != user.id and model in user.following %}
-                    <a  data-action="unfollow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-user"></i> Unfollow</a>
+                        {% if not model.is_business_profile or model.admin_approved %}
+                            {% if model.id != user.id and model in user.following %}
+                                <a  data-action="unfollow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-user blue"></i> Unfollow</a>
+                            {% else %}
+                                <a  data-action="follow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-user grey"></i> Follow</a>
+                            {% endif %}
+                            <a href="/messaging?load-user={{model.id}}" class="btn btn-default col-lg-6 col-xs-12 text-center"><i class="fa fa-envelope-o"></i> Send Message</a>
+                        {% else %}
+                            {% if model.id != user.id and model in user.following %}
+                                <a  data-action="unfollow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-12 col-xs-12 text-center"><i class="fa fa-user blue"></i> Unfollow</a>
+                            {% else %}
+                                <a  data-action="follow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-12 col-xs-12 text-center"><i class="fa fa-user grey"></i> Follow</a>
+                            {% endif %}
+                        {% endif %}
                     {% else %}
-                    <a  data-action="follow-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-user"></i> Follow</a>
-                    {% endif %}
-                    <a href="/messaging?load-user={{model.id}}" class="btn btn-default col-lg-6 col-xs-12 text-center"><i class="fa fa-envelope-o"></i> Send Message</a>
-                    {% else %}
-                    <a data-action="edit-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-users"></i> Edit</a>
-                    <div class="btn-group block">
-                        <a  href="#" class="btn btn-default col-lg-6 col-xs-12 text-center dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-cog"></i> Settings</a>
-                         <ul class="dropdown-menu setting-drop" role="menu">
-                            <li><a style="width: 90%" data-action="edit-profile-password" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#">Change password</a></li>
-                            <li><a style="width: 90%" data-action="edit-profile-preferences" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#">Preferences</a></li>
-                        </ul>
-                    </div>
-
+                        <a data-action="edit-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#" class="btn btn-default col-lg-5 col-xs-12 text-center"><i class="fa fa-users"></i> Edit</a>
+                        <div class="btn-group block">
+                            <a  href="#" class="btn btn-default col-lg-6 col-xs-12 text-center dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-cog"></i> Settings</a>
+                            <ul class="dropdown-menu setting-drop" role="menu">
+                                <li><a style="width: 90%" data-action="edit-profile-password" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#">Change password</a></li>
+                                <li><a style="width: 90%" data-action="edit-profile-preferences" data-model-id="{{model.id}}" data-user-id="{{user.id}}" href="#">Preferences</a></li>
+                            </ul>
+                        </div>
                     {% endif %}
                 </div>
                 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 user-desc">
                 {% if model.description and model.description|length > 0 %}
-                    <p>{{user.description}}</p>
+                    <p>{{model.description}}</p>
                 {% else %}
-                    <p>On fitrangi since {{user.since}}</p>
+                    <p>Joined Fitrangi {{model.since}}</p>
                 {% endif %}
                 </div>
 
@@ -69,6 +73,34 @@
 
     </div>
 </section>
+{% if model.is_business_profile %}
+<section class="container business-details">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 about">
+        <div class="heading"><h3>About</h3></div>
+        {{model.about|safe}}
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 contact">
+        <div class="heading"><h3>Contact</h3></div>
+        <div class="row-fluid">
+            {% if model.phone %}<h4><i class="fa fa-phone">:</i>&nbsp;{{model.phone}}</h4> {% endif %}
+            {% if model.email %}<h4><i class="fa fa-at">:</i>&nbsp;<a href="">{{model.email}}</a></h4> {% endif %}
+            {% if model.website %}<h4><i class="fa fa-globe">:</i>&nbsp;<a href="">{{model.website}}</a></h4> {% endif %}
+            {% if model.facebook %}<h4><i class="fa fa-facebook">:</i>&nbsp;{{model.facebook}}</a></h4> {% endif %}
+            {% if model.google_plus %} <h4><i class="fa fa-google-plus">:</i>&nbsp;{{model.google_plus}}</a></h4> {% endif %}
+            {% if model.linked_in %} <h4><i class="fa fa-linkedin">:</i>&nbsp;{{model.linked_in}}</a></h4> {% endif %}
+            {% if model.blog_channel %}<h4><i class="fa fa-rss">:</i>&nbsp;{{model.blog_channel}}</a></h4> {% endif %}
+            {% if model.youtube_channel %}<h4><i class="fa fa-youtube">:</i>&nbsp;{{model.youtube_channel}}</a></h4> {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                <h4 class="border-grey-b pb-5 darkgrey"><i class="fa fa-map-marker">:</i> Address</h4>
+                <p>{{model.address}}</p>
+                <p>{{ model.city}}, {{ model.region }}, {{ model.state }}, {{ model.country }}, {{ model.zipcode }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
 <section class="container-fluid p-0">
     <div role="tabpanel" data-example-id="togglable-tabs">
 
@@ -79,7 +111,8 @@
                     <li class="active"><a href="#my-stream"  role="tab" data-toggle="tab" aria-controls="my-stream" aria-expanded="false">
                         <span class="fa fa-spinner"></span> <strong>My Stream</strong></a></li>
 
-                    <li class=""><a href="#adventure-done"  role="tab" data-toggle="tab" aria-controls="adventure-done" aria-expanded="false">'
+                    {% if not model.is_business_profile %}
+                    <li class=""><a href="#adventure-done"  role="tab" data-toggle="tab" aria-controls="adventure-done" aria-expanded="false">
                         <span class="fa fa-flag"></span> <strong>Adventure Done</strong> </a></li>
 
                     <li class=""><a href="#my-wishlist" role="tab" data-toggle="tab" aria-controls="my-wishlist" aria-expanded="false">
@@ -87,6 +120,7 @@
 
                     <!--li class=""><a href="#photos-videos" role="tab" data-toggle="tab" aria-controls="photos-videos" aria-expanded="false">
                         <span class="fa fa-star"></span> <strong>Photos/Videos</strong> </a></li-->
+                    {%  endif %}
                     <li class=""><a href="#following" role="tab" data-toggle="tab" aria-controls="following" aria-expanded="false">
                         <span class="fa fa-group"></span> <strong>Following</strong> </a></li>
                     <li class=""><a href="#follower" role="tab" data-toggle="tab" aria-controls="follower" aria-expanded="false">
@@ -109,7 +143,7 @@
         <div class="container">
             <div id="myTabContent" class="tab-content">
                 <div role="tabpanel" class="tab-pane fade active in" id="my-stream" aria-labelledby="my-stream">
-                    <section class="container-fluid">
+                    <section class="container-fluid" id="my-stream-data">
                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
                             <input type="hidden" id="my-stream-filter" data-model="stream" data-filter="profile" data-category="my" value="{{model.id}}" data-filter-status="fixed"/>
                             {% if model.id == user.id %}
@@ -137,24 +171,43 @@
 
                 <div role="tabpanel" class="tab-pane fade" id="adventure-done" aria-labelledby="adventure-done">
                     <input id="accomplished-adventure-filter" data-category="accomplished" data-model="adventure" data-filter="relationship__accomplished__profile" type="hidden" value="{{model.id}}" data-filter-status="fixed">
-
+                    {% if user and model.id == user.id %}
+                    <div class="jumbotron help-info" data-category="accomplished" data-model="adventure">
+                        <h5>Mark <a href="/explore/adventure">adventures</a> as done to see them here. Create your adventure portfolio for the rest of the world to see!</h5>
+                    </div>
+                    {% endif %}
                     {{accomplished_adventure_list|safe}}
 
                 </div><!--Tab Pane End-->
 
                 <div role="tabpanel" class="tab-pane fade" id="my-wishlist" aria-labelledby="my-wishlist">
                     <input id="wish-list-adventure-filter" data-category="wishlisted" data-model="adventure" data-filter="relationship__wishlisted__profile" type="hidden" value="{{model.id}}" data-filter-status="fixed">
+                    {% if user and model.id == user.id %}
+                    <div class="jumbotron help-info" data-category="wishlisted" data-model="adventure">
+                        <h5>Would you like to experience new <a href="/explore/adventure">adventures</a> and keep track of the ones you still have to do? Add them to your wishlist and track them here</h5>
+                    </div>
+                    {% endif %}
                     {{wish_listed_adventure_list|safe}}
 
                 </div><!--Tab Pane End-->
 
                 <div role="tabpanel" class="tab-pane fade" id="following" aria-labelledby="following">
                     <input id="profile-following-filter" data-category="following" data-model="profile" data-filter="relationship__follows__profile" type="hidden" value="{{model.id}}" data-filter-status="fixed">
+                    {% if user and model.id == user.id %}
+                    <div class="jumbotron help-info" data-category="following" data-model="profile">
+                        <h5>See who follows you here! Make a difference by inspiring others in the community!</h5>
+                    </div>
+                    {% endif %}
                     {{following_list|safe}}
                 </div><!--Tab Pane End-->
 
                 <div role="tabpanel" class="tab-pane fade" id="follower" aria-labelledby="follower">
                     <input id="profile-follower-filter" data-category="follower" data-model="profile" data-filter="relationship__followed_by__profile" type="hidden" value="{{model.id}}" data-filter-status="fixed">
+                    {% if user and model.id == user.id %}
+                    <div class="jumbotron help-info" data-category="follower" data-model="profile">
+                        <h5>Follow other <a href="/community/profile">profiles</a> to see what they have been upto lately!</h5>
+                    </div>
+                    {% endif %}
                     {{follower_list|safe}}
                 </div><!--Tab Pane End-->
 
@@ -164,13 +217,22 @@
 
                 <div role="tabpanel" class="tab-pane fade" id="journals" aria-labelledby="journals">
                     <input id="article-filter" data-category="all" data-model="article" data-filter="author" type="hidden" value="{{model.id}}" data-filter-status="fixed">
+                    {% if user and model.id == user.id %}
+                    <div class="jumbotron help-info" data-category="all" data-model="article">
+                        <h5>Do you relish writing about your adventures and trips? Let the world see and learn from your experience</h5>
+                    </div>
+                    {% endif %}
                     {{article_list|safe}}
                 </div><!--Tab Pane End-->
 
 
                 <div role="tabpanel" class="tab-pane fade discussion" id="discussions" aria-labelledby="discussions">
                     <input id="discussion-filter" data-category="all" data-model="discussion" data-filter="author" type="hidden" value="{{model.id}}" data-filter-status="fixed">
-
+                    {% if user and model.id == user.id %}
+                    <div class="jumbotron help-info" data-category="all" data-model="discussion">
+                        <h5>Add a new discussion and track them from here. Contribute the knowledge with the community.</h5>
+                    </div>
+                    {% endif %}
                     {{discussion_list|safe}}
 
                 </div><!--Tab Pane End-->

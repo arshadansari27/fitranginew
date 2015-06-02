@@ -5,12 +5,27 @@ from app.models.profile import Profile, ProfileType
 
 __author__ = 'arshad'
 
-from flask import render_template, g, request, jsonify, send_file, flash, redirect, url_for, session
+from flask import render_template, g, request, jsonify, send_file, flash, redirect, url_for, session, make_response
 from app.utils import login_required
 from app import app
 from StringIO import StringIO
 from PIL import Image
 import random, os
+
+FOLDER = os.getcwd() + '/content-images'
+
+@app.route('/user-csv-download')
+def download_csv():
+    if not hasattr(g, 'user') or g.user is None or 'Admin' not in g.user.roles:
+        return 'Forbidden', 403
+    csv = []
+    profiles = Profile.objects.all()
+    for p in profiles:
+        csv.append(",".join([p.name if p.name else '', p.email, p.type[0].name if p.type and len(p.type) > 0 and p.type[0] is not None else '']))
+    data = '\n'.join(csv)
+    response = make_response(data)
+    response.headers["Content-Disposition"] = "attachment; filename=users.csv"
+    return response
 
 @app.route('/dialog/upload_image', methods=['POST'])
 @login_required
@@ -18,16 +33,28 @@ def image_uploader_dialog():
     _id = str(random.randint(9999999999999, 999999999999999999))
     try:
         f = request.files['file-0']
-        path = os.getcwd() + '/tmp/' + _id
+        perm = False
+        if not request.args.get('permanent', False):
+            path = os.getcwd() + '/tmp/' + _id
+        else:
+            if not os.path.exists(FOLDER):
+                os.makedirs(FOLDER)
+            perm = True
+            path = FOLDER + '/' + _id
         f.save(path)
         i = Image.open(path)
         originalImgWidth , originalImgHeight = i.size
+        if not perm:
+            url =  "/temp_image/%s" % str(_id)
+        else:
+            url =  "/perm_image/%s" % str(_id)
         response = dict(status="success",
-				url="/temp_image/%s" % str(_id),
+				url=url,
 				width=originalImgWidth,
 				height=originalImgHeight)
         return jsonify(response)
     except Exception, e:
+        print '*' * 10, e
         raise e
 
 @app.route('/dialog/crop_image', methods=['POST'])
@@ -66,9 +93,16 @@ def image_cropper_dialog():
     return jsonify(dict(status='success', url='/temp_image/%s' % str(_id)))
 
 @app.route('/temp_image/<id>')
-@login_required
 def get_image_temp(id):
     f = Image.open(os.getcwd() + '/tmp/' + id)
+    buffer = StringIO()
+    f.save(buffer, f.format)
+    buffer.seek(0)
+    return send_file(buffer, mimetype='image/' + f.format, add_etags=False, conditional=True)
+
+@app.route('/perm_image/<id>')
+def get_image_perm(id):
+    f = Image.open(FOLDER + '/' + id)
     buffer = StringIO()
     f.save(buffer, f.format)
     buffer.seek(0)

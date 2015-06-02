@@ -30,9 +30,7 @@ jQuery(document).ready(function($){
     		    if (callback != null){
                     callback(data);
                 } else {
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 1000);
+                    setTimeout(function() { window.location.reload();}, 1000);
                 }
     		},
     		contentType: "application/json",
@@ -70,14 +68,32 @@ jQuery(document).ready(function($){
 
     };
 
+    App.sorter = function(id) {
+        var input = $('#' + id);
+        var category = input.attr('data-category');
+        if (category == null || category == undefined || category.length == 0) category = 'all';
+        var model = input.attr('data-model');
+        var sorters = model + '-' + category;
+
+        window.sorters = window.sorters || {};
+        window.sorters[sorters] = window.sorters[sorters] || [];
+
+        var sorters_list = window.sorters[sorters];
+        console.log('Adding sorter for [' + model + '] [' + category + ']: ' + id);
+        sorters_list.push(id);
+    }
+
     App.uploader = function(dialogRef) {
         var data = new FormData();
-        jQuery.each(jQuery('input[type=file]')[0].files, function(i, file) {
+        console.log("RUnning file uploader");
+        jQuery.each(dialogRef.getModalBody().find('input[type=file]')[0].files, function(i, file) {
             data.append('file-'+i, file);
+            console.log(i + "-" + JSON.stringify(file));
         });
         if (data.length == 0) {
             return;
         }
+        console.log("RUnning file uploader");
         dialogRef.enableButtons(false);
         dialogRef.setClosable(false);
         dialogRef.getModalBody().prepend('<img class="loading-icon" src="/img/loading.gif">');
@@ -109,6 +125,8 @@ jQuery(document).ready(function($){
                 $('.alert').html('<div class="alert-message">Failed to upload the image, try again later.</div>');
                 $('.alert').addClass('alert-warning');
                 $('.alert').show();
+                dialogRef.enableButtons(true);
+                dialogRef.setClosable(true);
             }
         });
     };

@@ -34,13 +34,14 @@ class RelationShips(db.Document):
     }
 
     def __unicode__(self):
-        return self.subject, '=', self.relation, '=>', self.object
+        return self.__repr__()
 
     def __repr__(self):
-        return self.subject, '=', self.relation, '=>', self.object
+        return "%s=%s=>%s" % (self.subject, self.relation, self.object)
 
     @classmethod
     def create_relationship(cls, subject, object, relation):
+        from app.models.profile import Profile
         from app.models.streams import ActivityStream
         if RelationShips.objects(subject=subject, object=object, relation=relation).first() is None:
             relationship1 = RelationShips(subject=subject, object=object, relation=relation)
@@ -49,7 +50,8 @@ class RelationShips(db.Document):
         if RelationShips.objects(subject=object, object=subject, relation=inverse_relation.get(relation)).first() is None:
             relationship2 = RelationShips(subject=object, object=subject, relation=inverse_relation.get(relation))
             relationship2.save()
-            ActivityStream.push_relationship_to_stream(relationship2)
+            if isinstance(object, Profile):
+                ActivityStream.push_relationship_to_stream(relationship2)
         return relationship1, relationship2
 
 

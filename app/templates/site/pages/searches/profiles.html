@@ -5,9 +5,10 @@
 
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 finder-heading">
-                <h2>Send and Connect with adventures around</h2>
+                <h2>Interact, connect and network!</h2>
 
-                <h3>10000+ Users profiles and 2000+ business profiles</h3>
+                <h3>Search people and organization that interest you!</h3>
+                <br/>
             </div>
 
 
@@ -20,7 +21,7 @@
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 fitrangi-datalist">
-                 <input id="activity-filter" data-category="all" data-model="profile" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
+                 <input id="activity-filter" data-category="all" data-model="profile" data-filter="relationship__favorited_by__activity__name__iexact" list="activity" placeholder="FILTER BY ACTIVITY">
                 <datalist id="activity">
                     <option value="">
                 </datalist>
@@ -37,20 +38,15 @@
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 fitrangi-datalist">
-
-                <input id="location-filter" data-category="all" data-model="profile" data-filter="location__location__name" list="location" placeholder="FILTER BY LOCATION">
-                <datalist id="location">
-                    <option value="">
-                </datalist>
-                <script>
-                    $(document).ready(function(){
-                        $.ajax({
-                            url: '/options?model_name=location&attr=name'
-                        }).done(function (data) {
-                            $('#location').append(data);
-                        });
-                    });
-                </script>
+                <input class="geo-complete" placeholder="SORT BY LOCATION" data-sorter="location" data-category="all" data-model="profile">
+                <form>
+                    <input type="hidden" id="location-sorter-lat" name="lat" id="lat" data-category="all" data-model="profile" data-sorter="location_lat"/>
+                    <input type="hidden" id="location-sorter-lng" name="lng" id="lng" data-category="all" data-model="profile" data-sorter="location_lng"/>
+                    <input type="hidden" id="location-sorter-locality" name="locality_short" data-category="all" data-model="profile" data-sorter="location_locality"/>
+                    <input type="hidden" id="location-sorter-region2" name="administrative_area_level_2" data-category="all" data-model="profile" data-sorter="location_region2"/>
+                    <input type="hidden" id="location-sorter-region1" name="administrative_area_level_1" data-category="all" data-model="profile" data-sorter="location_region1"/>
+                    <input type="hidden" id="location-sorter-country" name="country_short" data-category="all" data-model="profile" data-sorter="location_country"/>
+                </form>
             </div>
 
 
@@ -81,8 +77,8 @@
 
     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 pull-right">
         <div class="input-group">
-            <input id="name-filter" data-filter="name__icontains" data-model="profile" type="text" class="form-control input-md no-radius p-20" placeholder="Search by Name">
-            <span class="input-group-btn no-radius"><button data-category="all" data-model="profile" data-filter-submit="search"  class="btn btn-default btn-md" type="button"><i
+            <input id="name-filter" data-filter="name__icontains" data-model="profile" type="text" class="form-control input-lg no-radius p-20" placeholder="Search by Name" style="margin-top: 1px;">
+            <span class="input-group-btn no-radius" style="padding-top: 2px;"><button data-category="all" data-model="profile" data-filter-submit="search"  class="btn btn-primary btn-sm" type="button"><i
                     class="fa fa-search"></i></button></span>
         </div>
     </div>
@@ -90,7 +86,7 @@
 </section>
 
 
-<section class="container-fluid p-0">
+<section id="model-container-section" class="container-fluid p-0">
     <div class="container">
 
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -104,9 +100,15 @@
     $(document).ready(function(){
         var App = window.App;
         App.filter('category-filter');
-        App.filter('location-filter');
         App.filter('activity-filter');
         App.filter('name-filter');
+        App.sorter('location-sorter-lat');
+        App.sorter('location-sorter-lng');
+        App.sorter('location-sorter-locality');
+        App.sorter('location-sorter-region2');
+        App.sorter('location-sorter-region1');
+        App.sorter('location-sorter-country');
+
     });
 </script>
 

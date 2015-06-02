@@ -11,7 +11,7 @@ import os, hashlib, random
 from app import db
 from app.models.extra.fields import ListField
 from app.utils import convertLinks, mkdirp
-
+from app.settings import CDN_URL
 
 base_path = os.getcwd() + '/app/assets'
 db.ListField = ListField
@@ -155,50 +155,65 @@ class Node(object):
     created_timestamp = db.DateTimeField(default=datetime.datetime.now)
     modified_timestamp = db.DateTimeField(default=datetime.datetime.now)
     slug = db.StringField()
+    not_ok_count = db.IntField(default=0)
 
     @property
     def cover_image_path(self):
+        from app import USE_CDN
         path = str(self.path_cover_image) if hasattr(self, 'path_cover_image') and self.path_cover_image else '-'
         if path and len(path) > 0 and os.path.exists(base_path + path):
-            return path
-        path = save_media_to_file(self, 'cover_image', 'cover')
-        if path:
-            self.path_cover_image = path
-            self.save()
-            return path
+            img = path
         else:
-            from app.models.profile import Profile
-            return '/img/Profile-Picture.jpg' if isinstance(self, Profile) else None
+            path = save_media_to_file(self, 'cover_image', 'cover')
+            if path:
+                self.path_cover_image = path
+                self.save()
+                img = path
+            else:
+                from app.models.profile import Profile
+                if isinstance(self, Profile):
+                    if self.is_business_profile:
+                        img = '/img/Profile-Picture1.jpg'
+                    else:
+                        img = '/img/Profile-Picture2.jpg'
+                else:
+                    img = None
+        return img if not USE_CDN else "%s%s" % (CDN_URL, img)
 
     @property
     def cover_image_path_small(self):
+        from app import USE_CDN
         path = self.cover_image_path if self.cover_image_path else None
+        if CDN_URL in path:
+            path = path.replace(CDN_URL, '')
         if path is None:
             from app.models.profile import Profile
             if isinstance(self, Profile):
-                return '/img/Profile-Picture-thumbnail.jpg' if isinstance(self, Profile) else None
+                return ('%s/img/Profile-Picture-thumbnail.jpg' % CDN_URL) if isinstance(self, Profile) else None
             return ''
-        steps = path.split('/')
-        full_name = steps[-1]
-        ux = full_name.split('.')
-        if len(ux) < 2:
-            print 'Something went wrong with thumbnail image path here....'
-            return ''
-        name, ext = ux[0], ux[1]
-        steps[-1] = name + '-thumbnail.' + ext
-        small_path = '/'.join(steps)
-        if not os.path.exists(small_path):
-            file_path = base_path + path
-            im  = Image.open(file_path)
-            format = im.format
-            x, y = im.size
-            f = Fraction(x, y)
-            num = f.numerator
-            den = f.denominator
-            s = 128 * num / den
-            im.thumbnail((s, 128), Image.ANTIALIAS)
-            im.save(base_path + small_path, format)
-        return small_path
+        else:
+            steps = path.split('/')
+            full_name = steps[-1]
+            ux = full_name.split('.')
+            if len(ux) < 2:
+                print 'Something went wrong with thumbnail image path here....'
+                return ''
+            name, ext = ux[0], ux[1]
+            steps[-1] = name + '-thumbnail.' + ext
+            small_path = '/'.join(steps)
+            if not os.path.exists(small_path):
+                file_path = base_path + path
+                im  = Image.open(file_path)
+                format = im.format
+                x, y = im.size
+                f = Fraction(x, y)
+                num = f.numerator
+                den = f.denominator
+                s = 128 * num / den
+                im.thumbnail((s, 128), Image.ANTIALIAS)
+                im.save(base_path + small_path, format)
+            img = small_path
+        return img if not USE_CDN else "%s%s" % (CDN_URL, img)
 
     @property
     def icon_image_path_small(self):
@@ -206,17 +221,20 @@ class Node(object):
 
     @property
     def icon_image_path(self):
+        from app import USE_CDN
         path = str(self.path_cover_image) if hasattr(self, 'path_cover_image') and self.path_cover_image else '-'
         if path and len(path) > 0 and os.path.exists(base_path + path):
-            return path
-        path = save_media_to_file(self, 'cover_image', 'cover')
-        if path:
-            self.path_cover_image = path
-            self.save()
-            return path
+            img = path
         else:
-            from app.models.profile import Profile
-            return '/img/Profile-Picture2.jpg' if isinstance(self, Profile) else None
+            path = save_media_to_file(self, 'cover_image', 'cover')
+            if path:
+                self.path_cover_image = path
+                self.save()
+                img = path
+            else:
+                from app.models.profile import Profile
+                img = '/img/Profile-Picture2.jpg' if isinstance(self, Profile) else None
+        return img if not USE_CDN else "%s%s" % (CDN_URL, img)
 
 
     @property
@@ -234,7 +252,11 @@ class Node(object):
 
     @property
     def since(self):
-        return human(self.created_timestamp, precision=1)
+        value = human(self.created_timestamp, precision=1)
+        if 'microseconds' in value:
+            return 'just now'
+        else:
+            return value
 
     @property
     def name_short(self):
@@ -272,11 +294,20 @@ class Entity(Node):
 
     @property
     def process_about(self):
-        return convertLinks(self.about)
+        return self.about
 
     def __unicode__(self): return self.name
 
     def __repr__(self): return self.name
+
+class Location(object):
+    location = db.StringField()
+    geo_location = db.PointField()
+    city = db.StringField()
+    region = db.StringField()
+    state = db.StringField()
+    country = db.StringField()
+    zipcode = db.StringField()
 
 class ExternalNetwork(object):
     external_name = db.StringField()
@@ -317,7 +348,7 @@ class NodeFactory(object):
     @classmethod
     def get_class_by_name(cls, name):
         from app.models.activity import Activity
-        from app.models.adventure import Adventure, Location
+        from app.models.adventure import Adventure
         from app.models.content import Content, Discussion, Channel, Post, Article, Advertisement
         from app.models.event import Event
         from app.models.store import Product
@@ -334,7 +365,6 @@ class NodeFactory(object):
         elif name == PROFILE: return Profile
         elif name == PRODUCT: return Product
         elif name == ARTICLE: return Article
-        elif name == LOCATION: return Location
         elif name == POST: return Post
         elif name == DISCUSSION: return Discussion
         elif name == CHANNEL: return Channel

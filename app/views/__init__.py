@@ -11,6 +11,8 @@ from flask import g, redirect, request, url_for, abort
 
 from jinja2 import Environment, FileSystemLoader
 from app.settings import TEMPLATE_FOLDER
+from app.settings import CDN_URL
+from app import USE_CDN
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
 
@@ -27,30 +29,28 @@ def force_setup_context(context={}):
         context['private_activity_count'] = user.private_activity_count if user.private_activity_count else 0
     for k, v in d.iteritems():
         context[k] = v
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return context
 
 
 @app.context_processor
 def setup_context():
     user = g.user if hasattr(g, 'user') and g.user is not None else None
-    return dict(user=user, menu=get_menu_selection(request.path))
+    return dict(user=user, menu=get_menu_selection(request.path), cdn_url=CDN_URL if USE_CDN else '')
 
 #@cache.cached(timeout=3600 * 24)
 def get_menu_selection(request_path):
     top, main, inner = None, None, None
 
     menu_args = [
-        ('/activity', ('explore', 'activity')),
-        ('/adventure', ('explore', 'adventure')),
-        ('/article', ('explore', 'journal')),
-        ('/blog', ('explore', 'journal')),
-        ('/journal', ('explore', 'journal')),
-        ('/profile', ('community', 'profile')),
-        ('/discussion', ('community', 'discussion')),
-        ('/event', ('community', 'event')),
-        ('/trip', ('trip', None)),
-        ('/explore', ('explore', None)),
-        ('/community', ('community', None))
+        ('/activities', ('explore', 'activity')),
+        ('/adventures', ('explore', 'adventure')),
+        ('/journals', ('explore', 'journal')),
+        ('/profiles', ('community', 'profile')),
+        ('/discussions', ('community', 'discussion')),
+        ('/events', ('community', 'event')),
+        ('/trips', ('trip', None)),
+        ('/', ('explore', None))
     ]
 
     for k, v in menu_args:

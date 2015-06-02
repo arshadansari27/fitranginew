@@ -3,6 +3,7 @@ import flask_admin
 from flask.ext.admin import AdminIndexView, expose
 from flask import Flask, g
 from flask.ext.cache import Cache
+from flask.ext.cdn import CDN
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.mandrill import Mandrill
 from flask.ext.mongorest import MongoRest
@@ -22,11 +23,14 @@ app.config['MONGODB_SETTINGS'] = {
 }
 app.config['MANDRILL_API_KEY'] = 'AW8kuRPFtDyZpOrgSf-0BQ'
 app.config['MANDRILL_DEFAULT_FROM'] = 'noreply@fitrangi.com'
+app.config['CDN_DOMAIN'] = settings.CDN_DOMAIN
+app.config['FLASK_ASSETS_USE_CDN']=True
+CDN(app)
+
 mandrill = Mandrill(app)
 db = MongoEngine()
 db.init_app(app)
 
-print 'DB: ', settings.MONGODB_DB, settings.MONGODB_HOST, settings.MONGODB_PORT
 #from flask.ext import login
 cache = Cache(app,config={'CACHE_TYPE': 'simple'})
 admin = None
@@ -36,6 +40,9 @@ app.jinja_env.cache = {}
 ASSETS_DEBUG = os.environ.get('ASSETS_DEBUG', None)
 if ASSETS_DEBUG and ASSETS_DEBUG == 'TRUE':
     app.config['ASSETS_DEBUG'] = True
+    USE_CDN = False
+else:
+    USE_CDN = True
 
 assets = Environment(app)
 

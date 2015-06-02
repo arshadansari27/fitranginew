@@ -1,19 +1,14 @@
 from app.handlers.messaging import send_single_email
-import os, random
-from jinja2 import Template
-import simplejson as json
-from PIL import Image
-from app import app
-from flask import render_template, request, g, redirect, jsonify, url_for, session
+from app import app, USE_CDN
+from app.models import STREAM
+from flask import render_template, request, g, redirect, jsonify, url_for, session, flash
 from app.handlers.editors import NodeEditor
 from app.handlers import NodeCollectionFactory, NodeExtractor
 from app.models import Node, NodeFactory, ACTIVITY, ADVENTURE, ARTICLE, DISCUSSION, PROFILE, EVENT, TRIP
 from app.models.profile import Profile, ProfileType
-from app.utils.search_helper import listing_helper, node_helper
-from app.utils import login_required, all_tags, convert_query_to_filter
-from app.handlers import  EditorView, NodeView, Page, CollectionView, PageManager
-from app.handlers import (activity_extractor, adventure_extractor, article_extractor, discussion_extractor,
-                            profile_extractor, event_extractor, trip_extractor)
+from app.utils import login_required, all_tags
+from app.handlers import  EditorView, PageManager
+from app.settings import CDN_URL
 
 (MODEL_DETAIL_VIEW, MODEL_LIST_ROW_VIEW, MODEL_LIST_GRID_VIEW, MODEL_LIST_POD_VIEW) = ('detail', 'row', 'grid', 'pod')
 
@@ -26,20 +21,26 @@ def login_page():
         profile = Profile.authenticate(email, password)
         if profile and profile.id:
             session['user'] = str(profile.id)
-            return jsonify(dict(status='success', message='Successfully logged in.', node=str(profile.id)))
+            if not hasattr(profile, 'location') or not profile.location or len(profile.location) is 0:
+                flash('Please update your location by clicking <a href="/edit-profile">here</a>')
+            response = dict(status='success', message='Successfully logged in.', node=str(profile.id), my_page=profile.slug)
+            print '[*] Login', response
+            return jsonify(response)
         return jsonify(dict(status='error', message='Failed to login. Please try again.'))
 
     if hasattr(g, 'user') and g.user is not None:
-        return redirect('/explore')
+        return redirect(g.user.slug)
     from app.views import force_setup_context
-    target = request.args.get('target', None)
 
+    target = request.args.get('target', '')
     context = force_setup_context({})
-    context['referrer'] = target if target else request.referrer
+    context['referrer'] = target if target else ''
     title, card, context = PageManager.get_common_title_and_page('login', **context)
     context['title'] = title
     context['card']  = card
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     print '[*] Target', target
+
     return render_template('site/layouts/empty_layout.html', **context)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -72,9 +73,8 @@ def registration():
     context['title'] = title
     context['card']  = card
     context['referrer'] = request.referrer
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/layouts/empty_layout.html', **context)
-
-
 
 @app.route('/write/<model_name>')
 @app.route('/write/<model_name>/<model_id>')
@@ -85,6 +85,7 @@ def editor(model_name, model_id=None):
     context = force_setup_context({})
     try:
         card = EditorView(model_name, model_id).get_card()
+        context['cdn_url'] = CDN_URL if USE_CDN else ''
         context['card'] = card
     except Exception, e:
         if e.message == 'Invalid User':
@@ -93,15 +94,16 @@ def editor(model_name, model_id=None):
             raise e
     return render_template('site/pages/commons/view.html', **context)
 
-@app.route("/")
-def act_home():
-    return redirect('/explore')
-
 @app.route("/explore")
+def act_home():
+    return redirect('/')
+
+@app.route("/")
 def home():
     title, card, context = PageManager.get_landing_title_and_page('explore', user=g.user if hasattr(g, 'user') else None)
     context['title'] = title
     context['card'] = card
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/about')
@@ -109,27 +111,26 @@ def about():
     title, card, context = PageManager.get_landing_title_and_page('about', user=g.user if hasattr(g, 'user') else None)
     context['title'] = title
     context['card'] = card
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
+"""
 @app.route("/community")
 def community_mail():
     title, card, context = PageManager.get_landing_title_and_page('community', user=g.user if hasattr(g, 'user') else None)
     context['title'] = title
     context['card'] = card
     return render_template('site/pages/commons/view.html', **context)
+"""
 
-@app.route("/explore/activity")
+@app.route("/activities")
 def activity_view():
     name = request.args.get('name')
-    if name:
-        title, card, context = PageManager.get_detail_title_and_page(ACTIVITY, query="name__iexact:%s;" % name)
-        context['title'] = title
-        context['card'] = card
-        return render_template('site/pages/commons/view.html', **context)
-    else:
-        return 'Not found', 404
+    query="name__iexact:%s;" % name
+    node = NodeExtractor.factory(ACTIVITY).get_single(query)
+    return redirect(node.slug)
 
-@app.route("/explore/adventure")
+@app.route("/adventures")
 def list_adventure():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
@@ -137,9 +138,10 @@ def list_adventure():
     title, card, context = PageManager.get_search_title_and_page(ADVENTURE, query=query)
     context['title'] = title
     context['card'] = card
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
-@app.route('/explore/journal')
+@app.route('/journals')
 def list_journal():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
@@ -147,9 +149,10 @@ def list_journal():
     title, card, context = PageManager.get_search_title_and_page(ARTICLE, query=query)
     context['title'] = 'Articles and Blogs @ Fitrangi'
     context['card'] = card
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
-@app.route('/community/discussion')
+@app.route('/discussions')
 def list_discussion():
     from app.views import force_setup_context
     query = request.args.get('query', '')
@@ -158,9 +161,10 @@ def list_discussion():
     title, card, context = PageManager.get_search_title_and_page(DISCUSSION, query=query)
     context['card'] = card
     context['title'] = 'Discussion @ Fitrangi'
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
-@app.route("/community/profile")
+@app.route("/profiles")
 def list_profile():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
@@ -168,28 +172,33 @@ def list_profile():
     title, card, context = PageManager.get_search_title_and_page(PROFILE, query=query)
     context['card'] = card
     context['title'] = 'Profile Finder'
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/community/my")
 def my_profile():
     if not hasattr(g, 'user') or g.user is None:
         return redirect(url_for('community_mail'))
+    slug = g.user.slug
+    """
     title, card, context = PageManager.get_detail_title_and_page(PROFILE, query='pk:%s;' % g.user.id)
     context['card'] = card
     context['title'] = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
-    return render_template('site/pages/commons/view.html', **context)
+    """
+    return redirect(slug)#render_template('site/pages/commons/view.html', **context)
 
-@app.route("/community/event")
+@app.route("/events")
 def list_event():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
         query = None
     title, card, context = PageManager.get_search_title_and_page(EVENT, query=query)
     context['title'] = title
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     context['card'] = card
     return render_template('site/pages/commons/view.html', **context)
 
-@app.route("/trip")
+@app.route("/trips")
 def list_trip():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
@@ -197,26 +206,41 @@ def list_trip():
     title, card, context = PageManager.get_search_title_and_page(TRIP, query=query)
     context['title'] = title
     context['card'] = card
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/listings")
 def paged_list():
     query       = request.args.get('query', None)
+    sort        = request.args.get('sort', None)
     size        = request.args.get('size', 12)
     page        = request.args.get('page', 1)
     model       = request.args.get('model_view', None)
     card_type   = request.args.get('card_type', None)
     category    = request.args.get('category', 'all')
     context = {}
+    print 'Query Info rec: ', query
+    print 'Sort Info rec: ', sort
     extractor = NodeExtractor.factory(model)
-    models = extractor.get_list(query, True, page, size)
+    models = extractor.get_list(query, True, page, size, sort=sort)
     html = NodeCollectionFactory.resolve(model, card_type, category, fixed_size=size).only_list(models)
+
+    if hasattr(g, 'user')  and g.user and g.user.id:
+        if model == STREAM and 'pk' in query and str(g.user.id) in query:
+            g.user.public_activity_count = 0
+            g.user.save()
+
     context['user'] = g.user if hasattr(g, 'user') and g.user is not None else None
-    last_page=extractor.last_page(query, size)
-    err_html = '<div class="jumbotron"><h6>No data available for this category</h6></div>'
-    if page is 1 and page is last_page and len(html) is 0:
+    last_page=extractor.last_page(query, size, sort=sort)
+    if model != 'post':
+        err_html = '<div class="jumbotron result-not-found"><h6>No content associated with category was found!</h6></div>' if '/profile/' not in request.referrer else ''
+    else:
+        err_html = ''
+    has_data = 1
+    if len(html) is 0:
         html = err_html
-    return jsonify(status='success', html=html, last_page=last_page)
+        has_data = 0
+    return jsonify(status='success', html=html, last_page=last_page, has_data=has_data)
 
 @app.route('/notifications-count')
 def get_notifications_count():
@@ -241,7 +265,6 @@ def ajax_options():
     results = (str_to_use % u for u in options)
     return ''.join(results)
 
-
 @app.route('/names')
 def ajax_names():
     model_name = request.args.get('model_name', '')
@@ -256,8 +279,6 @@ def ajax_names():
         options = (getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     results = (u for u in options)
     return ','.join(results)
-
-
 
 @app.route('/buttons')
 def ajax_buttons():
@@ -286,8 +307,39 @@ def model_view(slug):
     title, card, context = PageManager.get_detail_title_and_page(model_type, query="slug__iexact:%s;" % value)
     context['card']     = card
     context['title']    = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
+@app.route('/edit-profile')
+@login_required
+def edit_profile():
+    if not hasattr(g, 'user') and not g.user:
+        return 'Forbidden', 403
+    from app.views import force_setup_context
+    title, card, context    = PageManager.get_edit_title_and_page('profile', query="pk:%s;" % str(g.user.id))
+    context                 = force_setup_context(context)
+    context['card']         = card
+    context['title']        = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
+    return render_template('site/pages/commons/view.html', **context)
+
+@app.route('/manage-profile')
+@login_required
+def manage_profile():
+    if not hasattr(g, 'user') and not g.user:
+        return 'Forbidden', 403
+    pk = request.args.get('pk', None)
+    if pk:
+        query = 'pk:%s;' % pk
+    else:
+        query = None
+    from app.views import force_setup_context
+    title, card, context    = PageManager.get_edit_title_and_page('profile', query=query, business=True)
+    context                 = force_setup_context(context)
+    context['card']         = card
+    context['title']        = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
+    context['cdn_url'] = CDN_URL if USE_CDN else ''
+    return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/editors/invoke', methods=['POST'])
 def edit_invoke():

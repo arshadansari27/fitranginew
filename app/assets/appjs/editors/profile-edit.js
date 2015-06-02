@@ -3,7 +3,7 @@
  */
 $(document).ready(function() {
     console.log('profile-editor.js');
-    var App = window.App;
+    var App = window.App || {};
     App.profile = App.profile || {};
 
     App.profile.reset_counter = function(node, action, callback) {
@@ -13,6 +13,19 @@ $(document).ready(function() {
             type: 'profile',
             command: 'reset-activity-count'
         }
+        App.editor(options, callback);
+    };
+
+    App.profile.report_not_ok = function(node, node_type, user_id, callback) {
+        var options = {
+            node: node,
+            data: {
+                user_id: user_id,
+                node_type: node_type
+            },
+            type: 'profile',
+            command: 'not-ok'
+        };
         App.editor(options, callback);
     };
 
@@ -58,7 +71,7 @@ $(document).ready(function() {
         App.editor(options, callback);
     };
 
-    App.profile.add_activity_to_favorite = function(node, activity) {
+    App.profile.add_activity_to_favorite = function(node, activity, callback) {
         var options = {
             node: node,
             activity: activity,
@@ -66,10 +79,10 @@ $(document).ready(function() {
             command: 'favorite-activity',
             action: 'add'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.remove_activity_from_favorite = function(node, activity) {
+    App.profile.remove_activity_from_favorite = function(node, activity, callback) {
         var options = {
             node: node,
             activity: activity,
@@ -77,10 +90,10 @@ $(document).ready(function() {
             command: 'favorite-activity',
             action: 'remove'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.add_adventure_to_wish_list= function(node, adventure) {
+    App.profile.add_adventure_to_wish_list= function(node, adventure, callback) {
         var options = {
             node: node,
             adventure: adventure,
@@ -88,10 +101,10 @@ $(document).ready(function() {
             command: 'wish-list-adventure',
             action: 'add'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.remove_adventure_from_wish_list = function(node, adventure) {
+    App.profile.remove_adventure_from_wish_list = function(node, adventure, callback) {
         var options = {
             node: node,
             adventure: adventure,
@@ -99,10 +112,10 @@ $(document).ready(function() {
             command: 'wish-list-adventure',
             action: 'remove'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.add_adventure_to_done = function(node, adventure) {
+    App.profile.add_adventure_to_done = function(node, adventure, callback) {
         var options = {
             node: node,
             adventure: adventure,
@@ -110,10 +123,10 @@ $(document).ready(function() {
             command: 'accomplish-adventure',
             action: 'add'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.remove_adventure_from_done = function(node, adventure) {
+    App.profile.remove_adventure_from_done = function(node, adventure, callback) {
         var options = {
             node: node,
             adventure: adventure,
@@ -121,10 +134,10 @@ $(document).ready(function() {
             command: 'accomplish-adventure',
             action: 'remove'
         }
-        App.editor(options);
+        App.editor(options, callback);
     };
         //Armash Work Starts Here
-    App.profile.add_profile_to_follow= function(node, other_profile) {
+    App.profile.add_profile_to_follow= function(node, other_profile, callback) {
         var options = {
             node: node,
             other_profile: other_profile,
@@ -132,10 +145,10 @@ $(document).ready(function() {
             command: 'follow-profile',
             action: 'follow'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.remove_profile_from_follow= function(node, other_profile) {
+    App.profile.remove_profile_from_follow= function(node, other_profile, callback) {
         var options = {
             node: node,
             other_profile: other_profile,
@@ -143,10 +156,10 @@ $(document).ready(function() {
             command: 'follow-profile',
             action: 'unfollow'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.add_article_to_bookmark= function(node, article) {
+    App.profile.add_article_to_bookmark= function(node, article, callback) {
         var options = {
             node: node,
             article: article,
@@ -154,10 +167,10 @@ $(document).ready(function() {
             command: 'bookmark-article',
             action: 'add'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.remove_article_from_bookmark= function(node, article) {
+    App.profile.remove_article_from_bookmark= function(node, article, callback) {
         var options = {
             node: node,
             article: article,
@@ -168,7 +181,7 @@ $(document).ready(function() {
         App.editor(options);
     };
 
-    App.profile.add_event_to_interest= function(node, event) {
+    App.profile.add_event_to_interest= function(node, event, callback) {
         var options = {
             node: node,
             event: event,
@@ -176,10 +189,10 @@ $(document).ready(function() {
             command: 'interest-event',
             action: 'add'
         }
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.remove_event_from_interest= function(node, event) {
+    App.profile.remove_event_from_interest= function(node, event, callback) {
         var options = {
             node: node,
             event: event,
@@ -187,10 +200,10 @@ $(document).ready(function() {
             command: 'interest-event',
             action: 'remove'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.add_event_to_join= function(node, event) {
+    App.profile.add_event_to_join= function(node, event, callback) {
         var options = {
             node: node,
             event: event,
@@ -198,10 +211,10 @@ $(document).ready(function() {
             command: 'join-event',
             action: 'add'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.remove_event_from_join= function(node, event) {
+    App.profile.remove_event_from_join= function(node, event, callback) {
         var options = {
             node: node,
             event: event,
@@ -209,10 +222,10 @@ $(document).ready(function() {
             command: 'join-event',
             action: 'remove'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.add_trip_to_interest= function(node, trip) {
+    App.profile.add_trip_to_interest= function(node, trip, callback) {
         var options = {
             node: node,
             trip: trip,
@@ -220,10 +233,10 @@ $(document).ready(function() {
             command: 'interest-trip',
             action: 'add'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.remove_trip_from_interest= function(node, trip) {
+    App.profile.remove_trip_from_interest= function(node, trip, callback) {
         var options = {
             node: node,
             trip: trip,
@@ -231,10 +244,10 @@ $(document).ready(function() {
             command: 'interest-trip',
             action: 'remove'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.add_trip_to_join= function(node, trip) {
+    App.profile.add_trip_to_join= function(node, trip, callback) {
         var options = {
             node: node,
             trip: trip,
@@ -242,10 +255,10 @@ $(document).ready(function() {
             command: 'join-trip',
             action: 'add'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.remove_trip_from_join= function(node, trip) {
+    App.profile.remove_trip_from_join= function(node, trip, callback) {
         var options = {
             node: node,
             trip: trip,
@@ -253,10 +266,10 @@ $(document).ready(function() {
             command: 'join-trip',
             action: 'remove'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
-    App.profile.book_trip = function(name, email, phone, message, trip) {
+    App.profile.book_trip = function(name, email, phone, message, trip, callback) {
         var options = {
             name: name,
             email: email,
@@ -267,7 +280,7 @@ $(document).ready(function() {
             command: 'book-enquiry-trip',
             action: ''
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
     App.profile.verify_profile= function(node, data) {
@@ -309,6 +322,15 @@ $(document).ready(function() {
         App.editor(options, callback);
     };
 
+    App.profile.business_profile_register = function(data, callback) {
+        var options = {
+            data: data,
+            type: 'profile',
+            command: 'register-business-profile'
+        };
+        App.editor(options, callback);
+    };
+
     App.profile.subscribe = function(name, email, callback) {
         var options = {
             data: {name: name, email: email},
@@ -318,14 +340,14 @@ $(document).ready(function() {
         App.editor(options, callback);
     };
 
-    App.profile.business_profile_edit= function(node, data) {
+    App.profile.business_profile_edit= function(node, data, callback) {
         var options = {
             node: node,
             data: data,
             type: 'profile',
             command: 'business-profile-edit'
         };
-        App.editor(options);
+        App.editor(options, callback);
     };
 
     App.profile.edit_role= function(node, role) {

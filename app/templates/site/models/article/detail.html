@@ -4,13 +4,13 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h2>{{model.title}} </h2>
 	            <div class="media">
-    	            <center><img src="{{model.author.cover_image_path}}" class="img-circle text-center" width="48"></center>
+    	            <center><a href="{{model.author.slug}}"><img src="{{model.author.cover_image_path}}" class="img-circle text-center" width="48"></a></center>
                     <br/>
                     <h4>by {{model.author.name}}</h4>&nbsp;|&nbsp;
     	            <h4>{{model.since}}</h4>&nbsp;|&nbsp;
                     <h4>{{model.comments_count}}&nbsp;Comments</h4>&nbsp;|&nbsp;
                     <h4>{{model.views}}&nbsp;Views</h4>
-
+                    {% if user %}<h6><a href="#" class="btn btn-link uppercase red" data-action="not-ok" data-model="article" data-model-id="{{model.id}}" data-user-id="{{user.id}}">Report as Not Ok</a></h6>{% endif %}
 	            </div>
             </div>
             <br/>
@@ -22,6 +22,7 @@
             </div>
         </section>
     </div>
+    {% include 'site/includes/img-hider.html'%}
 </section>
 
 <hr class="clearfix divider">
@@ -48,8 +49,56 @@
             </div>
             <hr/>
             {% endif %}
-            <div clas="col-md-12 col-sm-12 block">
-                {{model.process_content|safe}}
+            <div id="actual-content-box" class="col-md-12 col-sm-12">
+                <div id="content-box2" style="display:none;">
+                    {{model.process_content|safe}}
+                </div>
+                <div id="content-box">
+                </div>
+                <br/>
+                <br/>
+                <script>
+                $(document).ready(function(){
+                    var max_width = parseInt($('#actual-content-box').width());
+                    var content = $.parseHTML($('#content-box2').html());
+                    var content_list = []
+                    $.each(content, function( i, el ) {
+                        var tag = el.tagName;
+                        var elem_txt = $(el).html();
+                        console.log('[->]' + elem_txt);
+                        if (elem_txt == undefined || elem_txt.length == 0)  {
+                            return;
+                        }
+                        var u = 0;
+                        while(elem_txt.indexOf('style="width', u) > -1) {
+                            var i = elem_txt.indexOf('style="width', u)
+                            var j = elem_txt.indexOf('"', i + 1);
+                            var k = elem_txt.indexOf('"', j + 1);
+                            var u_txt = elem_txt.substring(j, k + 1);
+                            var v_arr = u_txt.split(' ')
+                            if (v_arr.length > 1){
+                                var x = v_arr[1]
+                                if (x.indexOf('px;') > -1) {
+                                    var width = x.replace('px;', '');
+                                    width = parseInt(width.replace('"', ''));
+                                    if (max_width == 0) {
+                                        var width2 = "" + Math.floor(0.6 * width);
+                                        console.log('[*] Replacing ' + width + ' with ' + width2);
+                                        elem_txt = elem_txt.replace(width, width2);
+                                    } else {
+                                        if (max_width < width) {
+                                            elem_txt = elem_txt.replace(width, max_width);
+                                        }
+                                    }
+                                }
+                            }
+                            u = i + 1
+                        }
+                        content_list.push('<'+tag+'>' + elem_txt + '</'+tag+'>');
+                    });
+                    $('#content-box').html(content_list.join(''))
+                });
+                </script>
             </div>
         </div>
         <hr/>

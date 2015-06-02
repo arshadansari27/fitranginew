@@ -4,20 +4,22 @@ import sys, traceback, random
 
 from flask import g
 from app.utils import convert_query_to_filter
+from app.settings import CDN_URL
+from app import USE_CDN
 from app.handlers.extractors import NodeExtractor, article_extractor, advertisement_extractor, adventure_extractor, \
     activity_extractor, discussion_extractor, profile_type_extractor, event_extractor, profile_extractor, \
     trip_extractor, post_extractor, stream_extractor
 from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, POST, STREAM, Node, ADVERTISEMENT
 from app.models.streams import ActivityStream
 from app.models.content import Content, Post, Article, Discussion
-from app.models.adventure import Adventure, Location
+from app.models.adventure import Adventure
 from app.models.activity import Activity
 from app.models.event import Event
 from app.models.trip import Trip
 from app.models.profile import Profile, ProfileType
 
 ICON_VIEW, GRID_VIEW, ROW_VIEW, GRID_ROW_VIEW, DETAIL_VIEW = 'icon', "grid", "row", "grid-row", "detail"
-
+GENERIC_TITLE = 'Fitrangi.com - India\'s Complete Adventure Portal'
 COLLECTION_PATHS = {
     STREAM: 'site/pages/searches/streams',
     ADVENTURE: 'site/pages/searches/adventures',
@@ -36,19 +38,24 @@ COLLECTION_PATHS = {
 
 WALL_IMAGE_STYLE = "background:  linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url(%s) no-repeat center center;background-size: cover;"
 
+if USE_CDN:
+    prepend = CDN_URL
+else:
+    prepend = ''
+
 WALL_IMAGE_NAMES = {
     ACTIVITY: dict(detail=lambda u: u.cover_image_path, search='', landing=''),
     STREAM: dict(detail=lambda u: None, search='', landing=''),
-    ADVENTURE: dict(detail=lambda u: u.cover_image_path, search='/images/adventure-banner.jpg', landing=''),
-    PROFILE: dict(detail=lambda u: '/images/userprofile-banner.jpg', search='/images/userprofile-banner.jpg', landing=''),
+    ADVENTURE: dict(detail=lambda u: u.cover_image_path, search='%s/images/adventure-banner.jpg' % prepend, landing=''),
+    PROFILE: dict(detail=lambda u: '%s/images/userprofile-banner.jpg' % prepend, search='%s/images/finder-banner.jpg' % prepend, landing=''),
     POST: dict(detail=lambda u: None, search='', landing=''),
-    DISCUSSION: dict(detail=lambda u: u.cover_image_path if u.cover_image_path and len(u.cover_image_path) > 0 else '/images/discussion-banner.jpg', search='/images/discussion-banner.jpg', landing=''),
-    EVENT: dict(detail=lambda u: u.cover_image_path, search='/images/events-banner.jpg', landing=''),
-    ARTICLE: dict(detail=lambda u: u.cover_image_path, search='/images/userprofile-banner.jpg', landing=''),
-    TRIP: dict(detail=lambda u: u.cover_image_path, search='/images/adventure-trips-banner.jpg', landing=''),
-    "explore": dict(detail=lambda u: None, search=None, landing='/images/home-banner.jpg'),
-    "community": dict(detail=lambda u: None, search=None, landing='/images/community-banner.jpg'),
-    "about": dict(detail=lambda u: None, search=None, landing='/images/home-banner.jpg'),
+    DISCUSSION: dict(detail=lambda u: '%s/images/discussion-banner.jpg' % prepend, search='%s/images/discussion-banner.jpg' % prepend, landing=''),
+    EVENT: dict(detail=lambda u: u.cover_image_path, search='%s/images/events-banner.jpg' % prepend, landing=''),
+    ARTICLE: dict(detail=lambda u: u.cover_image_path, search='%s/images/journal-banner.jpg' % prepend, landing=''),
+    TRIP: dict(detail=lambda u: u.cover_image_path, search='%s/images/adventure-trips-banner.jpg' % prepend, landing=''),
+    "explore": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner2.jpg' % prepend),
+    "community": dict(detail=lambda u: None, search=None, landing='%s/images/community-banner.jpg' % prepend),
+    "about": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
 }
 
 class View(object):
@@ -75,7 +82,7 @@ class EditorView(View):
             model = extractor.get_single("pk:%s;" % str(self.id) )
             if not g.user:
                 raise Exception("where is the user")
-            if model and model.author.id != g.user.id or 'Admin' not in g.user.roles:
+            if model and model.author.id != g.user.id and 'Admin' not in g.user.roles:
                 raise Exception("Invalid User")
         else:
             model = None
@@ -238,6 +245,18 @@ class NodeView(View):
             print e.message
             return ''
 
+    @classmethod
+    def get_editable_card(cls, model_name, model, context={}):
+        from app.views import env
+        from app.views import force_setup_context
+        template_path = 'site/models/' + model_name + '/edit.html'
+        template = env.get_template(template_path)
+        context = force_setup_context(context)
+        context['model'] = model
+        print '[*] Context: ', context
+        context['profile_types'] = [u for u in ProfileType.objects.all() if u.name != 'Enthusiast']
+        return template.render(**context)
+
 
     @classmethod
     def get_detail_card(cls, model_name, model, context={}):
@@ -270,6 +289,28 @@ class PageManager(object):
         return title, NodeView.get_detail_card(model_name, model, context), context
 
     @classmethod
+    def get_edit_title_and_page(cls, model_name, **kwargs):
+        query = kwargs.get('query', None)
+        user = kwargs.get('user', None)
+        is_business = kwargs.get('business', None)
+        if query:
+            try:
+                model = NodeExtractor.factory(model_name).get_single(query)
+            except Exception, e:
+                model = None
+        else:
+            model = None
+
+        if model:
+            context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), is_business=any([model.is_business_profile, len(model.managed_by) > 0]))
+        else:
+            context = dict(parent=None, user=user, query=None, filters=None, is_business=is_business)
+
+        context.update(Page.factory(model_name, 'edit').get_context(context))
+        title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s complete adventure portal')
+        return title, NodeView.get_editable_card(model_name, model, context), context
+
+    @classmethod
     def get_search_title_and_page(cls, model_name, **kwargs):
         query = kwargs.get('query', None)
         user = kwargs.get('user', None)
@@ -281,7 +322,8 @@ class PageManager(object):
         context = force_setup_context(context)
         context.update(Page.factory(model_name, 'search').get_context(context))
         html = template.render(**context)
-        return 'Fitrangi: India\'s complete adventure portal. Find what you are looking for', html, context
+
+        return GENERIC_TITLE, html, context
 
     @classmethod
     def get_landing_title_and_page(cls, model_name, **kwargs):
@@ -295,7 +337,7 @@ class PageManager(object):
         context = force_setup_context(context)
         context.update(Page.factory(model_name, 'landing').get_context(context))
         html = template.render(**context)
-        return 'Fitrangi: India\'s complete adventure portal. Find what you are looking for', html, context
+        return GENERIC_TITLE, html, context
 
     @classmethod
     def get_common_title_and_page(cls, page, **kwargs):
@@ -323,7 +365,9 @@ class Page(object):
 
     @classmethod
     def factory(self, model_name, type):
-        if type == 'detail':
+        if type == 'edit':
+            return profile_edit_page
+        elif type == 'detail':
             if model_name == ACTIVITY:
                 return activity_detail_page
             elif model_name == ADVENTURE:
@@ -390,8 +434,7 @@ class LandingPage(Page):
             testimonials.append(dict(name=u"Divyesh Muni", image="/images/testimonials/DIVYESH MUNI.jpg", title=u"Hon. Treasurer and Hon. Secretary - The Himalayan Club. IMF Climbing Award - Excellence in Mountaineering", context=u"About Adventure Tourism Conclave 2015", content=u"Today's conclave is a good start and it's something that one needs to continue because it brings the community together and take things forward."))
             testimonials.append(dict(name=u"Shantanu Pandit", image="/images/testimonials/Shantanu Pandit.jpg", title=u"Adventure Consultant. Founder , EKO (Experience - Knowledge - Outdoors)", context=u"About Adventure Tourism Conclave 2015", content=u"I think this was a great initiative. It brought a lot of people together perhaps after a long time and at a scale which was speaking at Maharashtra level. This is desperately required for the field of Adventure.  I really liked the fact that safety was emphasized and the speakers brought concrete inputs.  Hey Fitrangi - Great Stuff."))
             testimonials.append(dict(name=u"Shalik Jogwe", image="/images/testimonials/Shalik Jogwe.jpg", title=u"Wildlife Photographer, Naturalist and Owner at Vidarbha Wildlife", context=u"About Adventure Tourism Conclave 2015", content=u"I am thankful to ATOM and Fitrangi for providing this opportunity to present wildlife and accepting wild life as an adventure activity at Adventure Tourism Conclave 2015."))
-            random.shuffle(testimonials)
-            return dict(counters=counters, adventure=adventure, journal=journal, profile=profile, event=event, discussion=discussion, testimonials=testimonials[0: 2])
+            return dict(counters=counters, adventure=adventure, journal=journal, profile=profile, event=event, discussion=discussion, testimonials=testimonials)
 
         elif self.model_name == 'community':
             profile = NodeCollectionFactory.resolve(PROFILE, ICON_VIEW, fixed_size=24).get_card(context)
@@ -410,7 +453,7 @@ class SearchPage(Page):
 
     def get_context(self, context):
         if self.model_name == ADVENTURE:
-            return dict(adventure_list=NodeCollectionFactory.resolve(ADVENTURE, GRID_VIEW).get_card(context))
+            return dict(count=Adventure.objects.count(), adventure_list=NodeCollectionFactory.resolve(ADVENTURE, GRID_VIEW).get_card(context))
         elif self.model_name == PROFILE:
             return dict(profiles_list=NodeCollectionFactory.resolve(PROFILE, ROW_VIEW).get_card(context))
         elif self.model_name == ARTICLE:
@@ -477,6 +520,14 @@ class DetailPage(Page):
             other_trips = NodeCollectionFactory.resolve(TRIP, GRID_ROW_VIEW, category="other", fixed_size=4).get_card(context)
             return dict(discussions=discussions, other_trips=other_trips)
 
+class EditPage(Page):
+
+    def __init__(self, model_name):
+        super(EditPage, self).__init__(model_name)
+
+    def get_context(self, context):
+        return {} #dict(profiles_types=ProfileType.objects.all())
+
 
 explore_landing_page    = LandingPage('explore')
 community_landing_page  = LandingPage('community')
@@ -495,3 +546,5 @@ profile_detail_page     = DetailPage(PROFILE)
 article_detail_page     = DetailPage(ARTICLE)
 discussion_detail_page  = DetailPage(DISCUSSION)
 trip_detail_page        = DetailPage(TRIP)
+
+profile_edit_page       = EditPage(PROFILE)
