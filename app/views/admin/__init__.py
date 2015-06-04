@@ -429,6 +429,7 @@ class ExtraPageAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
     form_overrides = dict(page_content=SummernoteTextAreaField)
+    column_list = ['name', 'page_title']
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
