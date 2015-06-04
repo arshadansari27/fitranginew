@@ -37,6 +37,8 @@ COLLECTION_PATHS = {
     'terms': 'site/pages/landings/extra',
     'faq': 'site/pages/landings/extra',
     'privacy': 'site/pages/landings/extra',
+    'contribute': 'site/pages/landings/extra',
+    'advertise': 'site/pages/landings/extra',
     'login': 'site/pages/landings/login',
     'register': 'site/pages/landings/register'
 }
@@ -63,7 +65,9 @@ WALL_IMAGE_NAMES = {
     "aboutus": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
     "terms": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
     "privacy": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
-    "faq": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend)
+    "faq": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
+    "contribute": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
+    "advertise": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend)
 }
 
 class View(object):
@@ -435,6 +439,10 @@ class Page(object):
                 return faq_landing_page
             elif model_name == 'terms':
                 return terms_landing_page
+            elif model_name == 'advertise':
+                return advertise_landing_page
+            elif model_name == 'contribute':
+                return contribute_landing_page
             else:
                 raise Exception("Not implemented")
         else:
@@ -483,6 +491,12 @@ class LandingPage(Page):
             return dict(page_title=title, page_content=content)
         elif self.model_name == 'faq':
             title, content = ExtraPage.get_faq()
+            return dict(page_title=title, page_content=content)
+        elif self.model_name == 'advertise':
+            title, content = ExtraPage.get_advertise()
+            return dict(page_title=title, page_content=content)
+        elif self.model_name == 'contribute':
+            title, content = ExtraPage.get_contribute()
             return dict(page_title=title, page_content=content)
         else:
             raise Exception('Not implemented')
@@ -576,6 +590,8 @@ aboutus_landing_page    = LandingPage('aboutus')
 terms_landing_page      = LandingPage('terms')
 privacy_landing_page    = LandingPage('privacy')
 faq_landing_page        = LandingPage('faq')
+advertise_landing_page  = LandingPage('advertise')
+contribute_landing_page = LandingPage('contribute')
 
 article_search_page     = SearchPage(ARTICLE)
 adventure_search_page   = SearchPage(ADVENTURE)

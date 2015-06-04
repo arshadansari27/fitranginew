@@ -27,3 +27,13 @@ class ExtraPage(db.Document):
     def get_privacy(cls):
         page = cls.objects(name__iexact='privacy').first()
         return page.page_title, page.page_content
+
+    @classmethod
+    def get_advertise(cls):
+        page = cls.objects(name__iexact='advertise').first()
+        return page.page_title, page.page_content
+
+    @classmethod
+    def get_contribute(cls):
+        page = cls.objects(name__iexact='contribute').first()
+        return page.page_title, page.page_content
