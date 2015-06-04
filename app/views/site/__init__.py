@@ -308,7 +308,7 @@ def model_view(slug):
     context['card']     = card
     context['title']    = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
     context['cdn_url'] = CDN_URL if USE_CDN else ''
-    context['meta_content'] = PageManager.get_meta_content(context['title'], description, value, image, model_type)
+    context['meta_content'] = PageManager.get_meta_content(context['title'], description, request.url, image, model_type)
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/edit-profile')

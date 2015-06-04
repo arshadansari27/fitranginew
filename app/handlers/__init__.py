@@ -282,7 +282,6 @@ class PageManager(object):
     def get_meta_content(cls, title, description, url, image, type=''):
         from app.views import env
         from flask import request
-        print request.host, ',', request.url, ',', request.path, ',', request.full_path
         template_path = 'site/includes/meta.html'
         template = env.get_template(template_path)
         context = dict(title=title, description=description, url=url, image=image, type=type)
