@@ -144,7 +144,7 @@ class NodeExtractor(object):
                     filters['geo_location__near'] = {"type": "Point", "coordinates": [float(sorters['location_lat']), float(sorters['location_lng'])]}
                     max_distance = 50000
                     filters['geo_location__max_distance'] = max_distance
-        if Content in self.model_class.__bases__:
+        if Content in self.model_class.__bases__ or Adventure in self.model_class.__bases__:
             order_by = '-modified_timestamp'
         else:
             order_by = '-created_timestamp'
