@@ -304,10 +304,11 @@ def model_view(slug):
     from app.views import force_setup_context
     model_type = [u for u in request.path.split('/') if u and len(u) > 0][0]
     value = '/%s/%s' % (model_type, slug)
-    title, card, context = PageManager.get_detail_title_and_page(model_type, query="slug__iexact:%s;" % value)
+    title, card, context, description, image = PageManager.get_detail_title_and_page(model_type, query="slug__iexact:%s;" % value)
     context['card']     = card
     context['title']    = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
     context['cdn_url'] = CDN_URL if USE_CDN else ''
+    context['meta_content'] = PageManager.get_meta_content(context['title'], description, value, image, model_type)
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/edit-profile')
@@ -320,6 +321,7 @@ def edit_profile():
     context                 = force_setup_context(context)
     context['card']         = card
     context['title']        = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
+    context['meta_content'] = PageManager.get_meta_content(context['title'], '', '', '')
     context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 

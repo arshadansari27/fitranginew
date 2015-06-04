@@ -1,5 +1,6 @@
 import re
 
+from BeautifulSoup import BeautifulSoup
 from functools import wraps
 from flask import g, redirect, request, url_for, abort
 from app.settings import MEDIA_FOLDER
@@ -9,10 +10,17 @@ import os, datetime, random
 from app import cache
 from bson.son import SON
 
+from app import cache
+
 TAG_RE = re.compile(r'<[^>]+>')
 
 _link = re.compile(r'(?:(http://)|(www\.))(\S+\b/?)([!"#$%&\'()*+,\-./:;<=>?@[\\\]^_`{|}~]*)(\s|$)', re.I)
 PAGE_LIMIT = 50
+
+@cache.cached(24*3600, key_prefix='description/%s')
+def get_descriptions(description):
+    soup = BeautifulSoup(description)
+    return soup.text
 
 def get_start_end(page, size=PAGE_LIMIT):
     if page < 1: page = 1

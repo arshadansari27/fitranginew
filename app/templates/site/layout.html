@@ -12,7 +12,7 @@
 
     <title>{% if title %}{{title}}{% else %}Fitrangi: India's complete adventure portal{% endif %}</title>
 
-
+    {{ meta_content|safe }}
     <link rel="stylesheet" href="/css/font-awesome.min.css">
 
     {% assets filters="cssmin", output="app/packed-new.css", "css/bootstrap.css", "css/owl.carousel.css",

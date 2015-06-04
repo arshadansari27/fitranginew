@@ -2,8 +2,9 @@ __author__ = 'arshad'
 
 import sys, traceback, random
 
-from flask import g
-from app.utils import convert_query_to_filter
+from BeautifulSoup import BeautifulSoup
+from flask import g, request
+from app.utils import convert_query_to_filter, get_descriptions
 from app.settings import CDN_URL
 from app import USE_CDN
 from app.handlers.extractors import NodeExtractor, article_extractor, advertisement_extractor, adventure_extractor, \
@@ -274,7 +275,18 @@ class NodeView(View):
         context['model'] = model
         return template.render(**context)
 
+
 class PageManager(object):
+
+    @classmethod
+    def get_meta_content(cls, title, description, url, image, type=''):
+        from app.views import env
+        from flask import request
+        print request.host, ',', request.url, ',', request.path, ',', request.full_path
+        template_path = 'site/includes/meta.html'
+        template = env.get_template(template_path)
+        context = dict(title=title, description=description, url=url, image=image, type=type)
+        return template.render(**context)
 
     @classmethod
     def get_detail_title_and_page(cls, model_name, **kwargs):
@@ -286,7 +298,10 @@ class PageManager(object):
         context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), background_cover=WALL_IMAGE_STYLE % WALL_IMAGE_NAMES[model_name].get('detail', '')(model))
         context.update(Page.factory(model_name, 'detail').get_context(context))
         title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s complete adventure portal')
-        return title, NodeView.get_detail_card(model_name, model, context), context
+        description = model.description if model.description else ''
+        if description:
+            description = get_descriptions(description)
+        return title, NodeView.get_detail_card(model_name, model, context), context, description, "http://%s%s" % (request.host, model.path_cover_image)
 
     @classmethod
     def get_edit_title_and_page(cls, model_name, **kwargs):
