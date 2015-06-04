@@ -300,7 +300,11 @@ class PageManager(object):
         description = model.description if model.description else ''
         if description:
             description = get_descriptions(description)
-        return title, NodeView.get_detail_card(model_name, model, context), context, description, "http://%s%s" % (request.host, model.path_cover_image)
+        if model.path_cover_image and len(model.path_cover_image) > 0:
+            image_path = model.path_cover_image
+        else:
+            image_path = '/images/home-banner.jpg'
+        return title, NodeView.get_detail_card(model_name, model, context), context, description, "http://%s%s" % (request.host, image_path)
 
     @classmethod
     def get_edit_title_and_page(cls, model_name, **kwargs):
