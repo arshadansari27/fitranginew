@@ -18,6 +18,7 @@ from app.models.activity import Activity
 from app.models.event import Event
 from app.models.trip import Trip
 from app.models.profile import Profile, ProfileType
+from app.models.page import ExtraPage
 
 ICON_VIEW, GRID_VIEW, ROW_VIEW, GRID_ROW_VIEW, DETAIL_VIEW = 'icon', "grid", "row", "grid-row", "detail"
 GENERIC_TITLE = 'Fitrangi.com - India\'s Complete Adventure Portal'
@@ -32,7 +33,10 @@ COLLECTION_PATHS = {
     TRIP: 'site/pages/searches/trips',
     "explore": 'site/pages/landings/home',
     "community": 'site/pages/landings/community',
-    'about': 'site/pages/landings/about',
+    'aboutus': 'site/pages/landings/extra',
+    'terms': 'site/pages/landings/extra',
+    'faq': 'site/pages/landings/extra',
+    'privacy': 'site/pages/landings/extra',
     'login': 'site/pages/landings/login',
     'register': 'site/pages/landings/register'
 }
@@ -56,7 +60,10 @@ WALL_IMAGE_NAMES = {
     TRIP: dict(detail=lambda u: u.cover_image_path, search='%s/images/adventure-trips-banner.jpg' % prepend, landing=''),
     "explore": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner2.jpg' % prepend),
     "community": dict(detail=lambda u: None, search=None, landing='%s/images/community-banner.jpg' % prepend),
-    "about": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
+    "aboutus": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
+    "terms": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
+    "aboutus": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
+    "faq": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend)
 }
 
 class View(object):
@@ -420,8 +427,14 @@ class Page(object):
                 return explore_landing_page
             elif model_name == 'community':
                 return community_landing_page
-            elif model_name == 'about':
-                return about_landing_page
+            elif model_name == 'aboutus':
+                return aboutus_landing_page
+            elif model_name == 'privacy':
+                return privacy_landing_page
+            elif model_name == 'faq':
+                return faq_landing_page
+            elif model_name == 'terms':
+                return terms_landing_page
             else:
                 raise Exception("Not implemented")
         else:
@@ -459,8 +472,18 @@ class LandingPage(Page):
             event = NodeCollectionFactory.resolve(EVENT, GRID_VIEW, fixed_size=6).get_card(context)
             discussion = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, fixed_size=4).get_card(context)
             return dict(profile=profile, event=event, discussion=discussion)
-        elif self.model_name == 'about':
-            return {}
+        elif self.model_name == 'aboutus':
+            title, content = ExtraPage.get_about_us()
+            return dict(page_title=title, page_content=content)
+        elif self.model_name == 'terms':
+            title, content = ExtraPage.get_terms()
+            return dict(page_title=title, page_content=content)
+        elif self.model_name == 'privacy':
+            title, content = ExtraPage.get_privacy()
+            return dict(page_title=title, page_content=content)
+        elif self.model_name == 'faq':
+            title, content = ExtraPage.get_faq()
+            return dict(page_title=title, page_content=content)
         else:
             raise Exception('Not implemented')
 
@@ -549,7 +572,10 @@ class EditPage(Page):
 
 explore_landing_page    = LandingPage('explore')
 community_landing_page  = LandingPage('community')
-about_landing_page      = LandingPage('about')
+aboutus_landing_page    = LandingPage('aboutus')
+terms_landing_page      = LandingPage('terms')
+privacy_landing_page    = LandingPage('privacy')
+faq_landing_page        = LandingPage('faq')
 
 article_search_page     = SearchPage(ARTICLE)
 adventure_search_page   = SearchPage(ADVENTURE)

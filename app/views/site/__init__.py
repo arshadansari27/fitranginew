@@ -106,9 +106,9 @@ def home():
     context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
-@app.route('/about')
-def about():
-    title, card, context = PageManager.get_landing_title_and_page('about', user=g.user if hasattr(g, 'user') else None)
+@app.route('/pages/<name>')
+def extra_pages(name):
+    title, card, context = PageManager.get_landing_title_and_page(name, user=g.user if hasattr(g, 'user') else None)
     context['title'] = title
     context['card'] = card
     context['cdn_url'] = CDN_URL if USE_CDN else ''

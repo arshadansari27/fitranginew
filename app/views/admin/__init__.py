@@ -20,6 +20,7 @@ from app.models.activity import Activity
 from app.models.adventure import Adventure
 from app.models.event import Event
 from app.models.trip import Trip
+from app.models.page import ExtraPage
 from app.models.relationships import RelationShips
 import mongoengine
 from mongoengine import Q
@@ -424,6 +425,16 @@ class NotOkAdminView(ModelView):
         q = {'not_ok_count': {'$exists': 1, "$gt": 0}}
         return self.model.objects(__raw__=q)
 
+class ExtraPageAdminView(ModelView):
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
+    form_overrides = dict(page_content=SummernoteTextAreaField)
+
+    def is_accessible(self):
+        if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
+            return True
+        return False
+
 
 class PreferenceView(flask_admin.BaseView):
 
@@ -627,6 +638,7 @@ admin.add_view(NotOkAdminView(Discussion, category="Flag Content", endpoint='fla
 admin.add_view(RestrictedAdminView(ProfileType, category="Tools"))
 #admin.add_view(LocationAdminView(Location, category="Tools"))
 admin.add_view(ChannelAdminView(Channel, category="Tools"))
+admin.add_view(ExtraPageAdminView(ExtraPage, category="Tools"))
 admin.add_view(PreferenceView(name='Preference', endpoint='settings.preference', category="Settings"))
 admin.add_view(ChangePasswordView(name='Change Password', endpoint='settings.password', category="Settings"))
 admin.add_view(ProfileSettingAdminView(name='My Profile', endpoint='settings.my_profile', category="Settings"))
