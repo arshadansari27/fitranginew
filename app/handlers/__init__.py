@@ -62,7 +62,7 @@ WALL_IMAGE_NAMES = {
     "community": dict(detail=lambda u: None, search=None, landing='%s/images/community-banner.jpg' % prepend),
     "aboutus": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
     "terms": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
-    "aboutus": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
+    "privacy": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
     "faq": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend)
 }
 
