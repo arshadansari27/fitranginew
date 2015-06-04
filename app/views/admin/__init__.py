@@ -403,7 +403,7 @@ class ApprovalProfileAdminView(ModelView):
 
     def get_query(self):
         if 'Admin' in g.user.roles:
-            q = {'admin_approved': False}
+            q = {'admin_approved': False, 'is_business_profile': True}
             return self.model.objects(__raw__=q)
         return None
 

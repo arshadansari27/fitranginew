@@ -1680,7 +1680,7 @@ ul.my-list-wrong, ul.my-list-right {
 
 ul.my-list-wrong li, ul.my-list-right li {
 	list-style:none;
-	color:#b0afaf;
+	color:#000;
 }
 ul.my-list-wrong li:before{
 	content:url(../images/wrong-tick.png);
