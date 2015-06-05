@@ -12,7 +12,7 @@
 
     <title>{% if title %}{{title}}{% else %}Fitrangi: India's complete adventure portal{% endif %}</title>
 
-
+    {{ meta_content|safe }}
     <link rel="stylesheet" href="/css/font-awesome.min.css">
 
     {% assets filters="cssmin", output="app/packed-new.css", "css/bootstrap.css", "css/owl.carousel.css",
@@ -298,12 +298,11 @@
             <h3>About Fitrangi.com</h3>
 
             <p>Fitrangi.com aims at providing a cohesive platform to converge together Adventure community.</p>
-            <a href="" class="label label-default">About</a>
-            <a href="" class="label label-default">Contact</a>
-            <a href="" class="label label-default">Contribute</a>
-            <a href="" class="label label-default">Advertise</a>
-            <a href="" class="label label-default">Privacy</a>
-            <a href="" class="label label-default">Terms</a>
+            <a href="/pages/aboutus" class="label label-default">About</a>
+            <a href="/pages/contribute" class="label label-default">Contribute</a>
+            <a href="/pages/advertise" class="label label-default">Advertise</a>
+            <a href="/pages/privacy" class="label label-default">Privacy</a>
+            <a href="/pages/terms" class="label label-default">Terms</a>
 
         </div>
 

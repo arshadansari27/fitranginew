@@ -39,6 +39,7 @@ def handler(event):
 
 @handler(signals.pre_save)
 def update_content(sender, document):
+    document.path_cover_image = ''
     document.modified_timestamp = datetime.datetime.now()
     if hasattr(document, 'published'):
         if document.published and document.published_timestamp is None:
@@ -129,6 +130,12 @@ def save_media_to_file(obj, attr, name, path_obj=None):
 
         path = '/' + '/'.join(dir_list) + '/' + name + '.' + _format
         file_path = base_path + path
+        i = 0
+        while os.path.exists(file_path):
+            i += 1
+            path = '/' + '/'.join(dir_list) + '/' + name + '_' + str(i) + '.' + _format
+            file_path = base_path + path
+
         with open(file_path, 'wb') as file_io:
             img.save(file_io, _format, quality=70)
             return path

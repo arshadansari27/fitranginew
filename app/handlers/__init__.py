@@ -2,8 +2,9 @@ __author__ = 'arshad'
 
 import sys, traceback, random
 
-from flask import g
-from app.utils import convert_query_to_filter
+from BeautifulSoup import BeautifulSoup
+from flask import g, request
+from app.utils import convert_query_to_filter, get_descriptions
 from app.settings import CDN_URL
 from app import USE_CDN
 from app.handlers.extractors import NodeExtractor, article_extractor, advertisement_extractor, adventure_extractor, \
@@ -17,6 +18,7 @@ from app.models.activity import Activity
 from app.models.event import Event
 from app.models.trip import Trip
 from app.models.profile import Profile, ProfileType
+from app.models.page import ExtraPage
 
 ICON_VIEW, GRID_VIEW, ROW_VIEW, GRID_ROW_VIEW, DETAIL_VIEW = 'icon', "grid", "row", "grid-row", "detail"
 GENERIC_TITLE = 'Fitrangi.com - India\'s Complete Adventure Portal'
@@ -31,7 +33,12 @@ COLLECTION_PATHS = {
     TRIP: 'site/pages/searches/trips',
     "explore": 'site/pages/landings/home',
     "community": 'site/pages/landings/community',
-    'about': 'site/pages/landings/about',
+    'aboutus': 'site/pages/landings/extra',
+    'terms': 'site/pages/landings/extra',
+    'faq': 'site/pages/landings/extra',
+    'privacy': 'site/pages/landings/extra',
+    'contribute': 'site/pages/landings/extra',
+    'advertise': 'site/pages/landings/extra',
     'login': 'site/pages/landings/login',
     'register': 'site/pages/landings/register'
 }
@@ -55,7 +62,12 @@ WALL_IMAGE_NAMES = {
     TRIP: dict(detail=lambda u: u.cover_image_path, search='%s/images/adventure-trips-banner.jpg' % prepend, landing=''),
     "explore": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner2.jpg' % prepend),
     "community": dict(detail=lambda u: None, search=None, landing='%s/images/community-banner.jpg' % prepend),
-    "about": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
+    "aboutus": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
+    "terms": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
+    "privacy": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
+    "faq": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
+    "contribute": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
+    "advertise": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend)
 }
 
 class View(object):
@@ -274,7 +286,17 @@ class NodeView(View):
         context['model'] = model
         return template.render(**context)
 
+
 class PageManager(object):
+
+    @classmethod
+    def get_meta_content(cls, title, description, url, image, type=''):
+        from app.views import env
+        from flask import request
+        template_path = 'site/includes/meta.html'
+        template = env.get_template(template_path)
+        context = dict(title=title, description=description, url=url, image=image, type=type)
+        return template.render(**context)
 
     @classmethod
     def get_detail_title_and_page(cls, model_name, **kwargs):
@@ -286,7 +308,14 @@ class PageManager(object):
         context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), background_cover=WALL_IMAGE_STYLE % WALL_IMAGE_NAMES[model_name].get('detail', '')(model))
         context.update(Page.factory(model_name, 'detail').get_context(context))
         title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s complete adventure portal')
-        return title, NodeView.get_detail_card(model_name, model, context), context
+        description = model.description if model.description else ''
+        if description:
+            description = get_descriptions(description)
+        if model.path_cover_image and len(model.path_cover_image) > 0:
+            image_path = model.path_cover_image
+        else:
+            image_path = '/images/home-banner.jpg'
+        return title, NodeView.get_detail_card(model_name, model, context), context, description, "http://%s%s" % (request.host, image_path)
 
     @classmethod
     def get_edit_title_and_page(cls, model_name, **kwargs):
@@ -402,8 +431,18 @@ class Page(object):
                 return explore_landing_page
             elif model_name == 'community':
                 return community_landing_page
-            elif model_name == 'about':
-                return about_landing_page
+            elif model_name == 'aboutus':
+                return aboutus_landing_page
+            elif model_name == 'privacy':
+                return privacy_landing_page
+            elif model_name == 'faq':
+                return faq_landing_page
+            elif model_name == 'terms':
+                return terms_landing_page
+            elif model_name == 'advertise':
+                return advertise_landing_page
+            elif model_name == 'contribute':
+                return contribute_landing_page
             else:
                 raise Exception("Not implemented")
         else:
@@ -441,8 +480,24 @@ class LandingPage(Page):
             event = NodeCollectionFactory.resolve(EVENT, GRID_VIEW, fixed_size=6).get_card(context)
             discussion = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, fixed_size=4).get_card(context)
             return dict(profile=profile, event=event, discussion=discussion)
-        elif self.model_name == 'about':
-            return {}
+        elif self.model_name == 'aboutus':
+            title, content = ExtraPage.get_about_us()
+            return dict(page_title=title, page_content=content)
+        elif self.model_name == 'terms':
+            title, content = ExtraPage.get_terms()
+            return dict(page_title=title, page_content=content)
+        elif self.model_name == 'privacy':
+            title, content = ExtraPage.get_privacy()
+            return dict(page_title=title, page_content=content)
+        elif self.model_name == 'faq':
+            title, content = ExtraPage.get_faq()
+            return dict(page_title=title, page_content=content)
+        elif self.model_name == 'advertise':
+            title, content = ExtraPage.get_advertise()
+            return dict(page_title=title, page_content=content)
+        elif self.model_name == 'contribute':
+            title, content = ExtraPage.get_contribute()
+            return dict(page_title=title, page_content=content)
         else:
             raise Exception('Not implemented')
 
@@ -531,7 +586,12 @@ class EditPage(Page):
 
 explore_landing_page    = LandingPage('explore')
 community_landing_page  = LandingPage('community')
-about_landing_page      = LandingPage('about')
+aboutus_landing_page    = LandingPage('aboutus')
+terms_landing_page      = LandingPage('terms')
+privacy_landing_page    = LandingPage('privacy')
+faq_landing_page        = LandingPage('faq')
+advertise_landing_page  = LandingPage('advertise')
+contribute_landing_page = LandingPage('contribute')
 
 article_search_page     = SearchPage(ARTICLE)
 adventure_search_page   = SearchPage(ADVENTURE)
