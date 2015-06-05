@@ -84,14 +84,15 @@
         <div class="heading"><h3>Contact</h3></div>
         <div class="row-fluid">
             {% if model.phone %}<h4><i class="fa fa-phone">:</i>&nbsp;{{model.phone}}</h4> {% endif %}
-            {% if model.email %}<h4><i class="fa fa-at">:</i>&nbsp;<a href="mailto:{{ model.email }}" target="_blank">{{model.email}}</a></h4> {% endif %}
-            {% if model.website %}<h4><i class="fa fa-globe">:</i>&nbsp;<a href="" target="_blank">{{model.website}}</a></h4> {% endif %}
+            {% if model.email %}<h4><i class="fa fa-at">:</i>&nbsp;<a href="#" target="_blank">{{model.email}}</a></h4> {% endif %}
+            {% if model.website %}<h4><i class="fa fa-globe">:</i>&nbsp;{{model.website}}</h4> {% endif %}
             <h4 class="text-center">
                 <a {% if model.facebook %}href="{{ model.facebook }}"  target="_blank"{% endif %}><i class="fa fa-facebook fa-2x"></i></a>
+                <a {% if True or model.twitter %}href="{{ model.twitter }}"  target="_blank"{% endif %}><i class="fa fa-twitter fa-2x"></i></a>
                 <a {% if model.google_plus %}href="{{ model.google_plus }}"  target="_blank"{% endif %}><i class="fa fa-google-plus fa-2x"></i></a>
                 <a {% if model.linked_in %}href="{{ model.linked_in }}"  target="_blank"{% endif %}><i class="fa fa-linkedin fa-2x"></i></a>
-                <a {% if model.blog_channel %}href="{{ model.blog_channel }}"  target="_blank"{% endif %}><i class="fa fa-rss fa-2x"></i></a>
                 <a {% if model.youtube_channel %}href="{{ model.youtube_channel }}"  target="_blank"{% endif %}><i class="fa fa-youtube fa-2x"></i></a>
+                <!--a {% if model.blog_channel %}href="{{ model.blog_channel }}"  target="_blank"{% endif %}><i class="fa fa-rss fa-2x"></i></a-->
             </h4>
         </div>
         <div class="row">
