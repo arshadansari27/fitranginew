@@ -335,7 +335,7 @@ class PageManager(object):
             context = dict(parent=None, user=user, query=None, filters=None, is_business=is_business)
 
         context.update(Page.factory(model_name, 'edit').get_context(context))
-        title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s complete adventure portal')
+        title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else GENERIC_TITLE)
         return title, NodeView.get_editable_card(model_name, model, context), context
 
     @classmethod

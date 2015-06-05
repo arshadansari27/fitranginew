@@ -1,4 +1,5 @@
 from app.handlers.messaging import send_single_email
+from app.handlers import GENERIC_TITLE
 from app import app, USE_CDN
 from app.models import STREAM
 from flask import render_template, request, g, redirect, jsonify, url_for, session, flash
@@ -104,6 +105,7 @@ def home():
     context['title'] = title
     context['card'] = card
     context['cdn_url'] = CDN_URL if USE_CDN else ''
+    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/pages/<name>')
@@ -112,6 +114,7 @@ def extra_pages(name):
     context['title'] = title
     context['card'] = card
     context['cdn_url'] = CDN_URL if USE_CDN else ''
+    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
     return render_template('site/pages/commons/view.html', **context)
 
 """
@@ -139,6 +142,7 @@ def list_adventure():
     context['title'] = title
     context['card'] = card
     context['cdn_url'] = CDN_URL if USE_CDN else ''
+    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/journals')
@@ -150,6 +154,7 @@ def list_journal():
     context['title'] = 'Articles and Blogs @ Fitrangi'
     context['card'] = card
     context['cdn_url'] = CDN_URL if USE_CDN else ''
+    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/discussions')
@@ -162,6 +167,7 @@ def list_discussion():
     context['card'] = card
     context['title'] = 'Discussion @ Fitrangi'
     context['cdn_url'] = CDN_URL if USE_CDN else ''
+    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/profiles")
@@ -173,6 +179,7 @@ def list_profile():
     context['card'] = card
     context['title'] = 'Profile Finder'
     context['cdn_url'] = CDN_URL if USE_CDN else ''
+    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/community/my")
@@ -196,6 +203,7 @@ def list_event():
     context['title'] = title
     context['cdn_url'] = CDN_URL if USE_CDN else ''
     context['card'] = card
+    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/trips")
@@ -207,6 +215,7 @@ def list_trip():
     context['title'] = title
     context['card'] = card
     context['cdn_url'] = CDN_URL if USE_CDN else ''
+    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/listings")
