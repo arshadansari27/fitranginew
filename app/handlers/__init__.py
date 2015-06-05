@@ -311,7 +311,7 @@ class PageManager(object):
         description = model.description if model.description else ''
         if description:
             description = get_descriptions(description)
-        image_path = model.path_cover_image
+        image_path = model.cover_image_path
         if image_path is None or len(image_path) is 0:
             image_path = '/images/home-banner.jpg'
         return title, NodeView.get_detail_card(model_name, model, context), context, description, "http://%s%s" % (request.host, image_path)
