@@ -15,8 +15,9 @@
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 fitrangi-datalist">
                 <input id="category-filter" data-category="all" data-model="profile" data-filter="type__profile_type__name" list="category" placeholder="SELECT CATEGORY" value="">
                 <datalist id="category">
-                    <option value="Organizer">
-                    <option value="Enthusiast">
+                    {%  for t in types %}
+                    <option value="{{ t }}">
+                    {%  endfor  %}
                 </datalist>
             </div>
 

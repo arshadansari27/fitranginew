@@ -509,7 +509,8 @@ class SearchPage(Page):
         if self.model_name == ADVENTURE:
             return dict(count=Adventure.objects.count(), adventure_list=NodeCollectionFactory.resolve(ADVENTURE, GRID_VIEW).get_card(context))
         elif self.model_name == PROFILE:
-            return dict(profiles_list=NodeCollectionFactory.resolve(PROFILE, ROW_VIEW).get_card(context))
+            profile_type_names = [u.name for u in ProfileType.objects.all() if u.name != 'Subscription Only']
+            return dict(profiles_list=NodeCollectionFactory.resolve(PROFILE, ROW_VIEW).get_card(context), types=profile_type_names)
         elif self.model_name == ARTICLE:
             all = NodeCollectionFactory.resolve(ARTICLE, GRID_VIEW).get_card(context)
             top = NodeCollectionFactory.resolve(ARTICLE, ROW_VIEW, category='top').get_card(context)
