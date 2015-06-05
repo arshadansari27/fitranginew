@@ -39,7 +39,7 @@ def handler(event):
 
 @handler(signals.pre_save)
 def update_content(sender, document):
-    document.path_cover_image = ''
+    #document.path_cover_image = ''
     document.modified_timestamp = datetime.datetime.now()
     if hasattr(document, 'published'):
         if document.published and document.published_timestamp is None:
