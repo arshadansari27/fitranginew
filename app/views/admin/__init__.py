@@ -393,8 +393,8 @@ class ApprovalProfileAdminView(ModelView):
     can_edit = True
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'managed_by', 'about', 'website', 'phone', 'email', 'facebook', 'linked_in', 'google_plus', 'blog_channel', 'youtube_channel', 'cover_image','admin_approved']
-    column_list = ('name', 'description', 'managed_by', 'admin_approved', 'cover_image')
+    form_columns = ['name', 'description', 'managed_by', 'about', 'website', 'phone', 'email', 'facebook', 'linked_in', 'google_plus', 'blog_channel', 'youtube_channel', 'cover_image', 'type','admin_approved']
+    column_list = ('name', 'description', 'managed_by', 'admin_approved', 'cover_image', 'type')
     form_overrides = dict(description=SummernoteTextAreaField, content=SummernoteTextAreaField)
 
     def is_accessible(self):
