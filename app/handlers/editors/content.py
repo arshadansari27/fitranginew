@@ -35,7 +35,7 @@ class ContentEditor(NodeEditor):
         else:
             raise Exception('Invalid command')
 
-@response_handler('Successfully deleted', 'Failed to delete')
+@response_handler('Successfully deleted', 'Failed to delete', flash_message=True)
 def delete(node, type):
     node = get_or_create_content(type, node)
     node.delete()
@@ -56,16 +56,16 @@ def get_or_create_content(type, id=None):
         node.save()
         return node
 
-@response_handler('Successfully added the content', 'Failed to add content')
+@response_handler('Successfully added the content', 'Failed to add content', flash_message=True)
 def add_content(type, data):
     return __edit(None, type, data)
 
-@response_handler('Thank you for posting the discussion. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to add content')
+@response_handler('Thank you for posting the discussion. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to add content', flash_message=True)
 def add_discussion(type, data):
     return __edit(None, type, data)
 
 
-@response_handler('Successfully updated the content', 'Failed to update content')
+@response_handler('Successfully updated the content', 'Failed to update content', flash_message=True)
 def edit(node, type, data):
     return __edit(node, type, data)
 
@@ -108,7 +108,7 @@ def __edit(node, type, data):
     obj.save()
     return obj
 
-@response_handler('Thank you for posting the content. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to publish')
+@response_handler('Thank you for posting the content. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to publish', flash_message=True)
 def publish(node, type):
     if not node or not type:
         raise Exception("invalid parameters")
@@ -133,7 +133,7 @@ def publish(node, type):
     ActivityStream.push_content_to_stream(content)
     return content
 
-@response_handler('Successfully unpublished the content', 'Failed to unpublish')
+@response_handler('Successfully unpublished the content', 'Failed to unpublish', flash_message=True)
 def unpublish(node, type):
     if not node or not type:
         raise Exception("invalid parameters")
