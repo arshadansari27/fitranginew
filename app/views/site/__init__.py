@@ -146,6 +146,7 @@ def list_adventure():
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/journals')
+@app.route('/blogs')
 def list_journal():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
@@ -190,7 +191,7 @@ def my_profile():
     """
     title, card, context = PageManager.get_detail_title_and_page(PROFILE, query='pk:%s;' % g.user.id)
     context['card'] = card
-    context['title'] = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
+    context['title'] = title if title and len(title) > 0 else GENERIC_TITLE
     """
     return redirect(slug)#render_template('site/pages/commons/view.html', **context)
 
@@ -315,7 +316,7 @@ def model_view(slug):
     value = '/%s/%s' % (model_type, slug)
     title, card, context, description, image = PageManager.get_detail_title_and_page(model_type, query="slug__iexact:%s;" % value)
     context['card']     = card
-    context['title']    = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
+    context['title']    = title if title and len(title) > 0 else GENERIC_TITLE
     context['cdn_url'] = CDN_URL if USE_CDN else ''
     context['meta_content'] = PageManager.get_meta_content(context['title'], description, request.url, image, model_type)
     return render_template('site/pages/commons/view.html', **context)
@@ -329,7 +330,7 @@ def edit_profile():
     title, card, context    = PageManager.get_edit_title_and_page('profile', query="pk:%s;" % str(g.user.id))
     context                 = force_setup_context(context)
     context['card']         = card
-    context['title']        = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
+    context['title']        = title if title and len(title) > 0 else GENERIC_TITLE
     context['meta_content'] = PageManager.get_meta_content(context['title'], '', '', '')
     context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
@@ -348,7 +349,7 @@ def manage_profile():
     title, card, context    = PageManager.get_edit_title_and_page('profile', query=query, business=True)
     context                 = force_setup_context(context)
     context['card']         = card
-    context['title']        = title if title and len(title) > 0 else "Fitrangi: India's complete adventure portal"
+    context['title']        = title if title and len(title) > 0 else GENERIC_TITLE
     context['cdn_url'] = CDN_URL if USE_CDN else ''
     return render_template('site/pages/commons/view.html', **context)
 
