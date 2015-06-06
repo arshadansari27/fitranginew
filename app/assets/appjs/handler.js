@@ -504,6 +504,27 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    $('body').on('click', '[data-action="claim-profile"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var that = this;
+        BootstrapDialog.confirm("Are you sure you want to claim this?", function (ip) {
+            if (ip == true) {
+                var model_id = $(that).attr('data-model-id');
+                var model_type = $(that).attr('data-model');
+                var user_id = $(that).attr('data-user-id');
+                console.log(Object.keys(App));
+                console.log(Object.keys(App.editor));
+                App.profile.claim_profile(model_id, model_type, user_id, function (data) {
+                    BootstrapDialog.alert(data.message);
+                    window.location.reload();
+                });
+            }
+        });
+    });
+
+
+
     $('body').on('click', '[data-action="not-ok"]', function (e) {
         e.stopPropagation();
         e.preventDefault();

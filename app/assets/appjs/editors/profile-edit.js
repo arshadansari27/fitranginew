@@ -29,6 +29,19 @@ $(document).ready(function() {
         App.editor(options, callback);
     };
 
+    App.profile.claim_profile = function(node, node_type, user_id, callback) {
+        var options = {
+            node: node,
+            data: {
+                user_id: user_id,
+                node_type: node_type
+            },
+            type: 'profile',
+            command: 'claim-profile'
+        };
+        App.editor(options, callback);
+    };
+
     App.profile.update_counter = function(node) {
 		$.ajax({
     		type: 'GET',

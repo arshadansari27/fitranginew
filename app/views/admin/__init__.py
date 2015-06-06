@@ -1,3 +1,4 @@
+from app.models.feedbacks import ClaimProfile
 from flask.ext.admin import BaseView, expose, AdminIndexView
 from flask.ext.admin.menu import MenuLink
 from app.models import NodeFactory
@@ -227,7 +228,7 @@ class TripAdminView(ModelView):
 class ProfileAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'email', 'address', 'alternative_email', 'featured', 'about', 'phone', 'alternative_phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image', 'type', 'managed_by', 'interest_in_activities']
+    form_columns = ['name', 'email', 'address', 'alternative_email', 'featured', 'about', 'phone', 'alternative_phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image', 'type', 'managed_by', 'interest_in_activities', 'admin_approved']
     column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login', 'type', 'featured', 'location')
     column_filters = ['name'] #, FilterProfileType('type.id', 'Type')]
     column_searchable_list = ('name', 'email')
@@ -425,6 +426,28 @@ class NotOkAdminView(ModelView):
         q = {'not_ok_count': {'$exists': 1, "$gt": 0}}
         return self.model.objects(__raw__=q)
 
+class ClaimAdminView(ModelView):
+    can_create = False
+    can_edit = False
+
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
+    column_list = ('profile', 'profile_email', 'claimed', 'claimed_email')
+
+    def is_accessible(self):
+        if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
+            return True
+        return False
+
+    def profile_email_formatter(view, context, model, name):
+        return Markup("<a href='#'>%s</a>" % (model.profile.email))
+
+    def claimed_email_formatter(view, context, model, name):
+        return Markup("<a href='#'>%s</a>" % (model.claimed.email))
+
+    column_formatters = {'profile_email': profile_email_formatter, 'claimed_email': claimed_email_formatter}
+
+
 class ExtraPageAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
@@ -615,6 +638,7 @@ admin.add_view(ApprovalContentAdminView(Article, name='Article', endpoint='appro
 #admin.add_view(ApprovalContentAdminView(Blog, name='Blog', endpoint='approval.blog', category="Approvals"))
 admin.add_view(ApprovalContentAdminView(Discussion, name='Discussion', endpoint='approval.discussion', category="Approvals"))
 admin.add_view(ApprovalProfileAdminView(Profile, name='Business Profile', endpoint='approval.business_profile', category="Approvals"))
+admin.add_view(ClaimAdminView(ClaimProfile, name='Claimed Profiles', endpoint='approval.claimed_profiles', category="Approvals"))
 admin.add_view(ProfileAdminView(Profile, category="Administration"))
 admin.add_view(ActivityAdminView(Activity, category="Administration"))
 admin.add_view(LocationSettingAdminView(name='Location Update', endpoint='location_update'))

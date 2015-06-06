@@ -7,6 +7,7 @@ from flask import g, request
 from app.utils import convert_query_to_filter, get_descriptions
 from app.settings import CDN_URL
 from app import USE_CDN
+from app.models.feedbacks import ClaimProfile
 from app.handlers.extractors import NodeExtractor, article_extractor, advertisement_extractor, adventure_extractor, \
     activity_extractor, discussion_extractor, profile_type_extractor, event_extractor, profile_extractor, \
     trip_extractor, post_extractor, stream_extractor
@@ -556,10 +557,12 @@ class DetailPage(Page):
             my_stream_list = NodeCollectionFactory.resolve(STREAM, ROW_VIEW, category='my').get_card(context)
             fitrangi_posts = NodeCollectionFactory.resolve(POST, GRID_VIEW, category="fitrangi").get_card(context)
             featured_profiles = ','.join(str(u.id) for u in profile_extractor.get_list("featured:bool|True;", False, 1, 10))
+            claims = ClaimProfile.objects(claimed=context['parent']).count() #len([u for u in ClaimProfile.objects().all() if u.claimed.id == context['parent'].id])
+            print '[*] Setting Claims', claims, context['parent']
             return dict(wish_listed_adventure_list=wish_listed_adventure_list, accomplished_adventure_list=accomplished_adventure_list,
                             follower_list=follower_list, following_list=following_list, discussion_list=discussion_list,
                             article_list=article_list, my_stream_list=my_stream_list, fitrangi_posts=fitrangi_posts,
-                            featured_profiles=featured_profiles)
+                            featured_profiles=featured_profiles, claims=claims)
         elif self.model_name == ARTICLE:
             comments = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
             related = NodeCollectionFactory.resolve(ARTICLE, GRID_ROW_VIEW, fixed_size=3).get_card(context)
