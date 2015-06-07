@@ -879,9 +879,9 @@ min-height: 50px;}
   width: 16px;
   height: 16px;
   text-align: center;
-  font-size: 8px;
+  font-size: 10px;
   line-height: 16px;
-  border-radius: 20px;
+  border-radius: 16px;
   color: #ffffff;
   background-color: #0F75BC;
 }
