@@ -43,7 +43,26 @@ COLLECTION_PATHS = {
     'login': 'site/pages/landings/login',
     'register': 'site/pages/landings/register'
 }
-
+CAPITALIZED_NAMES = {
+    STREAM: 'Streams',
+    ADVENTURE: 'Adventures',
+    PROFILE: 'Profiles',
+    POST: 'Posts',
+    DISCUSSION: 'Discussions',
+    EVENT: 'Events and Initiatives',
+    ARTICLE: 'Articles',
+    TRIP: 'Trips',
+    "explore": 'Home',
+    "community": 'Community',
+    'aboutus': 'About Fitrangi',
+    'terms': 'Terms and conditions',
+    'faq': 'Frequently Asked Questions',
+    'privacy': 'Privacy Policy',
+    'contribute': 'Contribute',
+    'advertise': 'Advertise on fitrangi',
+    'login': 'Login',
+    'register': 'Register'
+}
 WALL_IMAGE_STYLE = "background:  linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url(%s) no-repeat center center;background-size: cover;"
 
 if USE_CDN:
@@ -301,24 +320,33 @@ class PageManager(object):
 
     @classmethod
     def get_detail_title_and_page(cls, model_name, **kwargs):
+        from app.views import force_setup_context
         query = kwargs.get('query', None)
         user = kwargs.get('user', None)
         assert  query is not None
         model = NodeExtractor.factory(model_name).get_single(query)
-        print '[*] Detail page for', model_name, 'with backgroud image', WALL_IMAGE_NAMES[model_name].get('detail', '')(model)
-        context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), background_cover=WALL_IMAGE_STYLE % WALL_IMAGE_NAMES[model_name].get('detail', '')(model))
+        image_path = WALL_IMAGE_NAMES[model_name].get('detail', '')(model)
+        image_css = WALL_IMAGE_STYLE % image_path
+        context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), background_cover=image_css)
+        context = force_setup_context(context)
         context.update(Page.factory(model_name, 'detail').get_context(context))
         title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s complete adventure portal')
         description = model.description if model.description else ''
         if description:
             description = get_descriptions(description)
-        image_path = model.cover_image_path
-        if image_path is None or len(image_path) is 0:
-            image_path = '/images/home-banner.jpg'
-        return title, NodeView.get_detail_card(model_name, model, context), context, description, "http://%s%s" % (request.host, image_path)
+        if model_name == PROFILE:
+            if model.cover_image_path is not None and len(model.cover_image_path) > 0:
+                image_path = model.cover_image_path
+        meta_content = PageManager.get_meta_content(model.title if hasattr(model, 'title') else model.name, description, request.url, image_path, model_name)
+        context['title'] = title
+        context['card'] = NodeView.get_detail_card(model_name, model, context)
+        context['meta_content'] = meta_content
+        context['cdn_url'] = CDN_URL if USE_CDN else ''
+        return context
 
     @classmethod
     def get_edit_title_and_page(cls, model_name, **kwargs):
+        from app.views import force_setup_context
         query = kwargs.get('query', None)
         user = kwargs.get('user', None)
         is_business = kwargs.get('business', None)
@@ -336,8 +364,12 @@ class PageManager(object):
             context = dict(parent=None, user=user, query=None, filters=None, is_business=is_business)
 
         context.update(Page.factory(model_name, 'edit').get_context(context))
+        context = force_setup_context(context)
         title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else GENERIC_TITLE)
-        return title, NodeView.get_editable_card(model_name, model, context), context
+        context['title'] = title
+        context['card'] = NodeView.get_editable_card(model_name, model, context)
+        context['cdn_url'] = CDN_URL if USE_CDN else ''
+        return context
 
     @classmethod
     def get_search_title_and_page(cls, model_name, **kwargs):
@@ -347,26 +379,45 @@ class PageManager(object):
         from app.views import force_setup_context
         template_path = COLLECTION_PATHS.get(model_name) + '.html'
         template = env.get_template(template_path)
-        context = dict(user=user, query=query, filters=convert_query_to_filter(query), background_cover=WALL_IMAGE_STYLE % WALL_IMAGE_NAMES[model_name].get('search', ''))
+        image_path = WALL_IMAGE_NAMES[model_name].get('search', '')
+        image_css = WALL_IMAGE_STYLE % image_path
+        context = dict(user=user, query=query, filters=convert_query_to_filter(query), background_cover=image_css)
         context = force_setup_context(context)
         context.update(Page.factory(model_name, 'search').get_context(context))
         html = template.render(**context)
-
-        return GENERIC_TITLE, html, context
+        title = kwargs.get('title', '')
+        if not title or len(title) is 0:
+            title = "%s - %s" % (GENERIC_TITLE, CAPITALIZED_NAMES.get(model_name, 'Home'))
+        meta_content = PageManager.get_meta_content(title, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, image_path, model_name)
+        context['title'] = title
+        context['card'] = html
+        context['cdn_url'] = CDN_URL if USE_CDN else ''
+        context['meta_content'] = meta_content
+        return context
 
     @classmethod
     def get_landing_title_and_page(cls, model_name, **kwargs):
         from app.views import env
         from app.views import force_setup_context
+        title = kwargs.get('title', '')
+        if not title or len(title) is 0:
+            title = "%s - %s" % (GENERIC_TITLE, CAPITALIZED_NAMES.get(model_name, 'Home'))
         query = kwargs.get('query', None)
         user = kwargs.get('user', None)
         template_path = COLLECTION_PATHS.get(model_name) + '.html'
         template = env.get_template(template_path)
-        context = dict(user=user, query=query, filters=convert_query_to_filter(query), background_cover=WALL_IMAGE_STYLE % WALL_IMAGE_NAMES[model_name].get('landing', ''))
+        image_path = WALL_IMAGE_NAMES[model_name].get('landing', '')
+        image_css = WALL_IMAGE_STYLE % image_path
+        context = dict(user=user, query=query, filters=convert_query_to_filter(query), background_cover=image_css)
         context = force_setup_context(context)
         context.update(Page.factory(model_name, 'landing').get_context(context))
         html = template.render(**context)
-        return GENERIC_TITLE, html, context
+        meta_content = PageManager.get_meta_content(title, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, image_path, model_name)
+        context['title'] = title
+        context['card'] = html
+        context['cdn_url'] = CDN_URL if USE_CDN else ''
+        context['meta_content'] = meta_content
+        return context
 
     @classmethod
     def get_common_title_and_page(cls, page, **kwargs):

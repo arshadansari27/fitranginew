@@ -101,30 +101,14 @@ def act_home():
 
 @app.route("/")
 def home():
-    title, card, context = PageManager.get_landing_title_and_page('explore', user=g.user if hasattr(g, 'user') else None)
-    context['title'] = title
-    context['card'] = card
-    context['cdn_url'] = CDN_URL if USE_CDN else ''
-    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
+    context = PageManager.get_landing_title_and_page('explore', user=g.user if hasattr(g, 'user') else None)
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/pages/<name>')
 def extra_pages(name):
-    title, card, context = PageManager.get_landing_title_and_page(name, user=g.user if hasattr(g, 'user') else None)
-    context['title'] = title
-    context['card'] = card
-    context['cdn_url'] = CDN_URL if USE_CDN else ''
-    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
+    context = PageManager.get_landing_title_and_page(name, user=g.user if hasattr(g, 'user') else None)
     return render_template('site/pages/commons/view.html', **context)
 
-"""
-@app.route("/community")
-def community_mail():
-    title, card, context = PageManager.get_landing_title_and_page('community', user=g.user if hasattr(g, 'user') else None)
-    context['title'] = title
-    context['card'] = card
-    return render_template('site/pages/commons/view.html', **context)
-"""
 
 @app.route("/activities")
 def activity_view():
@@ -138,11 +122,7 @@ def list_adventure():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
         query = None
-    title, card, context = PageManager.get_search_title_and_page(ADVENTURE, query=query)
-    context['title'] = title
-    context['card'] = card
-    context['cdn_url'] = CDN_URL if USE_CDN else ''
-    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
+    context = PageManager.get_search_title_and_page(ADVENTURE, query=query, title='Adventures @ Fitrangi')
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/journals')
@@ -151,24 +131,16 @@ def list_journal():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
         query = None
-    title, card, context = PageManager.get_search_title_and_page(ARTICLE, query=query)
-    context['title'] = 'Articles and Blogs @ Fitrangi'
-    context['card'] = card
-    context['cdn_url'] = CDN_URL if USE_CDN else ''
-    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
+    title = 'Articles and Blogs @ Fitrangi'
+    context = PageManager.get_search_title_and_page(ARTICLE, query=query, title=title)
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/discussions')
 def list_discussion():
-    from app.views import force_setup_context
     query = request.args.get('query', '')
     if not query or len(query) is 0:
         query = None
-    title, card, context = PageManager.get_search_title_and_page(DISCUSSION, query=query)
-    context['card'] = card
-    context['title'] = 'Discussion @ Fitrangi'
-    context['cdn_url'] = CDN_URL if USE_CDN else ''
-    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
+    context = PageManager.get_search_title_and_page(DISCUSSION, query=query, title='Discussion @ Fitrangi')
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/profiles")
@@ -176,11 +148,7 @@ def list_profile():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
         query = None
-    title, card, context = PageManager.get_search_title_and_page(PROFILE, query=query)
-    context['card'] = card
-    context['title'] = 'Profile Finder'
-    context['cdn_url'] = CDN_URL if USE_CDN else ''
-    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
+    context = PageManager.get_search_title_and_page(PROFILE, query=query, title="Profile Finder")
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/community/my")
@@ -188,23 +156,14 @@ def my_profile():
     if not hasattr(g, 'user') or g.user is None:
         return redirect(url_for('community_mail'))
     slug = g.user.slug
-    """
-    title, card, context = PageManager.get_detail_title_and_page(PROFILE, query='pk:%s;' % g.user.id)
-    context['card'] = card
-    context['title'] = title if title and len(title) > 0 else GENERIC_TITLE
-    """
-    return redirect(slug)#render_template('site/pages/commons/view.html', **context)
+    return redirect(slug)
 
 @app.route("/events")
 def list_event():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
         query = None
-    title, card, context = PageManager.get_search_title_and_page(EVENT, query=query)
-    context['title'] = title
-    context['cdn_url'] = CDN_URL if USE_CDN else ''
-    context['card'] = card
-    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
+    context = PageManager.get_search_title_and_page(EVENT, query=query)
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/trips")
@@ -212,11 +171,7 @@ def list_trip():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
         query = None
-    title, card, context = PageManager.get_search_title_and_page(TRIP, query=query)
-    context['title'] = title
-    context['card'] = card
-    context['cdn_url'] = CDN_URL if USE_CDN else ''
-    context['meta_content'] = PageManager.get_meta_content(GENERIC_TITLE, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, "http://%s%s" % (request.host, '/images/home-banner.jpg'),'')
+    context = PageManager.get_search_title_and_page(TRIP, query=query, title="Trips @ Fitrangi")
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route("/listings")
@@ -311,14 +266,9 @@ def ajax_buttons():
 @app.route('/discussion/<slug>')
 @app.route('/post/<slug>')
 def model_view(slug):
-    from app.views import force_setup_context
     model_type = [u for u in request.path.split('/') if u and len(u) > 0][0]
     value = '/%s/%s' % (model_type, slug)
-    title, card, context, description, image = PageManager.get_detail_title_and_page(model_type, query="slug__iexact:%s;" % value)
-    context['card']     = card
-    context['title']    = title if title and len(title) > 0 else GENERIC_TITLE
-    context['cdn_url'] = CDN_URL if USE_CDN else ''
-    context['meta_content'] = PageManager.get_meta_content(context['title'], description, request.url, image, model_type)
+    context = PageManager.get_detail_title_and_page(model_type, query="slug__iexact:%s;" % value)
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/edit-profile')
@@ -326,13 +276,7 @@ def model_view(slug):
 def edit_profile():
     if not hasattr(g, 'user') and not g.user:
         return 'Forbidden', 403
-    from app.views import force_setup_context
-    title, card, context    = PageManager.get_edit_title_and_page('profile', query="pk:%s;" % str(g.user.id))
-    context                 = force_setup_context(context)
-    context['card']         = card
-    context['title']        = title if title and len(title) > 0 else GENERIC_TITLE
-    context['meta_content'] = PageManager.get_meta_content(context['title'], '', '', '')
-    context['cdn_url'] = CDN_URL if USE_CDN else ''
+    context = PageManager.get_edit_title_and_page('profile', query="pk:%s;" % str(g.user.id))
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/manage-profile')
@@ -345,12 +289,7 @@ def manage_profile():
         query = 'pk:%s;' % pk
     else:
         query = None
-    from app.views import force_setup_context
-    title, card, context    = PageManager.get_edit_title_and_page('profile', query=query, business=True)
-    context                 = force_setup_context(context)
-    context['card']         = card
-    context['title']        = title if title and len(title) > 0 else GENERIC_TITLE
-    context['cdn_url'] = CDN_URL if USE_CDN else ''
+    context = PageManager.get_edit_title_and_page('profile', query=query, business=True)
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/editors/invoke', methods=['POST'])
