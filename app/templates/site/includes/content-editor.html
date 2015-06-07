@@ -30,8 +30,9 @@
             {% if model_name == 'article' %}
             <div class="form-group">
                 <div class="thumbnail">
-                    <a href="#" data-action="write-content-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/800x400{% endif %}" width="40%"/></a>
-                    <div class="caption text-center">Click to change <span class="red">*</span> </div>
+                    <label for="cover-image">Cover Image <span class="red">*</span></label>
+                    <a href="#" data-action="write-content-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/1366x500{% endif %}" width="40%"/></a>
+                    <div class="caption text-center">Click on the image to change</div>
                 </div>
                 <input type="hidden" data-name="cover-image" value=""/>
                 <input type="hidden" data-name="cover-image-necessary" value="{% if not model.cover_image %}1{% endif %}"/>
@@ -45,9 +46,10 @@
 
             {% if model_name == 'discussion' %}
             <div class="form-group">
+                <label for="cover-image">Cover Image </label>
                 <div class="thumbnail">
-                    <a href="#" data-action="write-content-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/800x400{% endif %}" width="40%"/></a>
-                    <div class="caption text-center">Click to add/change (Optional)</div>
+                    <a href="#" data-action="write-content-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/1366x500{% endif %}" width="40%"/></a>
+                    <div class="caption text-center">Click on the image to change(Optional)</div>
                 </div>
                 <input type="hidden" data-name="cover-image" value=""/>
             </div>
