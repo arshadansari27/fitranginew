@@ -116,12 +116,20 @@
 <script>
 
     $(document).ready(function(){
-        $('#alert-message-container-2').html($('#alert-message-container').html());
-        $('#alert-message-container').html('');
+        var message_container = '#alert-message-container';
+        var message_container2 = '#alert-message-container-2';
+        var alert_message = $(message_container).html();
+        $(message_container).html('');
+        $(message_container2).html(alert_message);
         var model = '{{model.id}}';
         var type = '{{model_name}}';
         setTimeout(function() { $('.alert').hide(); }, 10000);
-
+        if (alert_message != undefined && alert_message.length > 0) {
+            console.log('[*] Alert Message: ' + $(message_container2)[0].scrollHeight);
+            setTimeout(function(){
+                $('.write-blog').animate({ scrollTop: $(message_container2)[0].scrollHeight}, 100);
+            }, 1000);
+        }
 
         var App = window.App;
         var editor = App.content;

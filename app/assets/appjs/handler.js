@@ -273,7 +273,15 @@ jQuery(document).ready(function ($) {
         }
         App.content.publish($(this).attr('data-model-id'), 'article', function (data) {
             if (data.status == 'success') {
-                window.location.reload();
+                if (window.location.href.indexOf('/blog') > -1) {
+                    window.location.reload();
+                } else {
+                    window.location.href= '/blog#my-blogs';
+                }
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function() { $('.alert').hide(); }, 10000);
             }
         });
     });
@@ -283,7 +291,15 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
         App.content.unpublish($(this).attr('data-model-id'), 'article', function (data) {
             if (data.status == 'success') {
-                window.location.reload();
+                if (window.location.href.indexOf('/blog') > -1) {
+                    window.location.reload();
+                } else {
+                    window.location.href= '/blog#my-blogs';
+                }
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function() { $('.alert').hide(); }, 10000);
             }
         });
     });
