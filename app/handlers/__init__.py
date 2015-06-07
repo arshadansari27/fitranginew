@@ -315,6 +315,16 @@ class PageManager(object):
         from flask import request
         template_path = 'site/includes/meta.html'
         template = env.get_template(template_path)
+        if type == ADVENTURE:
+            type = 'place'
+        elif type == TRIP:
+            type = 'place'
+        elif type == EVENT:
+            type = 'place'
+        elif type == DISCUSSION:
+            type = 'article'
+        else:
+            type = ''
         context = dict(title=title, description=description, url=url, image=image, type=type)
         return template.render(**context)
 
