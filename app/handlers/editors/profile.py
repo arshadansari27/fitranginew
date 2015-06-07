@@ -144,7 +144,7 @@ def report_not_ok(node, node_type, user_id):
     node.save()
     return node
 
-@response_handler('Thank you for the claiming the porfile. Admin will review and approve if appropriate.', 'Failed to report', login_required=True, flash_message=True)
+@response_handler('Info! Thank you for claiming this Listing. Admin will connect with you to approve it', 'Failed to claim the listing, please try again later.', login_required=True, flash_message=True)
 def claim_profile(node, node_type, user_id):
     node = Profile.objects(pk=node).first()
     user = Profile.objects(pk=user_id).first()
