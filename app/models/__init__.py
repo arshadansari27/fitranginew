@@ -39,7 +39,6 @@ def handler(event):
 
 @handler(signals.pre_save)
 def update_content(sender, document):
-    #document.path_cover_image = ''
     document.modified_timestamp = datetime.datetime.now()
     if hasattr(document, 'published'):
         if document.published and document.published_timestamp is None:
@@ -56,7 +55,8 @@ def update_content(sender, document):
     if document.path_cover_image and len(document.path_cover_image) > 0:
         path = base_path + document.path_cover_image
         if os.path.exists(path):
-            os.remove(path)
+            #os.remove(path)
+            pass
 
 @handler(signals.post_save)
 def new_object(sender, document, created):
