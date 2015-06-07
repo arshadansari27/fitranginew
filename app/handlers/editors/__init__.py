@@ -110,4 +110,6 @@ def save_cover(type, model, url):
     path = os.getcwd() + '/app/assets/' + node.path_cover_image if hasattr(node, 'path_cover_image') and node.path_cover_image and len(node.path_cover_image) > 0 else 'some-non-existent-path'
     if os.path.exists(path):
         os.remove(path)
+        node.path_cover_image = ''
+        node.save()
     return node

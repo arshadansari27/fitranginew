@@ -49,6 +49,7 @@ def get_or_create_content(type, id=None):
         node = NodeExtractor.factory(type).get_single('pk:%s;' % str(id))
         if not node:
             raise Exception("Node not found!")
+        node.path_cover_image = ''
         return node
     else:
         cls = NodeFactory.get_class_by_name(type)
