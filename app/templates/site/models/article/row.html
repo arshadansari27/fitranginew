@@ -11,9 +11,9 @@
     <button data-user-id="{{user.id}}" data-action="edit-article" data-model-id="{{model.id}}" class="btn btn-default btn-edi blue" type="button"><i class="fa fa-edit"></i> Edit </button>
 	<button data-user-id="{{user.id}}" data-action="delete-article" data-model-id="{{model.id}}" class="btn btn-default btn-edi red"  type="button"><i class="fa fa-remove"></i> Delete </button>
     {% if model.published %}
-    <button data-user-id="{{user.id}}" data-action="unpublish-article" data-model-id="{{model.id}}" class="btn btn-default btn-pub blue" type="button"><i class="fa fa-newspaper-o"></i> Unpublished </button>
+    <button data-user-id="{{user.id}}" data-action="unpublish-article" data-model-id="{{model.id}}" class="btn btn-default btn-pub blue" type="button"><i class="fa fa-newspaper-o"></i> Unpublish </button>
     {% else %}
-    <button data-user-id="{{user.id}}" data-action="publish-article" data-model-id="{{model.id}}" class="btn btn-default btn-pub green" type="button"><i class="fa fa-newspaper-o"></i> Published </button>
+    <button data-user-id="{{user.id}}" data-action="publish-article" data-model-id="{{model.id}}" class="btn btn-default btn-pub green" type="button"><i class="fa fa-newspaper-o"></i> Publish </button>
     {% endif %}
     </article>
     </div>

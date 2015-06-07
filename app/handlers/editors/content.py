@@ -120,15 +120,15 @@ def publish(node, type):
     content.published = True
     content.save()
     if content.published and (not hasattr(content, 'admin_published') or not content.admin_published):
-        profile = Profile.objects(roles__in=['Admin']).all()
+        profiles = [u for u in Profile.objects(roles__in=['Admin']).all()]
         from app.handlers.messaging import send_single_email
-        if not profile or len(profile) is 0:
+        if not profiles or len(profiles) is 0:
             print '[*] Publish Mail: Unable to send email to admin'
-        for p in profile:
+        for p in profiles:
             if not p or not p.email or p.email != 'fitrangi@gmail.com':
                 continue
             mail_data = render_template('notifications/content_posted_admin.html', user=p, content=content)
-            send_single_email("[Fitrangi] Content awaiting approval", to_list=[profile.email], data=mail_data)
+            send_single_email("[Fitrangi] Content awaiting approval", to_list=[p.email], data=mail_data)
             print '[*] Publish Mail: Sending mail to %s' % p.name
     ActivityStream.push_content_to_stream(content)
     return content

@@ -175,7 +175,10 @@ jQuery(document).ready(function ($) {
     $('body').on('click', '[data-action="publish-article"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
-
+        if($(this).attr('data-model-id') == undefined || $(this).attr('data-model-id').length == 0) {
+            BootstrapDialog.alert('Please save the content before publishing it.');
+            return;
+        }
         App.content.publish($(this).attr('data-model-id'), 'article', function (data) {
             if (data.status == 'success') {
                 window.location.reload();

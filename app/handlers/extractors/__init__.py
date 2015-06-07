@@ -148,7 +148,15 @@ class NodeExtractor(object):
             order_by = '-modified_timestamp'
         else:
             order_by = '-created_timestamp'
-        return self.model_class.objects(**filters).order_by(order_by)
+        criteria = None
+        for k, v in filters.iteritems():
+            d = {k: v}
+            if criteria is None:
+                criteria = Q(**d)
+            else:
+                criteria &= Q(**d)
+        print '[*] Filters: ', filters
+        return self.model_class.objects(criteria).order_by(order_by)
 
 
     @classmethod
