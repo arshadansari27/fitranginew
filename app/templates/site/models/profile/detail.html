@@ -29,7 +29,7 @@
                             <a href="" class="disabled label p-10 fs-12 uppercase" style="background: darkred;">Awaiting Approval</a>
                         {% elif claims > 0 and not model.manged_by and model.managed_by|length == 0 %}
                             <a href="" class="disabled label p-10 transwhite-bg darkgrey fs-12 uppercase">Claimed</a>
-                        {% elif not model.managed_by or model.managed_by|length == 0 %}
+                        {% elif not model.managed_by or model.managed_by|length == 0 or 'Admin' in model.managed_by[0].roles %}
                             {% if user and user.id %}
                                 <a href="#" class="label p-10 fs-12 uppercase" style="background: lightskyblue;" data-action="claim-profile" data-model="profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}">Claim this Listing</a>
                             {% else %}
