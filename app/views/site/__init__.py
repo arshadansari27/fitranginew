@@ -146,7 +146,7 @@ def list_adventure():
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/journals')
-@app.route('/blogs')
+@app.route('/blog')
 def list_journal():
     query = request.args.get('query', '')
     if not query or len(query) is 0:
