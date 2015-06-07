@@ -319,6 +319,8 @@ class PageManager(object):
             type = 'article'
         elif type == TRIP:
             type = 'article'
+        elif type == ARTICLE:
+            pass
         elif type == EVENT:
             type = 'article'
         elif type == DISCUSSION:
