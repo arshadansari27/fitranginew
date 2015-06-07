@@ -323,6 +323,8 @@ class PageManager(object):
             type = 'article'
         elif type == DISCUSSION:
             type = 'article'
+        elif type == 'profile':
+            pass
         else:
             type = ''
         context = dict(title=title, description=description, url=url, image=image, type=type)
