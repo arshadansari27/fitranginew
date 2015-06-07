@@ -53,6 +53,10 @@ def update_content(sender, document):
         use = None
     if use is not None:
         update_slug(sender, document, document.__class__.__name__.lower(), use)
+    if document.path_cover_image and len(document.path_cover_image) > 0:
+        path = base_path + document.path_cover_image
+        if os.path.exists(path):
+            os.remove(path)
 
 @handler(signals.post_save)
 def new_object(sender, document, created):
@@ -145,10 +149,6 @@ def save_media_to_file(obj, attr, name, path_obj=None):
         else:
             path_obj = path_obj.__class__.objects(id=path_obj.id).first()
             obj = [u for u in path_obj.image_gallery if u == obj][0]
-
-        with open(file_path, 'r') as _file_io:
-            if hashlib.md5(_file_io.read()).hexdigest() != hashlib.md5(getattr(obj, attr).read()).hexdigest():
-                return save_media_to_file(str(obj.id), attr, name)
     else:
         return None
 
