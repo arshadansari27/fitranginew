@@ -185,7 +185,7 @@ class Node(object):
                         img = '/img/Profile-Picture2.jpg'
                 else:
                     img = None
-        return img if not USE_CDN else "%s%s" % (CDN_URL, img)
+        return img #if not USE_CDN else "%s%s" % (CDN_URL, img)
 
     @property
     def cover_image_path_small(self):
@@ -220,7 +220,7 @@ class Node(object):
                 im.thumbnail((s, 128), Image.ANTIALIAS)
                 im.save(base_path + small_path, format)
             img = small_path
-        return img if not USE_CDN else "%s%s" % (CDN_URL, img)
+        return img #if not USE_CDN else "%s%s" % (CDN_URL, img)
 
     @property
     def icon_image_path_small(self):
@@ -241,7 +241,7 @@ class Node(object):
             else:
                 from app.models.profile import Profile
                 img = '/img/Profile-Picture2.jpg' if isinstance(self, Profile) else None
-        return img if not USE_CDN else "%s%s" % (CDN_URL, img)
+        return img #if not USE_CDN else "%s%s" % (CDN_URL, img)
 
 
     @property

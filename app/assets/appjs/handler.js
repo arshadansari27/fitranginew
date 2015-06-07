@@ -175,6 +175,7 @@ jQuery(document).ready(function ($) {
     $('body').on('click', '[data-action="publish-article"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
+
         App.content.publish($(this).attr('data-model-id'), 'article', function (data) {
             if (data.status == 'success') {
                 window.location.reload();
