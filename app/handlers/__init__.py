@@ -328,7 +328,7 @@ class PageManager(object):
         elif type == 'profile':
             pass
         else:
-            type = ''
+            type = 'website'
         context = dict(title=title, description=description, url=url, image=image, type=type)
         return template.render(**context)
 
