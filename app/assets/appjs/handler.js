@@ -140,6 +140,98 @@ jQuery(document).ready(function ($) {
         }
     });
 
+
+    $('body').on('click', '[data-action="vote_up"]', function(event){
+        event.stopPropagation();
+        var target = $(this);
+        var model_id = target.attr('data-model-id');
+        var user_id  = target.attr('data-user-id');
+        var votes = parseInt(target.text().replace(' ', ''));
+        var html = '<i class="fa fa-thumbs-o-up"></i> <span class="noti-badge">' + (votes + 1) + '</span>';
+        App.post.vote(model_id, true, user_id, function(e){
+            target.addClass('blue');
+            target.attr('data-action', 'unvote_up')
+            target.html(html);
+            var different = $('[data-action="unvote_down"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.addClass('disabled');
+            }
+            different = $('[data-action="vote_down"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.addClass('disabled');
+            }
+        });
+    });
+
+    $('body').on('click', '[data-action="unvote_up"]', function(event){
+        event.stopPropagation();
+        var target = $(this);
+        var model_id = target.attr('data-model-id');
+        var user_id  = target.attr('data-user-id');
+        var votes = parseInt(target.text().replace(' ', ''));
+        if (votes > 0) votes -= 1;
+        var html = '<i class="fa fa-thumbs-o-up"></i> <span class="noti-badge">' + votes + '</span>';
+        App.post.unvote(model_id, true, user_id, function(e){
+            target.removeClass('blue');
+            target.attr('data-action', 'vote_up')
+            target.html(html);
+            var different = $('[data-action="unvote_down"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.removeClass('disabled');
+            }
+            different = $('[data-action="vote_down"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.removeClass('disabled');
+            }
+        });
+    });
+
+    $('body').on('click', '[data-action="vote_down"]', function(event){
+        event.stopPropagation();
+        var target = $(this);
+        var model_id = target.attr('data-model-id');
+        var user_id  = target.attr('data-user-id');
+        var votes = parseInt(target.text().replace(' ', ''));
+        var html = '<i class="fa fa-thumbs-o-down"></i> <span class="noti-badge">' + (votes + 1) + '</span>';
+        App.post.vote(model_id, false, user_id, function(e){
+            target.addClass('blue');
+            target.attr('data-action', 'unvote_down')
+            target.html(html);
+            var different = $('[data-action="unvote_up"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.addClass('disabled');
+            }
+            different = $('[data-action="vote_up"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.addClass('disabled');
+            }
+        });
+    });
+
+    $('body').on('click', '[data-action="unvote_down"]', function(event){
+        event.stopPropagation();
+        var target = $(this);
+        var model_id = target.attr('data-model-id');
+        var user_id  = target.attr('data-user-id');
+        var votes = parseInt(target.text().replace(' ', ''));
+        if (votes > 0) votes -= 1;
+        var html = '<i class="fa fa-thumbs-o-down"></i> <span class="noti-badge">' + votes + '</span>';
+        App.post.unvote(model_id, false, user_id, function(e){
+            target.removeClass('blue');
+            target.attr('data-action', 'vote_down')
+            target.html(html);
+            var different = $('[data-action="unvote_up"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.removeClass('disabled');
+            }
+            different = $('[data-action="vote_up"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.removeClass('disabled');
+            }
+        });
+    });
+
+
     $('body').on('click', '[data-action="add-discussion"]', function (e) {
         e.stopPropagation();
         if ($(this).attr('data-user-id').length > 0) {
