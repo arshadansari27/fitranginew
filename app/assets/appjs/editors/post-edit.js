@@ -45,14 +45,29 @@ $(document).ready(function() {
         App.editor(options, callback);
     };
 
-    App.post.vote = function(node, up, callback) {
+    App.post.vote = function(node, up, user, callback) {
         var data = {
-            up: up
+            up: up,
+            user: user
         }
         var options = {
             node: node,
             type: 'post',
             command: 'vote',
+            data: data
+        }
+        App.editor(options, callback);
+    };
+
+    App.post.unvote = function(node, up, user, callback) {
+        var data = {
+            up: up,
+            user: user
+        }
+        var options = {
+            node: node,
+            type: 'post',
+            command: 'unvote',
             data: data
         }
         App.editor(options, callback);

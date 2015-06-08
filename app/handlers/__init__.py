@@ -7,6 +7,7 @@ from flask import g, request
 from app.utils import convert_query_to_filter, get_descriptions
 from app.settings import CDN_URL
 from app import USE_CDN
+from app.models.feedbacks import ClaimProfile
 from app.handlers.extractors import NodeExtractor, article_extractor, advertisement_extractor, adventure_extractor, \
     activity_extractor, discussion_extractor, profile_type_extractor, event_extractor, profile_extractor, \
     trip_extractor, post_extractor, stream_extractor
@@ -42,7 +43,26 @@ COLLECTION_PATHS = {
     'login': 'site/pages/landings/login',
     'register': 'site/pages/landings/register'
 }
-
+CAPITALIZED_NAMES = {
+    STREAM: 'Streams',
+    ADVENTURE: 'Adventures',
+    PROFILE: 'Profiles',
+    POST: 'Posts',
+    DISCUSSION: 'Discussions',
+    EVENT: 'Events and Initiatives',
+    ARTICLE: 'Articles',
+    TRIP: 'Trips',
+    "explore": 'Home',
+    "community": 'Community',
+    'aboutus': 'About Fitrangi',
+    'terms': 'Terms and conditions',
+    'faq': 'Frequently Asked Questions',
+    'privacy': 'Privacy Policy',
+    'contribute': 'Contribute',
+    'advertise': 'Advertise on fitrangi',
+    'login': 'Login',
+    'register': 'Register'
+}
 WALL_IMAGE_STYLE = "background:  linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url(%s) no-repeat center center;background-size: cover;"
 
 if USE_CDN:
@@ -295,30 +315,52 @@ class PageManager(object):
         from flask import request
         template_path = 'site/includes/meta.html'
         template = env.get_template(template_path)
+        if type == ADVENTURE:
+            type = 'article'
+        elif type == TRIP:
+            type = 'article'
+        elif type == ARTICLE:
+            pass
+        elif type == EVENT:
+            type = 'article'
+        elif type == DISCUSSION:
+            type = 'article'
+        elif type == 'profile':
+            pass
+        else:
+            type = 'website'
         context = dict(title=title, description=description, url=url, image=image, type=type)
         return template.render(**context)
 
     @classmethod
     def get_detail_title_and_page(cls, model_name, **kwargs):
+        from app.views import force_setup_context
         query = kwargs.get('query', None)
         user = kwargs.get('user', None)
         assert  query is not None
         model = NodeExtractor.factory(model_name).get_single(query)
-        print '[*] Detail page for', model_name, 'with backgroud image', WALL_IMAGE_NAMES[model_name].get('detail', '')(model)
-        context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), background_cover=WALL_IMAGE_STYLE % WALL_IMAGE_NAMES[model_name].get('detail', '')(model))
+        image_path = WALL_IMAGE_NAMES[model_name].get('detail', '')(model)
+        image_css = WALL_IMAGE_STYLE % image_path
+        context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), background_cover=image_css)
+        context = force_setup_context(context)
         context.update(Page.factory(model_name, 'detail').get_context(context))
         title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s complete adventure portal')
         description = model.description if model.description else ''
         if description:
             description = get_descriptions(description)
-        if model.path_cover_image and len(model.path_cover_image) > 0:
-            image_path = model.path_cover_image
-        else:
-            image_path = '/images/home-banner.jpg'
-        return title, NodeView.get_detail_card(model_name, model, context), context, description, "http://%s%s" % (request.host, image_path)
+        if model_name == PROFILE:
+            if model.cover_image_path is not None and len(model.cover_image_path) > 0:
+                image_path = model.cover_image_path
+        meta_content = PageManager.get_meta_content(model.title if hasattr(model, 'title') else model.name, description, request.url, image_path, model_name)
+        context['title'] = title
+        context['card'] = NodeView.get_detail_card(model_name, model, context)
+        context['meta_content'] = meta_content
+        context['cdn_url'] = CDN_URL if USE_CDN else ''
+        return context
 
     @classmethod
     def get_edit_title_and_page(cls, model_name, **kwargs):
+        from app.views import force_setup_context
         query = kwargs.get('query', None)
         user = kwargs.get('user', None)
         is_business = kwargs.get('business', None)
@@ -336,8 +378,12 @@ class PageManager(object):
             context = dict(parent=None, user=user, query=None, filters=None, is_business=is_business)
 
         context.update(Page.factory(model_name, 'edit').get_context(context))
-        title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s complete adventure portal')
-        return title, NodeView.get_editable_card(model_name, model, context), context
+        context = force_setup_context(context)
+        title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else GENERIC_TITLE)
+        context['title'] = title
+        context['card'] = NodeView.get_editable_card(model_name, model, context)
+        context['cdn_url'] = CDN_URL if USE_CDN else ''
+        return context
 
     @classmethod
     def get_search_title_and_page(cls, model_name, **kwargs):
@@ -347,26 +393,45 @@ class PageManager(object):
         from app.views import force_setup_context
         template_path = COLLECTION_PATHS.get(model_name) + '.html'
         template = env.get_template(template_path)
-        context = dict(user=user, query=query, filters=convert_query_to_filter(query), background_cover=WALL_IMAGE_STYLE % WALL_IMAGE_NAMES[model_name].get('search', ''))
+        image_path = WALL_IMAGE_NAMES[model_name].get('search', '')
+        image_css = WALL_IMAGE_STYLE % image_path
+        context = dict(user=user, query=query, filters=convert_query_to_filter(query), background_cover=image_css)
         context = force_setup_context(context)
         context.update(Page.factory(model_name, 'search').get_context(context))
         html = template.render(**context)
-
-        return GENERIC_TITLE, html, context
+        title = kwargs.get('title', '')
+        if not title or len(title) is 0:
+            title = "%s - %s" % (GENERIC_TITLE, CAPITALIZED_NAMES.get(model_name, 'Home'))
+        meta_content = PageManager.get_meta_content(title, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, image_path, model_name)
+        context['title'] = title
+        context['card'] = html
+        context['cdn_url'] = CDN_URL if USE_CDN else ''
+        context['meta_content'] = meta_content
+        return context
 
     @classmethod
     def get_landing_title_and_page(cls, model_name, **kwargs):
         from app.views import env
         from app.views import force_setup_context
+        title = kwargs.get('title', '')
+        if not title or len(title) is 0:
+            title = "%s - %s" % (GENERIC_TITLE, CAPITALIZED_NAMES.get(model_name, 'Home'))
         query = kwargs.get('query', None)
         user = kwargs.get('user', None)
         template_path = COLLECTION_PATHS.get(model_name) + '.html'
         template = env.get_template(template_path)
-        context = dict(user=user, query=query, filters=convert_query_to_filter(query), background_cover=WALL_IMAGE_STYLE % WALL_IMAGE_NAMES[model_name].get('landing', ''))
+        image_path = WALL_IMAGE_NAMES[model_name].get('landing', '')
+        image_css = WALL_IMAGE_STYLE % image_path
+        context = dict(user=user, query=query, filters=convert_query_to_filter(query), background_cover=image_css)
         context = force_setup_context(context)
         context.update(Page.factory(model_name, 'landing').get_context(context))
         html = template.render(**context)
-        return GENERIC_TITLE, html, context
+        meta_content = PageManager.get_meta_content(title, 'Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.', request.url, image_path, model_name)
+        context['title'] = title
+        context['card'] = html
+        context['cdn_url'] = CDN_URL if USE_CDN else ''
+        context['meta_content'] = meta_content
+        return context
 
     @classmethod
     def get_common_title_and_page(cls, page, **kwargs):
@@ -510,7 +575,8 @@ class SearchPage(Page):
         if self.model_name == ADVENTURE:
             return dict(count=Adventure.objects.count(), adventure_list=NodeCollectionFactory.resolve(ADVENTURE, GRID_VIEW).get_card(context))
         elif self.model_name == PROFILE:
-            return dict(profiles_list=NodeCollectionFactory.resolve(PROFILE, ROW_VIEW).get_card(context))
+            profile_type_names = [u.name.strip() for u in ProfileType.objects.all() if u.name != 'Subscription Only' and u.name is not None]
+            return dict(profiles_list=NodeCollectionFactory.resolve(PROFILE, ROW_VIEW).get_card(context), types=profile_type_names)
         elif self.model_name == ARTICLE:
             all = NodeCollectionFactory.resolve(ARTICLE, GRID_VIEW).get_card(context)
             top = NodeCollectionFactory.resolve(ARTICLE, ROW_VIEW, category='top').get_card(context)
@@ -556,10 +622,12 @@ class DetailPage(Page):
             my_stream_list = NodeCollectionFactory.resolve(STREAM, ROW_VIEW, category='my').get_card(context)
             fitrangi_posts = NodeCollectionFactory.resolve(POST, GRID_VIEW, category="fitrangi").get_card(context)
             featured_profiles = ','.join(str(u.id) for u in profile_extractor.get_list("featured:bool|True;", False, 1, 10))
+            claims = ClaimProfile.objects(claimed=context['parent']).count() #len([u for u in ClaimProfile.objects().all() if u.claimed.id == context['parent'].id])
+            print '[*] Setting Claims', claims, context['parent']
             return dict(wish_listed_adventure_list=wish_listed_adventure_list, accomplished_adventure_list=accomplished_adventure_list,
                             follower_list=follower_list, following_list=following_list, discussion_list=discussion_list,
                             article_list=article_list, my_stream_list=my_stream_list, fitrangi_posts=fitrangi_posts,
-                            featured_profiles=featured_profiles)
+                            featured_profiles=featured_profiles, claims=claims)
         elif self.model_name == ARTICLE:
             comments = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
             related = NodeCollectionFactory.resolve(ARTICLE, GRID_ROW_VIEW, fixed_size=3).get_card(context)

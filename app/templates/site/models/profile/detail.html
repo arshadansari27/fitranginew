@@ -15,7 +15,8 @@
             <div class="row">
 
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 user-pro">
-                    <img src="{% if not model.cover_image_path or model.cover_image_path|length == 0%}/img/Profile-Picture2.jpg{% else %}{{model.cover_image_path}}{% endif %}" alt="" class="center-block text-center img-responsive">
+                    <!--  style="background:url({% if not model.cover_image_path or model.cover_image_path|length == 0%}/img/Profile-Picture2.jpg{% else %}{{model.cover_image_path}}{% endif %}) no-repeat center center; width: 500px;"  -->
+                    <img src="{% if not model.cover_image_path or model.cover_image_path|length == 0%}/img/Profile-Picture2.jpg{% else %}{{model.cover_image_path}}{% endif %}" alt="" class="center-block text-center img-responsive" style="object-fit: cover; object-postion: center;">
                 </div>
 
                 <div class="col-lg-9 col-md-4 col-sm-4 col-xs-12 name-location">
@@ -23,7 +24,20 @@
                     <h4><i class="fa fa-map-marker"></i>&nbsp;{% if model.location %} {{model.location}} {% else %}{% if model.id == user.id %}<a href="#" data-action="edit-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" >Change location</a>{% else %}Location not known{% endif %}{% endif %}</h4>
                     <a href="#" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">{{ model.followers|length }} Followers</a>
                     <a href="#" class="label p-10 transwhite-bg darkgrey fs-12 uppercase">{{ model.following|length }} Following</a>
-                    {% if model.is_business_profile and not model.admin_approved %}<a href="" class="disabled label p-10 fs-12 uppercase" style="background: darkred;">Awaiting Approval</a>{% endif %}
+                    {% if model.is_business_profile %}
+                        {% if not model.admin_approved and model.managed_by and model.managed_by|length > 0 %}
+                            <a href="" class="disabled label p-10 fs-12 uppercase" style="background: darkred;">Awaiting Approval</a>
+                        {% elif claims > 0 and not model.manged_by and model.managed_by|length == 0 %}
+                            <a href="" class="disabled label p-10 transwhite-bg darkgrey fs-12 uppercase">Claimed</a>
+                        {% elif not model.managed_by or model.managed_by|length == 0 or 'Admin' in model.managed_by[0].roles %}
+                            {% if user and user.id %}
+                                <a href="#" class="label p-10 fs-12 uppercase" style="background: lightskyblue;" data-action="claim-profile" data-model="profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}">Claim this Listing</a>
+                            {% else %}
+                                <a href="/login?target={{ model.slug }}" class="label p-10 fs-12 uppercase" style="background: lightskyblue;">Claim this Listing</a>
+                            {% endif %}
+
+                        {% endif %}
+                    {% endif %}
                 </div>
 
             </div>
@@ -83,13 +97,16 @@
         <div class="heading"><h3>Contact</h3></div>
         <div class="row-fluid">
             {% if model.phone %}<h4><i class="fa fa-phone">:</i>&nbsp;{{model.phone}}</h4> {% endif %}
-            {% if model.email %}<h4><i class="fa fa-at">:</i>&nbsp;<a href="">{{model.email}}</a></h4> {% endif %}
-            {% if model.website %}<h4><i class="fa fa-globe">:</i>&nbsp;<a href="">{{model.website}}</a></h4> {% endif %}
-            {% if model.facebook %}<h4><i class="fa fa-facebook">:</i>&nbsp;{{model.facebook}}</a></h4> {% endif %}
-            {% if model.google_plus %} <h4><i class="fa fa-google-plus">:</i>&nbsp;{{model.google_plus}}</a></h4> {% endif %}
-            {% if model.linked_in %} <h4><i class="fa fa-linkedin">:</i>&nbsp;{{model.linked_in}}</a></h4> {% endif %}
-            {% if model.blog_channel %}<h4><i class="fa fa-rss">:</i>&nbsp;{{model.blog_channel}}</a></h4> {% endif %}
-            {% if model.youtube_channel %}<h4><i class="fa fa-youtube">:</i>&nbsp;{{model.youtube_channel}}</a></h4> {% endif %}
+            {% if model.email %}<h4><i class="fa fa-at">:</i>&nbsp;{{model.email}}</h4> {% endif %}
+            {% if model.website %}<h4><i class="fa fa-globe">:</i>&nbsp;<a href="{% if 'http' not in model.website %}http://{% endif %}{{ model.website }}" target="_blank">{{model.website}}</a></h4> {% endif %}
+            <h4 class="text-center">
+                <a {% if model.facebook %}href="{{ model.facebook }}"  target="_blank"{% endif %}><i class="fa fa-facebook fa-2x"></i></a>
+                <a {% if model.twitter %}href="{{ model.twitter }}"  target="_blank"{% endif %}><i class="fa fa-twitter fa-2x"></i></a>
+                <a {% if model.google_plus %}href="{{ model.google_plus }}"  target="_blank"{% endif %}><i class="fa fa-google-plus fa-2x"></i></a>
+                <a {% if model.linked_in %}href="{{ model.linked_in }}"  target="_blank"{% endif %}><i class="fa fa-linkedin fa-2x"></i></a>
+                <a {% if model.youtube_channel %}href="{{ model.youtube_channel }}"  target="_blank"{% endif %}><i class="fa fa-youtube fa-2x"></i></a>
+                <!--a {% if model.blog_channel %}href="{{ model.blog_channel }}"  target="_blank"{% endif %}><i class="fa fa-rss fa-2x"></i></a-->
+            </h4>
         </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">

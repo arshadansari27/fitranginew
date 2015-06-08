@@ -20,6 +20,8 @@ class PostEditor(NodeEditor):
             return comment(self.node, self.data)
         elif self.command == 'vote':
             return vote(self.node, self.data)
+        elif self.command == 'unvote':
+            return unvote(self.node, self.data)
         else:
             raise Exception('Invalid command')
 
@@ -79,9 +81,21 @@ def add(data):
 @response_handler('Successfully voted on post', 'Failed to vote')
 def vote(node, data):
     post = NodeExtractor.factory(POST).get_single('pk:%s;' % str(node))
-    if not post:
-        raise Exception("Invalid post")
-    post.vote(g.user.id, data.get('up', False))
+    user = data['user']
+    up = data['up']
+    if not post or not user:
+        raise Exception("Invalid parameters")
+    post.vote(user, up)
+    return post
+
+@response_handler('Successfully removed vote from the post', 'Failed to vote')
+def unvote(node, data):
+    post = NodeExtractor.factory(POST).get_single('pk:%s;' % str(node))
+    user = data['user']
+    up = data['up']
+    if not post or not user:
+        raise Exception("Invalid parameters")
+    post.unvote(user)
     return post
 
 @response_handler('Successfully added comment on post', 'Failed to comment')

@@ -217,6 +217,22 @@ class Post(ContentCommon, db.Document):
             return
         PostVote(voter=voter, up_vote=up, post=self).save()
 
+    def unvote(self, voter_id):
+        voter = Profile.objects(pk=voter_id).first()
+        if PostVote.objects(post=self, voter=voter).count() is 0:
+            return
+        op = all([u.delete() for u in PostVote.objects(post=self, voter=voter).all()])
+
+
+    def voted(self, user_id, up):
+        voter = Profile.objects(pk=user_id).first()
+        vote = PostVote.objects(post=self, voter=voter).first()
+        if not vote:
+            return False
+        if vote.up_vote == up:
+            return True
+        return False
+
     @property
     def up_votes(self):
         return PostVote.objects(post=self, up_vote=True).count()

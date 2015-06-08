@@ -1,3 +1,4 @@
+from app.models.feedbacks import ClaimProfile
 from flask.ext.admin import BaseView, expose, AdminIndexView
 from flask.ext.admin.menu import MenuLink
 from app.models import NodeFactory
@@ -135,7 +136,7 @@ class TagAdminView(ModelView):
 class ActivityAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'icon', 'about', 'dos', 'donts', 'safety_tips', 'tips', 'facts', 'highlights', 'cover_image', 'image_gallery']
+    form_columns = ['name', 'description', 'icon', 'about', 'dos', 'donts', 'safety_tips', 'tips', 'facts', 'highlights', 'cover_image', 'path_cover_image', 'image_gallery']
     column_list = ('name', 'description', 'cover_image')
     column_filters = ['name']
     column_searchable_list = ('name',)
@@ -150,7 +151,7 @@ class ActivityAdminView(ModelView):
 class AdventureAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'about', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image', 'activities']
+    form_columns = ['name', 'description', 'about', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image', 'activities', 'path_cover_image']
     column_list = ('name', 'description', 'cover_image', 'location')
     column_filters = ['name', FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name',)
@@ -176,7 +177,7 @@ class AdventureAdminView(ModelView):
 class EventAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'about', 'scheduled_date', 'organizer','cover_image', 'external_link']
+    form_columns = ['name', 'description', 'about', 'scheduled_date', 'organizer','cover_image', 'external_link', 'path_cover_image']
     column_list = ('name', 'description', 'organizer', 'cover_image', 'location')
     column_filters = ['name']
     column_searchable_list = ('name', )
@@ -200,7 +201,7 @@ class EventAdminView(ModelView):
 
 
 class TripAdminView(ModelView):
-    form_columns = ['name', 'description', 'about', 'starting_from', 'price', 'currency', 'discount_percentage', 'organizer',  'activities', 'difficulty_rating', 'registration', 'start_date', 'end_date', 'schedule', 'things_to_carry', 'inclusive', 'exclusive', 'others', 'announcements', 'cover_image']
+    form_columns = ['name', 'description', 'about', 'starting_from', 'price', 'currency', 'discount_percentage', 'organizer',  'activities', 'difficulty_rating', 'registration', 'start_date', 'end_date', 'schedule', 'things_to_carry', 'inclusive', 'exclusive', 'others', 'announcements', 'cover_image', 'path_cover_image']
     column_list = ('name', 'description', 'organizer', 'cover_image', 'location')
     column_filters = ['name', FilterAdventure('adventure.id', 'Adventure'), FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name', )
@@ -227,7 +228,7 @@ class TripAdminView(ModelView):
 class ProfileAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'email', 'address', 'alternative_email', 'featured', 'about', 'phone', 'alternative_phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image', 'type', 'managed_by', 'interest_in_activities']
+    form_columns = ['name', 'email', 'address', 'alternative_email', 'featured', 'about', 'phone', 'alternative_phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image', 'type', 'managed_by', 'interest_in_activities', 'admin_approved', 'path_cover_image']
     column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login', 'type', 'featured', 'location')
     column_filters = ['name'] #, FilterProfileType('type.id', 'Type')]
     column_searchable_list = ('name', 'email')
@@ -273,7 +274,7 @@ class CommentAdminView(ModelView):
 class PostAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['author', 'content', 'cover_image', 'type','image_gallery', 'video_embed', 'map_embed', 'parent', 'comments', 'parent']
+    form_columns = ['author', 'content', 'cover_image', 'type','image_gallery', 'video_embed', 'map_embed', 'parent', 'comments', 'parent', 'path_cover_image']
     column_list = ( 'author', 'content', 'vote_count', 'parent', 'type')
     form_overrides = dict(content=SummernoteTextAreaField)
 
@@ -314,7 +315,7 @@ class PostForContentAdminView(PostAdminView):
 class ContentAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['title', 'description', 'content', 'author', 'channels', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'tags']
+    form_columns = ['title', 'description', 'content', 'author', 'channels', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'tags', 'path_cover_image']
     column_list = ('title', 'author', 'published', 'admin_published', 'comments', 'cover_image', 'channels')
     column_filters = ['title', FilterChannel('channel.id', 'Channel')]
     column_searchable_list = ('title', )
@@ -393,8 +394,8 @@ class ApprovalProfileAdminView(ModelView):
     can_edit = True
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'managed_by', 'about', 'website', 'phone', 'email', 'facebook', 'linked_in', 'google_plus', 'blog_channel', 'youtube_channel', 'cover_image','admin_approved']
-    column_list = ('name', 'description', 'managed_by', 'admin_approved', 'cover_image')
+    form_columns = ['name', 'description', 'managed_by', 'about', 'website', 'phone', 'email', 'facebook', 'linked_in', 'google_plus', 'blog_channel', 'youtube_channel', 'cover_image', 'type','admin_approved']
+    column_list = ('name', 'description', 'managed_by', 'admin_approved', 'cover_image', 'type')
     form_overrides = dict(description=SummernoteTextAreaField, content=SummernoteTextAreaField)
 
     def is_accessible(self):
@@ -424,6 +425,28 @@ class NotOkAdminView(ModelView):
     def get_query(self):
         q = {'not_ok_count': {'$exists': 1, "$gt": 0}}
         return self.model.objects(__raw__=q)
+
+class ClaimAdminView(ModelView):
+    can_create = False
+    can_edit = False
+
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
+    column_list = ('profile', 'profile_email', 'claimed', 'claimed_email')
+
+    def is_accessible(self):
+        if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
+            return True
+        return False
+
+    def profile_email_formatter(view, context, model, name):
+        return Markup("<a href='#'>%s</a>" % (model.profile.email))
+
+    def claimed_email_formatter(view, context, model, name):
+        return Markup("<a href='#'>%s</a>" % (model.claimed.email))
+
+    column_formatters = {'profile_email': profile_email_formatter, 'claimed_email': claimed_email_formatter}
+
 
 class ExtraPageAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
@@ -615,6 +638,7 @@ admin.add_view(ApprovalContentAdminView(Article, name='Article', endpoint='appro
 #admin.add_view(ApprovalContentAdminView(Blog, name='Blog', endpoint='approval.blog', category="Approvals"))
 admin.add_view(ApprovalContentAdminView(Discussion, name='Discussion', endpoint='approval.discussion', category="Approvals"))
 admin.add_view(ApprovalProfileAdminView(Profile, name='Business Profile', endpoint='approval.business_profile', category="Approvals"))
+admin.add_view(ClaimAdminView(ClaimProfile, name='Claimed Profiles', endpoint='approval.claimed_profiles', category="Approvals"))
 admin.add_view(ProfileAdminView(Profile, category="Administration"))
 admin.add_view(ActivityAdminView(Activity, category="Administration"))
 admin.add_view(LocationSettingAdminView(name='Location Update', endpoint='location_update'))

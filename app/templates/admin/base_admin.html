@@ -118,11 +118,51 @@
               });
           }
           if ($(".summernote") != undefined) {
-            $('.summernote').summernote({
-  				height: 240,                 // set editor height
-  				minHeight: null,             // set minimum height of editor
-  				maxHeight: null,             // set maximum height of editor
-  				focus: true,                 // set focus to editable area after initializing summernot
+
+            var summernote_image_upload = function(file, editor, welEditable) {
+                data = new FormData();
+                data.append("file-0", file);
+                jQuery.ajax({
+                    url: '/dialog/upload_image?permanent=True',
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    type: 'POST',
+                    success: function(data){
+                        editor.insertImage(welEditable, data.url);
+                    },
+                    error: function(data) {
+                        alert('Something went wrong when uploading the file.');
+                    }
+                });
+            };
+
+            $('.summernote').each(function(){
+                var $textArea = $(this);
+                $textArea.summernote({
+                    height: 400,
+                    onImageUpload: function(files, editor, welEditable) {
+                        summernote_image_upload(files[0], editor, welEditable);
+                    },
+                    onkeyup: function (e) {
+                        var code = $(this).code();
+                        $textArea.val(code);
+                        $textArea.change(); //To update any action binded on the control
+                    },
+                    onpaste: function(e) {
+                        var thisNote = $(this);
+                        var updatePastedText = function(someNote){
+                            var original = someNote.code();
+                            var cleaned = clean_pasted_html(original); //this is where to call whatever clean function you want. I have mine in a different file, called CleanPastedHTML.
+                            someNote.code('').html(cleaned); //this sets the displayed content editor to the cleaned pasted code.
+                        };
+                        setTimeout(function () {
+                            //the function is called before the text is really pasted.
+                            updatePastedText(thisNote);
+                        }, 10);
+                    }
+                });
             });
 
             $('textarea').addClass("span8");

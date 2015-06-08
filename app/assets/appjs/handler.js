@@ -140,6 +140,98 @@ jQuery(document).ready(function ($) {
         }
     });
 
+
+    $('body').on('click', '[data-action="vote_up"]', function(event){
+        event.stopPropagation();
+        var target = $(this);
+        var model_id = target.attr('data-model-id');
+        var user_id  = target.attr('data-user-id');
+        var votes = parseInt(target.text().replace(' ', ''));
+        var html = '<i class="fa fa-thumbs-o-up"></i> <span class="noti-badge">' + (votes + 1) + '</span>';
+        App.post.vote(model_id, true, user_id, function(e){
+            target.addClass('blue');
+            target.attr('data-action', 'unvote_up')
+            target.html(html);
+            var different = $('[data-action="unvote_down"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.addClass('disabled');
+            }
+            different = $('[data-action="vote_down"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.addClass('disabled');
+            }
+        });
+    });
+
+    $('body').on('click', '[data-action="unvote_up"]', function(event){
+        event.stopPropagation();
+        var target = $(this);
+        var model_id = target.attr('data-model-id');
+        var user_id  = target.attr('data-user-id');
+        var votes = parseInt(target.text().replace(' ', ''));
+        if (votes > 0) votes -= 1;
+        var html = '<i class="fa fa-thumbs-o-up"></i> <span class="noti-badge">' + votes + '</span>';
+        App.post.unvote(model_id, true, user_id, function(e){
+            target.removeClass('blue');
+            target.attr('data-action', 'vote_up')
+            target.html(html);
+            var different = $('[data-action="unvote_down"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.removeClass('disabled');
+            }
+            different = $('[data-action="vote_down"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.removeClass('disabled');
+            }
+        });
+    });
+
+    $('body').on('click', '[data-action="vote_down"]', function(event){
+        event.stopPropagation();
+        var target = $(this);
+        var model_id = target.attr('data-model-id');
+        var user_id  = target.attr('data-user-id');
+        var votes = parseInt(target.text().replace(' ', ''));
+        var html = '<i class="fa fa-thumbs-o-down"></i> <span class="noti-badge">' + (votes + 1) + '</span>';
+        App.post.vote(model_id, false, user_id, function(e){
+            target.addClass('blue');
+            target.attr('data-action', 'unvote_down')
+            target.html(html);
+            var different = $('[data-action="unvote_up"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.addClass('disabled');
+            }
+            different = $('[data-action="vote_up"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.addClass('disabled');
+            }
+        });
+    });
+
+    $('body').on('click', '[data-action="unvote_down"]', function(event){
+        event.stopPropagation();
+        var target = $(this);
+        var model_id = target.attr('data-model-id');
+        var user_id  = target.attr('data-user-id');
+        var votes = parseInt(target.text().replace(' ', ''));
+        if (votes > 0) votes -= 1;
+        var html = '<i class="fa fa-thumbs-o-down"></i> <span class="noti-badge">' + votes + '</span>';
+        App.post.unvote(model_id, false, user_id, function(e){
+            target.removeClass('blue');
+            target.attr('data-action', 'vote_down')
+            target.html(html);
+            var different = $('[data-action="unvote_up"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.removeClass('disabled');
+            }
+            different = $('[data-action="vote_up"][data-model-id="' + model_id +'"]');
+            if(different != undefined) {
+                different.removeClass('disabled');
+            }
+        });
+    });
+
+
     $('body').on('click', '[data-action="add-discussion"]', function (e) {
         e.stopPropagation();
         if ($(this).attr('data-user-id').length > 0) {
@@ -175,9 +267,21 @@ jQuery(document).ready(function ($) {
     $('body').on('click', '[data-action="publish-article"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
+        if($(this).attr('data-model-id') == undefined || $(this).attr('data-model-id').length == 0) {
+            BootstrapDialog.alert('Please save the content before publishing it.');
+            return;
+        }
         App.content.publish($(this).attr('data-model-id'), 'article', function (data) {
             if (data.status == 'success') {
-                window.location.reload();
+                if (window.location.href.indexOf('/blog') > -1) {
+                    window.location.reload();
+                } else {
+                    window.location.href= '/blog#my-blogs';
+                }
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function() { $('.alert').hide(); }, 10000);
             }
         });
     });
@@ -187,7 +291,15 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
         App.content.unpublish($(this).attr('data-model-id'), 'article', function (data) {
             if (data.status == 'success') {
-                window.location.reload();
+                if (window.location.href.indexOf('/blog') > -1) {
+                    window.location.reload();
+                } else {
+                    window.location.href= '/blog#my-blogs';
+                }
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function() { $('.alert').hide(); }, 10000);
             }
         });
     });
@@ -503,6 +615,24 @@ jQuery(document).ready(function ($) {
             }
         });
     });
+
+    $('body').on('click', '[data-action="claim-profile"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var that = this;
+        BootstrapDialog.confirm("Are you sure you want to claim this?", function (ip) {
+            if (ip == true) {
+                var model_id = $(that).attr('data-model-id');
+                var model_type = $(that).attr('data-model');
+                var user_id = $(that).attr('data-user-id');
+                App.profile.claim_profile(model_id, model_type, user_id, function (data) {
+                    window.location.reload();
+                });
+            }
+        });
+    });
+
+
 
     $('body').on('click', '[data-action="not-ok"]', function (e) {
         e.stopPropagation();
@@ -1252,4 +1382,13 @@ jQuery(document).ready(function ($) {
             $('.alert').hide();
         }, 10000);
     }
+
+    var url = document.location.toString();
+    if (url.match('#')) {
+        $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+    }
+
+    $('.nav-tabs a').on('shown.bs.tab', function (e) {
+        window.location.hash = e.target.hash;
+    });
 });

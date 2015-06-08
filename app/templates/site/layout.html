@@ -104,7 +104,7 @@
                         </li>
                         <li>
                             <div class="top-icon"><a href="/messaging" title="Messages"><i
-                                    class="fa fa-envelope"></i></a><span>{% raw %}{{private_activity_count}}{% endraw %}</span>
+                                    class="fa fa-envelope"></i></a><span style="background-color: #CC033C">{% raw %}{{private_activity_count}}{% endraw %}</span>
                             </div>
                         </li>
                     </ul>
@@ -244,7 +244,7 @@
                         </li>
                         <li class="{% if menu.main_menu in ['journal', 'article', 'blog'] %}active{% endif %} {{menu.main_menu}}">
                             <a
-                                    href="/journals">Journal</a></li>
+                                    href="/blog">Blog</a></li>
                         <li class="{% if menu.main_menu == 'discussion' %}active{% endif %}"><a
                                 href="/discussions">Discussions</a></li>
                         <!--li class="{% if menu.main_menu == 'event' %}active{% endif %}"><a
@@ -260,13 +260,16 @@
     {%  endblock %}
     {% with messages = get_flashed_messages() %}
         {% if messages %}
-            <div class="alert alert-info alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <strong>Info!</strong>
-                {% for message in messages %}
-                {{ message|safe }}<br/>
-                {% endfor %}
+            <div id="alert-message-container" class="container-fluid">
+                <div class="alert alert-info alert-dismissible" role="alert" style="margin-bottom:0;">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Info!</strong>
+                    {% for message in messages %}
+                        {{ message|safe }}<br/>
+                    {% endfor %}
+                </div>
             </div>
+
         {% endif %}
     {% endwith %}
     <div style="min-height: 100%;">

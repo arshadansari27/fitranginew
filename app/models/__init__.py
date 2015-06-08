@@ -39,7 +39,6 @@ def handler(event):
 
 @handler(signals.pre_save)
 def update_content(sender, document):
-    document.path_cover_image = ''
     document.modified_timestamp = datetime.datetime.now()
     if hasattr(document, 'published'):
         if document.published and document.published_timestamp is None:
@@ -53,6 +52,11 @@ def update_content(sender, document):
         use = None
     if use is not None:
         update_slug(sender, document, document.__class__.__name__.lower(), use)
+    if document.path_cover_image and len(document.path_cover_image) > 0:
+        path = base_path + document.path_cover_image
+        if os.path.exists(path):
+            #os.remove(path)
+            pass
 
 @handler(signals.post_save)
 def new_object(sender, document, created):
@@ -145,10 +149,6 @@ def save_media_to_file(obj, attr, name, path_obj=None):
         else:
             path_obj = path_obj.__class__.objects(id=path_obj.id).first()
             obj = [u for u in path_obj.image_gallery if u == obj][0]
-
-        with open(file_path, 'r') as _file_io:
-            if hashlib.md5(_file_io.read()).hexdigest() != hashlib.md5(getattr(obj, attr).read()).hexdigest():
-                return save_media_to_file(str(obj.id), attr, name)
     else:
         return None
 
@@ -185,7 +185,7 @@ class Node(object):
                         img = '/img/Profile-Picture2.jpg'
                 else:
                     img = None
-        return img if not USE_CDN else "%s%s" % (CDN_URL, img)
+        return img #if not USE_CDN else "%s%s" % (CDN_URL, img)
 
     @property
     def cover_image_path_small(self):
@@ -220,7 +220,7 @@ class Node(object):
                 im.thumbnail((s, 128), Image.ANTIALIAS)
                 im.save(base_path + small_path, format)
             img = small_path
-        return img if not USE_CDN else "%s%s" % (CDN_URL, img)
+        return img #if not USE_CDN else "%s%s" % (CDN_URL, img)
 
     @property
     def icon_image_path_small(self):
@@ -241,7 +241,7 @@ class Node(object):
             else:
                 from app.models.profile import Profile
                 img = '/img/Profile-Picture2.jpg' if isinstance(self, Profile) else None
-        return img if not USE_CDN else "%s%s" % (CDN_URL, img)
+        return img #if not USE_CDN else "%s%s" % (CDN_URL, img)
 
 
     @property

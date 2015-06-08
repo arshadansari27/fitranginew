@@ -42,8 +42,25 @@
         </article>
         {% endif %}
         <article class="">
-            <button data-model-id="{{model.id}}" data-action="vote_up" class="btn btn-default btn-noti" type="button"><i class="fa fa-thumbs-o-up"></i> <span class="noti-badge">{{model.up_votes}}</span></button>
-            <button data-model-id="{{model.id}}" data-action="vote_down" class="btn btn-default btn-noti" type="button"><i class="fa fa-thumbs-o-down"></i> <span class="noti-badge">{{model.down_votes}}</span></button>
+            {% if user %}
+                {% if model.voted(user.id, True) %}
+                    <button data-model-id="{{model.id}}" data-user-id="{{ user.id }}" data-action="unvote_up" class="btn btn-default btn-noti blue" type="button"><i class="fa fa-thumbs-o-up"></i> <span class="noti-badge">{{model.up_votes}}</span></button>
+                {% elif model.voted(user.id, False) %}
+                    <button class="btn btn-default btn-noti disabled" type="button"><i class="fa fa-thumbs-o-up"></i> <span class="noti-badge">{{model.up_votes}}</span></button>
+                {% else %}
+                    <button data-model-id="{{model.id}}" data-user-id="{{ user.id }}" data-action="vote_up" class="btn btn-default btn-noti" type="button"><i class="fa fa-thumbs-o-up"></i> <span class="noti-badge">{{model.up_votes}}</span></button>
+                {% endif %}
+                {% if model.voted(user.id, False) %}
+                    <button data-model-id="{{model.id}}" data-user-id="{{ user.id }}" data-action="unvote_down" class="btn btn-default btn-noti blue" type="button"><i class="fa fa-thumbs-o-down"></i> <span class="noti-badge">{{model.down_votes}}</span></button>
+                {% elif model.voted(user.id, True) %}
+                    <button class="btn btn-default btn-noti disabled" type="button"><i class="fa fa-thumbs-o-down"></i> <span class="noti-badge">{{model.down_votes}}</span></button>
+                {% else %}
+                    <button data-model-id="{{model.id}}" data-user-id="{{ user.id }}" data-action="vote_down" class="btn btn-default btn-noti" type="button"><i class="fa fa-thumbs-o-down"></i> <span class="noti-badge">{{model.down_votes}}</span></button>
+                {% endif %}
+             {% else %}
+                <button class="btn btn-default btn-noti" type="button"><i class="fa fa-thumbs-o-up"></i> <span class="noti-badge">{{model.up_votes}}</span></button>
+                <button class="btn btn-default btn-noti" type="button"><i class="fa fa-thumbs-o-down"></i> <span class="noti-badge">{{model.down_votes}}</span></button>
+            {% endif %}
             <button class="btn btn-default btn-noti" type="button"><i class="fa fa-comment-o"></i> <span class="noti-badge">{{model.comments|length}}</span></button>
             <button class="btn btn-default pull-right" type="button"><i class="fa fa-share-square-o"></i></button>
         </article>
@@ -84,39 +101,14 @@
             var editor = App.post;
 
 
-            var model = '{{model.id}}';
-
-
-
-            $('[data-model-id="' + model + '"][data-action="vote_up"]').on('click', function(event){
-                event.stopPropagation();
-                var target = $(event.target);
-                var model_id = target.attr('data-model-id');
-                if (!model_id == model) {
-                    return;
-                }
-                editor.vote(model_id, true, function(e){
-                    window.location.reload();
-                });
-            });
-
-            $('[data-model-id="' + model + '"][data-action="vote_down"]').on('click', function(event){
-                event.stopPropagation();
-                var target = $(event.target);
-                var model_id = target.attr('data-model-id');
-                if (!model_id == model) {
-                    return;
-                }
-                editor.vote(model_id, false, function(e){
-                    window.location.reload();
-                });
-            });
+            var model = '{{ model.id }}';
 
             $('[data-model-id="'+model+'"][data-comment-text="1"]').on('keypress', function (event) {
                 if (event.which != 13) {
                     return;
                 }
                 event.stopPropagation();
+
                 var target = $(event.target);
                 var model_id = target.attr('data-model-id');
                 if (!model_id == model) {

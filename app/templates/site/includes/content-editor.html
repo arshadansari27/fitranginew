@@ -13,7 +13,7 @@
             <input data-name="id" type="hidden" value="{{model.id}}">
             <div class="form-group">
                 <label for="heading">Title<span class="red">*</span></label>
-                <input data-name="title" type="text" data-name="title" class="form-control" placeholder="Enter blog heading" value="{{model.title}}">
+                <input data-name="title" type="text" data-name="title" class="form-control" placeholdeif not USE_CDN else "%s%s" % (CDN_URL, ir="Enter blog heading" value="{{model.title}}">
             </div>
 
             {% if model_name == 'article' %}
@@ -30,8 +30,9 @@
             {% if model_name == 'article' %}
             <div class="form-group">
                 <div class="thumbnail">
-                    <a href="#" data-action="write-content-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/800x400{% endif %}" width="40%"/></a>
-                    <div class="caption text-center">Click to change <span class="red">*</span> </div>
+                    <label for="cover-image">Cover Image <span class="red">*</span></label>
+                    <a href="#" data-action="write-content-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/1366x500{% endif %}" width="40%"/></a>
+                    <div class="caption text-center">Click on the image to change</div>
                 </div>
                 <input type="hidden" data-name="cover-image" value=""/>
                 <input type="hidden" data-name="cover-image-necessary" value="{% if not model.cover_image %}1{% endif %}"/>
@@ -45,9 +46,10 @@
 
             {% if model_name == 'discussion' %}
             <div class="form-group">
+                <label for="cover-image">Cover Image </label>
                 <div class="thumbnail">
-                    <a href="#" data-action="write-content-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/800x400{% endif %}" width="40%"/></a>
-                    <div class="caption text-center">Click to add/change (Optional)</div>
+                    <a href="#" data-action="write-content-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/1366x500{% endif %}" width="40%"/></a>
+                    <div class="caption text-center">Click on the image to change(Optional)</div>
                 </div>
                 <input type="hidden" data-name="cover-image" value=""/>
             </div>
@@ -93,28 +95,41 @@
                 {% else %}
                 <button type="button" data-action="save" class="btn fitrangi-btn blue">Submit</button>
                 {% endif %}
-                {% if model and model_name == 'article'%}
-                    {% if model.published %}
+                {% if model_name == 'article'%}
+                    {% if model and model.published %}
                         <button type="button" data-action="unpublish-article" data-model-id="{{model.id}}" class="btn fitrangi-btn red">Unpublish</button>
                     {% else %}
                         <button type="button" data-action="publish-article"  data-model-id="{{model.id}}" class="btn fitrangi-btn green">Publish</button>
                     {% endif %}
-                    <button type="button" data-action="delete-article" data-model-id="{{model.id}}"  class="btn fitrangi-btn red">Delete</button>
+                    {% if model %}
+                        <button type="button" data-action="delete-article" data-model-id="{{model.id}}"  class="btn fitrangi-btn red">Delete</button>
+                    {% endif %}
                 {% endif %}
             </div>
         </form>
     </div>
 </section>
+<div id="alert-message-container-2"></div>
 
 
 
 <script>
-    $(document).ready(function(){
 
+    $(document).ready(function(){
+        var message_container = '#alert-message-container';
+        var message_container2 = '#alert-message-container-2';
+        var alert_message = $(message_container).html();
+        $(message_container).html('');
+        $(message_container2).html(alert_message);
         var model = '{{model.id}}';
         var type = '{{model_name}}';
         setTimeout(function() { $('.alert').hide(); }, 10000);
-
+        if (alert_message != undefined && alert_message.length > 0) {
+            console.log('[*] Alert Message: ' + $(message_container2)[0].scrollHeight);
+            setTimeout(function(){
+                $('.write-blog').animate({ scrollTop: $(message_container2)[0].scrollHeight}, 100);
+            }, 1000);
+        }
 
         var App = window.App;
         var editor = App.content;
@@ -269,7 +284,7 @@
             });
         });
 
-        setTimeout(function() { console.log('Scrolling to top'); window.scrollTo(0, 0); }, 2000);
+        //setTimeout(function() { console.log('Scrolling to top'); window.scrollTo(0, 0); }, 2000);
 
     });
 </script>

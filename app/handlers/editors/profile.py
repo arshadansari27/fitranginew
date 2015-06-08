@@ -6,6 +6,7 @@ from app.models.trip import Trip
 from app.models.activity import Activity
 from app.models.adventure import Adventure
 from app.models import Node, NodeFactory, LOCATION
+from app.models.feedbacks import ClaimProfile
 from app.handlers.editors import NodeEditor, response_handler
 from flask import session
 import hashlib
@@ -22,6 +23,8 @@ class ProfileEditor(NodeEditor):
             return subscribe(self.data)
         elif self.command == 'not-ok':
             return report_not_ok(self.node, self.data['node_type'], self.data['user_id'])
+        elif self.command == 'claim-profile':
+            return claim_profile(self.node, self.data['node_type'], self.data['user_id'])
         elif self.command == 'cover-image-edit':
             return edit_cover_image(self.node, self.data)
         elif self.command == 'change-password':
@@ -141,6 +144,13 @@ def report_not_ok(node, node_type, user_id):
     node.save()
     return node
 
+@response_handler('Info! Thank you for claiming this Listing. Admin will connect with you to approve it', 'Failed to claim the listing, please try again later.', login_required=True, flash_message=True)
+def claim_profile(node, node_type, user_id):
+    node = Profile.objects(pk=node).first()
+    user = Profile.objects(pk=user_id).first()
+    print '[*]', user
+    claim = ClaimProfile(profile=user, claimed=node).save()
+    return node
 
 @response_handler('Successfully updated the profile pic', 'Failed to update the profile pic')
 def edit_cover_image(profile, data):
