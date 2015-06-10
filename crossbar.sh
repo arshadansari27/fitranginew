@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 source venv/bin/activate
 export APP_STATE='BACK'
 export ASSETS_DEBUG='TRUE'
