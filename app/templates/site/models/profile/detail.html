@@ -99,7 +99,7 @@
             {% if model.phone %}<h4><i class="fa fa-phone">:</i>&nbsp;{{model.phone}}</h4> {% endif %}
             {% if model.email %}<h4><i class="fa fa-at">:</i>&nbsp;{{model.email}}</h4> {% endif %}
             {% if model.website %}<h4><i class="fa fa-globe">:</i>&nbsp;<a href="{% if 'http' not in model.website %}http://{% endif %}{{ model.website }}" target="_blank">{{model.website}}</a></h4> {% endif %}
-            <h4 class="text-center">
+            <h4 class="">
                 <a {% if model.facebook %}href="{{ model.facebook }}"  target="_blank"{% endif %}><i class="fa fa-facebook fa-2x"></i></a>
                 <a {% if model.twitter %}href="{{ model.twitter }}"  target="_blank"{% endif %}><i class="fa fa-twitter fa-2x"></i></a>
                 <a {% if model.google_plus %}href="{{ model.google_plus }}"  target="_blank"{% endif %}><i class="fa fa-google-plus fa-2x"></i></a>
@@ -109,10 +109,10 @@
             </h4>
         </div>
         <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
-                <h4 class="border-grey-b pb-5 darkgrey"><i class="fa fa-map-marker">:</i> Address</h4>
-                <p>{{model.address}}</p>
-                <p>{{ model.city}}, {{ model.region }}, {{ model.state }}, {{ model.country }}, {{ model.zipcode }}</p>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div  class="border-grey-b pb-5 darkgrey"></div>
+                <h4><i class="fa fa-map-marker">:</i>&nbsp; {{model.address}},
+                {{ model.city}}, {{ model.region }}, {{ model.state }}, {{ model.country }}, {{ model.zipcode }}</h4>
             </div>
         </div>
     </div>
