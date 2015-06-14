@@ -19,17 +19,20 @@
                 <span class="caret"></span>
 
             </a>
-            <!--ul class="dropdown-menu status-dropdown default" role="menu">
+            <ul class="dropdown-menu status-dropdown default" role="menu">
                 <li><a data-status="online"><span class="label label-status label-online">&nbsp;</span> Online</a></li>
                 <li><a data-status="busy"><span class="label label-status label-busy">&nbsp;</span> Busy</a></li>
                 <li><a data-status="away"><span class="label label-status label-away">&nbsp;</span> Away</a></li>
                 <li><a data-status="offline"><span class="label label-status label-offline">&nbsp;</span> Offline</a>
                 </li>
-            </ul-->
+            </ul>
         </div>
 
     </div>
+    <div class="">
+                        <input id="name-filter" data-filter="title__icontains" data-model="contact-id" type="text" class="form-control input-xs no-radius" placeholder="Search Contacts" maxlength="20">
 
+                    </div>
     <div class="contact-list">
 
         <div class="contact contact-list-element" id="contact-{{ contact.id }}" ng-repeat="contact in messages">
