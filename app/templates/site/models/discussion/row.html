@@ -1,6 +1,7 @@
 <li id="{{model.id}}-container" class="media" style="margin-top:1px;">
     {% if model.author.id == user.id %}
-        <a href="#" data-action="delete-discussion" data-model-id="{{model.id}}" data-user-id="{{user.id}}" data-author-id="{{model.author.id}}" class="close pull-right">[&times;]&nbsp;</a>
+        <a href="#" data-action="delete-discussion" data-model-id="{{model.id}}" data-user-id="{{user.id}}" data-author-id="{{model.author.id}}" class="close pull-right" title="delete">&times;&nbsp;</a>
+        <a href="#" data-action="edit-discussion" data-model-id="{{model.id}}" data-user-id="{{user.id}}" data-author-id="{{model.author.id}}" class="close pull-right" title="edit"><span class="fa fa-pencil"></span>&nbsp;</a>
     {% endif %}
     <div class="media-left">
       <a href="#">

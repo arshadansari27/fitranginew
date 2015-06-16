@@ -290,7 +290,7 @@ def edit_profile_preference(profile, data):
     node.save()
     return node
 
-@response_handler('Successfully registered', 'Failed to register', login_required=False)
+@response_handler('Successfully registered', 'Failed to register', login_required=False, flash_message=True)
 def register_profile(data):
     name, email, password = data['name'], data['email'], data['password']
     subscription_type = ProfileType.objects(name__icontains='subscription').first()

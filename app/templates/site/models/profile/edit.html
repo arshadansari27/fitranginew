@@ -640,6 +640,7 @@
                             window.location.href = window.location.href + '&pk=' + _data.node;
                         }
                     } else {
+                        window.location.reload();
                         $(".alert").html(data.message);
                         $('.alert').show();
                         setTimeout(function(){
