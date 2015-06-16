@@ -21,8 +21,8 @@ app.config['MONGODB_SETTINGS'] = {
     'port': settings.MONGODB_PORT,
     'read_preference': read_preferences.ReadPreference.PRIMARY
 }
-app.config['MANDRILL_API_KEY'] = 'AW8kuRPFtDyZpOrgSf-0BQ'
-app.config['MANDRILL_DEFAULT_FROM'] = 'noreply@fitrangi.com'
+app.config['MANDRILL_API_KEY'] = settings.MANDRILL_API_KEY
+app.config['MANDRILL_DEFAULT_FROM'] = settings.MANDRILL_DEFAULT_FROM
 app.config['CDN_DOMAIN'] = settings.CDN_DOMAIN
 app.config['FLASK_ASSETS_USE_CDN']=True
 CDN(app)
