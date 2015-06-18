@@ -1,10 +1,10 @@
+__author__ = 'arshad'
+
 from base64 import decodestring
 from app.handlers.messaging import send_single_email
 from app.models import NodeFactory
 from app.models.profile import Profile, ProfileType
-
-__author__ = 'arshad'
-
+import re, base64
 from flask import render_template, g, request, jsonify, send_file, flash, redirect, url_for, session, make_response
 from app.utils import login_required
 from app import app
@@ -57,39 +57,23 @@ def image_uploader_dialog():
         print '*' * 10, e
         raise e
 
-@app.route('/dialog/crop_image', methods=['POST'])
+@app.route('/dialog/cropped_image', methods=['POST'])
 @login_required
 def image_cropper_dialog():
-    image_url = request.form.get('imgUrl', None)
-    if image_url is None:
-        raise Exception("Invalid Image")
-    crop_width = int(float(request.form['cropW']))
-    crop_height = int(float(request.form['cropH']))
-    img_width = int(float(request.form['imgW']))
-    img_height = int(float(request.form['imgH']))
-
-    x = int(request.form['imgX1'])
-    y = int(request.form['imgY1'])
-
-    size = (img_width, img_height)
-    box = (x, y, x + crop_width, y + crop_height)
-
-
+    image_url = request.form.get('url', None)
+    img = request.form.get('img', None)
+    if image_url is None or len(image_url) is 0:
+        return jsonify(dict(status='error', message='invalid url'))
     _id = image_url.split("/")[-1]
     path = os.getcwd() + '/tmp/' + _id
-    img = Image.open(path)
-    img.thumbnail(size)
-    resize = StringIO.StringIO()
-    img.save(resize, 'JPEG')
-    resize.seek(0)
-    resize_img = Image.open(resize)
-    region = resize_img.crop(box)
-    region.load()
-    cropped = StringIO.StringIO()
-    region.save(cropped, 'JPEG')
-    cropped.seek(0)
-    with open(path , 'rb') as _f:
-        _f.write(cropped)
+    if img is None or len(img) is 0:
+        return jsonify(dict(status='error', message='invalid image'))
+    dataUrlPattern = re.compile('data:image/(png|jpeg);base64,(.*)$')
+    imgb64 = dataUrlPattern.match(img).group(2)
+    if imgb64 is not None and len(imgb64) > 0:
+        img = base64.b64decode(imgb64)
+        with open(path , 'wb') as _f:
+            _f.write(img)
     return jsonify(dict(status='success', url='/temp_image/%s' % str(_id)))
 
 @app.route('/temp_image/<id>')

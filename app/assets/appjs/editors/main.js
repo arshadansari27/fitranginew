@@ -81,11 +81,10 @@ jQuery(document).ready(function($){
         var sorters_list = window.sorters[sorters];
         console.log('Adding sorter for [' + model + '] [' + category + ']: ' + id);
         sorters_list.push(id);
-    }
+    };
 
-    App.uploader = function(dialogRef) {
+    App.uploader = function(dialogRef, aspect_ratio) {
         var data = new FormData();
-        console.log("RUnning file uploader");
         jQuery.each(dialogRef.getModalBody().find('input[type=file]')[0].files, function(i, file) {
             data.append('file-'+i, file);
             console.log(i + "-" + JSON.stringify(file));
@@ -93,7 +92,6 @@ jQuery(document).ready(function($){
         if (data.length == 0) {
             return;
         }
-        console.log("RUnning file uploader");
         dialogRef.enableButtons(false);
         dialogRef.setClosable(false);
         dialogRef.getModalBody().prepend('<img class="loading-icon" src="/img/loading.gif">');
@@ -107,14 +105,37 @@ jQuery(document).ready(function($){
             success: function(data){
                 console.log(data);
                 if (data.status == 'success') {
-                    $(".cropContainerModal").html('<img src="' + data.url + '" width="100%">');
-                    $(".upload-image-view").show();
+                    $(".img-container").html('<img src="' + data.url + '">');
+                    $("#upload-image-view").show();
                     $(".upload-image").val(data.url);
                     dialogRef.enableButtons(true);
                     dialogRef.setClosable(true);
                     $('.alert').html('<div class="alert-message">Successfully uploaded the image.</div>');
                     $('.alert').addClass('alert-info');
                     $('.loading-icon').hide();
+                    var $image = $('.img-container > img'),
+                        $dataX = $('#dataX'),
+                        $dataY = $('#dataY'),
+                        $dataHeight = $('#dataHeight'),
+                        $dataWidth = $('#dataWidth'),
+                        $dataRotate = $('#dataRotate'),
+                        options = {
+                            aspectRatio: aspect_ratio,
+                            preview: '.cropped-image',
+                            crop: function (data) {
+                                $dataX.val(Math.round(data.x));
+                                $dataY.val(Math.round(data.y));
+                                $dataHeight.val(Math.round(data.height));
+                                $dataWidth.val(Math.round(data.width));
+                                $dataRotate.val(Math.round(data.rotate));
+                            }
+                        };
+                    $image.cropper(options);
+                    var $uploadButton = dialogRef.getButton('btn-upload-image');
+                    $uploadButton.addClass('disabled');
+                    var $cropButton = dialogRef.getButton('btn-crop-image');
+                    $cropButton.removeClass('disabled');
+
                 } else {
                     $('.alert').html('<div class="alert-message">Failed to upload the image, try again later.</div>');
                     $('.alert').addClass('alert-warning');

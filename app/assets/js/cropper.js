@@ -1,11 +1,11 @@
 /*!
- * Cropper v0.9.1
+ * Cropper v0.10.0
  * https://github.com/fengyuanchen/cropper
  *
- * Copyright (c) 2014-2015 Fengyuan Chen and contributors
+ * Copyright (c) 2014-2015 Fengyuan Chen and other contributors
  * Released under the MIT license
  *
- * Date: 2015-03-21T04:58:27.265Z
+ * Date: 2015-06-08T14:57:26.353Z
  */
 
 (function (factory) {
@@ -29,6 +29,7 @@
 
       // Constants
       CROPPER_NAMESPACE = '.cropper',
+      CROPPER_PREVIEW = 'preview' + CROPPER_NAMESPACE,
 
       // RegExps
       REGEXP_DRAG_TYPES = /^(e|n|w|s|ne|nw|sw|se|all|crop|move|zoom)$/,
@@ -57,6 +58,7 @@
       EVENT_DRAG_END = 'dragend' + CROPPER_NAMESPACE,
       EVENT_ZOOM_IN = 'zoomin' + CROPPER_NAMESPACE,
       EVENT_ZOOM_OUT = 'zoomout' + CROPPER_NAMESPACE,
+      EVENT_CHANGE = 'change' + CROPPER_NAMESPACE,
 
       // Supports
       SUPPORT_CANVAS = $.isFunction($('<canvas>')[0].getContext),
@@ -74,7 +76,7 @@
       prototype = {};
 
   function isNumber(n) {
-    return typeof n === 'number';
+    return typeof n === 'number' && !isNaN(n);
   }
 
   function isUndefined(n) {
@@ -179,6 +181,8 @@
     this.rotated = false;
     this.cropped = false;
     this.disabled = false;
+    this.canvas = null;
+    this.cropBox = null;
 
     this.load();
   }
@@ -187,11 +191,16 @@
     var options = this.options,
         $this = this.$element,
         crossOrigin,
+        bustCacheUrl,
         buildEvent,
         $clone;
 
     if (!url) {
       if ($this.is('img')) {
+        if (!$this.attr('src')) {
+          return;
+        }
+
         url = $this.prop('src');
       } else if ($this.is('canvas') && SUPPORT_CANVAS) {
         url = $this[0].toDataURL();
@@ -210,18 +219,20 @@
     }
 
     if (options.checkImageOrigin && isCrossOriginURL(url)) {
-      crossOrigin = ' crossOrigin'; // crossOrigin="anonymous"
+      crossOrigin = ' crossOrigin="anonymous"';
 
       if (!$this.prop('crossOrigin')) { // Only when there was not a "crossOrigin" property
-        url = addTimestamp(url); // Bust cache (#148)
+        bustCacheUrl = addTimestamp(url); // Bust cache (#148)
       }
     }
 
-    this.$clone = $clone = $('<img>');
+    // IE8 compatibility: Don't use "$().attr()" to set "src"
+    this.$clone = $clone = $('<img' + (crossOrigin || '') + ' src="' + (bustCacheUrl || url) + '">');
 
     $clone.one('load', $.proxy(function () {
-      var naturalWidth = $clone.prop('naturalWidth') || $clone.width(),
-          naturalHeight = $clone.prop('naturalHeight') || $clone.height();
+      var image = $clone[0],
+          naturalWidth = image.naturalWidth || image.width,
+          naturalHeight = image.naturalHeight || image.height; // $clone.width() and $clone.height() will return 0 in IE8 (#319)
 
       this.image = {
         naturalWidth: naturalWidth,
@@ -233,9 +244,8 @@
       this.url = url;
       this.ready = true;
       this.build();
-    }, this)).attr({
-      src: url,
-      crossOrigin: crossOrigin
+    }, this)).one('error', function () {
+      $clone.remove();
     });
 
     // Hide and insert into the document
@@ -247,7 +257,8 @@
         $clone = this.$clone,
         options = this.options,
         $cropper,
-        $cropBox;
+        $cropBox,
+        $face;
 
     if (!this.ready) {
       return;
@@ -271,12 +282,13 @@
     this.$dragBox = $cropper.find('.cropper-drag-box');
     this.$cropBox = $cropBox = $cropper.find('.cropper-crop-box');
     this.$viewBox = $cropper.find('.cropper-view-box');
+    this.$face = $face = $cropBox.find('.cropper-face');
 
     this.addListeners();
     this.initPreview();
 
     // Format aspect ratio
-    options.aspectRatio = num(options.aspectRatio) || NaN; // 0 -> NaN, 'auto' -> NaN
+    options.aspectRatio = num(options.aspectRatio) || NaN; // 0 -> NaN
 
     if (options.autoCrop) {
       this.cropped = true;
@@ -293,25 +305,26 @@
     }
 
     if (!options.highlight) {
-      $cropBox.find('.cropper-face').addClass(CLASS_INVISIBLE);
+      $face.addClass(CLASS_INVISIBLE);
     }
 
     if (!options.guides) {
       $cropBox.find('.cropper-dashed').addClass(CLASS_HIDDEN);
     }
 
-    if (!options.movable) {
-      $cropBox.find('.cropper-face').data('drag', 'move');
+    if (options.cropBoxMovable) {
+      $face.addClass(CLASS_MOVE).data('drag', 'all');
     }
 
-    if (!options.resizable) {
+    if (!options.cropBoxResizable) {
       $cropBox.find('.cropper-line, .cropper-point').addClass(CLASS_HIDDEN);
     }
 
-    this.setDragMode(options.dragCrop ? 'crop' : 'move');
+    this.setDragMode(options.dragCrop ? 'crop' : options.movable ? 'move' : 'none');
 
     this.built = true;
     this.render();
+    this.setData(options.data);
     $this.one(EVENT_BUILT, options.built).trigger(EVENT_BUILT); // Only trigger once
   };
 
@@ -321,9 +334,15 @@
     }
 
     this.built = false;
+    this.initialImage = null;
+    this.initialCanvas = null; // This is necessary when replace
+    this.initialCropBox = null;
+    this.container = null;
+    this.canvas = null;
+    this.cropBox = null; // This is necessary when replace
     this.removeListeners();
 
-    this.$preview.empty();
+    this.resetPreview();
     this.$preview = null;
 
     this.$viewBox = null;
@@ -341,6 +360,12 @@
       this.initContainer();
       this.initCanvas();
       this.initCropBox();
+
+      this.renderCanvas();
+
+      if (this.cropped) {
+        this.renderCropBox();
+      }
     },
 
     initContainer: function () {
@@ -361,10 +386,9 @@
       $cropper.removeClass(CLASS_HIDDEN);
     },
 
-    // image wrapping box
+    // image box (wrapper)
     initCanvas: function () {
-      var options = this.options,
-          container = this.container,
+      var container = this.container,
           containerWidth = container.width,
           containerHeight = container.height,
           image = this.image,
@@ -372,94 +396,113 @@
           canvas = {
             aspectRatio: aspectRatio,
             width: containerWidth,
-            height: containerHeight,
-            left: 0,
-            top: 0,
-            minLeft: -containerWidth,
-            minTop: -containerHeight,
-            maxLeft: containerWidth,
-            maxTop: containerHeight,
-            minWidth: 0,
-            minHeight: 0,
-            maxWidth: Infinity,
-            maxHeight: Infinity
+            height: containerHeight
           };
 
       if (containerHeight * aspectRatio > containerWidth) {
-        if (options.strict) {
-          canvas.width = containerHeight * aspectRatio;
-        } else {
-          canvas.height = containerWidth / aspectRatio;
-        }
+        canvas.height = containerWidth / aspectRatio;
       } else {
-        if (options.strict) {
-          canvas.height = containerWidth / aspectRatio;
-        } else {
-          canvas.width = containerHeight * aspectRatio;
-        }
+        canvas.width = containerHeight * aspectRatio;
       }
 
       canvas.oldLeft = canvas.left = (containerWidth - canvas.width) / 2;
       canvas.oldTop = canvas.top = (containerHeight - canvas.height) / 2;
 
       this.canvas = canvas;
-      this.limitCanvas();
-
+      this.limitCanvas(true, true);
       this.initialImage = $.extend({}, image);
-      this.initialCanvas = $.extend({}, this.canvas);
-      this.renderCanvas();
+      this.initialCanvas = $.extend({}, canvas);
     },
 
-    limitCanvas: function () {
+    limitCanvas: function (size, position) {
       var options = this.options,
+          strict = options.strict,
           container = this.container,
           containerWidth = container.width,
           containerHeight = container.height,
           canvas = this.canvas,
           aspectRatio = canvas.aspectRatio,
-          minWidth = containerWidth,
-          minHeight = containerHeight;
+          cropBox = this.cropBox,
+          cropped = this.cropped && cropBox,
+          initialCanvas = this.initialCanvas || canvas,
+          initialCanvasWidth = initialCanvas.width,
+          initialCanvasHeight = initialCanvas.height,
+          minCanvasWidth,
+          minCanvasHeight;
 
-      if (containerHeight * aspectRatio > containerWidth) {
-        if (options.strict) {
-          minWidth = containerHeight * aspectRatio;
-        } else {
-          minHeight = containerWidth / aspectRatio;
+      if (size) {
+        minCanvasWidth = num(options.minCanvasWidth) || 0;
+        minCanvasHeight = num(options.minCanvasHeight) || 0;
+
+        if (minCanvasWidth) {
+          if (strict) {
+            minCanvasWidth = max(cropped ? cropBox.width : initialCanvasWidth, minCanvasWidth);
+          }
+
+          minCanvasHeight = minCanvasWidth / aspectRatio;
+        } else if (minCanvasHeight) {
+          if (strict) {
+            minCanvasHeight = max(cropped ? cropBox.height : initialCanvasHeight, minCanvasHeight);
+          }
+
+          minCanvasWidth = minCanvasHeight * aspectRatio;
+        } else if (strict) {
+          if (cropped) {
+            minCanvasWidth = cropBox.width;
+            minCanvasHeight = cropBox.height;
+
+            if (minCanvasHeight * aspectRatio > minCanvasWidth) {
+              minCanvasWidth = minCanvasHeight * aspectRatio;
+            } else {
+              minCanvasHeight = minCanvasWidth / aspectRatio;
+            }
+          } else {
+            minCanvasWidth = initialCanvasWidth;
+            minCanvasHeight = initialCanvasHeight;
+          }
         }
-      } else {
-        if (options.strict) {
-          minHeight = containerWidth / aspectRatio;
-        } else {
-          minWidth = containerHeight * aspectRatio;
-        }
+
+        $.extend(canvas, {
+          minWidth: minCanvasWidth,
+          minHeight: minCanvasHeight,
+          maxWidth: Infinity,
+          maxHeight: Infinity
+        });
       }
 
-      if (options.strict) {
-        canvas.minWidth = minWidth;
-        canvas.minHeight = minHeight;
-        canvas.maxLeft = 0;
-        canvas.maxTop = 0;
-        canvas.minLeft = containerWidth - minWidth;
-        canvas.minTop = containerHeight - minHeight;
-      } else {
-        canvas.minLeft = -minWidth;
-        canvas.minTop = -minHeight;
+      if (position) {
+        if (strict) {
+          if (cropped) {
+            canvas.minLeft = min(cropBox.left, (cropBox.left + cropBox.width) - canvas.width);
+            canvas.minTop = min(cropBox.top, (cropBox.top + cropBox.height) - canvas.height);
+            canvas.maxLeft = cropBox.left;
+            canvas.maxTop = cropBox.top;
+          } else {
+            canvas.minLeft = min(0, containerWidth - canvas.width);
+            canvas.minTop = min(0, containerHeight - canvas.height);
+            canvas.maxLeft = max(0, containerWidth - canvas.width);
+            canvas.maxTop = max(0, containerHeight - canvas.height);
+          }
+        } else {
+          canvas.minLeft = -canvas.width;
+          canvas.minTop = -canvas.height;
+          canvas.maxLeft = containerWidth;
+          canvas.maxTop = containerHeight;
+        }
       }
     },
 
     renderCanvas: function (changed) {
       var options = this.options,
-          container = this.container,
           canvas = this.canvas,
           image = this.image,
           aspectRatio,
-          reversed,
           rotated;
 
       if (this.rotated) {
         this.rotated = false;
 
-        // Computes rotatation sizes with initial image sizes
+        // Computes rotatation sizes with image sizes
         rotated = getRotatedSizes({
           width: image.width,
           height: image.height,
@@ -474,7 +517,7 @@
           canvas.width = rotated.width;
           canvas.height = rotated.height;
           canvas.aspectRatio = aspectRatio;
-          this.limitCanvas();
+          this.limitCanvas(true, false);
         }
       }
 
@@ -489,13 +532,7 @@
       canvas.width = min(max(canvas.width, canvas.minWidth), canvas.maxWidth);
       canvas.height = min(max(canvas.height, canvas.minHeight), canvas.maxHeight);
 
-      if (options.strict) {
-        canvas.minLeft = container.width - canvas.width;
-        canvas.minTop = container.height - canvas.height;
-      } else {
-        canvas.minLeft = -canvas.width;
-        canvas.minTop = -canvas.height;
-      }
+      this.limitCanvas(false, true);
 
       canvas.oldLeft = canvas.left = min(max(canvas.left, canvas.minLeft), canvas.maxLeft);
       canvas.oldTop = canvas.top = min(max(canvas.top, canvas.minTop), canvas.maxTop);
@@ -507,6 +544,22 @@
         top: canvas.top
       });
 
+      this.renderImage();
+
+      if (this.cropped && options.strict) {
+        this.limitCropBox(true, true);
+      }
+
+      if (changed) {
+        this.output();
+      }
+    },
+
+    renderImage: function () {
+      var canvas = this.canvas,
+          image = this.image,
+          reversed;
+
       if (image.rotate) {
         reversed = getRotatedSizes({
           width: canvas.width,
@@ -514,21 +567,19 @@
           degree: image.rotate,
           aspectRatio: image.aspectRatio
         }, true);
-
-        $.extend(image, {
-          width: reversed.width,
-          height: reversed.height,
-          left: (canvas.width - reversed.width) / 2,
-          top: (canvas.height - reversed.height) / 2
-        });
-      } else {
-        $.extend(image, {
-          width: canvas.width,
-          height: canvas.height,
-          left: 0,
-          top: 0
-        });
       }
+
+      $.extend(image, reversed ? {
+        width: reversed.width,
+        height: reversed.height,
+        left: (canvas.width - reversed.width) / 2,
+        top: (canvas.height - reversed.height) / 2
+      } : {
+        width: canvas.width,
+        height: canvas.height,
+        left: 0,
+        top: 0
+      });
 
       this.$clone.css({
         width: image.width,
@@ -537,79 +588,92 @@
         marginTop: image.top,
         transform: getRotateValue(image.rotate)
       });
-
-      if (changed) {
-        this.preview();
-
-        if (options.crop) {
-          options.crop.call(this.$element, this.getData());
-        }
-      }
     },
 
     initCropBox: function () {
       var options = this.options,
-          container = this.container,
           canvas = this.canvas,
-          strict = options.strict,
           aspectRatio = options.aspectRatio,
-          minCropBoxWidth = num(options.minCropBoxWidth) || 0,
-          minCropBoxHeight = num(options.minCropBoxHeight) || 0,
           autoCropArea = num(options.autoCropArea) || 0.8,
-          containerWidth = container.width,
-          containerHeight = container.height,
           cropBox = {
-            width: strict ? containerWidth : canvas.width,
-            height: strict ? containerHeight : canvas.height,
-            minWidth: minCropBoxWidth,
-            minHeight: minCropBoxHeight,
-            maxWidth: containerWidth,
-            maxHeight: containerHeight
+            width: canvas.width,
+            height: canvas.height
           };
 
       if (aspectRatio) {
-        // compare crop box size with container first
-        if (containerHeight * aspectRatio > containerWidth) {
+        if (canvas.height * aspectRatio > canvas.width) {
           cropBox.height = cropBox.width / aspectRatio;
-          cropBox.maxHeight = containerWidth / aspectRatio;
         } else {
           cropBox.width = cropBox.height * aspectRatio;
-          cropBox.maxWidth = containerHeight * aspectRatio;
-        }
-
-        // compare crop box size with canvas when it is not strict
-        if (!strict) {
-          if (cropBox.height * canvas.aspectRatio > cropBox.width) {
-            cropBox.height = canvas.height;
-            cropBox.width = cropBox.height * aspectRatio;
-          } else {
-            cropBox.width = canvas.width;
-            cropBox.height = cropBox.width / aspectRatio;
-          }
-        }
-
-        if (minCropBoxWidth) {
-          cropBox.minHeight = cropBox.minWidth / aspectRatio;
-        } else if (minCropBoxHeight) {
-          cropBox.minWidth = cropBox.minHeight * aspectRatio;
         }
       }
 
-      // The "minWidth" must be less than "maxWidth", and the "minHeight" too.
-      cropBox.minWidth = min(cropBox.maxWidth, cropBox.minWidth);
-      cropBox.minHeight = min(cropBox.maxHeight, cropBox.minHeight);
+      this.cropBox = cropBox;
+      this.limitCropBox(true, true);
+
+      // Initialize auto crop area
+      cropBox.width = min(max(cropBox.width, cropBox.minWidth), cropBox.maxWidth);
+      cropBox.height = min(max(cropBox.height, cropBox.minHeight), cropBox.maxHeight);
 
       // The width of auto crop area must large than "minWidth", and the height too. (#164)
       cropBox.width = max(cropBox.minWidth, cropBox.width * autoCropArea);
       cropBox.height = max(cropBox.minHeight, cropBox.height * autoCropArea);
-      cropBox.oldLeft = cropBox.left = (containerWidth - cropBox.width) / 2;
-      cropBox.oldTop = cropBox.top = (containerHeight - cropBox.height) / 2;
+      cropBox.oldLeft = cropBox.left = canvas.left + (canvas.width - cropBox.width) / 2;
+      cropBox.oldTop = cropBox.top = canvas.top + (canvas.height - cropBox.height) / 2;
 
       this.initialCropBox = $.extend({}, cropBox);
-      this.cropBox = cropBox;
+    },
 
-      if (this.cropped) {
-        this.renderCropBox();
+    limitCropBox: function (size, position) {
+      var options = this.options,
+          strict = options.strict,
+          container = this.container,
+          containerWidth = container.width,
+          containerHeight = container.height,
+          canvas = this.canvas,
+          cropBox = this.cropBox,
+          aspectRatio = options.aspectRatio,
+          minCropBoxWidth,
+          minCropBoxHeight;
+
+      if (size) {
+        minCropBoxWidth = num(options.minCropBoxWidth) || 0;
+        minCropBoxHeight = num(options.minCropBoxHeight) || 0;
+
+        // min/maxCropBoxWidth/Height must less than conatiner width/height
+        cropBox.minWidth = min(containerWidth, minCropBoxWidth);
+        cropBox.minHeight = min(containerHeight, minCropBoxHeight);
+        cropBox.maxWidth = min(containerWidth, strict ? canvas.width : containerWidth);
+        cropBox.maxHeight = min(containerHeight, strict ? canvas.height : containerHeight);
+
+        if (aspectRatio) {
+          // compare crop box size with container first
+          if (cropBox.maxHeight * aspectRatio > cropBox.maxWidth) {
+            cropBox.minHeight = cropBox.minWidth / aspectRatio;
+            cropBox.maxHeight = cropBox.maxWidth / aspectRatio;
+          } else {
+            cropBox.minWidth = cropBox.minHeight * aspectRatio;
+            cropBox.maxWidth = cropBox.maxHeight * aspectRatio;
+          }
+        }
+
+        // The "minWidth" must be less than "maxWidth", and the "minHeight" too.
+        cropBox.minWidth = min(cropBox.maxWidth, cropBox.minWidth);
+        cropBox.minHeight = min(cropBox.maxHeight, cropBox.minHeight);
+      }
+
+      if (position) {
+        if (strict) {
+          cropBox.minLeft = max(0, canvas.left);
+          cropBox.minTop = max(0, canvas.top);
+          cropBox.maxLeft = min(containerWidth, canvas.left + canvas.width) - cropBox.width;
+          cropBox.maxTop = min(containerHeight, canvas.top + canvas.height) - cropBox.height;
+        } else {
+          cropBox.minLeft = 0;
+          cropBox.minTop = 0;
+          cropBox.maxLeft = containerWidth - cropBox.width;
+          cropBox.maxTop = containerHeight - cropBox.height;
+        }
       }
     },
 
@@ -618,7 +682,6 @@
           container = this.container,
           containerWidth = container.width,
           containerHeight = container.height,
-          $cropBox = this.$cropBox,
           cropBox = this.cropBox;
 
       if (cropBox.width > cropBox.maxWidth || cropBox.width < cropBox.minWidth) {
@@ -631,27 +694,44 @@
 
       cropBox.width = min(max(cropBox.width, cropBox.minWidth), cropBox.maxWidth);
       cropBox.height = min(max(cropBox.height, cropBox.minHeight), cropBox.maxHeight);
-      cropBox.oldLeft = cropBox.left = min(max(cropBox.left, 0), containerWidth - cropBox.width);
-      cropBox.oldTop = cropBox.top = min(max(cropBox.top, 0), containerHeight - cropBox.height);
 
-      if (options.movable) {
-        $cropBox.find('.cropper-face').data('drag', (cropBox.width === containerWidth && cropBox.height === containerHeight) ? 'move' : 'all');
+      this.limitCropBox(false, true);
+
+      cropBox.oldLeft = cropBox.left = min(max(cropBox.left, cropBox.minLeft), cropBox.maxLeft);
+      cropBox.oldTop = cropBox.top = min(max(cropBox.top, cropBox.minTop), cropBox.maxTop);
+
+      if (options.movable && options.cropBoxMovable) {
+        // Turn to move the canvas when the crop box is equal to the container
+        this.$face.data('drag', (cropBox.width === containerWidth && cropBox.height === containerHeight) ? 'move' : 'all');
       }
 
-      $cropBox.css({
+      this.$cropBox.css({
         width: cropBox.width,
         height: cropBox.height,
         left: cropBox.left,
         top: cropBox.top
       });
 
-      if (!this.disabled) {
-        this.preview();
-
-        if (options.crop) {
-          options.crop.call(this.$element, this.getData());
-        }
+      if (this.cropped && options.strict) {
+        this.limitCanvas(true, true);
       }
+
+      if (!this.disabled) {
+        this.output();
+      }
+    },
+
+    output: function () {
+      var options = this.options,
+          $this = this.$element;
+
+      this.preview();
+
+      if (options.crop) {
+        options.crop.call($this, this.getData());
+      }
+
+      $this.trigger(EVENT_CHANGE);
     }
   });
 
@@ -666,10 +746,19 @@
     this.$preview.each(function () {
       var $this = $(this);
 
-      $this.data({
+      $this.data(CROPPER_PREVIEW, {
         width: $this.width(),
-        height: $this.height()
+        height: $this.height(),
+        original: $this.html()
       }).html('<img src="' + url + '" style="display:block;width:100%;min-width:0!important;min-height:0!important;max-width:none!important;max-height:none!important;image-orientation: 0deg!important">');
+    });
+  };
+
+  prototype.resetPreview = function () {
+    this.$preview.each(function () {
+      var $this = $(this);
+
+      $this.html($this.data(CROPPER_PREVIEW).original).removeData(CROPPER_PREVIEW);
     });
   };
 
@@ -697,7 +786,7 @@
 
     this.$preview.each(function () {
       var $this = $(this),
-          data = $this.data(),
+          data = $this.data(CROPPER_PREVIEW),
           ratio = data.width / cropBox.width,
           newWidth = data.width,
           newHeight = cropBox.height * ratio;
@@ -719,13 +808,42 @@
   };
 
   prototype.addListeners = function () {
-    var options = this.options;
+    var options = this.options,
+        $this = this.$element,
+        $cropper = this.$cropper;
 
-    this.$element.on(EVENT_DRAG_START, options.dragstart).on(EVENT_DRAG_MOVE, options.dragmove).on(EVENT_DRAG_END, options.dragend).on(EVENT_ZOOM_IN, options.zoomin).on(EVENT_ZOOM_OUT, options.zoomout);
-    this.$cropper.on(EVENT_MOUSE_DOWN, $.proxy(this.dragstart, this)).on(EVENT_DBLCLICK, $.proxy(this.dblclick, this));
+    if ($.isFunction(options.dragstart)) {
+      $this.on(EVENT_DRAG_START, options.dragstart);
+    }
+
+    if ($.isFunction(options.dragmove)) {
+      $this.on(EVENT_DRAG_MOVE, options.dragmove);
+    }
+
+    if ($.isFunction(options.dragend)) {
+      $this.on(EVENT_DRAG_END, options.dragend);
+    }
+
+    if ($.isFunction(options.zoomin)) {
+      $this.on(EVENT_ZOOM_IN, options.zoomin);
+    }
+
+    if ($.isFunction(options.zoomout)) {
+      $this.on(EVENT_ZOOM_OUT, options.zoomout);
+    }
+
+    if ($.isFunction(options.change)) {
+      $this.on(EVENT_CHANGE, options.change);
+    }
+
+    $cropper.on(EVENT_MOUSE_DOWN, $.proxy(this.dragstart, this));
 
     if (options.zoomable && options.mouseWheelZoom) {
-      this.$cropper.on(EVENT_WHEEL, $.proxy(this.wheel, this));
+      $cropper.on(EVENT_WHEEL, $.proxy(this.wheel, this));
+    }
+
+    if (options.doubleClickToggle) {
+      $cropper.on(EVENT_DBLCLICK, $.proxy(this.dblclick, this));
     }
 
     $document.on(EVENT_MOUSE_MOVE, (this._dragmove = proxy(this.dragmove, this))).on(EVENT_MOUSE_UP, (this._dragend = proxy(this.dragend, this)));
@@ -736,13 +854,42 @@
   };
 
   prototype.removeListeners = function () {
-    var options = this.options;
+    var options = this.options,
+        $this = this.$element,
+        $cropper = this.$cropper;
 
-    this.$element.off(EVENT_DRAG_START, options.dragstart).off(EVENT_DRAG_MOVE, options.dragmove).off(EVENT_DRAG_END, options.dragend).off(EVENT_ZOOM_IN, options.zoomin).off(EVENT_ZOOM_OUT, options.zoomout);
-    this.$cropper.off(EVENT_MOUSE_DOWN, this.dragstart).off(EVENT_DBLCLICK, this.dblclick);
+    if ($.isFunction(options.dragstart)) {
+      $this.off(EVENT_DRAG_START, options.dragstart);
+    }
+
+    if ($.isFunction(options.dragmove)) {
+      $this.off(EVENT_DRAG_MOVE, options.dragmove);
+    }
+
+    if ($.isFunction(options.dragend)) {
+      $this.off(EVENT_DRAG_END, options.dragend);
+    }
+
+    if ($.isFunction(options.zoomin)) {
+      $this.off(EVENT_ZOOM_IN, options.zoomin);
+    }
+
+    if ($.isFunction(options.zoomout)) {
+      $this.off(EVENT_ZOOM_OUT, options.zoomout);
+    }
+
+    if ($.isFunction(options.change)) {
+      $this.off(EVENT_CHANGE, options.change);
+    }
+
+    $cropper.off(EVENT_MOUSE_DOWN, this.dragstart);
 
     if (options.zoomable && options.mouseWheelZoom) {
-      this.$cropper.off(EVENT_WHEEL, this.wheel);
+      $cropper.off(EVENT_WHEEL, this.wheel);
+    }
+
+    if (options.doubleClickToggle) {
+      $cropper.off(EVENT_DBLCLICK, this.dblclick);
     }
 
     $document.off(EVENT_MOUSE_MOVE, this._dragmove).off(EVENT_MOUSE_UP, this._dragend);
@@ -760,7 +907,7 @@
           cropBoxData,
           ratio;
 
-      if (this.disabled) {
+      if (this.disabled || !container) { // Check "container" for IE8
         return;
       }
 
@@ -810,7 +957,7 @@
         delta = e.detail > 0 ? 1 : -1;
       }
 
-      this.zoom(delta * 0.1);
+      this.zoom(-delta * 0.1);
     },
 
     dragstart: function (event) {
@@ -917,7 +1064,7 @@
         this.endX = e.pageX;
         this.endY = e.pageY;
 
-        this.change();
+        this.change(e.shiftKey);
       }
     },
 
@@ -954,17 +1101,37 @@
   });
 
   $.extend(prototype, {
+    crop: function () {
+      if (!this.built || this.disabled) {
+        return;
+      }
+
+      if (!this.cropped) {
+        this.cropped = true;
+        this.limitCropBox(true, true);
+
+        if (this.options.modal) {
+          this.$dragBox.addClass(CLASS_MODAL);
+        }
+
+        this.$cropBox.removeClass(CLASS_HIDDEN);
+      }
+
+      this.setCropBoxData(this.initialCropBox);
+    },
+
     reset: function () {
-      if (this.disabled) {
+      if (!this.built || this.disabled) {
         return;
       }
 
       this.image = $.extend({}, this.initialImage);
       this.canvas = $.extend({}, this.initialCanvas);
+      this.cropBox = $.extend({}, this.initialCropBox); // required for strict mode
+
       this.renderCanvas();
 
       if (this.cropped) {
-        this.cropBox = $.extend({}, this.initialCropBox);
         this.renderCropBox();
       }
     },
@@ -981,8 +1148,12 @@
         height: 0
       });
 
-      this.renderCropBox();
       this.cropped = false;
+      this.renderCropBox();
+
+      this.limitCanvas();
+      this.renderCanvas(); // Render canvas after render crop box
+
       this.$dragBox.removeClass(CLASS_MODAL);
       this.$cropBox.addClass(CLASS_HIDDEN);
     },
@@ -990,16 +1161,19 @@
     destroy: function () {
       var $this = this.$element;
 
-      if (!this.ready) {
-        this.$clone.off('load').remove();
+      if (this.ready) {
+        this.unbuild();
+        $this.removeClass(CLASS_HIDDEN);
+      } else if (this.$clone) {
+        this.$clone.remove();
       }
 
-      this.unbuild();
-      $this.removeClass(CLASS_HIDDEN).removeData('cropper');
+      $this.removeData('cropper');
     },
 
     replace: function (url) {
-      if (this.ready && !this.disabled && url) {
+      if (!this.disabled && url) {
+        this.options.data = null; // Remove previous data
         this.load(url);
       }
     },
@@ -1021,7 +1195,7 @@
     move: function (offsetX, offsetY) {
       var canvas = this.canvas;
 
-      if (this.built && !this.disabled && isNumber(offsetX) && isNumber(offsetY)) {
+      if (this.built && !this.disabled && this.options.movable && isNumber(offsetX) && isNumber(offsetY)) {
         canvas.left += offsetX;
         canvas.top += offsetY;
         this.renderCanvas(true);
@@ -1068,11 +1242,10 @@
       }
     },
 
-    getData: function () {
+    getData: function (rounded) {
       var cropBox = this.cropBox,
           canvas = this.canvas,
           image = this.image,
-          rotate = image.rotate,
           ratio,
           data;
 
@@ -1088,7 +1261,7 @@
 
         $.each(data, function (i, n) {
           n = n / ratio;
-          data[i] = n;
+          data[i] = rounded ? Math.round(n) : n;
         });
 
       } else {
@@ -1100,9 +1273,44 @@
         };
       }
 
-      data.rotate = rotate;
+      data.rotate = this.ready ? image.rotate : 0;
 
       return data;
+    },
+
+    setData: function (data) {
+      var image = this.image,
+          canvas = this.canvas,
+          cropBoxData = {},
+          ratio;
+
+      if (this.built && !this.disabled && $.isPlainObject(data)) {
+        if (isNumber(data.rotate) && data.rotate !== image.rotate && this.options.rotatable) {
+          image.rotate = data.rotate;
+          this.rotated = true;
+          this.renderCanvas(true);
+        }
+
+        ratio = image.width / image.naturalWidth;
+
+        if (isNumber(data.x)) {
+          cropBoxData.left = data.x * ratio + canvas.left;
+        }
+
+        if (isNumber(data.y)) {
+          cropBoxData.top = data.y * ratio + canvas.top;
+        }
+
+        if (isNumber(data.width)) {
+          cropBoxData.width = data.width * ratio;
+        }
+
+        if (isNumber(data.height)) {
+          cropBoxData.height = data.height * ratio;
+        }
+
+        this.setCropBoxData(cropBoxData);
+      }
     },
 
     getContainerData: function () {
@@ -1184,21 +1392,19 @@
           cropBox.top = data.top;
         }
 
+        if (isNumber(data.width)) {
+          cropBox.width = data.width;
+        }
+
+        if (isNumber(data.height)) {
+          cropBox.height = data.height;
+        }
+
         if (aspectRatio) {
           if (isNumber(data.width)) {
-            cropBox.width = data.width;
             cropBox.height = cropBox.width / aspectRatio;
           } else if (isNumber(data.height)) {
-            cropBox.height = data.height;
             cropBox.width = cropBox.height * aspectRatio;
-          }
-        } else {
-          if (isNumber(data.width)) {
-            cropBox.width = data.width;
-          }
-
-          if (isNumber(data.height)) {
-            cropBox.height = data.height;
           }
         }
 
@@ -1324,50 +1530,39 @@
 
         if (this.built) {
           this.initCropBox();
+
+          if (this.cropped) {
+            this.renderCropBox();
+          }
         }
       }
     },
 
     setDragMode: function (mode) {
-      var $dragBox = this.$dragBox,
-          cropable = false,
-          movable = false;
+      var options = this.options,
+          croppable,
+          movable;
 
-      if (!this.ready || this.disabled) {
-        return;
+      if (this.ready && !this.disabled) {
+        croppable = options.dragCrop && mode === 'crop';
+        movable = options.movable && mode === 'move';
+        mode = (croppable || movable) ? mode : 'none';
+
+        this.$dragBox.data('drag', mode).toggleClass(CLASS_CROP, croppable).toggleClass(CLASS_MOVE, movable);
+
+        if (!options.cropBoxMovable) {
+          // Sync drag mode to crop box when it is not movable(#300)
+          this.$face.data('drag', mode).toggleClass(CLASS_CROP, croppable).toggleClass(CLASS_MOVE, movable);
+        }
       }
-
-      switch (mode) {
-        case 'crop':
-          if (this.options.dragCrop) {
-            cropable = true;
-            $dragBox.data('drag', mode);
-          } else {
-            movable = true;
-          }
-
-          break;
-
-        case 'move':
-          movable = true;
-          $dragBox.data('drag', mode);
-
-          break;
-
-        default:
-          $dragBox.removeData('drag');
-      }
-
-      $dragBox.toggleClass(CLASS_CROP, cropable).toggleClass(CLASS_MOVE, movable);
     }
   });
 
-  prototype.change = function () {
+  prototype.change = function (shiftKey) {
     var dragType = this.dragType,
+        options = this.options,
         canvas = this.canvas,
         container = this.container,
-        maxWidth = container.width,
-        maxHeight = container.height,
         cropBox = this.cropBox,
         width = cropBox.width,
         height = cropBox.height,
@@ -1375,13 +1570,29 @@
         top = cropBox.top,
         right = left + width,
         bottom = top + height,
+        minLeft = 0,
+        minTop = 0,
+        maxWidth = container.width,
+        maxHeight = container.height,
         renderable = true,
-        aspectRatio = this.options.aspectRatio,
+        aspectRatio = options.aspectRatio,
         range = {
           x: this.endX - this.startX,
           y: this.endY - this.startY
         },
         offset;
+
+    // Locking aspect ratio in "free mode" by holding shift key (#259)
+    if (!aspectRatio && shiftKey) {
+      aspectRatio = width && height ? width / height : 1;
+    }
+
+    if (options.strict) {
+      minLeft = cropBox.minLeft;
+      minTop = cropBox.minTop;
+      maxWidth = minLeft + min(container.width, canvas.width);
+      maxHeight = minTop + min(container.height, canvas.height);
+    }
 
     if (aspectRatio) {
       range.X = range.y * aspectRatio;
@@ -1397,7 +1608,7 @@
 
       // Resize cropBox
       case 'e':
-        if (range.x >= 0 && (right >= maxWidth || aspectRatio && (top <= 0 || bottom >= maxHeight))) {
+        if (range.x >= 0 && (right >= maxWidth || aspectRatio && (top <= minTop || bottom >= maxHeight))) {
           renderable = false;
           break;
         }
@@ -1417,7 +1628,7 @@
         break;
 
       case 'n':
-        if (range.y <= 0 && (top <= 0 || aspectRatio && (left <= 0 || right >= maxWidth))) {
+        if (range.y <= 0 && (top <= minTop || aspectRatio && (left <= minLeft || right >= maxWidth))) {
           renderable = false;
           break;
         }
@@ -1438,7 +1649,7 @@
         break;
 
       case 'w':
-        if (range.x <= 0 && (left <= 0 || aspectRatio && (top <= 0 || bottom >= maxHeight))) {
+        if (range.x <= 0 && (left <= minLeft || aspectRatio && (top <= minTop || bottom >= maxHeight))) {
           renderable = false;
           break;
         }
@@ -1459,7 +1670,7 @@
         break;
 
       case 's':
-        if (range.y >= 0 && (bottom >= maxHeight || aspectRatio && (left <= 0 || right >= maxWidth))) {
+        if (range.y >= 0 && (bottom >= maxHeight || aspectRatio && (left <= minLeft || right >= maxWidth))) {
           renderable = false;
           break;
         }
@@ -1480,7 +1691,7 @@
 
       case 'ne':
         if (aspectRatio) {
-          if (range.y <= 0 && (top <= 0 || right >= maxWidth)) {
+          if (range.y <= 0 && (top <= minTop || right >= maxWidth)) {
             renderable = false;
             break;
           }
@@ -1492,7 +1703,7 @@
           if (range.x >= 0) {
             if (right < maxWidth) {
               width += range.x;
-            } else if (range.y <= 0 && top <= 0) {
+            } else if (range.y <= 0 && top <= minTop) {
               renderable = false;
             }
           } else {
@@ -1500,7 +1711,7 @@
           }
 
           if (range.y <= 0) {
-            if (top > 0) {
+            if (top > minTop) {
               height -= range.y;
               top += range.y;
             }
@@ -1526,7 +1737,7 @@
 
       case 'nw':
         if (aspectRatio) {
-          if (range.y <= 0 && (top <= 0 || left <= 0)) {
+          if (range.y <= 0 && (top <= minTop || left <= minLeft)) {
             renderable = false;
             break;
           }
@@ -1537,10 +1748,10 @@
           left += range.X;
         } else {
           if (range.x <= 0) {
-            if (left > 0) {
+            if (left > minLeft) {
               width -= range.x;
               left += range.x;
-            } else if (range.y <= 0 && top <= 0) {
+            } else if (range.y <= 0 && top <= minTop) {
               renderable = false;
             }
           } else {
@@ -1549,7 +1760,7 @@
           }
 
           if (range.y <= 0) {
-            if (top > 0) {
+            if (top > minTop) {
               height -= range.y;
               top += range.y;
             }
@@ -1575,7 +1786,7 @@
 
       case 'sw':
         if (aspectRatio) {
-          if (range.x <= 0 && (left <= 0 || bottom >= maxHeight)) {
+          if (range.x <= 0 && (left <= minLeft || bottom >= maxHeight)) {
             renderable = false;
             break;
           }
@@ -1585,7 +1796,7 @@
           height = width / aspectRatio;
         } else {
           if (range.x <= 0) {
-            if (left > 0) {
+            if (left > minLeft) {
               width -= range.x;
               left += range.x;
             } else if (range.y >= 0 && bottom >= maxHeight) {
@@ -1758,6 +1969,10 @@
     // Type: Function
     crop: null,
 
+    // Previous/latest crop data
+    // Type: Object
+    data: null,
+
     // Add extra containers for previewing
     // Type: String (jQuery selector)
     preview: '',
@@ -1774,14 +1989,18 @@
 
     autoCrop: true, // Enable to crop the image automatically when initialize
     dragCrop: true, // Enable to create new crop box by dragging over the image
-    movable: true, // Enable to move the crop box
-    resizable: true, // Enable to resize the crop box
+    movable: true, // Enable to move the image
     rotatable: true, // Enable to rotate the image
     zoomable: true, // Enable to zoom the image
     touchDragZoom: true, // Enable to zoom the image by wheeling mouse
     mouseWheelZoom: true, // Enable to zoom the image by dragging touch
+    cropBoxMovable: true, // Enable to move the crop box
+    cropBoxResizable: true, // Enable to resize the crop box
+    doubleClickToggle: true, // Toggle drag mode between "crop" and "move" when double click on the cropper
 
     // Dimensions
+    minCanvasWidth: 0,
+    minCanvasHeight: 0,
     minCropBoxWidth: 0,
     minCropBoxHeight: 0,
     minContainerWidth: 200,
@@ -1794,7 +2013,8 @@
     dragmove: null, // Function
     dragend: null, // Function
     zoomin: null, // Function
-    zoomout: null // Function
+    zoomout: null, // Function
+    change: null // Function
   };
 
   Cropper.setDefaults = function (options) {
@@ -1807,17 +2027,17 @@
     return source.replace(/\d+/g, function (i) {
       return words[i];
     });
-  })('<0 6="5-container"><0 6="5-canvas"></0><0 6="5-2-9" 3-2="move"></0><0 6="5-crop-9"><1 6="5-view-9"></1><1 6="5-8 8-h"></1><1 6="5-8 8-v"></1><1 6="5-face" 3-2="all"></1><1 6="5-7 7-e" 3-2="e"></1><1 6="5-7 7-n" 3-2="n"></1><1 6="5-7 7-w" 3-2="w"></1><1 6="5-7 7-s" 3-2="s"></1><1 6="5-4 4-e" 3-2="e"></1><1 6="5-4 4-n" 3-2="n"></1><1 6="5-4 4-w" 3-2="w"></1><1 6="5-4 4-s" 3-2="s"></1><1 6="5-4 4-ne" 3-2="ne"></1><1 6="5-4 4-nw" 3-2="nw"></1><1 6="5-4 4-sw" 3-2="sw"></1><1 6="5-4 4-se" 3-2="se"></1></0></0>', 'div,span,drag,data,point,cropper,class,line,dashed,box');
+  })('<0 6="5-container"><0 6="5-canvas"></0><0 6="5-2-9"></0><0 6="5-crop-9"><1 6="5-view-9"></1><1 6="5-8 8-h"></1><1 6="5-8 8-v"></1><1 6="5-face"></1><1 6="5-7 7-e" 3-2="e"></1><1 6="5-7 7-n" 3-2="n"></1><1 6="5-7 7-w" 3-2="w"></1><1 6="5-7 7-s" 3-2="s"></1><1 6="5-4 4-e" 3-2="e"></1><1 6="5-4 4-n" 3-2="n"></1><1 6="5-4 4-w" 3-2="w"></1><1 6="5-4 4-s" 3-2="s"></1><1 6="5-4 4-ne" 3-2="ne"></1><1 6="5-4 4-nw" 3-2="nw"></1><1 6="5-4 4-sw" 3-2="sw"></1><1 6="5-4 4-se" 3-2="se"></1></0></0>', 'div,span,drag,data,point,cropper,class,line,dashed,box');
 
   /* Template source:
   <div class="cropper-container">
     <div class="cropper-canvas"></div>
-    <div class="cropper-drag-box" data-drag="move"></div>
+    <div class="cropper-drag-box"></div>
     <div class="cropper-crop-box">
       <span class="cropper-view-box"></span>
       <span class="cropper-dashed dashed-h"></span>
       <span class="cropper-dashed dashed-v"></span>
-      <span class="cropper-face" data-drag="all"></span>
+      <span class="cropper-face"></span>
       <span class="cropper-line line-e" data-drag="e"></span>
       <span class="cropper-line line-n" data-drag="n"></span>
       <span class="cropper-line line-w" data-drag="w"></span>
