@@ -1111,9 +1111,12 @@ jQuery(document).ready(function ($) {
     };
 
     var summernote_image_upload = function(file, editor, welEditable) {
-            data = new FormData();
-            data.append("file-0", file);
-            jQuery.ajax({
+        data = new FormData();
+        data.append("file-0", file);
+        if (('#loadingImage') != undefined) {
+            $('#loadingImage').show();
+        }
+        jQuery.ajax({
                 url: '/dialog/upload_image?permanent=True',
                 data: data,
                 cache: false,
@@ -1122,11 +1125,17 @@ jQuery(document).ready(function ($) {
                 type: 'POST',
                 success: function(data){
                     editor.insertImage(welEditable, data.url);
+                    if (('#loadingImage') != undefined) {
+                        $('#loadingImage').hide();
+                    }
                 },
                 error: function(data) {
+                    if (('#loadingImage') != undefined) {
+                        $('#loadingImage').hide();
+                    }
                     BootstrapDialog.alert('Something went wrong when uploading the file.');
                 }
-            });
+        });
     };
 
     if ($('.summernote') != undefined) {
