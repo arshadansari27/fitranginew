@@ -873,6 +873,46 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    $('body').on('click', '[data-action="search-members-chat"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+    BootstrapDialog.show({
+            title: 'Search Members to chat',
+            message: $('<div></div>').load('/search-members-chat-modal'),
+            buttons: [
+                {
+                    label: 'Close',
+                    action: function(dialog) {
+                        dialog.close();
+                    }
+                },
+                {
+                    label: 'Search',
+                    cssClass: 'btn-primary',
+                    action: function(dialog){
+                        dialog.getModalBody().find('.alert').remove();
+                        var id, email_enabled, email_frequency;
+                        id              = $('#profile-id').val();
+                        email_enabled   = ($('#email-enabled-edit').is(':checked'))?true: false;
+                        email_frequency = $('#email-frequency-edit').val();
+                        console.log('[*] email enabled ' + email_enabled);
+                        App.profile.edit_profile_preference(id, {
+                            email_enabled: email_enabled,
+                            email_frequency: email_frequency
+                        }, function(data){
+                            show_dialog_message(dialog, data.status, data.message);
+                            if (data.status == 'success') {
+                                setTimeout(function(){dialog.close();}, 1000);
+                            }
+                        });
+                    }
+                }
+            ]
+        });
+    });
+
+
     $('body').on('click', '[data-action="edit-profile-password"]', function (e) {
         e.stopPropagation();
         e.preventDefault();

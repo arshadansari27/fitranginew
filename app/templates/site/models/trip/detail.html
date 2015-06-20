@@ -28,94 +28,41 @@
 </section>
 
 <section class="container adventure-trips-content">
+     <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12 ">
 
-    <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12 ">
-        <div class="row-fluid adventure-trips-tabs">
-            <ul class="nav nav-pills " role="tablist">
-                <li class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">
-                    <i class="fa fa-home"></i> <strong>Overview</strong></a></li>
-
-
-                <li><a href="#details" aria-controls="details" role="tab" data-toggle="tab">
-                    <i class="fa fa-home"></i> <strong>Details</strong></a></li>
-
-                {% if model.has_gallery_images %}
-                <li><a href="#gallery-images" aria-controls="gallery-images" role="tab"
-                       data-toggle="tab">
-                    <i class="fa fa-home"></i> <strong>Gallery</strong></a></li>
-                {% endif %}
-            </ul>
-
-            <!-- Tab content -->
-            <div class="tab-content">
-                <div class="tab-pane" id="gallery-images">
-                    <article class="col-xs-12 col-md-12 tab-details">
-                        <div class="fotorama thumbnail" data-nav="thumbs">
-                            <a href=""><img src="/images/slider-3.jpg"></a>
-                        </div>
-                    </article>
-                </div>
-                <!-- End of Tab Pane -->
-
-                <div class="tab-pane active" id="overview">
-                    <!--h3>Overview Underconstructions</h3-->
-                    {% if model.description %}
-                    <h4><u>Description</u></h4>
-                    {{model.description}}
-                    <hr/>
-                    {% endif %}
-                    <h4><u>More</u></h4>
-                    {{ model.about }}
-                </div>
-                <!-- End of Tab Pane -->
-
-                <div class="tab-pane" id="details">
-                    <h3>Schedule</h3>
-                    <ul>
-                        {% for i in model.schedule %}
-                        <li>{{i}}</li>
-                        {% endfor %}
-                    </ul>
-                    <hr/>
-                    <h3>Inclusive</h3>
-                    <ul>
-                        {% for i in model.inclusive %}
-                        <li>{{i}}</li>
-                        {% endfor %}
-                    </ul>
-                    <hr/>
-                    <h3>Exclusive</h3>
-                    <ul>
-                        {% for i in model.exclusive %}
-                        <li>{{i}}</li>
-                        {% endfor %}
-                    </ul>
-                    <hr/>
-                    <h3>Things to carry</h3>
-                    <ul>
-                        {% for i in model.things_to_carry %}
-                        <li>{{i}}</li>
-                        {% endfor %}
-                    </ul>
-
-                </div>
-                <!-- End of Tab Pane -->
-
-            </div>
-            <!-- Tab content end -->
-
-
+        <article class="col-xs-12 col-md-12 tab-details">
+        <div class="fotorama thumbnail" data-nav="thumbs">
+          <a href=""><img src="../images/slider-3.jpg"></a>
+          <a href=""><img src="../images/slider-2.jpg"></a>
+          <a href=""><img src="../images/slider-1.jpg"></a>
+          <a href=""><img src="../images/slider-3.jpg"></a>
+          <a href=""><img src="../images/slider-2.jpg"></a>
+          <a href=""><img src="../images/slider-1.jpg"></a>
+          <a href=""><img src="../images/slider-3.jpg"></a>
+          <a href=""><img src="../images/slider-2.jpg"></a>
+          <a href=""><img src="../images/slider-1.jpg"></a>
         </div>
+        </article>
 
+         <div class="col-lg-12 col-md-12 col-xs-12 going-list">
+            {% if not user or user in model.joined %}
+                {% for u in model.joined %}
+                <img src="{{u.cover_image_path}}" class="" width="48">
+                {% endfor %}
+                <!--h3>45+</h3-->
+            {% else %}
+                {% for u in model.interested %}
+                <img src="{{u.cover_image_path}}" class="" width="48">
+                {% else %}
+                <div class="well well-sm">
+                    <h4>Be the first to show interest in this event</h4>
+                </div>
+                {% endfor %}
 
-    </div>
-    <!--col7-close-->
+            {% endif %}
+         </div>
 
-
-
-
-
-
+     </div><!--col7-close-->
 
     <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
 
@@ -198,33 +145,108 @@
 
     </div>
     <!--col5-close-->
-    <div class="col-lg-12 col-md-12 col-xs-12 going-list">
-        {% if not user or user in model.joined %}
-            {% for u in model.joined %}
-            <img src="{{u.cover_image_path}}" class="" width="48">
-            {% endfor %}
-            <!--h3>45+</h3-->
-        {% else %}
-            {% for u in model.interested %}
-            <img src="{{u.cover_image_path}}" class="" width="48">
-            {% else %}
-            <div class="well well-sm">
-                <h4>Be the first to show interest in this event</h4>
+
+    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
+        <div class="row-fluid adventure-trips-tabs">
+            <ul class="nav nav-pills " role="tablist">
+                <li class="active"><a href="#discussion" aria-controls="discussion" role="tab" data-toggle="tab">
+                    <i class="fa fa-home"></i> <strong>Event Discussion</strong></a></li>
+
+
+                <li class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">
+                    <i class="fa fa-home"></i> <strong>Overview</strong></a></li>
+
+                <li class="active"><a href="#schedule" aria-controls="schedule" role="tab" data-toggle="tab">
+                    <i class="fa fa-home"></i> <strong>Schedule</strong></a></li>
+
+
+                <li><a href="#details" aria-controls="details" role="tab" data-toggle="tab">
+                    <i class="fa fa-home"></i> <strong>Inclusive/Exclusive</strong></a></li>
+
+                <li><a href="#things_to_carry" aria-controls="things_to_carry" role="tab" data-toggle="tab">
+                    <i class="fa fa-home"></i> <strong>Things to Carry</strong></a></li>
+
+                {% if model.has_gallery_images %}
+                <li><a href="#gallery-images" aria-controls="gallery-images" role="tab"
+                       data-toggle="tab">
+                    <i class="fa fa-home"></i> <strong>Gallery</strong></a></li>
+                {% endif %}
+            </ul>
+
+            <!-- Tab content -->
+            <div class="tab-content">
+                <div class="tab-pane" id="gallery-images">
+                    <article class="col-xs-12 col-md-12 tab-details">
+                        <div class="fotorama thumbnail" data-nav="thumbs">
+                            <a href=""><img src="/images/slider-3.jpg"></a>
+                        </div>
+                    </article>
+                </div>
+                <!-- End of Tab Pane -->
+
+                <div class="tab-pane active" id="overview">
+                    <!--h3>Overview Underconstructions</h3-->
+                    {% if model.description %}
+                    <h4><u>Description</u></h4>
+                    {{model.description}}
+                    <hr/>
+                    {% endif %}
+                    <h4><u>More</u></h4>
+                    {{ model.about }}
+                </div>
+                <!-- End of Tab Pane -->
+
+                <div class="tab-pane" id="details">
+                    <h3>Schedule</h3>
+                    <ul>
+                        {% for i in model.schedule %}
+                        <li>{{i}}</li>
+                        {% endfor %}
+                    </ul>
+                    <hr/>
+                    <h3>Inclusive</h3>
+                    <ul>
+                        {% for i in model.inclusive %}
+                        <li>{{i}}</li>
+                        {% endfor %}
+                    </ul>
+                    <hr/>
+                    <h3>Exclusive</h3>
+                    <ul>
+                        {% for i in model.exclusive %}
+                        <li>{{i}}</li>
+                        {% endfor %}
+                    </ul>
+                    <hr/>
+                    <h3>Things to carry</h3>
+                    <ul>
+                        {% for i in model.things_to_carry %}
+                        <li>{{i}}</li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+                <!-- End of Tab Pane -->
+
             </div>
-            {% endfor %}
-
-        {% endif %}
-    </div>
+            <!-- Tab content end -->
 
 
-    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-        <div>
-            {% import 'site/includes/post_box.html' as post %}
-            {{ post.show_post_form(model, 'discussion') }}
-            <input type="hidden" id="discussion-filter" data-category="all" data-filter="parent__trip__pk" data-model="post" value="{{model.id}}" data-filter-status="fixed"/>
-            {{ discussions|safe }}
         </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div>
+                {% import 'site/includes/post_box.html' as post %}
+                {{ post.show_post_form(model, 'discussion') }}
+                <input type="hidden" id="discussion-filter" data-category="all" data-filter="parent__trip__pk" data-model="post" value="{{model.id}}" data-filter-status="fixed"/>
+                {{ discussions|safe }}
+            </div>
+        </div>
+
     </div>
+    <!--col7-close-->
+
+
 
     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
 

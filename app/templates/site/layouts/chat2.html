@@ -2,13 +2,15 @@
 {% raw %}
 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 contact-section">
     <div class="profile online">
+        <a class="pull-right" data-user-id="{{user.id}}" href="#">
+            <button data-action="search-members-chat" data-model="" data-model-id="{{user.id}}" data-filter-submit="search" class="btn btn-default btn-sm" type="button"><i class="fa fa-search"></i></button>
+        </a>
         <a href="#" class="pull-left">
             <figure class="profile-picture">
                 <img src="{% endraw %}{{user.cover_image_path}}{% raw %}" class="img-circle img-responsive" alt="User Name">
             </figure>
         </a>
         <h5>{% endraw %}{{user.name}}{% raw %}</h5>
-
         <div class="btn-group">
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 
