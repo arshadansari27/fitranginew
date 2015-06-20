@@ -92,6 +92,8 @@
                 <button type="button" data-action="go-back" class="btn fitrangi-btn">Back</button>
                 {% if model_name == 'article' %}
                 <button type="button" data-action="save" class="btn fitrangi-btn blue">Save</button>
+                {% elif model.admin_published %}
+                <button type="button" data-action="save-edit" class="btn fitrangi-btn blue">Submit</button>
                 {% else %}
                 <button type="button" data-action="save" class="btn fitrangi-btn blue">Submit</button>
                 {% endif %}
@@ -192,6 +194,12 @@
             e.stopPropagation();
             e.preventDefault();
             save_content();
+        });
+        $('[data-action="save-edit"]').click(function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            save_content();
+            window.history.back();
         });
         $('[data-action="go-back"]').click(function(){
             window.history.back();
