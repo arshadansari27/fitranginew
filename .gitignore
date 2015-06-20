@@ -12,4 +12,5 @@ node.pid
 .webassets-cache/
 app/assets/app
 content-images/
-app/assets/img/Profile-Picture*thumbnail.jpg
+app/assets/img/Profile-Picture1-thumbnail.jpg
+app/assets/img/Profile-Picture2-thumbnail.jpg
