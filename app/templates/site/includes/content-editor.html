@@ -167,7 +167,11 @@
             if (id != undefined && id.length > 0) {
                 editor.edit(id, type, title, description, video_link, cover_image, channels, tags, content, function(data){
                     if (data.status == 'success'){
-                        window.location.reload();
+                        if (type == 'discussion') {
+                            window.location.href = '/discussions#mystuff';
+                        } else {
+                            window.location.reload();
+                        }
                     } else {
                         $('.alert').show();
                         $('.alert').append(data.message);
@@ -199,7 +203,6 @@
             e.stopPropagation();
             e.preventDefault();
             save_content();
-            window.history.back();
         });
         $('[data-action="go-back"]').click(function(){
             window.history.back();

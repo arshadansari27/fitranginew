@@ -79,6 +79,7 @@
                 <ul id="myTab" class="nav nav-tabs" role="tablist">
                     <li class="active"><a href="#latest" role="tab" data-toggle="tab" aria-controls="top-blogs" aria-expanded="false"><span class="fa fa-refresh"></span> <strong>Latest</strong> </a></li>
                     <li><a href="#featured" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="false"> <span class="fa fa-bolt"></span> <strong>Featured</strong></a></li>
+                    <li><a href="#mystuff" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="false"> <span class="fa fa-user"></span> <strong>My Discussions</strong></a></li>
                 </ul>
             </div>
         </div>
@@ -94,6 +95,12 @@
                             {{latest|safe}}
                     </section>
                 </div>
+                <div role="tabpanel" class="tab-pane fade in" id="mystuff" aria-labelledby="latest">
+                    <input id="my-discussion-filter" type="hidden" data-category="my" data-filter="author" data-model="discussion" value="{{user.id}}" data-filter-status="fixed"/>
+                    <section class="container-fluid mb-10 discussion">
+                            {{my|safe}}
+                    </section>
+                </div>
             </div>
         </div>
     </div>
@@ -105,6 +112,7 @@
         App.filter('channel-filter');
         App.filter('tag-filter');
         App.filter('admin-published-filter');
+        App.filter('my-discussion-filter');
 
     });
 </script>
