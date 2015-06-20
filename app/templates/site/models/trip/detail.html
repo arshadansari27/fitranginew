@@ -20,7 +20,7 @@
         <a class="btn btn-primary"  href="#" data-action="remove-trip-interested" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-link green"></span>&nbsp;Not Interested</a>
     {% endif %}
     {% if not model in user.joined_trip %}
-        <a  class="btn btn-primary" href="#" data-action="add-trip-joined" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-link"></span>&nbsp;Join</a>
+        <!--a  class="btn btn-primary" href="#" data-action="add-trip-joined" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-link"></span>&nbsp;Join</a-->
     {% else %}
         <a class="btn btn-primary"  href="#" data-action="remove-trip-joined" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-link green"></span>&nbsp;Unjoin</a>
     {% endif %}
@@ -284,19 +284,14 @@
 
         <div class="row box-bg">
             <div class="heading">
-                <h4>Why Book Through us?</h4>
+                <h4>Booking Enquiry</h4>
             </div>
+            <p style="text-align: center;">"{{model.name}}"</p> <br>
+            <p style="text-align: center;">"{{model.description}}"</p>
 
-            <ul class="my-list-right">
-                <li>Best Price Guarantee</li>
-                <!--li>2500+ Trips to Select</li-->
-                <li>Only Genuine Trips</li>
-                <!--li>Trusted by 100,000+ Adventurers</li-->
-                <li>Un-biased curated trips</li>
-            </ul>
 
             <div class="sub-heading">
-                <h5>Not Sure Yet? Have a Question?</h5>
+                <h5 style="font-size:17px;">Fill these to let us connect you with the organiser</h5>
             </div>
             <form id="book-now" class="form-horizontal question-form">
                 <div class="form-group">
@@ -341,8 +336,17 @@
                         <textarea  data-action-value="enquiry" class="form-control" placeholder="how can we help you" rows="3"></textarea>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-sm-2 "></label>
 
-                <button type="button" data-model-id="{{model.id}}" data-action="send-enquiry" class="btn btn-primary btn-block btn-sm">Send Booking</button>
+                    <div class="col-sm-10">
+                        I Prefer:
+                      <input type="checkbox" name="iprefer" value="phone" >Phone
+                      <input type="checkbox" name="iprefer" value="email" >Email
+                    </div>
+                </div>
+
+                <button type="button" data-model-id="{{model.id}}" data-action="send-enquiry" class="btn btn-primary btn-block btn-sm">Send Enquiry</button>
 
             </form>
         </div>
