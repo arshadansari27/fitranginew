@@ -4,7 +4,8 @@
 
         <section class="container discussion-heading">
 
-            <input id="admin-published-filter" type="hidden" data-model="discussion" data-filter="admin_published" value="bool|True" data-filter-status="fixed"/>
+            <input id="admin-published-filter1" type="hidden" data-category="latest" data-model="discussion" data-filter="admin_published" value="bool|True" data-filter-status="fixed"/>
+            <input id="admin-published-filter2" type="hidden" data-category="featured" data-model="discussion" data-filter="admin_published" value="bool|True" data-filter-status="fixed"/>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <a data-user-id="{{user.id}}" data-action="add-discussion" href="#" class="btn btn-primary btn-lg  m-5">Add a discussion</a>
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 pull-right">
@@ -111,7 +112,8 @@
         App.filter('name-filter');
         App.filter('channel-filter');
         App.filter('tag-filter');
-        App.filter('admin-published-filter');
+        App.filter('admin-published-filter1');
+        App.filter('admin-published-filter2');
         App.filter('my-discussion-filter');
 
     });
