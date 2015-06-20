@@ -1157,7 +1157,7 @@ jQuery(document).ready(function ($) {
                     var updatePastedText = function(someNote){
                         var original = someNote.code();
                         var cleaned = clean_pasted_html(original); //this is where to call whatever clean function you want. I have mine in a different file, called CleanPastedHTML.
-                        someNote.code('').html(cleaned); //this sets the displayed content editor to the cleaned pasted code.
+                        someNote.code().html(cleaned); //this sets the displayed content editor to the cleaned pasted code.
                     };
                     setTimeout(function () {
                         //the function is called before the text is really pasted.
