@@ -5145,7 +5145,8 @@ button.note-editor .close {
   line-height: 1.428571429;
 }
 .modal-body {
-  position: relative;
+  max-height: 420px;
+  overflow-y: auto;
   padding: 20px;
 }
 .modal-footer {
