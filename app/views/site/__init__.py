@@ -295,10 +295,30 @@ def manage_profile():
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/editors/invoke', methods=['POST'])
-def edit_invoke():
+def editor_invoke():
     try:
         message = request.get_json(force=True)
         editor = NodeEditor.factory(message)
         return editor.invoke()
+    except Exception, e:
+        return jsonify(dict(status='error', message='Something went wrong', exception=str(e)))
+
+
+@app.route('/extractors/invoke', methods=['GET', 'POST'])
+def extractor_invoke():
+    try:
+        message = request.get_json(force=True)
+        extractor = NodeExtractor.factory(message.get('model_type'))
+        is_single = message.get('is_single', False)
+        query       = message.get('query', None)
+        if is_single:
+            model       = extractor.get_single(query)
+            return jsonify(status='success', node=model)
+        else:
+            sort        = message.get('sort', None)
+            size        = message.get('size', 12)
+            page        = message.get('page', 1)
+            models      = extractor.get_list(query, True, page, size, sort=sort)
+            return jsonify(status='success', nodes=models)
     except Exception, e:
         return jsonify(dict(status='error', message='Something went wrong', exception=str(e)))
