@@ -1494,7 +1494,20 @@ jQuery(document).ready(function ($) {
 
     var url = document.location.toString();
     if (url.match('#')) {
-        $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+        var second_part = url.split('#')[1];
+        var should_scroll = false;
+        if (second_part.match('/?')) {
+            second_part = second_part.split('?')[0];
+            should_scroll = true;
+        }
+        if ('.nav-tabs') {
+            $('.nav-tabs a[href=#'+second_part+']').tab('show') ;
+        }
+        if (should_scroll) {
+            setTimeout(function () {
+                App.scroll_to_container();
+            }, 4000);
+        }
     }
 
     $('.nav-tabs a').on('shown.bs.tab', function (e) {
