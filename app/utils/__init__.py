@@ -99,6 +99,21 @@ def convertLinks(text):
 def tag_remove(text):
     return TAG_RE.sub('', text)
 
+def specific_tags(type):
+    from app.models.content import Content, Article, Discussion
+    tags = []
+    if type == 'article':
+        col = Article._get_collection()
+    elif type == 'discussion':
+        col = Discussion._get_collection()
+    else:
+        col = Content._get_collection()
+    pipeline = [{"$unwind": "$tags"}, {"$group": {"_id": "$tags", "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}]
+    tags.extend([(u['_id'], u['count']) for u in col.aggregate(pipeline)['result']])
+    tags = sorted(tags, reverse=True, key=lambda u: u[1])
+    return tags
+
+
 #@cache.cached(60)
 def all_tags(type=None):
     from app.models.content import Content, Article, Discussion

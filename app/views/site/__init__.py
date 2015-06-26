@@ -7,7 +7,7 @@ from app.handlers.editors import NodeEditor
 from app.handlers import NodeCollectionFactory, NodeExtractor
 from app.models import Node, NodeFactory, ACTIVITY, ADVENTURE, ARTICLE, DISCUSSION, PROFILE, EVENT, TRIP
 from app.models.profile import Profile, ProfileType
-from app.utils import login_required, all_tags
+from app.utils import login_required, all_tags, specific_tags
 from app.handlers import  EditorView, PageManager
 from app.settings import CDN_URL
 
@@ -235,8 +235,13 @@ def ajax_names():
     model_name = request.args.get('model_name', '')
     attr = request.args.get('attr', None)
     size = request.args.get('size', None)
+    model_type = request.args.get('model_type', None)
     if model_name == 'tag':
-        options = [u[0] for u in all_tags()]
+        if model_type is not None:
+            options = [u[0] for u in specific_tags(model_type)]
+            #print '*' * 100, '\n', options, '\n', '*' * 100
+        else:
+            options = [u[0] for u in all_tags()]
         options.extend([u.name for u in NodeExtractor.factory(ACTIVITY).get_list("", False, 0, 0)])
         if size:
             options = options[0: int(size)]
