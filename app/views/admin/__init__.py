@@ -316,7 +316,7 @@ class ContentAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
     form_columns = ['title', 'description', 'content', 'author', 'channels', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'tags', 'path_cover_image']
-    column_list = ('title', 'author', 'published', 'admin_published', 'comments', 'cover_image', 'channels')
+    column_list = ('title', 'author', 'published', 'admin_published', 'comments', 'cover_image', 'channels', 'image_download')
     column_filters = ['title', FilterChannel('channel.id', 'Channel')]
     column_searchable_list = ('title', )
     form_overrides = dict(content=SummernoteTextAreaField)
@@ -337,7 +337,10 @@ class ContentAdminView(ModelView):
     def _comments_formatter(view, context, model, name):
         return Markup("<a href='%s'>%d</a>" % (url_for('content_post_admin_view.index_view', content_id=str(model.id), content_type=model.__class__.__name__), Post.objects(parent=model).count())) if Post.objects(parent=model).count() > 0 else ""
 
-    column_formatters = {    'comments': _comments_formatter}
+    def _image_downloader(view, context, model, name):
+        return Markup('<a href="%s" target="new">%s</a>' % (model.cover_image_path, 'Download') if model.cover_image_path is not None and len(model.cover_image_path) > 0 else 'No Cover Image')
+
+    column_formatters = {'comments': _comments_formatter, 'image_download': _image_downloader}
 
 class ChannelAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
