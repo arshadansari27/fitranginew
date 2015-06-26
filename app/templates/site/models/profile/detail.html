@@ -191,7 +191,7 @@
                     <input id="accomplished-adventure-filter" data-category="accomplished" data-model="adventure" data-filter="relationship__accomplished__profile" type="hidden" value="{{model.id}}" data-filter-status="fixed">
                     {% if user and model.id == user.id %}
                     <div class="jumbotron help-info" data-category="accomplished" data-model="adventure">
-                        <h5>Mark <a href="/explore/adventure">Adventure Destinations</a> as done to see them here. Create your adventure portfolio for the rest of the world to see!</h5>
+                        <h5>Mark <a href="/adventures">Adventure Destinations</a> as done to see them here. Create your adventure portfolio for the rest of the world to see!</h5>
                     </div>
                     {% endif %}
                     {{accomplished_adventure_list|safe}}
@@ -202,7 +202,7 @@
                     <input id="wish-list-adventure-filter" data-category="wishlisted" data-model="adventure" data-filter="relationship__wishlisted__profile" type="hidden" value="{{model.id}}" data-filter-status="fixed">
                     {% if user and model.id == user.id %}
                     <div class="jumbotron help-info" data-category="wishlisted" data-model="adventure">
-                        <h5>Would you like to experience new <a href="/explore/adventure">Adventure Destinations</a> and keep track of the ones you still have to do? Add them to your wishlist and track them here</h5>
+                        <h5>Would you like to experience new <a href="/adventures">Adventure Destinations</a> and keep track of the ones you still have to do? Add them to your wishlist and track them here</h5>
                     </div>
                     {% endif %}
                     {{wish_listed_adventure_list|safe}}
@@ -223,7 +223,7 @@
                     <input id="profile-follower-filter" data-category="follower" data-model="profile" data-filter="relationship__followed_by__profile" type="hidden" value="{{model.id}}" data-filter-status="fixed">
                     {% if user and model.id == user.id %}
                     <div class="jumbotron help-info" data-category="follower" data-model="profile">
-                        <h5>Follow other <a href="/community/profile">profiles</a> to see what they have been upto lately!</h5>
+                        <h5>Follow other <a href="/profiles">profiles</a> to see what they have been upto lately!</h5>
                     </div>
                     {% endif %}
                     {{follower_list|safe}}
