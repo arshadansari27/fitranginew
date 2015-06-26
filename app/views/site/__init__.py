@@ -267,8 +267,10 @@ def ajax_buttons():
 @app.route('/post/<slug>')
 def model_view(slug):
     model_type = [u for u in request.path.split('/') if u and len(u) > 0][0]
+
     value = '/%s/%s' % (model_type, slug)
-    context = PageManager.get_detail_title_and_page(model_type, query="slug__iexact:%s;" % value)
+    user_id = str(g.user.id) if g.user and g.user.id else ''
+    context = PageManager.get_detail_title_and_page(model_type, query="slug__iexact:%s;" % value, user=user_id)
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/edit-profile')

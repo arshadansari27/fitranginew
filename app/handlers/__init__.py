@@ -339,6 +339,10 @@ class PageManager(object):
         user = kwargs.get('user', None)
         assert  query is not None
         model = NodeExtractor.factory(model_name).get_single(query)
+        if model_name in ['blog', 'discussion', 'article'] and not model.admin_published:
+            if not user or str(model.author.id) != user:
+                return cls.get_search_title_and_page(model_name, query='', title="%s @ Fitrangi" % model_name.capitalize())
+
         image_path = WALL_IMAGE_NAMES[model_name].get('detail', '')(model)
         image_css = WALL_IMAGE_STYLE % image_path
         context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), background_cover=image_css)
