@@ -216,8 +216,8 @@ class Node(object):
                 f = Fraction(x, y)
                 num = f.numerator
                 den = f.denominator
-                s = 128 * num / den
-                im.thumbnail((s, 128), Image.ANTIALIAS)
+                s = 360 * num / den
+                im.thumbnail((s, 360), Image.ANTIALIAS)
                 im.save(base_path + small_path, format)
             img = small_path
         return img #if not USE_CDN else "%s%s" % (CDN_URL, img)
