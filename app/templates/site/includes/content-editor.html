@@ -182,7 +182,11 @@
                 editor.add(type, title, description, video_link, cover_image, channels, tags, content, function(data){
 
                     if (data.status == 'success') {
-                        window.location.href = '/write/' + type + '/' + data.node;
+                        if (type == 'discussion') {
+                            window.location.href = '/discussions#mystuff';
+                        } else {
+                            window.location.href = '/write/' + type + '/' + data.node;
+                        }
                     } else {
                         $('.alert').show();
                         $('.alert').append(data.message);
