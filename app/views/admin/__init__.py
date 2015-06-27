@@ -315,7 +315,7 @@ class PostForContentAdminView(PostAdminView):
 class ContentAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['title', 'description', 'content', 'author', 'channels', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'tags', 'path_cover_image']
+    form_columns = ['title', 'slug', 'description', 'content', 'author', 'channels', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'tags', 'path_cover_image']
     column_list = ('title', 'author', 'published', 'admin_published', 'comments', 'cover_image', 'channels', 'image_download')
     column_filters = ['title', FilterChannel('channel.id', 'Channel')]
     column_searchable_list = ('title', )
