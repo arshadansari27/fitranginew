@@ -7,7 +7,7 @@ from app.handlers.editors import NodeEditor
 from app.handlers import NodeCollectionFactory, NodeExtractor
 from app.models import Node, NodeFactory, ACTIVITY, ADVENTURE, ARTICLE, DISCUSSION, PROFILE, EVENT, TRIP
 from app.models.profile import Profile, ProfileType
-from app.utils import login_required, all_tags, specific_tags
+from app.utils import login_required, all_tags, specific_tags_article, specific_channels_discussion, specific_tags_discussion, specific_channels_article, specific_channels, specific_tags
 from app.handlers import  EditorView, PageManager
 from app.settings import CDN_URL
 
@@ -238,13 +238,24 @@ def ajax_names():
     model_type = request.args.get('model_type', None)
     if model_name == 'tag':
         if model_type is not None:
-            options = [u[0] for u in specific_tags(model_type)]
-            #print '*' * 100, '\n', options, '\n', '*' * 100
+            if model_type == 'article':
+                options = [u[0] for u in specific_tags_article()]
+            elif model_type == 'discussion':
+                options = [u[0] for u in specific_tags_discussion()]
+            else:
+                options = [u[0] for u in specific_tags(model_type)]
         else:
             options = [u[0] for u in all_tags()]
-        options.extend([u.name for u in NodeExtractor.factory(ACTIVITY).get_list("", False, 0, 0)])
         if size:
             options = options[0: int(size)]
+    elif model_name == 'channel':
+        from app.models.content import Channel
+        if model_type == 'article':
+            options = [Channel.objects(pk=str(u[0])).first().name for u in specific_channels_article()]
+        elif model_type == 'discussion':
+            options = [Channel.objects(pk=str(u[0])).first().name for u in specific_channels_discussion()]
+        else:
+            options = [Channel.objects(pk=str(u[0])).first().name for u in specific_channels(model_type)]
     else:
         options = (getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     results = (u for u in options)

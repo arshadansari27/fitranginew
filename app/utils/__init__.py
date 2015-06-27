@@ -99,24 +99,40 @@ def convertLinks(text):
 def tag_remove(text):
     return TAG_RE.sub('', text)
 
+def specific_channels_article():
+    return specific_channels('article')
+
+def specific_channels_discussion():
+    return specific_channels('discussion')
+
+
+def specific_channels(type):
+    from app.models.content import Content
+    channels = []
+    col = Content._get_collection()
+    pipeline = [{"$unwind": "$channels"}, {"$group": {"_id": {'channel': "$channels", 'class': "$_cls"}, "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}]
+    channels.extend([(u['_id']['channel'], u['count']) for u in col.aggregate(pipeline)['result'] if type in u['_id']['class'].lower()])
+    channels = sorted(channels, reverse=True, key=lambda u: u[1])
+    return channels
+
+def specific_tags_article():
+    return specific_tags('article')
+
+def specific_tags_discussion():
+    return specific_tags('discussion')
+
 def specific_tags(type):
-    from app.models.content import Content, Article, Discussion
+    from app.models.content import Content
     tags = []
-    if type == 'article':
-        col = Article._get_collection()
-    elif type == 'discussion':
-        col = Discussion._get_collection()
-    else:
-        col = Content._get_collection()
+    col = Content._get_collection()
     pipeline = [{"$unwind": "$tags"}, {"$group": {"_id": {'tag': "$tags", 'class': "$_cls"}, "count": {"$sum": 1}}}, {"$sort": SON([("count", -1), ("_id", -1)])}]
     tags.extend([(u['_id']['tag'], u['count']) for u in col.aggregate(pipeline)['result'] if type in u['_id']['class'].lower()])
     tags = sorted(tags, reverse=True, key=lambda u: u[1])
     return tags
 
 
-#@cache.cached(60)
-def all_tags(type=None):
-    from app.models.content import Content, Article, Discussion
+def all_tags():
+    from app.models.content import Content
     from app.models.activity import Activity
     tags = [(u.name, 100) for u in Activity.objects.all()]
     col = Content._get_collection()
