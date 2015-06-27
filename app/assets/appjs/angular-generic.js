@@ -34,23 +34,23 @@ function NotificationCtrl($scope) {
     var reset_message_counter = (loc.indexOf('/messaging') > -1)? true: false;
     var reset_stream_counter = (loc.indexOf(url) > -1)? true:false;
 
+    window.App.inital_message_notification = window.App.inital_message_notification || false;
 
     var checkNotifications = function() {
-        var notification_timer = setInterval(function () {
-            window.App.async.call('com.fitrangi.notifications', [user, (reset_stream_counter)?'1':'0', (reset_message_counter)?'1':'0'], function(res){
-                $scope.public_activity_count = res.public_activity_count;
-                $scope.private_activity_count = res.private_activity_count;
-                console.log("Notification counts: " + $scope.public_activity_count + ', ' + $scope.private_activity_count) ;
-                $scope.$apply();
-            });
-        }, 10000);
+        window.App.async.call('com.fitrangi.notifications', [user, (reset_stream_counter)?'1':'0', (reset_message_counter)?'1':'0'], function(res){
+            $scope.public_activity_count = res.public_activity_count;
+            $scope.private_activity_count = res.private_activity_count;
+            console.log("Notification counts: " + $scope.public_activity_count + ', ' + $scope.private_activity_count) ;
+            $scope.$apply();
 
+        });
     };
 
     $(document).bind("status.async.connection", function(e, status){
         if (status == true) {
             console.log('Starting notification counter...');
             checkNotifications();
+            var notification_timer = setInterval(checkNotifications, 10000);
 
         }
     });

@@ -22,10 +22,10 @@ def login_page():
         profile = Profile.authenticate(email, password)
         if profile and profile.id:
             session['user'] = str(profile.id)
+            session['just_logged_in'] = True
             if not hasattr(profile, 'location') or not profile.location or len(profile.location) is 0:
                 flash('Please update your location by clicking <a href="/edit-profile">here</a>')
             response = dict(status='success', message='Successfully logged in.', node=str(profile.id), my_page=profile.slug)
-            print '[*] Login', response
             return jsonify(response)
         return jsonify(dict(status='error', message='Failed to login. Please try again.'))
 

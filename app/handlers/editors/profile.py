@@ -332,13 +332,15 @@ def register_business_profile(data):
         raise Exception("Not logged in")
 
 
-
+    email = email.strip()
+    type = type.strip()
     subscription_type = ProfileType.objects(name__icontains='subscription').first()
-    if Profile.objects(email__iexact=email, type__nin=[str(subscription_type.id)]).first():
+    p = Profile.objects(email__iexact=email).first()
+    if p and ((len(p.type) is 1 and p.type[0] != subscription_type) or len(p.type) > 1):
         raise Exception('Profile already exists')
 
-    type = ProfileType.objects(name__iexact=type.strip()).first()
-    profile = Profile.objects(email__iexact=email.strip()).first()
+    type = ProfileType.objects(name__iexact=type).first()
+    profile = Profile.objects(email__iexact=email).first()
     if lat:
         lat = lat.strip()
     if lng:

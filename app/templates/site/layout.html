@@ -370,7 +370,14 @@
                 $('li.dropdown').removeClass('open');
             }
         });
-
+        var messages = parseInt('{% if user %}{{user.private_activity_count}}{% else %}0{% endif %}');
+        var show_notification = '{% if user %}{{show_message_notification}}{% else %}0{% endif %}';
+        if (show_notification == 'True' && messages > 0) {
+            BootstrapDialog.show({
+                title: 'You have ' + messages + ' message' + ((messages == 1)? '': 's'),
+                message: '<div class="text-center">Click <a href="/messaging">here</a> to view them</div>'
+            });
+        }
     });
 
     (function (i, s, o, g, r, a, m) {

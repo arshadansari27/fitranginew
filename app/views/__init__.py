@@ -20,6 +20,9 @@ env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
 def setup_user():
     if session.get('user') is not None:
         g.user = Profile.objects(pk=session['user']).first()
+    if session.get('just_logged_in', False):
+        g.just_logged_in = True
+        session['just_logged_in'] = False
 
 def force_setup_context(context={}):
     user = g.user if hasattr(g, 'user') and g.user is not None else None
@@ -30,13 +33,19 @@ def force_setup_context(context={}):
     for k, v in d.iteritems():
         context[k] = v
     context['cdn_url'] = CDN_URL if USE_CDN else ''
+    if hasattr(g, 'just_logged_in') and g.just_logged_in:
+        context['show_message_notification'] = True
     return context
 
 
 @app.context_processor
 def setup_context():
     user = g.user if hasattr(g, 'user') and g.user is not None else None
-    return dict(user=user, menu=get_menu_selection(request.path), cdn_url=CDN_URL if USE_CDN else '')
+    if hasattr(g, 'just_logged_in') and g.just_logged_in:
+        show_message_notification = True
+    else:
+        show_message_notification = False
+    return dict(user=user, menu=get_menu_selection(request.path), cdn_url=CDN_URL if USE_CDN else '', show_message_notification=show_message_notification)
 
 #@cache.cached(timeout=3600 * 24)
 def get_menu_selection(request_path):
@@ -60,9 +69,6 @@ def get_menu_selection(request_path):
 
     if '/activity' in request_path:
         inner = request.args.get('name', None)
-
-
-
 
     menu = Menu(top, main, inner)
     return menu
