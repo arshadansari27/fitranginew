@@ -35,7 +35,7 @@
                             var channel_list = data.split(',');
                             var channels = '';
                             for(var i = 0; i < channel_list.length; i++) {
-                                if (channel_list[i] != null && channel_list[i].length > 0) channels += '<a href="/discussions#latest?query=channels__channel__name:'+ channel_list[i]+ ';" >'+ channel_list[i]+ '</a>';
+                                if (channel_list[i] != null && channel_list[i].length > 0) channels += '<a href="/discussions?query=channels__channel__name:'+ channel_list[i]+ ';" >'+ channel_list[i]+ '</a>';
                             }
                             $('#channel-list').append(channels);
                         });
@@ -56,7 +56,7 @@
                             var tag_list = data.split(',');
                             var tags = '';
                             for(var i = 0; i < tag_list.length; i++) {
-                                if (tag_list[i] != null && tag_list[i].length > 0) tags += '<a href="/discussions#latest?query=tags:'+ tag_list[i]+ ';" >'+ tag_list[i]+ '</a>';
+                                if (tag_list[i] != null && tag_list[i].length > 0) tags += '<a href="/discussions?query=tags:'+ tag_list[i]+ ';" >'+ tag_list[i]+ '</a>';
                             }
                             $('#tag-list').append(tags);
                         });
