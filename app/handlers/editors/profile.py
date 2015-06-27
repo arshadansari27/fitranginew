@@ -317,7 +317,7 @@ def register_profile(data):
         send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=html)
     return profile
 
-@response_handler('Successfully registered the business profile, awaiting admin approval', 'Failed to register', login_required=True)
+@response_handler('Thank you for listing your business. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to register', login_required=True, flash_message=True)
 def register_business_profile(data):
     by_user = data['logged_in_user']
     assert by_user is not None

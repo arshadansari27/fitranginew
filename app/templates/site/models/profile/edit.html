@@ -634,11 +634,13 @@
                 profile_editor.business_profile_register(data, function (_data) {
                     if (_data.status == 'success') {
                         var url = window.location.href;
+                        window.location.href = '/profiles';
+                        /*
                         if (url.indexOf('?') == -1) {
                             window.location.href = window.location.href + '?pk=' + _data.node;
                         } else {
                             window.location.href = window.location.href + '&pk=' + _data.node;
-                        }
+                        }*/
                     } else {
                         window.location.reload();
                         $(".alert").html(data.message);

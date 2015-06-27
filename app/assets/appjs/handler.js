@@ -698,7 +698,8 @@ jQuery(document).ready(function ($) {
         e.stopPropagation();
         e.preventDefault();
 
-        var id, name, phone, location, website, facebook, google_plus, linked_in, youtube_channel, blog_channel, location_lat, location_long, about;
+        var id, logged_in, name, phone, location, website, facebook, google_plus, linked_in, youtube_channel, blog_channel, location_lat, location_long, about;
+        var city, region, state, country, email, type;
         id              = $('#profile-id').val();
         logged_in        = $('#logged-in-id').val();
         name            = $('#name-edit').val();
@@ -743,7 +744,7 @@ jQuery(document).ready(function ($) {
                     country: country
                 }, function(data){
                     BootstrapDialog.alert({title: data.status, message: data.message});
-                    setTimeout(0, function(){ window.location.href='/explore';})
+                    setTimeout(0, function(){ window.location.href='/my';})
                 }
             );
         } else {
