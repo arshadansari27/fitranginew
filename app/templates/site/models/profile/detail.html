@@ -194,7 +194,9 @@
                         <h5>Mark <a href="/adventures">Adventure Destinations</a> as done to see them here. Create your adventure portfolio for the rest of the world to see!</h5>
                     </div>
                     {% endif %}
-                    {{accomplished_adventure_list|safe}}
+                    <div id="models_list" class="container fitrangi-thumb">
+                        {{accomplished_adventure_list|safe}}
+                    </div>
 
                 </div><!--Tab Pane End-->
 
@@ -205,7 +207,9 @@
                         <h5>Would you like to experience new <a href="/adventures">Adventure Destinations</a> and keep track of the ones you still have to do? Add them to your wishlist and track them here</h5>
                     </div>
                     {% endif %}
-                    {{wish_listed_adventure_list|safe}}
+                    <div id="models_list" class="container fitrangi-thumb">
+                        {{wish_listed_adventure_list|safe}}
+                    </div>
 
                 </div><!--Tab Pane End-->
 
