@@ -150,21 +150,21 @@
         <div class="row-fluid adventure-trips-tabs">
             <ul class="nav nav-pills " role="tablist">
                 <li class="active"><a href="#discussion" aria-controls="discussion" role="tab" data-toggle="tab">
-                    <i class="fa fa-home"></i> <strong>Event Discussion</strong></a></li>
+                    </i> <strong>Event Discussion</strong></a></li>
 
 
-                <li class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">
-                    <i class="fa fa-home"></i> <strong>Overview</strong></a></li>
+                <li><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">
+                     <strong>Overview</strong></a></li>
 
-                <li class="active"><a href="#schedule" aria-controls="schedule" role="tab" data-toggle="tab">
-                    <i class="fa fa-home"></i> <strong>Schedule</strong></a></li>
+                <li><a href="#schedule" aria-controls="schedule" role="tab" data-toggle="tab">
+                     <strong>Schedule</strong></a></li>
 
 
                 <li><a href="#details" aria-controls="details" role="tab" data-toggle="tab">
-                    <i class="fa fa-home"></i> <strong>Inclusive/Exclusive</strong></a></li>
+                     <strong>Inclusive/Exclusive</strong></a></li>
 
                 <li><a href="#things_to_carry" aria-controls="things_to_carry" role="tab" data-toggle="tab">
-                    <i class="fa fa-home"></i> <strong>Things to Carry</strong></a></li>
+                     <strong>Things to Carry</strong></a></li>
 
                 {% if model.has_gallery_images %}
                 <li><a href="#gallery-images" aria-controls="gallery-images" role="tab"
@@ -183,8 +183,17 @@
                     </article>
                 </div>
                 <!-- End of Tab Pane -->
+                <div class="tab-pane  active" id="discussion">
+                    <h3>Discussion</h3>
+                    <ul>
+                        {% for i in model.discussion %}
+                        <li>{{i}}</li>
+                        {% endfor %}
+                    </ul>
+                    <hr/>
+                </div>
 
-                <div class="tab-pane active" id="overview">
+                <div class="tab-pane" id="overview">
                     <!--h3>Overview Underconstructions</h3-->
                     {% if model.description %}
                     <h4><u>Description</u></h4>
@@ -196,7 +205,7 @@
                 </div>
                 <!-- End of Tab Pane -->
 
-                <div class="tab-pane" id="details">
+                <div class="tab-pane" id="schedule">
                     <h3>Schedule</h3>
                     <ul>
                         {% for i in model.schedule %}
@@ -204,6 +213,9 @@
                         {% endfor %}
                     </ul>
                     <hr/>
+                </div>
+
+                <div class="tab-pane" id="details">
                     <h3>Inclusive</h3>
                     <ul>
                         {% for i in model.inclusive %}
@@ -218,6 +230,9 @@
                         {% endfor %}
                     </ul>
                     <hr/>
+                </div>
+
+                <div class="tab-pane" id="things_to_carry">
                     <h3>Things to carry</h3>
                     <ul>
                         {% for i in model.things_to_carry %}
@@ -286,8 +301,8 @@
             <div class="heading">
                 <h4>Booking Enquiry</h4>
             </div>
-            <p style="text-align: center;">"{{model.name}}"</p> <br>
-            <p style="text-align: center;">"{{model.description}}"</p>
+            <h4 style="text-align: center;"><strong>"{{model.name}}"</strong></h4> <br>
+            <p style="text-align: center; color: grey;">"{{model.description}}"</p>
 
 
             <div class="sub-heading">
@@ -340,9 +355,9 @@
                     <label class="col-sm-2 "></label>
 
                     <div class="col-sm-10">
-                        I Prefer:
-                      <input type="checkbox" name="iprefer" value="phone" >Phone
-                      <input type="checkbox" name="iprefer" value="email" >Email
+                        <strong>I Prefer:</strong> &nbsp;
+                      <input class="checkbox-inline" type="checkbox" name="iprefer" value="phone" > <span style="color: grey;"> Phone </span> &nbsp;
+                      <input class="checkbox-inline" type="checkbox" name="iprefer" value="email" > <span style="color: grey;"> Email </span>
                     </div>
                 </div>
 
