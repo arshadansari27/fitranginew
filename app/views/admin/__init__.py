@@ -21,6 +21,7 @@ from app.models.activity import Activity
 from app.models.adventure import Adventure
 from app.models.event import Event
 from app.models.trip import Trip
+from app.models.contest import Contest, ContestAnswer
 from app.models.page import ExtraPage
 from app.models.relationships import RelationShips
 import mongoengine
@@ -289,6 +290,39 @@ class PostAdminView(ModelView):
         else:
             return self.model.objects(author=g.user)
 
+class ContestAnswerAdminView(ModelView):
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
+    form_columns = ['author', 'answer', 'contest']
+    column_list = ( 'author', 'contest', 'created_timestamp')
+
+    def is_accessible(self):
+        if hasattr(g, 'user') and g.user is not None:
+            return True
+        return False
+
+    def get_query(self):
+        if 'Admin' in g.user.roles:
+            return self.model.objects
+        else:
+            return self.model.objects(author=g.user)
+
+
+class AnswerForContestAdminView(ContestAnswerAdminView):
+    can_create = False
+    form_columns = ['author', 'answer']
+
+    def get_query(self):
+        contest_id = request.args.get('contest_id', None)
+        if contest_id is not None:
+            parent = Contest.objects(pk=contest_id).first()
+            return ContestAnswer.objects(contest=parent)
+        else:
+            return ContestAnswer.objects()
+
+    def is_visible(self):
+        return False
+
 class PostForContentAdminView(PostAdminView):
     can_create = False
 
@@ -299,6 +333,8 @@ class PostForContentAdminView(PostAdminView):
             cls = Article
         elif content_type == 'Discussion':
             cls = Discussion
+        elif content_type == 'Contest':
+            cls = Contest
         else:
             cls = Post
 
@@ -311,6 +347,40 @@ class PostForContentAdminView(PostAdminView):
 
     def is_visible(self):
         return False
+
+class ContestAdminView(ModelView):
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
+    form_columns = ['title', 'description', 'content', 'author', 'start_date', 'end_date', 'answer_type', 'contest_type', 'answer_choices', 'correct_choice', 'winner', 'winning_answer', 'cover_image', 'published', 'tags', 'admin_published','slug']
+    column_list = ('title', 'author', 'published', 'admin_published', 'comments', 'cover_image', 'answers', 'image_download')
+    column_filters = ['title', FilterChannel('channel.id', 'Channel')]
+    column_searchable_list = ('title', )
+    form_overrides = dict(content=SummernoteTextAreaField)
+
+    form_args = dict(author=dict(default=get_current_user))
+
+    def is_accessible(self):
+        if hasattr(g, 'user') and g.user is not None:
+            return True
+        return False
+
+    def get_query(self):
+        if 'Admin' in g.user.roles:
+            return self.model.objects
+        else:
+            return self.model.objects(author=g.user)
+
+    def _comments_formatter(view, context, model, name):
+        return Markup("<a href='%s'>%d</a>" % (url_for('content_post_admin_view.index_view', content_id=str(model.id), content_type=model.__class__.__name__), Post.objects(parent=model).count())) if Post.objects(parent=model).count() > 0 else ""
+
+    def _answers_formatter(view, context, model, name):
+        return Markup("<a href='%s'>%d</a>" % (url_for('contest_answer_admin_view.index_view', contest_id=str(model.id)), ContestAnswer.objects(contest=model).count())) if ContestAnswer.objects(contest=model).count() > 0 else ""
+
+    def _image_downloader(view, context, model, name):
+        return Markup('<a href="%s" target="new">%s</a>' % (model.cover_image_path, 'Download') if model.cover_image_path is not None and len(model.cover_image_path) > 0 else 'No Cover Image')
+
+    column_formatters = {'comments': _comments_formatter, 'image_download': _image_downloader, 'answers': _answers_formatter}
+
 
 class ContentAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
@@ -652,7 +722,10 @@ admin.add_view(RestrictedAdminView(Advertisement, category="Administration"))
 admin.add_view(ContentAdminView(Article, category="Editorial"))
 admin.add_view(ContentAdminView(Discussion, category="Editorial"))
 admin.add_view(PostAdminView(Post, category="Editorial"))
+admin.add_view(ContestAdminView(Contest, category="Editorial"))
+admin.add_view(ContestAnswerAdminView(ContestAnswer, category="Editorial"))
 admin.add_view(PostForContentAdminView(Post, name="Posts on content", endpoint="content_post_admin_view"))
+admin.add_view(AnswerForContestAdminView(ContestAnswer, name="Answers for contest", endpoint="contest_answer_admin_view"))
 
 admin.add_view(EventAdminView(Event, category="Organizers"))
 admin.add_view(TripAdminView(Trip, category="Organizers"))

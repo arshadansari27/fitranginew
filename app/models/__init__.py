@@ -50,12 +50,11 @@ def update_content(sender, document):
         use = document.title
     else:
         use = None
-    if use is not None:
+    if (not hasattr(document, 'slug') or document.slug is None) and use is not None:
         update_slug(sender, document, document.__class__.__name__.lower(), use)
     if document.path_cover_image and len(document.path_cover_image) > 0:
         path = base_path + document.path_cover_image
         if os.path.exists(path):
-            #os.remove(path)
             pass
 
 @handler(signals.post_save)
