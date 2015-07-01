@@ -10,11 +10,12 @@ from flask.ext.mongorest import MongoRest
 from flask.ext.assets import Environment
 from app import settings
 from pymongo import read_preferences
+from datetime import timedelta
 
 
 app = Flask(__name__, template_folder='templates', static_folder='assets', static_url_path='')
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
-app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SECRET_KEY'] = 'd2f700ed-ff0f-4f9d-91bc-43b03805303e' #os.urandom(24)
 app.config['MONGODB_SETTINGS'] = {
     'db': settings.MONGODB_DB,
     'host': settings.MONGODB_HOST,
@@ -50,7 +51,9 @@ def start_app():
     global admin
     from app.models.extra.sessions import MongoSessionInterface
     from app.models.profile import Profile
+    app.secret_key = os.urandom(24)
 
+    app.permanent_session_lifetime = timedelta(minutes=120)
     app.session_interface = MongoSessionInterface()
 
     #from app.handlers.views import *

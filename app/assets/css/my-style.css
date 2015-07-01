@@ -1788,6 +1788,16 @@ ul.my-list-right li:before{
 }
 }
 
+.adventure-banner .carousel-caption2{
+    top: 250px;
+}
+
+@media (max-width: 767px) {
+.adventure-banner .carousel-caption2{
+	top:150px;
+}
+}
+
 .review-heading{
 	border-bottom:1px solid #f0f0f0;
 	margin:50px 0 20px 0;

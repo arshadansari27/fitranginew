@@ -1,0 +1,117 @@
+<section class="container-fluid p-0">
+    <div class="adventure-banner"
+         style="{{background_cover}}">
+
+        <div class="container">
+
+            <section class="container carousel-caption carousel-caption2">
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                    <h2>{{model.title}}</h2>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <hr/>
+                    <h4>Sponsored By</h4>
+                    <img src="{{model.sponsorer.cover_image_path_small}}" width="60px" height="60px"/>
+                    <br/>
+                    <p>{{model.sponsorer.name}}</p>
+                </div>
+
+
+            </section>
+
+
+        </div>
+
+    </div>
+</section>
+
+<section class="container p-0">
+</section>
+
+<section class="container-fluid p-0" id="adventure-review-area">
+    <div role="tabpanel" data-example-id="togglable-tabs">
+
+        <div class="border-grey-t border-grey-b h-56">
+            <div class="container text-center">
+                <ul id="myTab" class="nav nav-tabs" role="tablist">
+
+                    <li class="active"><a href="#about-reviews" role="tab" data-toggle="tab" aria-controls="about-reviews"
+                                          aria-expanded="false">
+                        <span class="fa fa-star"></span> <strong>About Contest</strong></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="container">
+            <div id="myTabContent" class="tab-content">
+                <div role="tabpanel" class="tab-pane fade active in" id="about-reviews" aria-labelledby="about-reviews">
+                    <p>{{model.content|safe}}</p>
+                </div>
+                <!--Tab Pane End-->
+            </div>
+
+
+            <hr class="w-100 clearfix border-grey-b"/>
+
+
+            <div>
+
+                    {% if model.is_closed %}
+                        <div class="form-group">
+                            <label>Winner of the Event</label>
+                        </div>
+                        <div>
+                            Winner display card
+                        </div>
+                        {% else %}
+                        <div class="form-group text-center">
+                            <h4>Questions</h4>
+                            <hr/>
+                        </div>
+                        {% if user %}
+                            {% if not model.has_user_answered(user) %}
+                            <div>
+                                {% for question in model.questions %}
+                                <div class="well well-sm" style="background: #F0F8FF;">
+                                    <h4>{{question.question}}</h4>
+                                    <div>
+                                        {% for option in question.options %}
+                                        <div class="input-group">
+                                            <input type="radio" name="{{question.enumeration}}" value="{{option.enumaration}}">&nbsp;&nbsp;{{ option.option }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                <div class="form-group">
+                                    <button class="btn btn-primary">
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+                            {% else %}
+                                <div class="well well-sm">
+                                    <p>You have already answered this contest with the score {{model.get_user_score(user)}} out of {{model.questions|length}}.</p>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="well well-sm">
+                                <p>Please <a href="/login?target={{model.slug}}">login</a> to participate</p>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function(){
+        var user = '{{user.id}}';
+        var contest = '{{model.id}}';
+        var App = window.App;
+
+        //App.filter('review-filter');
+    });
+</script>

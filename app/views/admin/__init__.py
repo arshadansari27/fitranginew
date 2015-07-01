@@ -5,7 +5,7 @@ from app.models import NodeFactory
 from markupsafe import Markup
 from wtforms import fields, widgets, form
 from mongoengine import Q
-import flask_admin, hashlib
+import flask_admin, hashlib, datetime
 from flask_admin.form import rules
 from flask_admin.contrib.mongoengine import ModelView
 from flask import g, request, flash, url_for, redirect
@@ -290,11 +290,23 @@ class PostAdminView(ModelView):
         else:
             return self.model.objects(author=g.user)
 
-class ContestAnswerAdminView(ModelView):
+class ContestParticipantAdminView(ModelView):
+    can_create = False
+    can_edit = False
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['author', 'answer', 'contest']
-    column_list = ( 'author', 'contest', 'created_timestamp')
+    column_list = ( 'author.name', 'author.email', 'contest', 'answers', 'correct_answers', 'possible_winner')
+
+    def _answers(view, context, model, name):
+        return Markup("%s" % ContestAnswer.answers_by_contest_and_user(request.args.get('contest_id'), model))
+
+    def _correct_answers(view, context, model, name):
+        return Markup("%d" % ContestAnswer.correct_answers_by_contest_and_user(request.args.get('contest_id'), model))
+
+    def _possible_winner(view, context, model, name):
+        return Markup("%s" % str(ContestAnswer.check_all_correct_answers_by_contest_and_user(request.args.get('contest_id'), model)))
+
+    column_formatters = {'answers': _answers, 'correct_answers': _correct_answers, 'possible_winner': _possible_winner}
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None:
@@ -302,23 +314,12 @@ class ContestAnswerAdminView(ModelView):
         return False
 
     def get_query(self):
-        if 'Admin' in g.user.roles:
-            return self.model.objects
-        else:
-            return self.model.objects(author=g.user)
-
-
-class AnswerForContestAdminView(ContestAnswerAdminView):
-    can_create = False
-    form_columns = ['author', 'answer']
-
-    def get_query(self):
         contest_id = request.args.get('contest_id', None)
         if contest_id is not None:
-            parent = Contest.objects(pk=contest_id).first()
-            return ContestAnswer.objects(contest=parent)
+            participants = ContestAnswer.get_all_participants_by_contest(contest_id)
+            return Profile.objects(id__in=[str(p.id) for p in participants])
         else:
-            return ContestAnswer.objects()
+            return Profile.objects()
 
     def is_visible(self):
         return False
@@ -351,9 +352,8 @@ class PostForContentAdminView(PostAdminView):
 class ContestAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['title', 'description', 'content', 'author', 'start_date', 'end_date', 'answer_type', 'contest_type', 'answer_choices', 'correct_choice', 'winner', 'winning_answer', 'cover_image', 'published', 'tags', 'admin_published','slug']
-    column_list = ('title', 'author', 'published', 'admin_published', 'comments', 'cover_image', 'answers', 'image_download')
-    column_filters = ['title', FilterChannel('channel.id', 'Channel')]
+    form_columns = ['title', 'sponsorer', 'description', 'content', 'author', 'start_date', 'end_date', 'closed', 'winner', 'questions', 'published', 'tags', 'admin_published', 'slug']
+    column_list = ('title', 'author', 'start_date', 'end_date', 'is_live', 'is_closed', 'winner', 'participants', 'published', 'admin_published')
     column_searchable_list = ('title', )
     form_overrides = dict(content=SummernoteTextAreaField)
 
@@ -370,16 +370,17 @@ class ContestAdminView(ModelView):
         else:
             return self.model.objects(author=g.user)
 
-    def _comments_formatter(view, context, model, name):
-        return Markup("<a href='%s'>%d</a>" % (url_for('content_post_admin_view.index_view', content_id=str(model.id), content_type=model.__class__.__name__), Post.objects(parent=model).count())) if Post.objects(parent=model).count() > 0 else ""
+    def _is_closed(view, context, model, name):
+        return Markup("%s" % str(model.is_closed))
 
-    def _answers_formatter(view, context, model, name):
-        return Markup("<a href='%s'>%d</a>" % (url_for('contest_answer_admin_view.index_view', contest_id=str(model.id)), ContestAnswer.objects(contest=model).count())) if ContestAnswer.objects(contest=model).count() > 0 else ""
+    def _is_live(view, context, model, name):
+        now = datetime.datetime.now()
+        return Markup("%s" % "Yes" if now > model.start_date and now < model.end_date else 'No')
 
-    def _image_downloader(view, context, model, name):
-        return Markup('<a href="%s" target="new">%s</a>' % (model.cover_image_path, 'Download') if model.cover_image_path is not None and len(model.cover_image_path) > 0 else 'No Cover Image')
+    def _participants(view, context, model, name):
+        return Markup('<a href="%s" target="new">%s</a>' % (url_for('participants_for_context_view.index_view', contest_id=str(model.id)), ContestAnswer.get_all_participants_by_contest_count(model)))
 
-    column_formatters = {'comments': _comments_formatter, 'image_download': _image_downloader, 'answers': _answers_formatter}
+    column_formatters = {'is_closed': _is_closed, 'is_live': _is_live, 'participants': _participants}
 
 
 class ContentAdminView(ModelView):
@@ -722,10 +723,9 @@ admin.add_view(RestrictedAdminView(Advertisement, category="Administration"))
 admin.add_view(ContentAdminView(Article, category="Editorial"))
 admin.add_view(ContentAdminView(Discussion, category="Editorial"))
 admin.add_view(PostAdminView(Post, category="Editorial"))
-admin.add_view(ContestAdminView(Contest, category="Editorial"))
-admin.add_view(ContestAnswerAdminView(ContestAnswer, category="Editorial"))
 admin.add_view(PostForContentAdminView(Post, name="Posts on content", endpoint="content_post_admin_view"))
-admin.add_view(AnswerForContestAdminView(ContestAnswer, name="Answers for contest", endpoint="contest_answer_admin_view"))
+admin.add_view(ContestAdminView(Contest, category="Editorial"))
+admin.add_view(ContestParticipantAdminView(Profile, name="Answering stats for contest", endpoint="participants_for_context_view"))
 
 admin.add_view(EventAdminView(Event, category="Organizers"))
 admin.add_view(TripAdminView(Trip, category="Organizers"))

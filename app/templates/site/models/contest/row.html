@@ -1,0 +1,21 @@
+<li class="panel-default">
+<section class="container fitrangi-event mt-10">
+    <div class="row text-center">
+        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 left">
+            <h4>Starts on </h4>
+            <i class="fa fa-calendar"></i>
+            <h4>{{model.formatted_start_date|safe}}</h4>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-4 col-xs-12">
+            <h5>&nbsp;&nbsp;</h5>
+            <a id="contest-{{model.id}}" href="{% if model.is_started or model.is_closed %}{{model.slug}}{% else %}#contest-{{model.id}}{% endif %}"><button class="btn btn-primary"><h3>{{model.title}}</h3></button></a>
+            <h4>{{model.description}}</h4>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 right">
+            <h4>Ends on </h4>
+            <i class="fa fa-calendar"></i>
+            <h4>{{model.formatted_end_date|safe}}</h4>
+        </div>
+    </div>
+</section>
+</li>

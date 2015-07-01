@@ -19,10 +19,10 @@ db.ListField = ListField
 
 (ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, PRODUCT, ARTICLE,
  LOCATION, POST, DISCUSSION, CHANNEL, STREAM, MESSAGE,
- RELATIONSHIPS, PROFILE_TYPE, ADVERTISEMENT) =  (
+ RELATIONSHIPS, PROFILE_TYPE, ADVERTISEMENT, CONTEST) =  (
     "activity", "adventure", "event", "trip", "profile", "product",
     "article", "location", "post", "discussion", "channel",
-    "stream", "message", "relationships", "profile_type", "advertisement"
+    "stream", "message", "relationships", "profile_type", "advertisement", "contest"
 )
 
 def handler(event):
@@ -50,7 +50,8 @@ def update_content(sender, document):
         use = document.title
     else:
         use = None
-    if (not hasattr(document, 'slug') or document.slug is None) and use is not None:
+
+    if (not hasattr(document, 'slug') or document.slug is None or len(document.slug) is 0) and use is not None:
         update_slug(sender, document, document.__class__.__name__.lower(), use)
     if document.path_cover_image and len(document.path_cover_image) > 0:
         path = base_path + document.path_cover_image
@@ -362,6 +363,7 @@ class NodeFactory(object):
         from app.models.trip import Trip
         from app.models.streams import ActivityStream, ChatMessage
         from app.models.relationships import RelationShips
+        from app.models.contest import Contest
         name = name.lower()
 
         if name == ACTIVITY: return Activity
@@ -379,6 +381,7 @@ class NodeFactory(object):
         elif name == RELATIONSHIPS: return RelationShips
         elif name == PROFILE_TYPE: return ProfileType
         elif name == ADVERTISEMENT: return Advertisement
+        elif name == CONTEST: return Contest
         else: return None
 
 if __name__ == '__main__':

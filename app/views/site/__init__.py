@@ -5,7 +5,7 @@ from app.models import STREAM
 from flask import render_template, request, g, redirect, jsonify, url_for, session, flash
 from app.handlers.editors import NodeEditor
 from app.handlers import NodeCollectionFactory, NodeExtractor
-from app.models import Node, NodeFactory, ACTIVITY, ADVENTURE, ARTICLE, DISCUSSION, PROFILE, EVENT, TRIP
+from app.models import Node, NodeFactory, ACTIVITY, ADVENTURE, ARTICLE, DISCUSSION, PROFILE, EVENT, TRIP, CONTEST
 from app.models.profile import Profile, ProfileType
 from app.utils import login_required, all_tags, specific_tags_article, specific_channels_discussion, specific_tags_discussion, specific_channels_article, specific_channels, specific_tags
 from app.handlers import  EditorView, PageManager
@@ -166,6 +166,12 @@ def list_event():
     context = PageManager.get_search_title_and_page(EVENT, query=query)
     return render_template('site/pages/commons/view.html', **context)
 
+@app.route("/contests")
+def list_contest():
+    context = PageManager.get_search_title_and_page(CONTEST, query=None)
+    return render_template('site/pages/commons/view.html', **context)
+
+
 @app.route("/trips")
 def list_trip():
     query = request.args.get('query', '')
@@ -281,6 +287,7 @@ def ajax_buttons():
 @app.route('/blog/<slug>')
 @app.route('/discussion/<slug>')
 @app.route('/post/<slug>')
+@app.route('/contest/<slug>')
 def model_view(slug):
     model_type = [u for u in request.path.split('/') if u and len(u) > 0][0]
 

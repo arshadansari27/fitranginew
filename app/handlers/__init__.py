@@ -1,6 +1,6 @@
 __author__ = 'arshad'
 
-import sys, traceback, random
+import sys, traceback, random, datetime
 
 from BeautifulSoup import BeautifulSoup
 from flask import g, request
@@ -11,10 +11,11 @@ from app.models.feedbacks import ClaimProfile
 from app.handlers.extractors import NodeExtractor, article_extractor, advertisement_extractor, adventure_extractor, \
     activity_extractor, discussion_extractor, profile_type_extractor, event_extractor, profile_extractor, \
     trip_extractor, post_extractor, stream_extractor
-from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, POST, STREAM, Node, ADVERTISEMENT
+from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, POST, STREAM, Node, ADVERTISEMENT, CONTEST
 from app.models.streams import ActivityStream
 from app.models.content import Content, Post, Article, Discussion
 from app.models.adventure import Adventure
+from app.models.contest import Contest
 from app.models.activity import Activity
 from app.models.event import Event
 from app.models.trip import Trip
@@ -32,6 +33,7 @@ COLLECTION_PATHS = {
     EVENT: 'site/pages/searches/events',
     ARTICLE: 'site/pages/searches/articles',
     TRIP: 'site/pages/searches/trips',
+    CONTEST: 'site/pages/searches/contests',
     "explore": 'site/pages/landings/home',
     "community": 'site/pages/landings/community',
     'aboutus': 'site/pages/landings/extra',
@@ -52,6 +54,7 @@ CAPITALIZED_NAMES = {
     EVENT: 'Events and Initiatives',
     ARTICLE: 'Articles',
     TRIP: 'Trips',
+    CONTEST: "Contests",
     "explore": 'Home',
     "community": 'Community',
     'aboutus': 'About Fitrangi',
@@ -80,6 +83,7 @@ WALL_IMAGE_NAMES = {
     EVENT: dict(detail=lambda u: u.cover_image_path, search='%s/images/events-banner.jpg' % prepend, landing=''),
     ARTICLE: dict(detail=lambda u: u.cover_image_path, search='%s/images/journal-banner.jpg' % prepend, landing=''),
     TRIP: dict(detail=lambda u: u.cover_image_path, search='%s/images/adventure-trips-banner.jpg' % prepend, landing=''),
+    CONTEST: dict(detail=lambda u: '%s/images/userprofile-banner.jpg' % prepend, search='%s/images/finder-banner.jpg' % prepend, landing=''),
     "explore": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner2.jpg' % prepend),
     "community": dict(detail=lambda u: None, search=None, landing='%s/images/community-banner.jpg' % prepend),
     "aboutus": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
@@ -271,11 +275,13 @@ class NodeView(View):
                             context['entity_view'] = entity_view
 
             template = env.get_template(template_path)
-            return template.render(**context)
+            card = template.render(**context)
         except Exception, e:
             traceback.print_exc(file=sys.stdout)
             print e.message
-            return ''
+            card = ''
+        print '[*] Card for', model_name, ', ', card_type, ': ', model
+        return card
 
     @classmethod
     def get_editable_card(cls, model_name, model, context={}):
@@ -297,7 +303,7 @@ class NodeView(View):
         template_path = 'site/models/' + model_name + '/detail.html'
         template = env.get_template(template_path)
         context = force_setup_context(context)
-        if isinstance(model, Content):
+        if isinstance(model, Content) and not isinstance(model, Contest):
             if not hasattr(model, 'views'):
                 model.views = 0
             if model.views < 1000000000:
@@ -327,6 +333,8 @@ class PageManager(object):
             type = 'article'
         elif type == 'profile':
             pass
+        elif type == 'contest':
+            type = 'article'
         else:
             type = 'website'
         context = dict(title=title, description=description, url=url, image=image, type=type)
@@ -348,7 +356,7 @@ class PageManager(object):
         context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), background_cover=image_css)
         context = force_setup_context(context)
         context.update(Page.factory(model_name, 'detail').get_context(context))
-        title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s complete adventure portal')
+        title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else 'Fitrangi: India\'s Complete Adventure Portal')
         description = model.description if model.description else ''
         if description:
             description = get_descriptions(description)
@@ -478,9 +486,12 @@ class Page(object):
                 return discussion_detail_page
             elif model_name == TRIP:
                 return trip_detail_page
+            elif model_name == CONTEST:
+                return contest_detail_page
             else:
                 raise Exception("Not implemented")
         elif type == 'search':
+            print 'TS', model_name == CONTEST
             if model_name == ADVENTURE:
                 return adventure_search_page
             elif model_name == PROFILE:
@@ -493,6 +504,8 @@ class Page(object):
                 return event_search_page
             elif model_name == TRIP:
                 return trip_search_page
+            elif model_name == CONTEST:
+                return contest_search_page
             else:
                 raise Exception("Not implemented")
         elif type == 'landing':
@@ -597,6 +610,8 @@ class SearchPage(Page):
             return dict(events_list=NodeCollectionFactory.resolve(EVENT, ROW_VIEW).get_card(context))
         elif self.model_name == TRIP:
             return dict(trips=NodeCollectionFactory.resolve(TRIP, GRID_VIEW).get_card(context))
+        elif self.model_name == CONTEST:
+            return dict(live=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='live').get_card(context), upcoming=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='upcoming').get_card(context), past=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='past').get_card(context), now=str(datetime.datetime.now()).split(' ')[0])
         else:
             raise Exception("not implemented")
 
@@ -647,6 +662,10 @@ class DetailPage(Page):
             discussions = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
             other_trips = NodeCollectionFactory.resolve(TRIP, GRID_ROW_VIEW, category="other", fixed_size=4).get_card(context)
             return dict(discussions=discussions, other_trips=other_trips)
+        elif self.model_name == CONTEST:
+            return {}
+        else:
+            return {}
 
 class EditPage(Page):
 
@@ -672,6 +691,7 @@ profile_search_page     = SearchPage(PROFILE)
 discussion_search_page  = SearchPage(DISCUSSION)
 event_search_page       = SearchPage(EVENT)
 trip_search_page        = SearchPage(TRIP)
+contest_search_page     = SearchPage(CONTEST)
 
 activity_detail_page    = DetailPage(ACTIVITY)
 adventure_detail_page   = DetailPage(ADVENTURE)
@@ -679,5 +699,6 @@ profile_detail_page     = DetailPage(PROFILE)
 article_detail_page     = DetailPage(ARTICLE)
 discussion_detail_page  = DetailPage(DISCUSSION)
 trip_detail_page        = DetailPage(TRIP)
+contest_detail_page     = DetailPage(CONTEST)
 
 profile_edit_page       = EditPage(PROFILE)

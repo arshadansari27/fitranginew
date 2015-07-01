@@ -8,7 +8,7 @@ __author__ = 'arshad'
 
 from functools import wraps
 from flask import g, redirect, request, url_for, abort
-
+from datetime import timedelta
 from jinja2 import Environment, FileSystemLoader
 from app.settings import TEMPLATE_FOLDER
 from app.settings import CDN_URL
@@ -18,6 +18,7 @@ env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
 
 @app.before_request
 def setup_user():
+    session.permanent = True
     if session.get('user') is not None:
         g.user = Profile.objects(pk=session['user']).first()
     if session.get('just_logged_in', False):

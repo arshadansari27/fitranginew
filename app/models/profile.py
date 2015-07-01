@@ -63,6 +63,12 @@ class Profile(Entity, db.Document, Location):
     }
 
     @property
+    def is_admin(self):
+        if not self.roles or len(self.roles) is 0:
+            return False
+        return 'Admin' in self.roles
+
+    @property
     def is_admin_approved_business_profile(self):
         if hasattr(self, 'admin_approved') and self.admin_approved:
             return True
@@ -89,6 +95,14 @@ class Profile(Entity, db.Document, Location):
 
     def __unicode__(self):
         return self.__repr__()
+
+    def __eq__(self, other):
+        if not isinstance(other, Profile):
+            return False
+        return self.id == other.id
+
+    def __hash__(self):
+        return self.id.__hash__
 
     @property
     def password(self):
