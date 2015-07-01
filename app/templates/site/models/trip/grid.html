@@ -1,6 +1,6 @@
 <div class="{% block grid_size %}col-lg-4 col-md-4 col-sm-6 col-xs-12{% endblock %}">
     <div class="thumbnail">
-      <a href="{{model.slug}}"></a><img src="{{model.cover_image_path_small}}" alt="..."></a>
+      <a href="{{model.slug}}"><img src="{{model.cover_image_path_small}}" alt="..."></a>
 
       <div class="caption captop">
         <article>
@@ -9,10 +9,10 @@
 		</article>
       </div>
 
-      <div class="caption capbottom">
+      <!--div class="caption capbottom">
         <a href="" class="btn btn-default"><span class="fa fa-user"></span></a>
         <a href="" class="btn btn-default"><span class="fa fa-tags"></span></a>
-      </div>
+      </div-->
 
       <div class="caption">
       	<!--div class="going">
@@ -24,8 +24,10 @@
         	<h5>32+</h5>
 	  	</div-->
         <h4><a href="{{model.slug}}">{{ model.name }}</a></h4>
-        <h3>{{ model.price }}</h3>
-        <span class="days">{{ model.duration }}</span>
+        <a href="#"> <h3>22 Feb, 2015 {#{ model.start_date }#}</h3> </a>
+        <span class="days">{{ model.duration }} </span>
+          <span class="rs">  {{ model.price }} </span>
+
       </div>
 
     </div>
