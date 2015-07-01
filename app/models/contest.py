@@ -74,12 +74,9 @@ class Contest(Content):
 
     def _formatted_data(self, date):
         day = date.day
-        print '[->] Getting formatted date'
         sup = self._get_sup(date)
         month = utils.get_month(date.month)
         year = str(date.year)
-        hour = str(date.hour)
-        minute = str(date.minute)
         _total_date = "%d<sup>%s</sup> %s %s " % (day, sup, month, year)
         return _total_date
 
