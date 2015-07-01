@@ -2880,29 +2880,44 @@ section.user-post{
 	display:inline-block;
 }
 .fitrangi-trips .caption h3:before{
-	content: "\f156";
 	font: normal normal normal 14px/1 FontAwesome;
 	margin:.2em;
 	width: 1em;
 	font-size:24px;
 }
-.fitrangi-trips .caption h3:after{
+
+fitrangi-trips .caption h3:after{
 	content:' /-'
 }
 
 .fitrangi-trips .caption .days{
 	color: #95a5a6;
 }
-.fitrangi-trips .caption .days:after{
-	content:' Days'
+.fitrangi-trips .caption .days:before{
+	content:'('
 }
+.fitrangi-trips .caption .days:after{
+	content:' Days ) |'
+}
+.fitrangi-trips .caption .rs{
+	color: #95a5a6;
+}
+.fitrangi-trips .caption .rs:before{
+	content: "\f156";
+	font: normal normal normal 14px/1 FontAwesome;
 
+}
+.fitrangi-trips .caption .rs:after{
+	content:' /-'
+}
 .fitrangi-trips .captop{
 	position:absolute;
+	display: table-cell;
 	top:0px;
 	right:5px;
 	padding:15px 30px;
 }
+
 .fitrangi-trips .capbottom{
 	position:absolute;
 	top:165px;
@@ -2919,7 +2934,7 @@ section.user-post{
 .fitrangi-trips .captop article h4{
 	display:inline-block;
 	color:#FFF;
-	vertical-align:middle;
+	vertical-align: middle;
 }
 .fitrangi-trips .thumbnail .caption .going{
 	margin:5px 0 10px 0;
