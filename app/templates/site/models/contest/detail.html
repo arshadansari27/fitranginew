@@ -79,14 +79,14 @@
                                     <div>
                                         {% for option in question.options %}
                                         <div class="input-group">
-                                            <input type="radio" name="{{question.enumeration}}" value="{{option.enumaration}}">&nbsp;&nbsp;{{ option.option }}
+                                            <input type="radio" data-question="{{question.enumeration}}" data-answer="{{option.enumaration}}">&nbsp;&nbsp;{{ option.option }}
                                         </div>
                                         {% endfor %}
                                     </div>
                                 </div>
                                 {% endfor %}
                                 <div class="form-group">
-                                    <button class="btn btn-primary">
+                                    <button class="btn btn-primary" data-action="submit-answers">
                                         Submit
                                     </button>
                                 </div>
@@ -110,8 +110,23 @@
     $(document).ready(function(){
         var user = '{{user.id}}';
         var contest = '{{model.id}}';
+        var total_questions = parseInt('{{model.questions|length}}');
         var App = window.App;
 
         //App.filter('review-filter');
+        $('body').on('click', '[data-action="submit-answers"]', function(e){
+            e.stopPropagation();
+            var answers = [];
+
+            $.each($('input[data-question][data-answer]:checked'), function(i, elem){
+                answers.push([$(elem).attr('data-question'), $(elem).attr('data-answer')]);
+            });
+            if(answers.length != total_questions) {
+                BootstrapDialog.alert('Answer all the questions, before submitting!');
+                return;
+            }
+            console.log(JSON.stringify(answers));
+            App.content.answer_contest(user, contest, answers);
+        });
     });
 </script>

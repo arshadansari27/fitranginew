@@ -32,7 +32,7 @@ class ContestQuestion(db.EmbeddedDocument):
 
     def get_answer_by_enumeration(self, enumeration):
         for a in self.options:
-            if a.enumeration == enumeration:
+            if a.enumaration == enumeration:
                 return a
         raise Exception('Invalid enumeration')
 
@@ -119,7 +119,7 @@ class Contest(Content):
         return user in users
 
     def get_user_score(self, user):
-        return len(filter(lambda a: a, [answer.is_correct_answer for answer in ContestAnswer.answers_by_contest_and_user(self, user)]))
+        return len(filter(lambda a: a, [answer.correct_answer for answer in ContestAnswer.answers_by_contest_and_user(self, user)]))
 
 
 class ContestAnswer(db.Document):
@@ -130,15 +130,22 @@ class ContestAnswer(db.Document):
     answer_enumeration = db.StringField()
     correct_answer     = db.BooleanField()
 
-    @property
-    def is_correct_answer(self):
-        if not self.question_enumeration:
-            raise Exception('Invalid Question Selected')
-        if not self.answer_enumeration:
-            return None
-        question = self.contest.get_question_by_enumeration(self.question_enumeration)
-        answer = question.get_answer_by_enumeration(self.answer_enumeration)
-        return answer.enumaration == self.answer_enumeration
+    @classmethod
+    def create(cls, author, contest, question, answer):
+        if isinstance(author, str) or isinstance(author, unicode) or isinstance(author, ObjectId):
+            author = Profile.objects(pk=str(author)).first()
+            if not author:
+                raise Exception('Invalid Author')
+        if isinstance(contest, str) or isinstance(contest, unicode) or isinstance(contest, ObjectId):
+            contest = Contest.objects(pk=str(contest)).first()
+            if not contest:
+                raise Exception('Invalid Contest')
+
+        contest_answer = ContestAnswer(author=author, contest=contest, question_enumeration=question).save()
+        contest_answer.answer = answer
+        contest_answer.save()
+        return contest_answer
+
 
     @property
     def answer(self):
@@ -171,7 +178,7 @@ class ContestAnswer(db.Document):
             contest = Contest.objects(pk=str(contest)).first()
         if isinstance(user, str) or isinstance(user, unicode) or isinstance(user, ObjectId):
             user = Profile.objects(pk=str(user)).first()
-        return ContestAnswer.objects(Q(contest=contest) & Q(user=user)).all()
+        return ContestAnswer.objects(Q(contest=contest) & Q(author=user)).all()
 
     @classmethod
     def correct_answers_by_contest_and_user(cls, contest, user):
@@ -193,7 +200,8 @@ class ContestAnswer(db.Document):
     def get_all_participants_by_contest(cls, contest):
         if isinstance(contest, str) or isinstance(contest, unicode) or isinstance(contest, ObjectId):
             contest = Contest.objects(pk=str(contest)).first()
-        users = set([c.author for c in ContestAnswer.objects(contest=contest).all()])
+        user_dicts = dict([(str(c.author.id), c.author) for c in ContestAnswer.objects(contest=contest).all()])
+        users = [user_dicts[u] for u in set(user_dicts.keys())]
         print users
         return users
 

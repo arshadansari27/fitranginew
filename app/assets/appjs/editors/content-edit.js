@@ -6,6 +6,23 @@ $(document).ready(function() {
     var App = window.App;
     App.content = App.content || {};
 
+    App.content.answer_contest = function(user, content, answers){
+        var data = {
+            answers: answers,
+            content: content,
+            user: user
+        };
+        var options = {
+            command: 'answer-contest',
+            node: content,
+            type: 'contest',
+            data: data
+        }
+        App.editor(options, function(data){
+            console.log(data);
+            //window.location.reload();
+        });
+    };
 
     App.content.add = function(type, title, description, video, image, channels, tags, content, callback) {
         var data = {

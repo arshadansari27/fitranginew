@@ -14,7 +14,7 @@ from PIL import Image
 
 
 
-from app.models import PROFILE, ACTIVITY, ADVENTURE, ARTICLE, POST, EVENT, TRIP, DISCUSSION
+from app.models import PROFILE, CONTEST, ADVENTURE, ARTICLE, POST, EVENT, TRIP, DISCUSSION
 #from app.views.site.extractors import NodeExtractor
 
 __author__ = 'arshad'
@@ -86,6 +86,8 @@ class NodeEditor(object):
             return ContentEditor(message, ARTICLE)
         elif type == DISCUSSION:
             return ContentEditor(message, DISCUSSION)
+        elif type == CONTEST:
+            return ContentEditor(message, CONTEST)
 
 
 @response_handler(success="Successfully uploaded cover image", failure="Failed to upload cover image")

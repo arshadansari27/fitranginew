@@ -2,6 +2,7 @@ from app.handlers.editors import NodeEditor, response_handler
 from app.handlers.extractors import NodeExtractor
 from app.models import POST, CHANNEL, DISCUSSION, ARTICLE, Node, NodeFactory
 from app.models.profile import ProfileType, Profile
+from app.models.contest import Contest, ContestAnswer
 from app.models.streams import ActivityStream
 from flask import g, jsonify, render_template, flash
 import os
@@ -32,8 +33,22 @@ class ContentEditor(NodeEditor):
             return publish(self.node, self.type)
         elif self.command == 'unpublish':
             return unpublish(self.node, self.type)
+        elif self.command == 'answer-contest':
+            return answer_contest(self.node, self.type, self.data)
         else:
             raise Exception('Invalid command')
+
+@response_handler('Successfully Answered the questions', 'Failed to submit the answers', flash_message=True)
+def answer_contest(node, type, data):
+    node = get_or_create_content(type, node)
+    user = NodeExtractor.factory('profile').get_single('pk:%s;' % data['user'])
+    print 'Answering', node, 'by', user
+    answers = data['answers']
+    for k, v in answers:
+        contest_answer = ContestAnswer.create(author=user, contest=node, question=k, answer=v)
+        print '[*]', contest_answer.is_correct_answer
+    flash('Successfully answered questions')
+    return node
 
 @response_handler('Successfully deleted', 'Failed to delete', flash_message=True)
 def delete(node, type):
