@@ -52,9 +52,9 @@ class Contest(Content):
         else:
             return self.closed
 
-    def get_question_by_enumeration(self, enumeratoin):
+    def get_question_by_enumeration(self, enumeration):
         for q in self.questions:
-            if enumeratoin == q.enumeration:
+            if enumeration == q.enumeration:
                 return q
         raise Exception('Invalid enumeration')
 
