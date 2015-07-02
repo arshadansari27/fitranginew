@@ -64,7 +64,7 @@ class ProfileEditor(NodeEditor):
         elif self.command == 'deactivate-profile':
             return deactivate_profile(self.action, self.node)
         elif self.command == 'book-enquiry-trip':
-            return book_trip(self.action, self.message['name'], self.message['email'], self.message['phone'], self.message['message'], self.message['trip'])
+            return book_trip(self.node, self.message['data'])
         elif self.command == 'reset-activity-count':
             return reset_activity_count(self.node, self.action)
         elif self.command == 'switch-profile':
@@ -485,15 +485,21 @@ def deactivate_profile(action, profile):
     node.save()
     return node
 
-@response_handler('Successfully sent enquiry regarding trip', 'Failed to send the enquiry regarding trip')
-def book_trip(action, name, email, phone, message, trip):
-    node = Profile.objects(email__iexact=email).first()
+@response_handler('Successfully sent enquiry regarding trip', 'Failed to send the enquiry regarding trip', login_required=True)
+def book_trip(node,  data):
+    name = data['name']
+    email = data['email']
+    phone = data['phone']
+    message = data['message']
+    contact_pref = data['contact_pref']
+    trip = data['trip']
+    node = Profile.objects(pk=node).first()
     if not node:
         type = ProfileType.objects(name__iexact='Subscription Only').first()
         node = Profile(name=name, email=email, phone=phone, type=[type]).save()
     trip = Trip.objects(pk=trip).first()
     if not node or not trip:
         raise Exception('Invalid profile or event')
-    trip.add_enquiry(node, message)
+    trip.add_enquiry(node, name, email, phone, message, contact_pref)
     return node
 

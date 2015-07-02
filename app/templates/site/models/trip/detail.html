@@ -1,6 +1,5 @@
 <section class="container-fluid p1">
     <div class="adventures-trips-banner" style="{{background_cover}}">
-        {% include 'site/includes/img-hider.html'%}
         <div class="container">
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -44,23 +43,7 @@
         </div>
         </article>
 
-         <div class="col-lg-12 col-md-12 col-xs-12 going-list">
-            {% if not user or user in model.joined %}
-                {% for u in model.joined %}
-                <img src="{{u.cover_image_path}}" class="" width="48">
-                {% endfor %}
-                <!--h3>45+</h3-->
-            {% else %}
-                {% for u in model.interested %}
-                <img src="{{u.cover_image_path}}" class="" width="48">
-                {% else %}
-                <div class="well well-sm">
-                    <h4>Be the first to show interest in this event</h4>
-                </div>
-                {% endfor %}
 
-            {% endif %}
-         </div>
 
      </div><!--col7-close-->
 
@@ -146,6 +129,23 @@
     </div>
     <!--col5-close-->
 
+    <div class="col-lg-12 col-md-12 col-xs-12 going-list">
+            {% if not user or user in model.joined %}
+                {% for u in model.joined %}
+                <img src="{{u.cover_image_path}}" class="" width="48">
+                {% endfor %}
+                <!--h3>45+</h3-->
+            {% else %}
+                {% for u in model.interested %}
+                <img src="{{u.cover_image_path}}" class="" width="48">
+                {% else %}
+                <div class="well well-sm">
+                    <h4>Be the first to show interest in this event</h4>
+                </div>
+                {% endfor %}
+
+            {% endif %}
+         </div>
     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
         <div class="row-fluid adventure-trips-tabs">
             <ul class="nav nav-pills " role="tablist">
@@ -184,13 +184,15 @@
                 </div>
                 <!-- End of Tab Pane -->
                 <div class="tab-pane  active" id="discussion">
-                    <h3>Discussion</h3>
-                    <ul>
-                        {% for i in model.discussion %}
-                        <li>{{i}}</li>
-                        {% endfor %}
-                    </ul>
-                    <hr/>
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div>
+                            {% import 'site/includes/post_box.html' as post %}
+                            {{ post.show_post_form(model, 'discussion') }}
+                            <input type="hidden" id="discussion-filter" data-category="all" data-filter="parent__trip__pk" data-model="post" value="{{model.id}}" data-filter-status="fixed"/>
+                            {{ discussions|safe }}
+                        </div>
+                    </div>
                 </div>
 
                 <div class="tab-pane" id="overview">
@@ -207,38 +209,28 @@
 
                 <div class="tab-pane" id="schedule">
                     <h3>Schedule</h3>
-                    <ul>
-                        {% for i in model.schedule %}
-                        <li>{{i}}</li>
-                        {% endfor %}
-                    </ul>
-                    <hr/>
+                    <div>
+                        {{model.schedule|safe}}
+                    </div>
                 </div>
 
                 <div class="tab-pane" id="details">
                     <h3>Inclusive</h3>
-                    <ul>
-                        {% for i in model.inclusive %}
-                        <li>{{i}}</li>
-                        {% endfor %}
-                    </ul>
+                    <div>
+                        {{ model.inclusive|safe }}
+                    </div>
                     <hr/>
                     <h3>Exclusive</h3>
-                    <ul>
-                        {% for i in model.exclusive %}
-                        <li>{{i}}</li>
-                        {% endfor %}
-                    </ul>
-                    <hr/>
+                    <div>
+                        {{ model.exclusive|safe }}
+                    </div>
                 </div>
 
                 <div class="tab-pane" id="things_to_carry">
                     <h3>Things to carry</h3>
-                    <ul>
-                        {% for i in model.things_to_carry %}
-                        <li>{{i}}</li>
-                        {% endfor %}
-                    </ul>
+                    <div>
+                        {{ model.things_to_carry|safe }}
+                    </div>
 
                 </div>
                 <!-- End of Tab Pane -->
@@ -249,14 +241,7 @@
 
         </div>
 
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div>
-                {% import 'site/includes/post_box.html' as post %}
-                {{ post.show_post_form(model, 'discussion') }}
-                <input type="hidden" id="discussion-filter" data-category="all" data-filter="parent__trip__pk" data-model="post" value="{{model.id}}" data-filter-status="fixed"/>
-                {{ discussions|safe }}
-            </div>
-        </div>
+
 
     </div>
     <!--col7-close-->
@@ -302,7 +287,7 @@
                 <h4>Booking Enquiry</h4>
             </div>
             <h4 style="text-align: center;"><strong>"{{model.name}}"</strong></h4> <br>
-            <p style="text-align: center; color: grey;">"{{model.description}}"</p>
+            <p style="text-align: center; color: grey;">{{model.announcements}}</p>
 
 
             <div class="sub-heading">
@@ -313,7 +298,7 @@
                     <label class="col-sm-2 control-label"><i class="fa fa-envelope"></i></label>
 
                     <div class="col-sm-10">
-                        {% if user %}
+                        {% if user and user.name|length > 0  %}
                         <input data-action-value="name" type="text" class="form-control" value="{{user.name}}">
                         {% else %}
                         <input data-action-value="name" type="text" class="form-control" placeholder="your email">
@@ -324,7 +309,7 @@
                     <label class="col-sm-2 control-label"><i class="fa fa-envelope"></i></label>
 
                     <div class="col-sm-10">
-                        {% if user %}
+                        {% if user and user.email|length > 0  %}
                         <input data-action-value="email" type="email" class="form-control" value="{{user.email}}">
                         {% else %}
                         <input data-action-value="email" type="email" class="form-control" placeholder="your email">
@@ -336,7 +321,7 @@
                     <label class="col-sm-2 control-label"><i class="fa fa-phone"></i></label>
 
                     <div class="col-sm-10">
-                        {% if user %}
+                        {% if user and user.phone|length > 0 %}
                         <input data-action-value="phone" type="text" class="form-control" value="{{user.phone}}">
                         {% else %}
                         <input data-action-value="phone" type="text" class="form-control" placeholder="your phone number">
@@ -356,12 +341,12 @@
 
                     <div class="col-sm-10">
                         <strong>I Prefer:</strong> &nbsp;
-                      <input class="checkbox-inline" type="checkbox" name="iprefer" value="phone" > <span style="color: grey;"> Phone </span> &nbsp;
-                      <input class="checkbox-inline" type="checkbox" name="iprefer" value="email" > <span style="color: grey;"> Email </span>
+                      <input   data-action-value="contact-pref" class="checkbox-inline" type="radio" name="iprefer" value="phone" > <span style="color: grey;"> Phone </span> &nbsp;
+                      <input   data-action-value="contact-pref" class="checkbox-inline" type="radio" name="iprefer" value="email" > <span style="color: grey;"> Email </span>
                     </div>
                 </div>
 
-                <button type="button" data-model-id="{{model.id}}" data-action="send-enquiry" class="btn btn-primary btn-block btn-sm">Send Enquiry</button>
+                <button type="button" data-model-slug="{{model.slug}}" data-user-id="{{user.id}}" data-model-id="{{model.id}}" data-action="send-enquiry" class="btn btn-primary btn-block btn-sm">Send Enquiry</button>
 
             </form>
         </div>

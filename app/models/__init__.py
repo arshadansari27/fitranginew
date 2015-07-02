@@ -322,10 +322,6 @@ class ExternalNetwork(object):
     external_domain = db.StringField()
 
 
-class BookingEnquiry(db.EmbeddedDocument):
-    message = db.StringField()
-    author = db.ReferenceField('Profile')
-
 class Charge(object):
     price = db.DecimalField()
     currency = db.StringField(choices=['INR', 'USD'])

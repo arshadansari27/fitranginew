@@ -91,6 +91,10 @@ class RelationShips(db.Document):
 
     @classmethod
     def join(cls, subject, object):
+        relations = RelationShips.get_joined(subject, paged=False)
+        for r in relations:
+            if r.object == object:
+                return
         r1, r2 = cls.create_relationship(subject, object, JOINED)
 
     @classmethod

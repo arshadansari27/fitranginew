@@ -23,6 +23,7 @@ from app.models.event import Event
 from app.models.trip import Trip
 from app.models.contest import Contest, ContestAnswer
 from app.models.page import ExtraPage
+from app.models.booking import TripBooking
 from app.models.relationships import RelationShips
 import mongoengine
 from mongoengine import Q
@@ -43,6 +44,14 @@ class FilterAdventure(BaseMongoEngineFilter):
     def apply(self, query, value):
         adventure = Adventure.objects(name__icontains=value).first()
         return query.filter(adventures__iexact=[adventure.id])
+
+    def operation(self):
+        return 'is'
+
+class FilterTrip(BaseMongoEngineFilter):
+    def apply(self, query, value):
+        trip = Trip.objects(name__icontains=value).first()
+        return query.filter(trip=trip.id)
 
     def operation(self):
         return 'is'
@@ -203,15 +212,18 @@ class EventAdminView(ModelView):
 
 class TripAdminView(ModelView):
     form_columns = ['name', 'description', 'about', 'starting_from', 'price', 'currency', 'discount_percentage', 'organizer',  'activities', 'difficulty_rating', 'registration', 'start_date', 'end_date', 'schedule', 'things_to_carry', 'inclusive', 'exclusive', 'others', 'announcements', 'cover_image', 'path_cover_image']
-    column_list = ('name', 'description', 'organizer', 'cover_image', 'location')
+    column_list = ('name', 'description', 'organizer', 'cover_image', 'location', 'bookings')
     column_filters = ['name', FilterAdventure('adventure.id', 'Adventure'), FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name', )
-    form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField)
+    form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField, schedule=SummernoteTextAreaField, things_to_carry=SummernoteTextAreaField, inclusive=SummernoteTextAreaField, exclusive=SummernoteTextAreaField, others=SummernoteTextAreaField, announcements=SummernoteTextAreaField)
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
             return True
         return False
+
+    def _bookings(view, context, model, name):
+        return Markup('<a href="%s" target="new">%s</a>' % (url_for('enquiries_for_trip_view.index_view', trip_id=str(model.id)), TripBooking.objects(trip=model).count()))
 
     def _location_formatter(view, context, model, name):
         url = '/admin/location_update?model_id=%s&model_type=%s&back=%s' % (str(model.id), model.__class__.__name__, '/admin/trip/')
@@ -222,8 +234,35 @@ class TripAdminView(ModelView):
 
         return Markup(text)
 
-    column_formatters = {'location': _location_formatter}
+    column_formatters = {'location': _location_formatter, 'bookings': _bookings}
 
+class TripBookingAdminView(ModelView):
+    form_columns = ['trip', 'booking_by', 'preferred_name', 'preferred_email', 'preferred_phone', 'contact_preference', 'total_charge', 'discount_percent', 'status',  'payment_status']
+    column_list = ('trip', 'booking_by', 'preferred_name', 'preferred_email', 'preferred_phone', 'contact_preference', 'status', 'payment_status', 'total_charge', 'discount_percent', 'actual_charge')
+    column_filters = [FilterTrip('trip.id', 'Trip'), 'status', 'payment_status']
+    column_searchable_list = ('preferred_name', 'preferred_phone', 'preferred_email')
+
+    def is_accessible(self):
+        if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
+            return True
+        return False
+
+    def _actual_charge(view, context, model, name):
+        return Markup(model.actual_charge)
+
+    column_formatters = {'actual_charge': _actual_charge}
+
+
+class SelectedTripBookingAdminView(TripBookingAdminView):
+    def get_query(self):
+        trip_id = request.args.get('trip_id', None)
+        if trip_id is not None:
+            return TripBooking.objects(trip=trip_id)
+        else:
+            return TripBooking.objects()
+
+    def is_visible(self):
+        return False
 
 
 class ProfileAdminView(ModelView):
@@ -729,6 +768,8 @@ admin.add_view(ContestParticipantAdminView(Profile, name="Answering stats for co
 
 admin.add_view(EventAdminView(Event, category="Organizers"))
 admin.add_view(TripAdminView(Trip, category="Organizers"))
+admin.add_view(TripBookingAdminView(TripBooking, category="Organizers"))
+admin.add_view(SelectedTripBookingAdminView(TripBooking, name="Bookings for trip", endpoint="enquiries_for_trip_view"))
 
 admin.add_view(NotOkAdminView(Profile, category="Flag Content", endpoint='flagged.profile'))
 admin.add_view(NotOkAdminView(Adventure, category="Flag Content", endpoint='flagged.adventure'))

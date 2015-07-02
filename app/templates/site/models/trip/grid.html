@@ -24,7 +24,7 @@
         	<h5>32+</h5>
 	  	</div-->
         <h4><a href="{{model.slug}}">{{ model.name }}</a></h4>
-        <a href="#"> <h3>22 Feb, 2015 {#{ model.start_date }#}</h3> </a>
+        <a href="#"> <h3>{{ model.total_date|safe }}</h3> </a>
         <span class="days">{{ model.duration }} </span>
           <span class="rs">  {{ model.price }} </span>
 

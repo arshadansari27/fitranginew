@@ -1,12 +1,13 @@
 __author__ = 'arshad'
 
-from app.models import update_content, Entity, ExternalNetwork, Charge, db, BookingEnquiry
+from app.models import update_content, Entity, ExternalNetwork, Charge, db, Location
 from app.models.relationships import RelationShips
+from app.models.booking import TripBooking
 from app.models.profile import Profile
 from app import utils
 
 @update_content.apply
-class Trip(Entity, ExternalNetwork, Charge, db.Document):
+class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
     starting_from = db.StringField()
     geo_starting_from = db.PointField()
     organizer = db.ReferenceField('Profile')
@@ -16,16 +17,13 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document):
     registration = db.StringField()
     start_date = db.DateTimeField()
     end_date = db.DateTimeField()
-    schedule = db.ListField(db.StringField())
-    things_to_carry = db.ListField(db.StringField())
-    inclusive = db.ListField(db.StringField())
-    exclusive = db.ListField(db.StringField())
-    others = db.ListField(db.StringField())
-    comments = db.ListField(db.ReferenceField('Post'))
-    enquiries = db.ListField(db.EmbeddedDocumentField(BookingEnquiry))
-    announcements = db.ListField(db.StringField())
-    location = db.StringField()
-    geo_location = db.PointField()
+    schedule = db.StringField()
+    things_to_carry = db.StringField()
+    inclusive = db.StringField()
+    exclusive = db.StringField()
+    others = db.StringField()
+    #comments = db.ListField(db.ReferenceField('Post'))
+    announcements = db.StringField()
 
     meta = {
         'indexes': [
@@ -87,7 +85,8 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document):
     def joined(self):
         return [u for u in RelationShips.get_joined_in(self) if isinstance(u, Profile)]
 
-    def add_enquiry(self, user, message):
-        enquiry = BookingEnquiry(author=user, message=message)
-        self.enquiries.append(enquiry)
-        self.save()
+    def add_enquiry(self, user, name, email, phone, message, contact_pref):
+        enquiry = TripBooking(trip=self, booking_by=user, preferred_name=name, preferred_email=email, preferred_phone=phone, enquiry=message, contact_preference=contact_pref, total_charge=self.price, discount_percent=self.discount_percentage * 1.0)
+        enquiry.save()
+        RelationShips.join(user, self)
+        return enquiry

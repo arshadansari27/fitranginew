@@ -550,15 +550,22 @@ jQuery(document).ready(function ($) {
         e.stopPropagation();
         e.preventDefault();
         var values = $('[data-action-value]');
-        var name, email, phone, enquiry;
+        var user, name, email, phone, enquiry, contact_pref;
         var model = $(this).attr('data-model-id');
-        console.log(values);
-        console.log(model);
+        var slug = $(this).attr('data-model-slug');
+        var user = $(this).attr('data-user-id');
+        if (user == undefined || user.length == 0) {
+            BootstrapDialog.alert('You must be logged in to make booking enquiry. Please login from <a href="' + slug +'">here.</a>');
+            return;
+        }
         if (values != undefined) {
-            for(var i = 0; i < values.length; i++){
+            for (var i = 0; i < values.length; i++) {
                 var elem = values[i]
                 var value = $(elem).attr('data-action-value');
-                if (value == 'name') {
+
+                if (value == 'user') {
+                    user = $(elem).val();
+                } else if (value == 'name') {
                     name = $(elem).val();
                 } else if (value == 'email') {
                     email = $(elem).val();
@@ -566,13 +573,22 @@ jQuery(document).ready(function ($) {
                     phone = $(elem).val();
                 } else if (value == 'enquiry') {
                     enquiry = $(elem).val();
+                } else if (value == 'contact-pref' && $(elem).is(":checked")) {
+                    contact_pref = $(elem).val();
                 }
+
             }
-            if ((name == undefined || name.length == 0) || (email == undefined || email.length == 0) ){
-                BootstrapDialog.alert('Please enter your name and email. They are mandatory.');
-            } else {
-                App.profile.book_trip(name, email, phone, enquiry, model);
-            }
+        }
+        if ((name == undefined || name.length == 0) || (email == undefined || email.length == 0) || (contact_pref == undefined || contact_pref.length == 0)) {
+            BootstrapDialog.alert('Please enter your name, email, phone and contact preference. They are mandatory.');
+        } else {
+            App.profile.book_trip(user, name, email, phone, enquiry, contact_pref, model, function(data){
+                if (data.status=='success') {
+                    BootstrapDialog.alert('Successfullly sent enquiry');
+                } else {
+                    BootstrapDialog.alert('Failed to send enquiry, please try again later');
+                }
+            });
         }
 
     });

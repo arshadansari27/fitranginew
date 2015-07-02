@@ -282,16 +282,21 @@ $(document).ready(function() {
         App.editor(options, callback);
     };
 
-    App.profile.book_trip = function(name, email, phone, message, trip, callback) {
-        var options = {
+    App.profile.book_trip = function(user, name, email, phone, message, contact_pref, trip, callback) {
+        var data = {
             name: name,
             email: email,
             phone: phone,
             message: message,
-            trip: trip,
+            contact_pref: contact_pref,
+            trip: trip
+        };
+        var options = {
+            node: user,
             type: 'profile',
             command: 'book-enquiry-trip',
-            action: ''
+            action: 'enquiry',
+            data: data
         };
         App.editor(options, callback);
     };
