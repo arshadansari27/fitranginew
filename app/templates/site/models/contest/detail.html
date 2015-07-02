@@ -70,35 +70,40 @@
                             <h4>Questions</h4>
                             <hr/>
                         </div>
-                        {% if user %}
-                            {% if not model.has_user_answered(user) %}
+                        {% if user and model.has_user_answered(user) %}
+                            <div class="well well-sm">
+                                <p>You have already answered this contest with the score {{model.get_user_score(user)}} out of {{model.questions|length}}.</p>
+                            </div>
+                        {% else %}
                             <div>
                                 {% for question in model.questions %}
                                 <div class="well well-sm" style="background: #F0F8FF;">
                                     <h4>{{question.question}}</h4>
                                     <div>
                                         {% for option in question.options %}
-                                        <div class="input-group">
+                                        <div class="input-group" {% if not user %}{% endif %}>
                                             <input type="radio" data-question="{{question.enumeration}}" data-answer="{{option.enumaration}}">&nbsp;&nbsp;{{ option.option }}
                                         </div>
                                         {% endfor %}
                                     </div>
                                 </div>
                                 {% endfor %}
+                                {% if user %}
                                 <div class="form-group">
                                     <button class="btn btn-primary" data-action="submit-answers">
                                         Submit
                                     </button>
                                 </div>
-                            </div>
-                            {% else %}
-                                <div class="well well-sm">
-                                    <p>You have already answered this contest with the score {{model.get_user_score(user)}} out of {{model.questions|length}}.</p>
+                                {% else %}
+                                <div class="form-group">
+                                    <script>
+                                        $(document).ready(function(){ BootstrapDialog.alert('You must be logged in to submit answers...');})
+                                    </script>
+                                    <a href="/login?target={{model.slug}}" class="btn btn-primary">
+                                        Login to submit the answers
+                                    </a>
                                 </div>
-                            {% endif %}
-                        {% else %}
-                            <div class="well well-sm">
-                                <p>Please <a href="/login?target={{model.slug}}">login</a> to participate</p>
+                                {% endif %}
                             </div>
                         {% endif %}
                     {% endif %}
