@@ -663,7 +663,13 @@ class DetailPage(Page):
             other_trips = NodeCollectionFactory.resolve(TRIP, GRID_ROW_VIEW, category="other", fixed_size=4).get_card(context)
             return dict(discussions=discussions, other_trips=other_trips)
         elif self.model_name == CONTEST:
-            return {}
+            parent = context['parent']
+            ad = parent.associated_advertisements[0] if parent.associated_advertisements and len(parent.associated_advertisements) > 0 else None
+            if ad:
+                ad_view = NodeView.get_collection_card(ADVERTISEMENT, GRID_ROW_VIEW,  ad)
+            else:
+                ad_view = ''
+            return dict(ad_view=ad_view)
         else:
             return {}
 

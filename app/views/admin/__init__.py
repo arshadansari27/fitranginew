@@ -352,7 +352,7 @@ class PostForContentAdminView(PostAdminView):
 class ContestAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['title', 'sponsorer', 'description', 'content', 'author', 'start_date', 'end_date', 'closed', 'winner', 'questions', 'published', 'tags', 'admin_published', 'slug']
+    form_columns = ['title', 'sponsorer', 'description', 'content', 'author', 'start_date', 'end_date', 'closed', 'associated_advertisements', 'winner', 'questions', 'published', 'tags', 'admin_published', 'slug']
     column_list = ('title', 'author', 'start_date', 'end_date', 'is_live', 'is_closed', 'winner', 'participants', 'published', 'admin_published')
     column_searchable_list = ('title', )
     form_overrides = dict(content=SummernoteTextAreaField)
@@ -375,7 +375,7 @@ class ContestAdminView(ModelView):
 
     def _is_live(view, context, model, name):
         now = datetime.datetime.now()
-        return Markup("%s" % "Yes" if now > model.start_date and now < model.end_date else 'No')
+        return Markup("%s" % "Yes" if model.is_started else 'No')
 
     def _participants(view, context, model, name):
         return Markup('<a href="%s" target="new">%s</a>' % (url_for('participants_for_context_view.index_view', contest_id=str(model.id)), ContestAnswer.get_all_participants_by_contest_count(model)))

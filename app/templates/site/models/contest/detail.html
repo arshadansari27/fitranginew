@@ -47,7 +47,18 @@
         <div class="container">
             <div id="myTabContent" class="tab-content">
                 <div role="tabpanel" class="tab-pane fade active in" id="about-reviews" aria-labelledby="about-reviews">
+                    {% if ad_view and ad_view|length > 0 %}
+                    <div class="row">
+                        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                            <p>{{model.content|safe}}</p>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <p>{{ad_view|safe}}</p>
+                        </div>
+                    </div>
+                    {% else %}
                     <p>{{model.content|safe}}</p>
+                    {% endif %}
                 </div>
                 <!--Tab Pane End-->
             </div>

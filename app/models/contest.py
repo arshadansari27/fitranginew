@@ -45,6 +45,7 @@ class Contest(Content):
     winner          = db.ReferenceField('Profile')
     closed          = db.BooleanField(default=False)
     sponsorer        = db.ReferenceField('Profile')
+    associated_advertisements = db.ListField(db.ReferenceField('Advertisement'))
 
     def is_closed(self):
         if datetime.datetime.now() > self.end_date:
@@ -92,17 +93,17 @@ class Contest(Content):
 
     @property
     def is_started(self):
-        return self.start_date < datetime.datetime.now() < self.end_date
+        return self.start_date and self.end_date and self.start_date < datetime.datetime.now() < self.end_date
 
     @property
     def is_not_started(self):
-        is_not = (self.start_date > datetime.datetime.now())
+        is_not = (self.start_date is not None and self.start_date > datetime.datetime.now())
         print 'Started: ', is_not
         return is_not
 
     @property
     def is_closed(self):
-        return self.end_date < datetime.datetime.now() or self.closed
+        return (self.end_date and self.end_date < datetime.datetime.now()) or self.closed
 
     def find_lucky_answer(self):
         answers = list(ContestAnswer.objects(contest=self).all())

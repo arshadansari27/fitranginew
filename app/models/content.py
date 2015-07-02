@@ -267,3 +267,9 @@ class Discussion(Content):
 class Advertisement(Node, db.Document):
     title = db.StringField()
     link = db.StringField()
+
+    def __repr__(self):
+        return self.title
+
+    def __unicode__(self):
+        return self.__repr__()
