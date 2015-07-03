@@ -335,10 +335,16 @@ class ContestParticipantAdminView(ModelView):
     can_delete = False
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    column_list = ( 'author.name', 'author.email', 'contest', 'answers', 'correct_answers', 'possible_winner')
+    column_list = ( 'name', 'email', 'contest', 'answers', 'correct_answers', 'possible_winner')
+
+
+    def _contest(view, context, model, name):
+        return Markup("%s" % Contest.objects(pk=str(request.args.get('contest_id')).strip()).first())
+
 
     def _answers(view, context, model, name):
-        return Markup("%s" % ContestAnswer.answers_by_contest_and_user(request.args.get('contest_id'), model))
+        answers = ContestAnswer.answers_by_contest_and_user(request.args.get('contest_id'), model)
+        return Markup("%s" % str(answers))
 
     def _correct_answers(view, context, model, name):
         return Markup("%d" % ContestAnswer.correct_answers_by_contest_and_user(request.args.get('contest_id'), model))
@@ -346,7 +352,7 @@ class ContestParticipantAdminView(ModelView):
     def _possible_winner(view, context, model, name):
         return Markup("%s" % str(ContestAnswer.check_all_correct_answers_by_contest_and_user(request.args.get('contest_id'), model)))
 
-    column_formatters = {'answers': _answers, 'correct_answers': _correct_answers, 'possible_winner': _possible_winner}
+    column_formatters = {'contest': _contest, 'answers': _answers, 'correct_answers': _correct_answers, 'possible_winner': _possible_winner}
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None:

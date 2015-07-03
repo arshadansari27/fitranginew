@@ -179,7 +179,7 @@ class ContestAnswer(db.Document):
             contest = Contest.objects(pk=str(contest)).first()
         if isinstance(user, str) or isinstance(user, unicode) or isinstance(user, ObjectId):
             user = Profile.objects(pk=str(user)).first()
-        return ContestAnswer.objects(Q(contest=contest) & Q(author=user)).all()
+        return ', '.join(["%s: %s" % (c.question_enumeration, c.answer_enumeration) for c in  ContestAnswer.objects(Q(contest=contest) & Q(author=user)).all()])
 
     @classmethod
     def correct_answers_by_contest_and_user(cls, contest, user):
