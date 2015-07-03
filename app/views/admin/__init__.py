@@ -398,7 +398,7 @@ class PostForContentAdminView(PostAdminView):
 class ContestAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['title', 'sponsorer', 'description', 'content', 'author', 'start_date', 'end_date', 'closed', 'associated_advertisements', 'winner', 'questions', 'published', 'tags', 'admin_published', 'slug']
+    form_columns = ['title', 'sponsorer', 'description', 'cover_image', 'content', 'author', 'start_date', 'end_date', 'closed', 'associated_advertisements', 'winner', 'questions', 'published', 'tags', 'admin_published', 'slug', 'path_cover_image']
     column_list = ('title', 'author', 'start_date', 'end_date', 'is_live', 'is_closed', 'winner', 'participants', 'published', 'admin_published')
     column_searchable_list = ('title', )
     form_overrides = dict(content=SummernoteTextAreaField)

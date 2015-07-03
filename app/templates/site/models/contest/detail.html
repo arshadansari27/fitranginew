@@ -60,11 +60,14 @@
                             <div>
 
                                 {% if model.is_closed %}
-                                <div class="form-group">
-                                    <label>Winner of the Event</label>
+                                <div class="form-group text-center">
+                                    <label>Winner of the Contest</label>
                                 </div>
-                                <div>
-                                    Winner display card
+                                <div class="text-center thumbnail">
+                                    <a href="{{model.winner.slug}}"><img src="{{model.winner.cover_image_path_small}}"/></a>
+                                    <div class="caption">
+                                        <a href="{{model.winner.slug}}"><h4 class="lg">{{model.sponsorer.name}}</h4></a>
+                                    </div>
                                 </div>
                                 {% else %}
                                 <div class="form-group text-center">
