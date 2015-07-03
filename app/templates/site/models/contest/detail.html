@@ -12,11 +12,12 @@
 
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <hr/>
-                    <h4>Sponsored By</h4>
-                    <img src="{{model.sponsorer.cover_image_path_small}}" width="60px" height="60px"/>
+                    <p>{{model.description}}</p>
                     <br/>
-
-                    <p>{{model.sponsorer.name}}</p>
+                    <h4>Sponsored By</h4>
+                    <a href="{{model.sponsorer.slug}}"><img src="{{model.sponsorer.cover_image_path_small}}" width="60px" height="60px"/></a>
+                    <br/>
+                    <a href="{{model.sponsorer.slug}}"><span class="white">{{model.sponsorer.name}}</span></a>
                 </div>
 
 
