@@ -267,6 +267,7 @@ class Discussion(Content):
 class Advertisement(Node, db.Document):
     title = db.StringField()
     link = db.StringField()
+    is_specific = db.BooleanField()
 
     def __repr__(self):
         return self.title

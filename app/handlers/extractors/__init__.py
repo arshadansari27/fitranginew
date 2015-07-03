@@ -197,7 +197,7 @@ class NodeExtractor(object):
 
 stream_extractor = NodeExtractor(STREAM)
 activity_extractor = NodeExtractor(ACTIVITY)
-advertisement_extractor = NodeExtractor(ADVERTISEMENT)
+advertisement_extractor = NodeExtractor(ADVERTISEMENT, init_filters=dict(is_specific__in=[None, False]))
 channel_extractor = NodeExtractor(CHANNEL)
 profile_type_extractor = NodeExtractor(PROFILE_TYPE)
 article_extractor = NodeExtractor(ARTICLE)
