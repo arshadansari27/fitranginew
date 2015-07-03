@@ -653,10 +653,9 @@ class DetailPage(Page):
             discussion_list = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW).get_card(context)
             article_list = NodeCollectionFactory.resolve(ARTICLE, GRID_VIEW).get_card(context)
             my_stream_list = NodeCollectionFactory.resolve(STREAM, ROW_VIEW, category='my').get_card(context)
-            fitrangi_posts = NodeCollectionFactory.resolve(POST, GRID_VIEW, category="fitrangi").get_card(context)
+            fitrangi_posts = NodeCollectionFactory.resolve(POST, GRID_ROW_VIEW, category="fitrangi").get_card(context)
             featured_profiles = ','.join(str(u.id) for u in profile_extractor.get_list("featured:bool|True;", False, 1, 10))
             claims = ClaimProfile.objects(claimed=context['parent']).count() #len([u for u in ClaimProfile.objects().all() if u.claimed.id == context['parent'].id])
-            print '[*] Setting Claims', claims, context['parent']
             return dict(wish_listed_adventure_list=wish_listed_adventure_list, accomplished_adventure_list=accomplished_adventure_list,
                             follower_list=follower_list, following_list=following_list, discussion_list=discussion_list,
                             article_list=article_list, my_stream_list=my_stream_list, fitrangi_posts=fitrangi_posts,
