@@ -11,7 +11,7 @@
             {% if not model.is_started and not model.is_closed %}
                 <a><button class="btn btn-primary disabled"><h3>{{model.title_short}}</h3></button></a>
             {% else %}
-                <a id="contest-{{model.id}}" href="{% if model.is_started or model.is_closed %}{{model.slug}}{% else %}#{% endif %}"><button class="btn btn-primary"><h3>{{model.title}}</h3></button></a>
+                <a id="contest-{{model.id}}" href="{% if model.is_started or model.is_closed %}{{model.slug}}{% else %}#{% endif %}"><button class="btn btn-primary"><h3>{{model.title_short}}</h3></button></a>
             {% endif %}
             <h4>{{model.description}}</h4>
         </div>
