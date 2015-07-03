@@ -8,20 +8,23 @@ from app import utils
 
 @update_content.apply
 class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
-    starting_from = db.StringField()
-    geo_starting_from = db.PointField()
+    starting_from = db.StringField() # deprecated
+    geo_starting_from = db.PointField() # deprecated
     organizer = db.ReferenceField('Profile')
     activities = db.ListField(db.ReferenceField('Activity'))
-    adventure = db.ReferenceField('Adventure')
-    difficulty_rating = db.IntField()
-    registration = db.StringField()
+    adventure = db.ReferenceField('Adventure') # deprecated
+    difficulty_rating = db.IntField() # deprecated
+    registration = db.StringField() # deprecated
     start_date = db.DateTimeField()
     end_date = db.DateTimeField()
-    schedule = db.StringField()
-    things_to_carry = db.StringField()
-    inclusive = db.StringField()
-    exclusive = db.StringField()
-    others = db.StringField()
+    schedule = db.StringField() # deprecated
+    itinerary = db.StringField()
+    things_to_carry = db.StringField() #deprecated
+    inclusive = db.StringField() # deprecated
+    exclusive = db.StringField() # deprecated
+    inclusive_exclusive = db.StringField()
+    others = db.StringField() # deprecated
+    other_details = db.StringField()
     #comments = db.ListField(db.ReferenceField('Post'))
     announcements = db.StringField()
     optional_location_name = db.StringField()

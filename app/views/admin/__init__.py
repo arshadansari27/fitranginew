@@ -211,16 +211,19 @@ class EventAdminView(ModelView):
 
 
 class TripAdminView(ModelView):
-    form_columns = ['name', 'description', 'optional_location_name', 'about', 'starting_from', 'price', 'currency', 'discount_percentage', 'organizer',  'activities', 'difficulty_rating', 'registration', 'start_date', 'end_date', 'schedule', 'things_to_carry', 'inclusive', 'exclusive', 'others', 'announcements', 'cover_image', 'path_cover_image', 'slug']
-    column_list = ('name', 'description', 'organizer', 'cover_image', 'location', 'bookings')
+    form_columns = ['name', 'description', 'optional_location_name', 'about', 'price', 'organizer',  'activities', 'start_date', 'end_date', 'itinerary', 'other_details', 'inclusive_exclusive', 'announcements', 'cover_image', 'path_cover_image', 'slug']
+    column_list = ('name', 'organizer_name', 'cover_image', 'location', 'bookings')
     column_filters = ['name', FilterAdventure('adventure.id', 'Adventure'), FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name', )
-    form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField, schedule=SummernoteTextAreaField, things_to_carry=SummernoteTextAreaField, inclusive=SummernoteTextAreaField, exclusive=SummernoteTextAreaField, others=SummernoteTextAreaField, announcements=SummernoteTextAreaField)
+    form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField, itinerary=SummernoteTextAreaField, other_details=SummernoteTextAreaField, inclusive_exclusive=SummernoteTextAreaField, announcements=SummernoteTextAreaField)
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
             return True
         return False
+
+    def organizer(view, context, model, name):
+        return Markup('%s' % model.organizer.name)
 
     def _bookings(view, context, model, name):
         return Markup('<a href="%s" target="new">%s</a>' % (url_for('enquiries_for_trip_view.index_view', trip_id=str(model.id)), TripBooking.objects(trip=model).count()))
@@ -234,7 +237,7 @@ class TripAdminView(ModelView):
 
         return Markup(text)
 
-    column_formatters = {'location': _location_formatter, 'bookings': _bookings}
+    column_formatters = {'location': _location_formatter, 'bookings': _bookings, 'organizer_name': organizer}
 
 class TripBookingAdminView(ModelView):
     form_columns = ['trip', 'booking_by', 'preferred_name', 'preferred_email', 'preferred_phone', 'contact_preference', 'total_charge', 'discount_percent', 'status',  'payment_status']
