@@ -57,24 +57,48 @@
 
             <article>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <i class="fa fa-calendar"></i><strong>Date</strong>
-
-                    <p>{{model.total_date|safe}}</p>
+                    <div class="row">
+                        <div>
+                            <i class="fa fa-calendar "></i>
+                        </div>
+                        <div>
+                            <strong>Date</strong>
+                            <p>{{model.total_date|safe}}</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <i class="fa fa-clock-o"></i><strong>Days</strong>
-
-                    <p> {{model.duration}} </p>
+                    <div class="row">
+                        <div>
+                            <i class="fa fa-clock-o"></i>
+                        </div>
+                        <div>
+                            <strong>Days</strong>
+                            <p> {{model.duration}} </p>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <i class="fa fa-map-marker"></i><strong>Location</strong>
-
-                    <p>{{model.location }}</p>
+                    <div class="row">
+                        <div>
+                            <i class="fa fa-map-marker"></i>
+                        </div>
+                        <div>
+                            <strong>Location</strong>
+                            <p>{% if model.optional_location_name %}{{ model.optional_location_name }}{% else %}{{model.location }}{% endif %}</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <i class="fa fa-inr"></i><strong>Amount</strong>
-
-                    <p>{{model.price}} /- per person</p>
+                    <div class="row">
+                        <div>
+                            <i class="fa fa-inr"></i>
+                        </div>
+                        <div>
+                            <strong>Amount</strong>
+                            <p>{{model.price|int}} /- per person</p>
+                        </div>
+                    </div>
                 </div>
             </article>
 
@@ -100,7 +124,7 @@
                 <div class="media">
                     <div class="media-left">
                         <a href="#">
-                            <img class="media-object" data-src="holder.js/74x74" alt="74x74" src="{{model.organizer.cover_image_path}}"  data-holder-rendered="true"  style="width: 74px; height: 74px;">
+                            <a href="{{model.organizer.slug}}"><img class="media-object" data-src="holder.js/74x74" alt="74x74" src="{{model.organizer.cover_image_path}}"  data-holder-rendered="true"  style="width: 74px; height: 74px;"></a>
                         </a>
                     </div>
                     <div class="media-body">
@@ -197,12 +221,6 @@
 
                 <div class="tab-pane" id="overview">
                     <!--h3>Overview Underconstructions</h3-->
-                    {% if model.description %}
-                    <h4><u>Description</u></h4>
-                    {{model.description}}
-                    <hr/>
-                    {% endif %}
-                    <h4><u>More</u></h4>
                     {{ model.about }}
                 </div>
                 <!-- End of Tab Pane -->
@@ -283,7 +301,7 @@
 
 
         <div class="row box-bg">
-            <div class="heading">
+            <div id="book-now" class="heading">
                 <h4>Booking Enquiry</h4>
             </div>
             <h4 style="text-align: center;"><strong>"{{model.name}}"</strong></h4> <br>
@@ -293,7 +311,7 @@
             <div class="sub-heading">
                 <h5 style="font-size:17px;">Fill these to let us connect you with the organiser</h5>
             </div>
-            <form id="book-now" class="form-horizontal question-form">
+            <form class="form-horizontal question-form">
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><i class="fa fa-envelope"></i></label>
 

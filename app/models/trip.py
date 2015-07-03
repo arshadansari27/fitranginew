@@ -24,6 +24,7 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
     others = db.StringField()
     #comments = db.ListField(db.ReferenceField('Post'))
     announcements = db.StringField()
+    optional_location_name = db.StringField()
 
     meta = {
         'indexes': [
@@ -33,7 +34,7 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
 
     @property
     def duration(self):
-        return (self.end_date - self.start_date).days
+        return (self.end_date - self.start_date).days + 1
 
     @property
     def total_date(self):
@@ -46,6 +47,8 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
         end_month = utils.get_month(self.end_date.month)
         end_year = str(self.end_date.year)
         params = (start_day, start_sup, start_month, start_year, end_day, end_sup, end_month, end_year)
+        _total_date = "%d<sup>%s</sup> %s %s" % (start_day, start_sup, end_month, end_year)
+        """
         if start_year == end_year:
             if start_month == end_month:
                 if start_day == end_day:
@@ -56,6 +59,7 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
                 _total_date = "%d<sup>%s</sup> %s - %d<sup>%s</sup> %s %s" % (start_day, start_sup, start_month, end_day, end_sup, end_month, end_year)
         else:
             _total_date = "%d<sup>%s</sup> %s %s - %d<sup>%s</sup> %s %s" % params
+        """
         return _total_date
 
     def _get_sup(self, date):
@@ -89,7 +93,7 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
         return [u for u in RelationShips.get_joined_in(self) if isinstance(u, Profile)]
 
     def add_enquiry(self, user, name, email, phone, message, contact_pref):
-        enquiry = TripBooking(trip=self, booking_by=user, preferred_name=name, preferred_email=email, preferred_phone=phone, enquiry=message, contact_preference=contact_pref, total_charge=self.price, discount_percent=self.discount_percentage * 1.0)
+        enquiry = TripBooking(trip=self, booking_by=user, preferred_name=name, preferred_email=email, preferred_phone=phone, enquiry=message, contact_preference=contact_pref, total_charge=self.price, discount_percent=self.discount_percentage if self.discount_percentage is not None else 0.0 * 1.0)
         enquiry.save()
         RelationShips.join(user, self)
         return enquiry
