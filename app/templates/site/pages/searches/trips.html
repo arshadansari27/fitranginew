@@ -50,7 +50,7 @@
                         <script>
                             $(document).ready(function(){
                                 $.ajax({
-                                    url: '/options?model_name=trip&attr=organizer'
+                                    url: '/options?model_name=trip&attr=organizer&attr2=name'
                                 }).done(function (data) {
                                     $('#organizer').append(data);
                                 });

@@ -222,11 +222,14 @@ def get_notifications_count():
 def ajax_options():
     model_name = request.args.get('model_name', '')
     attr = request.args.get('attr', None)
+    attr2 = request.args.get('attr2', None)
     select = request.args.get('select', 0)
     if model_name == 'tag':
         options = [(u[0], u[0]) for u in all_tags()]
     elif model_name == 'location' and attr == 'name':
         options = ((str(getattr(u, 'id')), u.name) for u in NodeFactory.get_class_by_name(model_name).objects.all())
+    elif attr2 is not None:
+        options = ((str(getattr(u, 'id')), getattr(getattr(u, attr), attr2)) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     else:
         options = ((str(getattr(u, 'id')), getattr(u, attr)) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     if not select:
