@@ -609,7 +609,7 @@ class SearchPage(Page):
         elif self.model_name == EVENT:
             return dict(events_list=NodeCollectionFactory.resolve(EVENT, ROW_VIEW).get_card(context))
         elif self.model_name == TRIP:
-            return dict(trips=NodeCollectionFactory.resolve(TRIP, GRID_VIEW).get_card(context))
+            return dict(upcoming=NodeCollectionFactory.resolve(TRIP, GRID_VIEW, category='upcoming').get_card(context), now=str(datetime.datetime.now()).split(' ')[0], interesting=NodeCollectionFactory.resolve(TRIP, GRID_VIEW, category='interesting').get_card(context))
         elif self.model_name == CONTEST:
             return dict(live=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='live').get_card(context), upcoming=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='upcoming').get_card(context), past=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='past').get_card(context), now=str(datetime.datetime.now()).split(' ')[0])
         else:

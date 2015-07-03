@@ -1351,8 +1351,8 @@ jQuery(document).ready(function ($) {
         load_model(options,function(data){
             if (data.has_data == 1 || data.has_data == '1') {
                 $('[data-model="'+ model +'"][data-category="'+category+'"].help-info').hide();
-                $(elem).html(data.html);
             }
+            $(elem).html(data.html);
             if (data.last_page <= 1 && load_more != undefined)  {
                 $(load_more).hide();
             }
@@ -1387,6 +1387,9 @@ jQuery(document).ready(function ($) {
 
     var resetSearch = '[data-filter-submit="reset"]';
     $('body').on('click', resetSearch, function(e) {
+        window.location.reload();
+        return;
+        /*
         var model       = $(this).attr('data-model');
         var category    = $(this).attr('data-category');
 
@@ -1436,6 +1439,7 @@ jQuery(document).ready(function ($) {
         $(selector).each(function(i, elem){
             initiate_model_loading(elem);
         });
+        */
     });
 
     App.force_reset_listing = function(model, category) {

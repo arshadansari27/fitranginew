@@ -2,6 +2,7 @@ from app.utils import get_start_end, PAGE_LIMIT
 
 __author__ = 'arshad'
 from app.models import db, new_object
+from mongoengine import Q
 
 FAVORITE, FAVORITED_BY = 'favorite', 'favorited_by'
 FOLLOWS, FOLLOWED_BY = 'follows', 'followed_by'
@@ -91,10 +92,11 @@ class RelationShips(db.Document):
 
     @classmethod
     def join(cls, subject, object):
-        relations = RelationShips.get_joined(subject, paged=False)
-        for r in relations:
-            if r.object == object:
-                return
+        if RelationShips.objects(Q(subject=subject) & Q(object=object) & Q(relations=JOINED)).count() > 0:
+            return
+
+        if RelationShips.objects(Q(subject=subject) & Q(object=object) & Q(relations=INTERESTED)).count() is 0:
+            RelationShips.interested(subject, object)
         r1, r2 = cls.create_relationship(subject, object, JOINED)
 
     @classmethod

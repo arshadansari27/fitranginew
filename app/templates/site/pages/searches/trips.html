@@ -11,7 +11,7 @@
             </div>
 
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
-                <input id="activity-filter" data-category="all" data-model="trip" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
+                <input id="activity-filter" data-model="trip" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
                 <datalist id="activity">
                     <option value="">
                 </datalist>
@@ -28,72 +28,81 @@
             </div>
 
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
-
-               <input id="location-filter" data-category="all" data-model="trip" data-filter="location__location__name" list="location" placeholder="FILTER BY LOCATION">
-                <datalist id="location">
-                    <option value="">
-                </datalist>
-                <script>
-                    $(document).ready(function(){
-                        $.ajax({
-                            url: '/options?model_name=location&attr=name'
-                        }).done(function (data) {
-                            $('#location').append(data);
-                        });
-                    });
-                </script>
+                <input class="geo-complete" placeholder="SORT BY LOCATION" data-sorter="location" data-model="trip">
+                <form>
+                    <input type="hidden" id="location-sorter-lat" name="lat" data-model="adventure" data-sorter="location_lat"/>
+                    <input type="hidden" id="location-sorter-lng" name="lng" data-model="adventure" data-sorter="location_lng"/>
+                    <input type="hidden" id="location-sorter-locality" name="locality_short" data-model="adventure" data-sorter="location_locality"/>
+                    <input type="hidden" id="location-sorter-region2" name="administrative_area_level_2" data-model="adventure" data-sorter="location_region2"/>
+                    <input type="hidden" id="location-sorter-region1" name="administrative_area_level_1" data-model="adventure" data-sorter="location_region1"/>
+                    <input type="hidden" id="location-sorter-country" name="country_short" data-model="adventure" data-sorter="location_country"/>
+                </form>
             </div>
-
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 fitrangi-range">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 fitrangi-datalist fitrangi-range">
                 <div class="form-group">
-                    <h3>Price Range Starts</h3>
+                    <h3>Search by Oragnzer</h3>
 
                     <div class="range range-primary">
-                        <input id="price-start-filter" data-category="all" data-model="trip" data-filter="price__gte" data-filter-type="float" type="range" min="0" max="20000" step="1000" onchange="rangePrimary1.value=value">
+                        <input id="organizer-filter" data-model="trip" data-filter="organizer__profile__name" list="organizer" placeholder="FILTER BY ORGANIZER">
+                        <datalist id="organizer">
+                            <option value="">
+                        </datalist>
+                        <script>
+                            $(document).ready(function(){
+                                $.ajax({
+                                    url: '/options?model_name=trip&attr=organizer'
+                                }).done(function (data) {
+                                    $('#organizer').append(data);
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 fitrangi-range">
+                <div class="form-group">
+                    <h3>Price Range</h3>
+
+                    <div class="range range-primary">
+                        <input id="rangePrimary0" type="range" min="0" max="20000" step="1000" onchange="rangePrimary1.value=value+'-' + (parseInt(value) + 1000);price_start_filter.value=value;price_end_filter.value=parseInt(value) + 1000;">
                         <output id="rangePrimary1"></output>
+                        <output class="hide" id="price_start_filter" data-model="trip" data-filter="price__gte" data-filter-type="float"></output>
+                        <output class="hide" id="price_end_filter" data-model="trip" data-filter="price__lte" data-filter-type="float"></output>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 fitrangi-range">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 fitrangi-range">
                 <div class="form-group">
-                    <h3>Price Range Ends</h3>
+                    <h3>Date Starts</h3>
 
                     <div class="range range-primary">
-                        <input id="price-end-filter" data-category="all" data-model="trip" data-filter="price__lte" data-filter-type="float" type="range" min="0" max="20000" step="1000" onchange="rangePrimary2.value=value">
-                        <output id="rangePrimary2"></output>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 fitrangi-range">
-                <div class="form-group">
-                    <h3>Date Starts After</h3>
-
-                    <div class="range range-primary">
-                        <input id="start-date-filter" data-category="all" data-model="trip" data-filter="start_date__gte" type="date" name="start">
+                        <input id="start-date-filter" data-model="trip" data-filter="start_date__gte" type="date" name="start">
                     </div>
 
                 </div>
             </div>
-
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 fitrangi-range">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 fitrangi-datalist fitrangi-range">
                 <div class="form-group">
-                    <h3>Date Ends Before</h3>
+                    <h3>Sort</h3>
 
                     <div class="range range-primary">
-                        <input id="end-date-filter" data-category="all" data-model="trip" data-filter="end_date__lte" type="date" name="end">
+                        <input id="sorter-filter" data-model="trip" list="sorter" placeholder="Sort By">
+                        <datalist id="sorter">
+                            <option value="Generic">
+                        </datalist>
                     </div>
-
                 </div>
+
             </div>
 
 
             <div class="col-lg-offset-4 col-md-offset-4">
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a data-category="all" data-model="trip" data-filter-submit="search" href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">GO</a>
+                    <a data-model="trip" data-filter-submit="search" href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">GO</a>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a data-category="all" data-model="trip" data-filter-submit="reset"  href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">RESET</a>
+                    <a data-model="trip" data-filter-submit="reset"  href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">RESET</a>
                 </div>
             </div>
 
@@ -103,46 +112,71 @@
 
     </div>
 </section>
-
-<hr class="clearfix divider">
-
 <section  id="model-container-section" class="container-fluid p-0">
-    <div class="container fitrangi-trips">
+    <div role="tabpanel" data-example-id="togglable-tabs">
 
-        {{ trips|safe }}
+        <div class="border-grey-t border-grey-b h-56">
+            <div class="container text-center">
+                <ul id="myTab" class="nav nav-tabs" role="tablist">
+                    <li class="active"><a href="#upcoming" role="tab" data-toggle="tab" aria-controls="upcoming" aria-expanded="false">
+                        <span class="fa fa-home"></span> <strong>Upcoming Tripes</strong></a></li>
+                    {% if user %}<li class=""><a href="#interesting" role="tab" data-toggle="tab" aria-controls="interesting"
+                            aria-expanded="false">
+                        <span class="fa fa-certificate"></span> <strong>Interesting or Joined Trips </strong> </a></li>{% endif %}
+                </ul>
+            </div>
+        </div>
+        <div class="container">
+            <div id="myTabContent" class="tab-content">
+                <div role="tabpanel" class="tab-pane fade active in" id="upcoming" aria-labelledby="upcoming">
+                    <div class="container fitrangi-trips">
+                        <input id="start-date-default-filter" data-category="upcoming" data-model="trip" data-filter="start_date__gte" type="hidden" name="start" value="{{now}}" data-filter-status="fixed">
+                        {{ upcoming|safe }}
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="interesting" aria-labelledby="interesting">
+                    <div class="container fitrangi-trips">
+                        {% if user %}
+                        <input id="interesting-trip-filter" data-category="interesting" data-model="trip" data-filter="relationship__interested__profile" type="hidden" value="{{user.id}}" data-filter-status="fixed">
+                        {{ interesting|safe }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
  <script>
+     $('#activity-filter').val('');
+     $('#start-date-filter').val('');
+     $('#end-date-filter').val('');
+     $('#rangePrimary0').val('0');
+     $('#rangePrimary1').val('0');
+     $('price_start_filter').html('');
+     $('price_end_filter').html('');
     $(document).ready(function(){
 
-        $('#activity-filter').val('');
-        $('#location-filter').val('');
-        $('#start-date-filter').val('');
-        $('#end-date-filter').val('');
-        $('#price-start-filter').val('0');
-        $('#rangePrimary1').val('0');
-        $('#price-end-filter').val('20000');
-        $('#rangePrimary2').val('20000');
+
         window.App.filter('activity-filter');
-        window.App.filter('location-filter');
         window.App.filter('start-date-filter');
+        window.App.filter('start-date-default-filter');
+        window.App.filter('interesting-trip-filter');
         window.App.filter('end-date-filter');
-        window.App.filter('price-start-filter');
-        window.App.filter('price-end-filter');
+        window.App.filter('price_start_filter');
+        window.App.filter('price_end_filter');
+        window.App.sorter('location-sorter-lat');
+        window.App.sorter('location-sorter-lng');
+        window.App.sorter('location-sorter-locality');
+        window.App.sorter('location-sorter-region2');
+        window.App.sorter('location-sorter-region1');
+        window.App.sorter('location-sorter-country');
     });
 </script>
 {% if filters.get('activities__activity__name') %}
   <script>
     $(document).ready(function(){
         $('#activity-filter').val('{{filters.get("activities__activity__name")}}');
-    });
-</script>
-{% endif %}
- {% if filters.get('location__location__name') %}
-  <script>
-    $(document).ready(function(){
-        $('#location-filter').val('{{filters.get("location__location__name")}}');
     });
 </script>
 {% endif %}
