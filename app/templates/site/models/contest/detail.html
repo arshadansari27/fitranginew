@@ -50,7 +50,9 @@
                      aria-labelledby="about-reviews">
                     <div class="row">
                         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                            <p>{{model.content|safe}}</p>
+                            <div class="container-fluid">
+                                {{model.content|safe}}
+                            </div>
                             <hr class="w-100 clearfix border-grey-b"/>
 
 
@@ -113,7 +115,9 @@
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                            <p>{{ad_view|safe}}</p>
+                            {% for ad_view in ad_views %}
+                                {{ad_view|safe}}
+                            {% endfor %}
                         </div>
                     </div>
                     <!--Tab Pane End-->

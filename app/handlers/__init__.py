@@ -664,12 +664,15 @@ class DetailPage(Page):
             return dict(discussions=discussions, other_trips=other_trips)
         elif self.model_name == CONTEST:
             parent = context['parent']
-            ad = parent.associated_advertisements[0] if parent.associated_advertisements and len(parent.associated_advertisements) > 0 else None
-            if ad:
-                ad_view = NodeView.get_collection_card(ADVERTISEMENT, GRID_ROW_VIEW,  ad)
+            ads = parent.associated_advertisements if parent.associated_advertisements and len(parent.associated_advertisements) > 0 else None
+            ad_views = []
+            if ads:
+                for ad in ads:
+                    ad_view = NodeView.get_collection_card(ADVERTISEMENT, GRID_ROW_VIEW,  ad)
+                    ad_views.append(ad_view)
             else:
                 ad_view = ''
-            return dict(ad_view=ad_view)
+            return dict(ad_views=ad_views)
         else:
             return {}
 
