@@ -49,7 +49,7 @@ class Contest(Content):
 
     @property
     def title_short(self):
-        return self.title if len(self.title) < 40 else "%s..." % self.title[:30]
+        return self.title if len(self.title) <= 30 else "%s..." % self.title[:30]
 
     def is_closed(self):
         if datetime.datetime.now() > self.end_date:
