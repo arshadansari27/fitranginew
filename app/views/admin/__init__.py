@@ -332,6 +332,7 @@ class PostAdminView(ModelView):
 class ContestParticipantAdminView(ModelView):
     can_create = False
     can_edit = False
+    can_delete = False
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
     column_list = ( 'author.name', 'author.email', 'contest', 'answers', 'correct_answers', 'possible_winner')
