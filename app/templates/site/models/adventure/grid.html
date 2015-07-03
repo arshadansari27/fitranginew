@@ -1,4 +1,4 @@
-<div class="{% block grid_size %}col-lg-4 col-md-4 col-sm-4 col-xs-12{% endblock %}">
+<div class="{% block grid_size %}{% endblock %}">
     <div class="thumbnail text-center">
        <div>
            <img src="{{model.cover_image_path_small}}"  alt="{{model.name}}">
@@ -7,7 +7,7 @@
         <div class="caption captop">
             <article>
                 <h4><a class="label label-warning label-as-badge" href="{{model.slug}}#adventure-review-area" style="color: white">{% set reviews_count=model.reviews_count %}{% if reviews_count > 0 %}{{reviews_count}} Reviews{% else %}Write review{% endif %}</a></h4>
-                <a href="#" class="btn rating-{{model.extremity|lower}}">{{model.extremity}}</a>
+                <!--a href="#" class="btn rating-{{model.extremity|lower}}">{{model.extremity}}</a-->
             </article>
         </div>
         <div class="caption capbottom">

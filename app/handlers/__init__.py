@@ -165,13 +165,26 @@ class CollectionView(object):
 
     def __get_model_cards(self, models):
         if len(models) > 0:
-
             def iterate_models(models):
                 for model in models:
+
                     temp = NodeView.get_collection_card(self.model_name, self.card_type, model)
                     yield model, temp
+            cards = [u[1] for u in iterate_models(models)]
+            if not self.card_type == GRID_VIEW:
+                return ''.join(cards)
+            else:
 
-            return ''.join(u[1] for u in iterate_models(models))
+                final_cards = [[], [], []]
+                j = 0
+                temp_cards = []
+                for i in xrange(0, len(cards)):
+                    final_cards[i % 3].append(cards[i])
+                for i in xrange(0, 3):
+                    temp_cards.append(''.join(final_cards[i]))
+                out = '<div class="row">' + ''.join(['<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">%s</div>' % t for t in temp_cards]) + '</div>'
+                return out
+
         else:
             return ''
 
