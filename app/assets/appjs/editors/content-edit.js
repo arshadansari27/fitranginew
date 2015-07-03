@@ -19,8 +19,18 @@ $(document).ready(function() {
             data: data
         }
         App.editor(options, function(data){
-            console.log(data);
             //window.location.reload();
+            if (data.status == 'success') {
+                BootstrapDialog.show({
+                    message: 'Thank you for participating! you will be notified once the results announce',
+                    onhidden: function (dialogRef) {
+                        window.location.href="/contests";
+                    }
+                });
+            } else {
+
+                BootstrapDialog.alert('Something went wrong, please try again later!');
+            }
         });
     };
 

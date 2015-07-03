@@ -47,6 +47,10 @@ class Contest(Content):
     sponsorer        = db.ReferenceField('Profile')
     associated_advertisements = db.ListField(db.ReferenceField('Advertisement'))
 
+    @property
+    def title_short(self):
+        return self.title if len(self.title) < 40 else "%s..." % self.title[:30]
+
     def is_closed(self):
         if datetime.datetime.now() > self.end_date:
             return True

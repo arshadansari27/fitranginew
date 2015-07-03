@@ -45,9 +45,8 @@ def answer_contest(node, type, data):
     print 'Answering', node, 'by', user
     answers = data['answers']
     for k, v in answers:
-        contest_answer = ContestAnswer.create(author=user, contest=node, question=k, answer=v)
-        print '[*]', contest_answer.is_correct_answer
-    flash('Successfully answered questions')
+        ContestAnswer.create(author=user, contest=node, question=k, answer=v)
+    #flash('Successfully answered questions')
     return node
 
 @response_handler('Successfully deleted', 'Failed to delete', flash_message=True)
