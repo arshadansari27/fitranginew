@@ -104,7 +104,7 @@
                         </a>
                     </div>
                     <div class="media-body">
-                        <h3 class="media-heading">{{model.organizer.name}}</h3>
+                        <h3 class="media-heading"><a href="{{model.organizer.slug}}">{{model.organizer.name}}</a></h3>
                         {% if model.organizer.location %}<h5><i class="fa fa-map-marker fs-22"></i> {{model.organizer.location }}</h5>{% endif %}
                     </div>
                 </div>
