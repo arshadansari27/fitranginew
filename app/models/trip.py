@@ -48,7 +48,10 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
         params = (start_day, start_sup, start_month, start_year, end_day, end_sup, end_month, end_year)
         if start_year == end_year:
             if start_month == end_month:
-                _total_date = "%d<sup>%s</sup> - %d<sup>%s</sup> %s %s" % (start_day, start_sup, end_day, end_sup, end_month, end_year)
+                if start_day == end_day:
+                    _total_date = "%d<sup>%s</sup> %s %s" % (start_day, start_sup, end_month, end_year)
+                else:
+                    _total_date = "%d<sup>%s</sup> - %d<sup>%s</sup> %s %s" % (start_day, start_sup, end_day, end_sup, end_month, end_year)
             else:
                 _total_date = "%d<sup>%s</sup> %s - %d<sup>%s</sup> %s %s" % (start_day, start_sup, start_month, end_day, end_sup, end_month, end_year)
         else:
