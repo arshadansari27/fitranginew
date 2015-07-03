@@ -187,7 +187,7 @@ class ContestAnswer(db.Document):
             contest = Contest.objects(pk=str(contest)).first()
         if isinstance(user, str) or isinstance(user, unicode) or isinstance(user, ObjectId):
             user = Profile.objects(pk=str(user)).first()
-        return len(filter(lambda u: u.correct_answer, ContestAnswer.objects(Q(contest=contest) & Q(user=user)).all()))
+        return len(filter(lambda u: u.correct_answer, ContestAnswer.objects(Q(contest=contest) & Q(author=user)).all()))
 
     @classmethod
     def check_all_correct_answers_by_contest_and_user(cls, contest, user):
