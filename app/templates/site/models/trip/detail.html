@@ -298,7 +298,7 @@
                     <label class="col-sm-2 control-label"><i class="fa fa-envelope"></i></label>
 
                     <div class="col-sm-10">
-                        {% if user and user.name|length > 0  %}
+                        {% if user and user.name and user.name|length > 0  %}
                         <input data-action-value="name" type="text" class="form-control" value="{{user.name}}">
                         {% else %}
                         <input data-action-value="name" type="text" class="form-control" placeholder="your email">
@@ -309,7 +309,7 @@
                     <label class="col-sm-2 control-label"><i class="fa fa-envelope"></i></label>
 
                     <div class="col-sm-10">
-                        {% if user and user.email|length > 0  %}
+                        {% if user and user.email and user.email|length > 0  %}
                         <input data-action-value="email" type="email" class="form-control" value="{{user.email}}">
                         {% else %}
                         <input data-action-value="email" type="email" class="form-control" placeholder="your email">
@@ -321,7 +321,7 @@
                     <label class="col-sm-2 control-label"><i class="fa fa-phone"></i></label>
 
                     <div class="col-sm-10">
-                        {% if user and user.phone|length > 0 %}
+                        {% if user and user.phone and user.phone|length > 0 %}
                         <input data-action-value="phone" type="text" class="form-control" value="{{user.phone}}">
                         {% else %}
                         <input data-action-value="phone" type="text" class="form-control" placeholder="your phone number">
