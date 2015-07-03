@@ -233,7 +233,7 @@ def ajax_options():
         str_to_use = '<option id="%s" value="%s">'
     else:
         str_to_use = '<option value="%s">%s</option>'
-    results = (str_to_use % u for u in options)
+    results = set([str_to_use % u for u in options])
     return ''.join(results)
 
 @app.route('/names')
