@@ -130,6 +130,7 @@ class NodeExtractor(object):
                     for m, k, v in to_add:
                         del filters[m]
                         filters[k].append(v)
+        _order_by = []
         if sorters and len(sorters) > 0:
             if sorters.has_key('location_lat') and sorters.has_key('location_lng'):
                 if sorters.has_key('location_locality') and len(sorters['location_locality']) > 0:
@@ -144,10 +145,17 @@ class NodeExtractor(object):
                     filters['geo_location__near'] = {"type": "Point", "coordinates": [float(sorters['location_lat']), float(sorters['location_lng'])]}
                     max_distance = 50000
                     filters['geo_location__max_distance'] = max_distance
+
+            for sorter_key, sorter_value in sorters.iteritems():
+                if sorter_key.startswith('location'):
+                    continue
+                _order_by.append("%s%s" % (("-" if sorter_value == "high" else ""), sorter_key))
+
         if Content in self.model_class.__bases__ or Adventure == self.model_class:
             order_by = '-modified_timestamp'
         else:
             order_by = '-created_timestamp'
+        order_by =  ','.join(_order_by) + ',' + order_by
         criteria = None
         for k, v in filters.iteritems():
             d = {k: v}
@@ -155,8 +163,8 @@ class NodeExtractor(object):
                 criteria = Q(**d)
             else:
                 criteria &= Q(**d)
-        print '[*] Filters: ', filters
-        return self.model_class.objects(criteria).order_by(order_by)
+        print '[*] Filters and Sort: ', filters, order_by
+        return self.model_class.objects(criteria).order_by(*order_by.split(',') if ',' in order_by else order_by)
 
 
     @classmethod

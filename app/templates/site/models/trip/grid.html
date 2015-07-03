@@ -2,32 +2,17 @@
     <div class="thumbnail">
       <a href="{{model.slug}}"><img src="{{model.cover_image_path_small}}" alt="..."></a>
 
-      <div class="caption captop">
-        <article>
-			<h4>Organised by : </h4>
-			<img src="{{model.organizer.cover_image_path_small}}" class="img-rounded" width="52">
-		</article>
-      </div>
-
-      <!--div class="caption capbottom">
-        <a href="" class="btn btn-default"><span class="fa fa-user"></span></a>
-        <a href="" class="btn btn-default"><span class="fa fa-tags"></span></a>
-      </div-->
-
       <div class="caption">
-      	<!--div class="going">
-      		<img src="/images/pro1.jpg" class="img-circle" width="38">
-        	<img src="/images/pro6.jpg" class="img-circle" width="38">
-        	<img src="/images/pro5.jpg" class="img-circle" width="38">
-        	<img src="/images/pro4.jpg" class="img-circle" width="38">
-        	<img src="/images/pro2.jpg" class="img-circle" width="38">
-        	<h5>32+</h5>
-	  	</div-->
-        <h4><a href="{{model.slug}}">{{ model.name }}</a></h4>
-        <a href="#"> <h3>{{ model.total_date|safe }}</h3> </a>
-        <span class="days">{{ model.duration }} </span>
-          <span class="rs">  {{ model.price }} </span>
 
+
+          <a href="{{ model.organizer.slug}}"><img src="{{model.organizer.cover_image_path_small}}" class="img-rounded pull-right" width="52"></a>
+
+          <h4><a href="{{model.slug}}">{{ model.name }}</a></h4>
+
+          <a href="#"> <h3>{{ model.partial_date|safe }}</h3> </a>
+
+          <span class="days">{{ model.duration }} </span>
+          <span class="rs">  {{ model.price|int }} </span>
       </div>
 
     </div>

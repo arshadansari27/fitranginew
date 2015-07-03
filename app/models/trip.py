@@ -28,6 +28,7 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
     #comments = db.ListField(db.ReferenceField('Post'))
     announcements = db.StringField()
     optional_location_name = db.StringField()
+    _duration = db.IntField()
 
     meta = {
         'indexes': [
@@ -37,10 +38,19 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
 
     @property
     def duration(self):
-        return (self.end_date - self.start_date).days + 1
+        self._duration = (self.end_date - self.start_date).days + 1
+        self.save()
+        return self._duration
 
     @property
     def total_date(self):
+        return self._total_date(partial=False)
+
+    @property
+    def partial_date(self):
+        return self._total_date()
+
+    def _total_date(self, partial=True):
         start_day = self.start_date.day
         start_sup = self._get_sup(self.start_date)
         start_month = utils.get_month(self.start_date.month)
@@ -50,8 +60,9 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
         end_month = utils.get_month(self.end_date.month)
         end_year = str(self.end_date.year)
         params = (start_day, start_sup, start_month, start_year, end_day, end_sup, end_month, end_year)
-        _total_date = "%d<sup>%s</sup> %s %s" % (start_day, start_sup, end_month, end_year)
-        """
+        _total_date = "%d<sup>%s</sup> %s %s" % (start_day, start_sup, start_month, start_year)
+        if partial:
+            return _total_date
         if start_year == end_year:
             if start_month == end_month:
                 if start_day == end_day:
@@ -62,7 +73,6 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
                 _total_date = "%d<sup>%s</sup> %s - %d<sup>%s</sup> %s %s" % (start_day, start_sup, start_month, end_day, end_sup, end_month, end_year)
         else:
             _total_date = "%d<sup>%s</sup> %s %s - %d<sup>%s</sup> %s %s" % params
-        """
         return _total_date
 
     def _get_sup(self, date):

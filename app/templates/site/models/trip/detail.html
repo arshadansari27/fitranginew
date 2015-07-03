@@ -180,21 +180,17 @@
                 <li><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">
                      <strong>Overview</strong></a></li>
 
-                <li><a href="#schedule" aria-controls="schedule" role="tab" data-toggle="tab">
-                     <strong>Schedule</strong></a></li>
+                <li><a href="#itinerary" aria-controls="schedule" role="tab" data-toggle="tab">
+                     <strong>Itinerary</strong></a></li>
 
 
-                <li><a href="#details" aria-controls="details" role="tab" data-toggle="tab">
+                <li><a href="#inclusive-exclusive" aria-controls="details" role="tab" data-toggle="tab">
                      <strong>Inclusive/Exclusive</strong></a></li>
 
-                <li><a href="#things_to_carry" aria-controls="things_to_carry" role="tab" data-toggle="tab">
-                     <strong>Things to Carry</strong></a></li>
+                <li><a href="#other-details" aria-controls="things_to_carry" role="tab" data-toggle="tab">
+                     <strong>Other Details</strong></a></li>
 
-                {% if model.has_gallery_images %}
-                <li><a href="#gallery-images" aria-controls="gallery-images" role="tab"
-                       data-toggle="tab">
-                    <i class="fa fa-home"></i> <strong>Gallery</strong></a></li>
-                {% endif %}
+
             </ul>
 
             <!-- Tab content -->
@@ -221,33 +217,28 @@
 
                 <div class="tab-pane" id="overview">
                     <!--h3>Overview Underconstructions</h3-->
-                    {{ model.about }}
+                    {% if model.about %}{{ model.about|safe }}{% endif %}
                 </div>
                 <!-- End of Tab Pane -->
 
-                <div class="tab-pane" id="schedule">
-                    <h3>Schedule</h3>
+                <div class="tab-pane" id="itinerary">
+                    <h3>Itinerary</h3>
                     <div>
-                        {{model.schedule|safe}}
+                        {% if model.itinerary %}{{model.itinerary|safe}}{% endif %}
                     </div>
                 </div>
 
-                <div class="tab-pane" id="details">
-                    <h3>Inclusive</h3>
+                <div class="tab-pane" id="inclusive-exclusive">
+                    <h3>Inclusive / Exclusive</h3>
                     <div>
-                        {{ model.inclusive|safe }}
-                    </div>
-                    <hr/>
-                    <h3>Exclusive</h3>
-                    <div>
-                        {{ model.exclusive|safe }}
+                        {% if model.inclusive_exclusive %}{{ model.inclusive_exclusive|safe }}{% endif %}
                     </div>
                 </div>
 
-                <div class="tab-pane" id="things_to_carry">
-                    <h3>Things to carry</h3>
+                <div class="tab-pane" id="other-details">
+                    <h3>Other Details</h3>
                     <div>
-                        {{ model.things_to_carry|safe }}
+                        {% if model.other_details %}{{ model.other_details|safe }}{% endif %}
                     </div>
 
                 </div>

@@ -204,7 +204,7 @@ def paged_list():
     context['user'] = g.user if hasattr(g, 'user') and g.user is not None else None
     last_page=extractor.last_page(query, size, sort=sort)
     if model != 'post':
-        err_html = '<div class="jumbotron result-not-found"><h6>No content associated with category was found!</h6></div>' if '/profile/' not in request.referrer else ''
+        err_html = '<div class="jumbotron result-not-found"><h6>No content associated with category was found!</h6></div>' if request.referrer  and '/profile/' not in request.referrer else ''
     else:
         err_html = ''
     has_data = 1
@@ -223,13 +223,22 @@ def ajax_options():
     model_name = request.args.get('model_name', '')
     attr = request.args.get('attr', None)
     attr2 = request.args.get('attr2', None)
+    attr3 = request.args.get('attr3', None)
     select = request.args.get('select', 0)
     if model_name == 'tag':
         options = [(u[0], u[0]) for u in all_tags()]
     elif model_name == 'location' and attr == 'name':
         options = ((str(getattr(u, 'id')), u.name) for u in NodeFactory.get_class_by_name(model_name).objects.all())
-    elif attr2 is not None:
+    elif attr2 is not None and attr3 is None:
         options = ((str(getattr(getattr(u, attr), 'id')), getattr(getattr(u, attr), attr2)) for u in NodeFactory.get_class_by_name(model_name).objects.all())
+    elif attr2 is not None and attr3 is not None:
+        objs = [getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all()]
+        _options = {}
+        for obj in objs:
+            for a in obj:
+                _options[a.id] = getattr(a, attr3)
+
+        options = _options.items()
     else:
         options = ((str(getattr(u, 'id')), getattr(u, attr)) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     if not select:

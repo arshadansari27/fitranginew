@@ -11,14 +11,14 @@
             </div>
 
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
-                <input id="activity-filter" data-model="trip" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
+                <input id="activity-filter" data-category="upcoming" data-model="trip" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
                 <datalist id="activity">
                     <option value="">
                 </datalist>
                 <script>
                     $(document).ready(function(){
                         $.ajax({
-                            url: '/options?model_name=activity&attr=name'
+                            url: '/options?model_name=trip&attr=activities&attr2=activity&attr3=name'
                         }).done(function (data) {
                             $('#activity').append(data);
 
@@ -28,14 +28,14 @@
             </div>
 
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
-                <input class="geo-complete" placeholder="SORT BY LOCATION" data-sorter="location" data-model="trip">
+                <input class="geo-complete" placeholder="SORT BY LOCATION" data-category="upcoming" data-sorter="location" data-model="trip">
                 <form>
-                    <input type="hidden" id="location-sorter-lat" name="lat" data-model="adventure" data-sorter="location_lat"/>
-                    <input type="hidden" id="location-sorter-lng" name="lng" data-model="adventure" data-sorter="location_lng"/>
-                    <input type="hidden" id="location-sorter-locality" name="locality_short" data-model="adventure" data-sorter="location_locality"/>
-                    <input type="hidden" id="location-sorter-region2" name="administrative_area_level_2" data-model="adventure" data-sorter="location_region2"/>
-                    <input type="hidden" id="location-sorter-region1" name="administrative_area_level_1" data-model="adventure" data-sorter="location_region1"/>
-                    <input type="hidden" id="location-sorter-country" name="country_short" data-model="adventure" data-sorter="location_country"/>
+                    <input type="hidden" id="location-sorter-lat" name="lat" data-category="upcoming" data-model="adventure" data-sorter="location_lat"/>
+                    <input type="hidden" id="location-sorter-lng" name="lng" data-category="upcoming" data-model="adventure" data-sorter="location_lng"/>
+                    <input type="hidden" id="location-sorter-locality" name="locality_short" data-category="upcoming" data-model="adventure" data-sorter="location_locality"/>
+                    <input type="hidden" id="location-sorter-region2" name="administrative_area_level_2" data-category="upcoming" data-model="adventure" data-sorter="location_region2"/>
+                    <input type="hidden" id="location-sorter-region1" name="administrative_area_level_1" data-category="upcoming" data-model="adventure" data-sorter="location_region1"/>
+                    <input type="hidden" id="location-sorter-country" name="country_short" data-model="adventure" data-category="upcoming" data-sorter="location_country"/>
                 </form>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 fitrangi-datalist fitrangi-range">
@@ -43,7 +43,7 @@
                     <h3>Search by Oragnzer</h3>
 
                     <div class="range range-primary">
-                        <input id="organizer-filter" data-model="trip" data-filter="organizer__profile__name" list="organizer" placeholder="FILTER BY ORGANIZER">
+                        <input id="organizer-filter" data-category="upcoming" data-model="trip" data-filter="organizer__profile__name" list="organizer" placeholder="FILTER BY ORGANIZER">
                         <datalist id="organizer">
                             <option value="">
                         </datalist>
@@ -67,8 +67,8 @@
                     <div class="range range-primary">
                         <input id="rangePrimary0" type="range" min="0" max="20000" step="1000" onchange="rangePrimary1.value=value+'-' + (parseInt(value) + 1000);price_start_filter.value=value;price_end_filter.value=parseInt(value) + 1000;">
                         <output id="rangePrimary1"></output>
-                        <output class="hide" id="price_start_filter" data-model="trip" data-filter="price__gte" data-filter-type="float"></output>
-                        <output class="hide" id="price_end_filter" data-model="trip" data-filter="price__lte" data-filter-type="float"></output>
+                        <output class="hide" id="price_start_filter" data-category="upcoming" data-model="trip" data-filter="price__gte" data-filter-type="float"></output>
+                        <output class="hide" id="price_end_filter" data-category="upcoming" data-model="trip" data-filter="price__lte" data-filter-type="float"></output>
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                     <h3>Date Starts</h3>
 
                     <div class="range range-primary">
-                        <input id="start-date-filter" data-model="trip" data-filter="start_date__gte" type="date" name="start">
+                        <input id="start-date-filter" data-category="upcoming" data-model="trip" data-filter="start_date__gte" type="date" name="start" value="{{now}}">
                     </div>
 
                 </div>
@@ -87,9 +87,10 @@
                     <h3>Sort</h3>
 
                     <div class="range range-primary">
-                        <input id="sorter-filter" data-model="trip" list="sorter" placeholder="Sort By">
+                        <input id="duration-sorter" data-model="trip" data-category="upcoming" list="sorter" data-sorter="_duration" placeholder="Sort By"/>
                         <datalist id="sorter">
-                            <option value="Generic">
+                            <option value="high">Sort by greater number of days</option>
+                            <option value="low">Sort by lesser number of days</option>
                         </datalist>
                     </div>
                 </div>
@@ -157,6 +158,22 @@
      $('price_end_filter').html('');
     $(document).ready(function(){
 
+        $('#start-date-filter').on('change', function(e){
+            e.stopPropagation();
+            console.log('Changing date... ');
+            window.App.current_date = $('#start-date-default-filter').val();
+            console.log('Current is ' + window.App.current_date);
+            console.log('Main Filter is ' + $('#start-date-filter').val());
+
+            if ($('#start-date-filter').val() != undefined && $('#start-date-filter').val().length > 0) {
+                $('#start-date-default-filter').val('');
+                console.log('Now default filter is ' + $('#start-date-default-filter').val());
+            } else {
+                $('#start-date-default-filter').val(window.App.current_date);
+                console.log('Now default filter is ' + $('#start-date-default-filter').val());
+            }
+        });
+
 
         window.App.filter('activity-filter');
         window.App.filter('start-date-filter');
@@ -171,6 +188,7 @@
         window.App.sorter('location-sorter-region2');
         window.App.sorter('location-sorter-region1');
         window.App.sorter('location-sorter-country');
+        window.App.sorter('duration-sorter');
     });
 </script>
 {% if filters.get('activities__activity__name') %}
