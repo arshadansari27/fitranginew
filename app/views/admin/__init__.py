@@ -211,7 +211,7 @@ class EventAdminView(ModelView):
 
 
 class TripAdminView(ModelView):
-    form_columns = ['name', 'description', 'about', 'starting_from', 'price', 'currency', 'discount_percentage', 'organizer',  'activities', 'difficulty_rating', 'registration', 'start_date', 'end_date', 'schedule', 'things_to_carry', 'inclusive', 'exclusive', 'others', 'announcements', 'cover_image', 'path_cover_image']
+    form_columns = ['name', 'description', 'about', 'starting_from', 'price', 'currency', 'discount_percentage', 'organizer',  'activities', 'difficulty_rating', 'registration', 'start_date', 'end_date', 'schedule', 'things_to_carry', 'inclusive', 'exclusive', 'others', 'announcements', 'cover_image', 'path_cover_image', 'slug']
     column_list = ('name', 'description', 'organizer', 'cover_image', 'location', 'bookings')
     column_filters = ['name', FilterAdventure('adventure.id', 'Adventure'), FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name', )
