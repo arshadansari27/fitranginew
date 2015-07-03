@@ -161,6 +161,7 @@ def social_login():
 
     if profile:
         session['user'] = str(profile.id)
+        session['just_logged_in'] = True
         return jsonify(dict(location='/stream/me', status='success'))
 
     return jsonify(dict(location=url_for('login'), status='error'))
