@@ -229,7 +229,7 @@ def ajax_options():
     elif model_name == 'location' and attr == 'name':
         options = ((str(getattr(u, 'id')), u.name) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     elif attr2 is not None:
-        options = ((str(getattr(u, 'id')), getattr(getattr(u, attr), attr2)) for u in NodeFactory.get_class_by_name(model_name).objects.all())
+        options = ((str(getattr(getattr(u, attr), 'id')), getattr(getattr(u, attr), attr2)) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     else:
         options = ((str(getattr(u, 'id')), getattr(u, attr)) for u in NodeFactory.get_class_by_name(model_name).objects.all())
     if not select:
