@@ -106,7 +106,31 @@
                                     <div class="form-group">
                                         <script>
                                             $(document).ready(function () {
-                                                BootstrapDialog.alert('You must be logged in to submit answers...');
+                                                BootstrapDialog.show({
+                                                    title: 'Information!',
+                                                    message: 'You must be logged in to submit answers...',
+                                                    buttons: [
+                                                        {
+                                                            label: 'Close',
+                                                            action: function(dialogRef) {
+                                                                dialogRef.close();
+                                                            }
+                                                        },
+                                                        {
+                                                            label: 'Register',
+                                                            action: function(dialogRef) {
+                                                                window.location.href="/register?target={{model.slug}}";
+                                                            }
+                                                        },
+                                                        {
+                                                            cssClass: 'btn-primary',
+                                                            label: 'Login',
+                                                            action: function(dialogRef) {
+                                                                window.location.href="/login?target={{model.slug}}";
+                                                            }
+                                                        }
+                                                    ]
+                                                });
                                             })
                                         </script>
                                         <a href="/login?target={{model.slug}}" class="btn btn-primary">
