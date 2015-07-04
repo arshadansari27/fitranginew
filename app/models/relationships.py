@@ -92,10 +92,10 @@ class RelationShips(db.Document):
 
     @classmethod
     def join(cls, subject, object):
-        if RelationShips.objects(Q(subject=subject) & Q(object=object) & Q(relations=JOINED)).count() > 0:
+        if RelationShips.objects(Q(subject=subject) & Q(object=object) & Q(relation=JOINED)).count() > 0:
             return
 
-        if RelationShips.objects(Q(subject=subject) & Q(object=object) & Q(relations=INTERESTED)).count() is 0:
+        if RelationShips.objects(Q(subject=subject) & Q(object=object) & Q(relation=INTERESTED)).count() is 0:
             RelationShips.interested(subject, object)
         r1, r2 = cls.create_relationship(subject, object, JOINED)
 
