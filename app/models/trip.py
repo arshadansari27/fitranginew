@@ -43,7 +43,7 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
 
     @property
     def media_gallery_path(self):
-        paths = [u.image_path for u in self.media_gallery]
+        paths = [u.image_path for u in self.media_gallery if u.image_path is not None and len(u.image_path) > 0]
         return paths
 
     @property
