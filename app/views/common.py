@@ -125,7 +125,7 @@ def save_profile_image(profile, image):
         response = requests.get(image)
         data = response.content
         content_type = response.headers['content-type']
-        if content_type.startswith('image'):
+        if not content_type.startswith('image'):
             return
         format = content_type.split('/')[1]
         p = '/tmp/' + str(random.randint(888888, 9999999)) + '.' + format
@@ -169,7 +169,8 @@ def social_login():
     if profile.is_social_login and profile.id:
         img_uploaded = request.form['file']
         if img_uploaded and len(img_uploaded) > 0:
-            Thread(target=save_profile_image, args=(str(profile.id), img_uploaded)).start()
+            #Thread(target=save_profile_image, args=(str(profile.id), img_uploaded)).start()
+            save_profile_image(str(profile.id), img_uploaded)
 
     if profile:
         session['user'] = str(profile.id)
