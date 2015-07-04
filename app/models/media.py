@@ -62,6 +62,16 @@ class Media(db.Document):
                 den = f.denominator
                 s = 360 * num / den
                 im.thumbnail((s, 360), Image.ANTIALIAS)
+                p = '/tmp/' + str(random.randint(88888888, 999999999)) + '.' + format
+                im.save(p, format)
+                im = Image.open(p)
+                x, y = im.size
+                u = x / 2
+                v = y / 2
+                x1, x2 = u - 240, u + 240
+                y1, y2 = v - 180, v + 180
+
+                im = im.crop((x1, y1, x2, y2))
                 im.save(base_path + small_path, format)
             img = small_path
         return img

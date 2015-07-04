@@ -162,12 +162,12 @@ class Node(object):
 
     @property
     def cover_image_path_small(self):
+        from app.models.profile import Profile
         from app import USE_CDN
         path = self.cover_image_path if self.cover_image_path else None
         if CDN_URL in path:
             path = path.replace(CDN_URL, '')
         if path is None:
-            from app.models.profile import Profile
             if isinstance(self, Profile):
                 return ('%s/img/Profile-Picture-thumbnail.jpg' % CDN_URL) if isinstance(self, Profile) else None
             return ''
@@ -191,7 +191,19 @@ class Node(object):
                 den = f.denominator
                 s = 360 * num / den
                 im.thumbnail((s, 360), Image.ANTIALIAS)
+                if not isinstance(self, Profile):
+                    p = '/tmp/' + str(random.randint(88888888, 999999999)) + '.' + format
+                    im.save(p, format)
+                    im = Image.open(p)
+                    x, y = im.size
+                    u = x / 2
+                    v = y / 2
+                    x1, x2 = u - 240, u + 240
+                    y1, y2 = v - 180, v + 180
+
+                    im = im.crop((x1, y1, x2, y2))
                 im.save(base_path + small_path, format)
+
             img = small_path
         return img #if not USE_CDN else "%s%s" % (CDN_URL, img)
 
