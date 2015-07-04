@@ -30,12 +30,12 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
                 <input class="geo-complete" placeholder="SORT BY LOCATION" data-category="upcoming" data-sorter="location" data-model="trip">
                 <form>
-                    <input type="hidden" id="location-sorter-lat" name="lat" data-category="upcoming" data-model="adventure" data-sorter="location_lat"/>
-                    <input type="hidden" id="location-sorter-lng" name="lng" data-category="upcoming" data-model="adventure" data-sorter="location_lng"/>
-                    <input type="hidden" id="location-sorter-locality" name="locality_short" data-category="upcoming" data-model="adventure" data-sorter="location_locality"/>
-                    <input type="hidden" id="location-sorter-region2" name="administrative_area_level_2" data-category="upcoming" data-model="adventure" data-sorter="location_region2"/>
-                    <input type="hidden" id="location-sorter-region1" name="administrative_area_level_1" data-category="upcoming" data-model="adventure" data-sorter="location_region1"/>
-                    <input type="hidden" id="location-sorter-country" name="country_short" data-model="adventure" data-category="upcoming" data-sorter="location_country"/>
+                    <input type="hidden" id="location-sorter-lat" name="lat" data-category="upcoming" data-model="trip" data-sorter="location_lat"/>
+                    <input type="hidden" id="location-sorter-lng" name="lng" data-category="upcoming" data-model="trip" data-sorter="location_lng"/>
+                    <input type="hidden" id="location-sorter-locality" name="locality_short" data-category="upcoming" data-model="trip" data-sorter="location_locality"/>
+                    <input type="hidden" id="location-sorter-region2" name="administrative_area_level_2" data-category="upcoming" data-model="trip" data-sorter="location_region2"/>
+                    <input type="hidden" id="location-sorter-region1" name="administrative_area_level_1" data-category="upcoming" data-model="trip" data-sorter="location_region1"/>
+                    <input type="hidden" id="location-sorter-country" name="country_short" data-model="trip" data-category="upcoming" data-sorter="location_country"/>
                 </form>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 fitrangi-datalist fitrangi-range">
@@ -65,10 +65,9 @@
                     <h3>Price Range</h3>
 
                     <div class="range range-primary">
-                        <input id="rangePrimary0" type="range" min="0" max="20000" step="1000" onchange="rangePrimary1.value=value+'-' + (parseInt(value) + 1000);price_start_filter.value=value;price_end_filter.value=parseInt(value) + 1000;">
+                        <input id="rangePrimary0" type="range" min="0" max="20000" step="1000" onchange="rangePrimary1.value='upto Rs. ' + value;price_start_filter.value=value">
                         <output id="rangePrimary1"></output>
-                        <output class="hide" id="price_start_filter" data-category="upcoming" data-model="trip" data-filter="price__gte" data-filter-type="float"></output>
-                        <output class="hide" id="price_end_filter" data-category="upcoming" data-model="trip" data-filter="price__lte" data-filter-type="float"></output>
+                        <output class="hide" id="price_start_filter" data-category="upcoming" data-model="trip" data-filter="price__lte" data-filter-type="float"></output>
                     </div>
                 </div>
             </div>
@@ -158,10 +157,10 @@
      $('price_end_filter').html('');
     $(document).ready(function(){
 
+        window.App.current_date = $('#start-date-default-filter').val();
         $('#start-date-filter').on('change', function(e){
             e.stopPropagation();
             console.log('Changing date... ');
-            window.App.current_date = $('#start-date-default-filter').val();
             console.log('Current is ' + window.App.current_date);
             console.log('Main Filter is ' + $('#start-date-filter').val());
 
@@ -179,9 +178,7 @@
         window.App.filter('start-date-filter');
         window.App.filter('start-date-default-filter');
         window.App.filter('interesting-trip-filter');
-        window.App.filter('end-date-filter');
         window.App.filter('price_start_filter');
-        window.App.filter('price_end_filter');
         window.App.sorter('location-sorter-lat');
         window.App.sorter('location-sorter-lng');
         window.App.sorter('location-sorter-locality');

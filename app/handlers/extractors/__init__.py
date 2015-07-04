@@ -133,6 +133,7 @@ class NodeExtractor(object):
         _order_by = []
         if sorters and len(sorters) > 0:
             if sorters.has_key('location_lat') and sorters.has_key('location_lng'):
+                print 'Sorting by location', str([(u, v) for u, v in sorters.iteritems() if u.startswith('location')])
                 if sorters.has_key('location_locality') and len(sorters['location_locality']) > 0:
                     filters['city__iexact'] = sorters['location_locality']
                 elif sorters.has_key('location_region2') and len(sorters['location_region2']) > 0:

@@ -240,8 +240,8 @@ class TripAdminView(ModelView):
     column_formatters = {'location': _location_formatter, 'bookings': _bookings, 'organizer_name': organizer}
 
 class TripBookingAdminView(ModelView):
-    form_columns = ['trip', 'booking_by', 'preferred_name', 'preferred_email', 'preferred_phone', 'contact_preference', 'total_charge', 'discount_percent', 'status',  'payment_status']
-    column_list = ('trip', 'booking_by', 'preferred_name', 'preferred_email', 'preferred_phone', 'contact_preference', 'status', 'payment_status', 'total_charge', 'discount_percent', 'actual_charge')
+    form_columns = ['trip', 'booking_by', 'preferred_name', 'preferred_email', 'preferred_phone', 'contact_preference', 'enquiry', 'total_charge', 'discount_percent', 'status',  'payment_status']
+    column_list = ('trip', 'booking_by', 'preferred_name', 'preferred_email', 'preferred_phone', 'contact_preference', 'message', 'status', 'payment_status', 'total_charge', 'discount_percent', 'actual_charge')
     column_filters = [FilterTrip('trip.id', 'Trip'), 'status', 'payment_status']
     column_searchable_list = ('preferred_name', 'preferred_phone', 'preferred_email')
 
@@ -253,7 +253,10 @@ class TripBookingAdminView(ModelView):
     def _actual_charge(view, context, model, name):
         return Markup(model.actual_charge)
 
-    column_formatters = {'actual_charge': _actual_charge}
+    def _message(view, context, model, name):
+        return Markup('<a href="#" onclick="javascript:BootstrapDialog.alert(\''+ model.enquiry +'\');">Click to view</a>')
+
+    column_formatters = {'actual_charge': _actual_charge, 'message': _message}
 
 
 class SelectedTripBookingAdminView(TripBookingAdminView):
