@@ -98,7 +98,15 @@
                         data: data
                     }).done(function (msg) {
                         if (msg.status == 'success') {
-                            window.location.reload();
+                            if (window.location.href.indexOf("target=") > -1) {
+                                var u =  window.location.href;
+                                var v = u.split('target=')[1];
+                                var w = v.split('&')[0];
+                                window.location.href=w;
+                            }
+                            else {
+                                window.location.reload();
+                            }
                         } else {
                             $("#message").html('Some went wrong. Please try again later.');
                             $("#error").show();
