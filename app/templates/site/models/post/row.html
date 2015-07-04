@@ -30,17 +30,15 @@
         </article>
         <br/>
         <br/>
-        {% if model.gallery_size > 0 %}
-        <article class="row">
-            {% for indx in xrange(model.gallery_size) %}
+        <!--article class="row">
+            {#% for indx in xrange(model.gallery_size) %#}
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
                 <a href="#" target="_blank">
                     <img src="{{model.gallery_image_path}}{{indx}}" class="img-responsive img-thumbnail">
                 </a>
             </div>
-            {% endfor %}
-        </article>
-        {% endif %}
+            {#% endfor %#}
+        </article-->
         <article class="">
             {% if user %}
                 {% if model.voted(user.id, True) %}

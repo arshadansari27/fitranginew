@@ -10,7 +10,8 @@ from app.utils import login_required
 from app import app
 from StringIO import StringIO
 from PIL import Image
-import random, os
+import random, os, requests
+from threading import Thread
 
 FOLDER = os.getcwd() + '/content-images'
 
@@ -117,6 +118,32 @@ def save_image_from_temp():
     return redirect(request.referrer)
 
 
+def save_profile_image(profile, image):
+    try:
+        print '[*] Running image downloader in seperate thread for %s and %s' % (profile, image)
+        profile = Profile.objects(pk=profile).first()
+        response = requests.get(image)
+        data = response.content
+        content_type = response.headers['content-type']
+        if content_type.startswith('image'):
+            return
+        format = content_type.split('/')[1]
+        p = '/tmp/' + str(random.randint(888888, 9999999)) + '.' + format
+        with open(p, 'wb') as _f:
+            _f.write(data)
+        img = Image.open(p)
+        buffer = StringIO()
+        img.save(buffer, img.format)
+        buffer.seek(0)
+        profile.cover_image.replace(buffer)
+        profile.save()
+        path = os.getcwd() + '/app/assets/' + profile.path_cover_image if profile.path_cover_image and len(profile.path_cover_image) > 0 else 'some-non-existent-path'
+        if os.path.exists(path):
+            os.remove(path)
+    except:
+        print 'Failed to save profile image'
+        raise
+
 
 
 @app.route('/sociallogin', methods=['POST'])
@@ -139,25 +166,10 @@ def social_login():
         profile.save()
 
 
-    if profile.is_social_login and profile.id and hasattr(profile, 'uploaded_image_cover') and not profile.uploaded_image_cover:
+    if profile.is_social_login and profile.id:
         img_uploaded = request.form['file']
         if img_uploaded and len(img_uploaded) > 0:
-            try:
-                data = img_uploaded
-                data = data[data.index(','):]
-                s = StringIO(decodestring(data))
-                img = Image.open(s)
-                buffer = StringIO()
-                img.save(buffer, img.format)
-                buffer.seek(0)
-                profile.cover_image.replace(buffer)
-                profile.save()
-                path = os.getcwd() + '/app/assets/' + profile.path_cover_image if profile.path_cover_image and len(profile.path_cover_image) > 0 else 'some-non-existent-path'
-                if os.path.exists(path):
-                    os.remove(path)
-
-            except Exception, e:
-                raise e
+            Thread(target=save_profile_image, args=(str(profile.id), img_uploaded)).start()
 
     if profile:
         session['user'] = str(profile.id)

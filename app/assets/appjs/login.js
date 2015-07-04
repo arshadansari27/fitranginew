@@ -83,12 +83,11 @@
         }());
 
         var _login_with_data = function(profile_image, response) {
-            convertImgToBase64(profile_image, function(base64Img) {
-                var _login = function(image) {
+                var _login = function() {
 
                     var data = null;
-                    if (image != null) {
-                        data = {name: response.name, email: response.email, file: image};
+                    if (profile_image != null) {
+                        data = {name: response.name, email: response.email, file: profile_image};
                     } else {
                         data = {name: response.name, email: response.email, file: ''};
                     }
@@ -114,8 +113,7 @@
                     });
 
                 };
-                _login(base64Img);
-            });
+                _login();
         }
 
         function testAPI() {
