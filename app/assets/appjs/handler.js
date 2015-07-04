@@ -536,14 +536,40 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
         var user = $(this).attr('data-user-id');
         var model = $(this).attr('data-model-id');
-        App.profile.add_trip_to_interest(user, model);
+        var that = $(this);
+        App.profile.add_trip_to_interest(user, model, function(data){
+            if(data.status == 'success') {
+                var html = '<span class="fa fa-check orange"></span>&nbsp;Remove from Interest';
+                that.html(html);
+                that.attr('data-action', 'remove-trip-interested');
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
     });
     $('body').on('click', '[data-action="remove-trip-interested"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
         var user = $(this).attr('data-user-id');
         var model = $(this).attr('data-model-id');
-        App.profile.remove_trip_from_interest(user, model);
+        var that = $(this);
+        App.profile.remove_trip_from_interest(user, model, function(data){
+            if(data.status == 'success') {
+                var html = '<span class="fa fa-link"></span> Interested';
+                that.html(html);
+                that.attr('data-action', 'add-trip-interested');
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
     });
 
     $('body').on('click', '[data-action="send-enquiry"]', function(e){
