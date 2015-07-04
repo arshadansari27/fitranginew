@@ -29,9 +29,15 @@
 
         <article class="col-xs-12 col-md-12 tab-details">
         <div class="fotorama thumbnail" data-nav="thumbs">
-            {% for p in model.media_gallery_path %}
-                <a href=""><img src="{{p}}"></a>
-            {% endfor %}
+            {% set media_gallery = model.media_gallery_path %}
+            {% if media_gallery|length > 0 %}
+                {% for p in model.media_gallery_path %}
+                    <a href=""><img src="{{p}}"></a>
+                {% endfor %}
+            {% else %}
+                <a href=""><img src="/images/slider-3.jpg"></a>
+            {% endif %}
+
         </div>
         </article>
 
