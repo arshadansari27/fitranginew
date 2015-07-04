@@ -166,7 +166,7 @@ def social_login():
         profile.save()
 
 
-    if profile.is_social_login and profile.id:
+    if profile.is_social_login and profile.id and not profile.uploaded_image_cover:
         img_uploaded = request.form['file']
         if img_uploaded and len(img_uploaded) > 0:
             #Thread(target=save_profile_image, args=(str(profile.id), img_uploaded)).start()
