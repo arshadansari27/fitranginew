@@ -90,35 +90,10 @@ def update_slug(sender, document, type, title):
 def get_random():
     return random.randint(0, 99999999999)
 
-class EmbeddedImageField(db.EmbeddedDocument):
-    id_field = db.IntField(default=get_random)
-    image = db.ImageField(thumbnail_size=(128, 128))
-    path = db.StringField()
-    alt = db.StringField()
-    copyright = db.StringField()
 
-    def image_path(self, parent, i):
-        path = str(self.path) if hasattr(self, 'path') and self.path else ''
-        if path and len(path) > 0 and os.path.exists(path):
-            return path
-        path = save_media_to_file(self, 'image', 'gallery_%d' % i, parent)
-        if path:
-            self.path = path
-            parent.save()
-            return path
-        else:
-            return ''
-
-def save_media_to_file(obj, attr, name, path_obj=None):
-    is_embedded = path_obj is not None
-    if not is_embedded:
-        path_obj = obj
-        obj = obj.__class__.objects(id=obj.id).first()
-        image = getattr(obj, attr)
-    else:
-        path_obj = path_obj.__class__.objects(id=path_obj.id).first()
-        obj = [u for u in path_obj.image_gallery if u.id_field == obj.id_field][0]
-        image = getattr(obj, attr)
+def save_media_to_file(obj, attr, name):
+    obj = obj.__class__.objects(id=obj.id).first()
+    image = getattr(obj, attr)
 
     if image and image.size:
         img = Image.open(image)
@@ -127,7 +102,7 @@ def save_media_to_file(obj, attr, name, path_obj=None):
         if _format == 'ico':
             _format = 'jpeg'
 
-        dir_list = ['media', path_obj.__class__.__name__.lower(), str(path_obj.id)]
+        dir_list = ['media', obj.__class__.__name__.lower(), str(obj.id)]
         for i in xrange(len(dir_list)):
             if i is 0:
                 dir_path = base_path + '/' + dir_list[0]
@@ -147,11 +122,6 @@ def save_media_to_file(obj, attr, name, path_obj=None):
             img.save(file_io, _format, quality=70)
             return path
 
-        if is_embedded:
-            obj = obj.__class__.objects(id=obj.id).first()
-        else:
-            path_obj = path_obj.__class__.objects(id=path_obj.id).first()
-            obj = [u for u in path_obj.image_gallery if u == obj][0]
     else:
         return None
 
@@ -160,12 +130,12 @@ class Node(object):
 
     description = db.StringField()
     cover_image = db.ImageField(thumbnail_size=(128, 128))
-    image_gallery = db.ListField(db.EmbeddedDocumentField(EmbeddedImageField))
     path_cover_image = db.StringField()
     created_timestamp = db.DateTimeField(default=datetime.datetime.now)
     modified_timestamp = db.DateTimeField(default=datetime.datetime.now)
     slug = db.StringField()
     not_ok_count = db.IntField(default=0)
+    image_gallery = db.ListField(db.StringField()) # Deprecated
 
     @property
     def cover_image_path(self):
@@ -246,16 +216,6 @@ class Node(object):
                 img = '/img/Profile-Picture2.jpg' if isinstance(self, Profile) else None
         return img #if not USE_CDN else "%s%s" % (CDN_URL, img)
 
-
-    @property
-    def gallery_image_list(self):
-        gallery_images = [u.image_path(self, i) for i, u in enumerate(self.image_gallery)]
-        print '****', gallery_images
-        return gallery_images
-
-    @property
-    def gallery_size(self):
-        return len([u for u in self.image_gallery if u.image is not None])
 
     def on_create(self):
         pass

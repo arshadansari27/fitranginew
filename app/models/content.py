@@ -5,7 +5,7 @@ import requests, os
 
 __author__ = 'arshad'
 
-from app.models import Node, update_content, db, EmbeddedImageField
+from app.models import Node, update_content, db
 from app.models.profile import Profile
 import datetime
 

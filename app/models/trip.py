@@ -3,6 +3,7 @@ __author__ = 'arshad'
 from app.models import update_content, Entity, ExternalNetwork, Charge, db, Location
 from app.models.relationships import RelationShips
 from app.models.booking import TripBooking
+from app.models.media import TripGalleryImage
 from app.models.profile import Profile
 from app import utils
 
@@ -35,6 +36,15 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
             {'fields': ['-modified_timestamp', 'slug', 'name'], 'unique': False, 'sparse': False, 'types': False },
         ],
     }
+
+    @property
+    def media_gallery(self):
+        return TripGalleryImage.objects(trip=self).all()
+
+    @property
+    def media_gallery_path(self):
+        paths = [u.image_path for u in self.media_gallery]
+        return paths
 
     @property
     def duration(self):

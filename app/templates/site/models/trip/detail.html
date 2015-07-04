@@ -29,15 +29,9 @@
 
         <article class="col-xs-12 col-md-12 tab-details">
         <div class="fotorama thumbnail" data-nav="thumbs">
-          <a href=""><img src="../images/slider-3.jpg"></a>
-          <a href=""><img src="../images/slider-2.jpg"></a>
-          <a href=""><img src="../images/slider-1.jpg"></a>
-          <a href=""><img src="../images/slider-3.jpg"></a>
-          <a href=""><img src="../images/slider-2.jpg"></a>
-          <a href=""><img src="../images/slider-1.jpg"></a>
-          <a href=""><img src="../images/slider-3.jpg"></a>
-          <a href=""><img src="../images/slider-2.jpg"></a>
-          <a href=""><img src="../images/slider-1.jpg"></a>
+            {% for p in model.media_gallery_path %}
+                <a href=""><img src="{{p}}"></a>
+            {% endfor %}
         </div>
         </article>
 

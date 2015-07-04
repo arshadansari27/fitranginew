@@ -24,6 +24,7 @@ from app.models.trip import Trip
 from app.models.contest import Contest, ContestAnswer
 from app.models.page import ExtraPage
 from app.models.booking import TripBooking
+from app.models.media import Media, TripGalleryImage
 from app.models.relationships import RelationShips
 import mongoengine
 from mongoengine import Q
@@ -146,7 +147,7 @@ class TagAdminView(ModelView):
 class ActivityAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'icon', 'about', 'dos', 'donts', 'safety_tips', 'tips', 'facts', 'highlights', 'cover_image', 'path_cover_image', 'image_gallery']
+    form_columns = ['name', 'description', 'icon', 'about', 'dos', 'donts', 'safety_tips', 'tips', 'facts', 'highlights', 'cover_image', 'path_cover_image', ]
     column_list = ('name', 'description', 'cover_image')
     column_filters = ['name']
     column_searchable_list = ('name',)
@@ -320,7 +321,7 @@ class CommentAdminView(ModelView):
 class PostAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['author', 'content', 'cover_image', 'type','image_gallery', 'video_embed', 'map_embed', 'parent', 'comments', 'parent', 'path_cover_image']
+    form_columns = ['author', 'content', 'cover_image', 'type', 'video_embed', 'map_embed', 'parent', 'comments', 'parent', 'path_cover_image']
     column_list = ( 'author', 'content', 'vote_count', 'parent', 'type')
     form_overrides = dict(content=SummernoteTextAreaField)
 
@@ -438,7 +439,7 @@ class ContestAdminView(ModelView):
 class ContentAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['title', 'slug', 'description', 'content', 'author', 'channels', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'tags', 'path_cover_image']
+    form_columns = ['title', 'slug', 'description', 'content', 'author', 'channels', 'cover_image', 'video_embed', 'map_embed', 'source', 'published', 'tags', 'path_cover_image']
     column_list = ('title', 'author', 'published', 'admin_published', 'comments', 'cover_image', 'channels', 'image_download')
     column_filters = ['title', FilterChannel('channel.id', 'Channel')]
     column_searchable_list = ('title', )
@@ -484,7 +485,7 @@ class ApprovalContentAdminView(ModelView):
     can_edit = True
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['title', 'description', 'content', 'author', 'cover_image','image_gallery', 'video_embed', 'map_embed', 'source', 'published', 'admin_published']
+    form_columns = ['title', 'description', 'content', 'author', 'cover_image', 'video_embed', 'map_embed', 'source', 'published', 'admin_published']
     column_list = ('title', 'author', 'published', 'admin_published')
     form_overrides = dict(description=SummernoteTextAreaField, content=SummernoteTextAreaField)
 
@@ -783,6 +784,7 @@ admin.add_view(EventAdminView(Event, category="Organizers"))
 admin.add_view(TripAdminView(Trip, category="Organizers"))
 admin.add_view(TripBookingAdminView(TripBooking, category="Organizers"))
 admin.add_view(SelectedTripBookingAdminView(TripBooking, name="Bookings for trip", endpoint="enquiries_for_trip_view"))
+admin.add_view(RestrictedAdminView(TripGalleryImage, category="Organizers"))
 
 admin.add_view(NotOkAdminView(Profile, category="Flag Content", endpoint='flagged.profile'))
 admin.add_view(NotOkAdminView(Adventure, category="Flag Content", endpoint='flagged.adventure'))
