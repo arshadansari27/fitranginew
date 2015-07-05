@@ -21,11 +21,12 @@ def login_page():
         #remember = request.form.get('remember', None)
         profile = Profile.authenticate(email, password)
         if profile and profile.id:
+            target = request.args.get('target', None)
             session['user'] = str(profile.id)
             session['just_logged_in'] = True
             if not hasattr(profile, 'location') or not profile.location or len(profile.location) is 0:
                 flash('Please update your location by clicking <a href="/edit-profile">here</a>')
-            response = dict(status='success', message='Successfully logged in.', node=str(profile.id), my_page=profile.slug)
+            response = dict(status='success', message='Successfully logged in.', node=str(profile.id), my_page=target if target and len(target) > 0 else profile.slug)
             return jsonify(response)
         return jsonify(dict(status='error', message='Failed to login. Please try again.'))
 
@@ -46,6 +47,7 @@ def login_page():
 
 @app.route('/register', methods=['GET', 'POST'])
 def registration():
+    target = request.args.get('target', None)
     if request.method == 'POST':
         name = request.form.get('name', None)
         email = request.form.get('email', None)
@@ -64,12 +66,12 @@ def registration():
             session['user'] = str(profile.id)
             mail_data = render_template('notifications/successfully_registered.html', user=profile)
             send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=mail_data)
-            return jsonify(dict(status='success', message='Profile created and logged in.', node=str(profile.id)))
+            return jsonify(dict(status='success', message='Profile created and logged in.', node=str(profile.id), my_page=target if target and len(target) > 0 else profile.slug))
         return jsonify(dict(status='error', message='Failed to register. Please try again.'))
     if hasattr(g, 'user') and g.user is not None:
         return redirect('/explore')
     from app.views import force_setup_context
-    title, card, context = PageManager.get_common_title_and_page('register')
+    title, card, context = PageManager.get_common_title_and_page('register', target=target)
     context = force_setup_context(context)
     context['title'] = title
     context['card']  = card
