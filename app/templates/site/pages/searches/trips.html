@@ -76,7 +76,7 @@
                     <h3>Date Starts</h3>
 
                     <div class="range range-primary">
-                        <input id="start-date-filter" data-category="upcoming" data-model="trip" data-filter="start_date__gte" type="date" name="start" value="{{now}}">
+                        <input id="start-date-filter" data-category="upcoming" data-model="trip" data-filter="start_date__gt" type="date" name="start" value="{{now}}">
                     </div>
 
                 </div>
@@ -130,7 +130,7 @@
             <div id="myTabContent" class="tab-content">
                 <div role="tabpanel" class="tab-pane fade active in" id="upcoming" aria-labelledby="upcoming">
                     <div class="container fitrangi-trips">
-                        <input id="start-date-default-filter" data-category="upcoming" data-model="trip" data-filter="start_date__gte" type="hidden" name="start" value="{{now}}" data-filter-status="fixed">
+                        <input id="start-date-default-filter" data-category="upcoming" data-model="trip" data-filter="start_date__gt" type="hidden" name="start" value="{{now}}" data-filter-status="fixed">
                         {{ upcoming|safe }}
                     </div>
                 </div>

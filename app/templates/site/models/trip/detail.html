@@ -302,11 +302,11 @@
             </div>
             <form class="form-horizontal question-form">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label"><i class="fa fa-envelope"></i></label>
+                    <label class="col-sm-2 control-label"><i class="fa fa-user"></i></label>
 
                     <div class="col-sm-10">
                         {% if user and user.name and user.name|length > 0  %}
-                        <input data-action-value="name" type="text" class="form-control" value="{{user.name}}">
+                        <input data-action-value="name" type="text" class="form-control" placeholder="your name" value="{{user.name}}">
                         {% else %}
                         <input data-action-value="name" type="text" class="form-control" placeholder="your email">
                         {% endif %}
@@ -317,7 +317,7 @@
 
                     <div class="col-sm-10">
                         {% if user and user.email and user.email|length > 0  %}
-                        <input data-action-value="email" type="email" class="form-control" value="{{user.email}}">
+                        <input data-action-value="email" type="email" class="form-control" placeholder="your email" value="{{user.email}}">
                         {% else %}
                         <input data-action-value="email" type="email" class="form-control" placeholder="your email">
                         {% endif %}
@@ -329,7 +329,7 @@
 
                     <div class="col-sm-10">
                         {% if user and user.phone and user.phone|length > 0 %}
-                        <input data-action-value="phone" type="text" class="form-control" value="{{user.phone}}">
+                        <input data-action-value="phone" type="text" class="form-control" placeholder="your phone number" value="{{user.phone}}">
                         {% else %}
                         <input data-action-value="phone" type="text" class="form-control" placeholder="your phone number">
                         {% endif %}
@@ -348,8 +348,8 @@
 
                     <div class="col-sm-10">
                         <strong>I Prefer:</strong> &nbsp;
-                      <input   data-action-value="contact-pref" class="checkbox-inline" type="radio" name="iprefer" value="phone" > <span style="color: grey;"> Phone </span> &nbsp;
-                      <input   data-action-value="contact-pref" class="checkbox-inline" type="radio" name="iprefer" value="email" > <span style="color: grey;"> Email </span>
+                      <input   data-action-value="contact-pref" class="checkbox-inline" type="checkbox"  value="phone"> <span style="color: grey;"> Phone </span> &nbsp;
+                      <input   data-action-value="contact-pref" class="checkbox-inline" type="checkbox"  value="email" checked> <span style="color: grey;"> Email </span>
                     </div>
                 </div>
 

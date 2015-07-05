@@ -14,7 +14,7 @@ class Booking(db.Document):
     enquiry         = db.StringField()
     total_charge     = db.FloatField()
     discount_percent = db.FloatField()
-    contact_preference = db.StringField(choices=['phone', 'email'])
+    contact_preference = db.StringField()
     status           = db.StringField(choices=['Enquiry', 'Done', 'Cancelled'], default='Enquiry')
     payment_status   = db.StringField(choices=['Paid', 'Balance'], default='Balance')
     created_timestamp = db.DateTimeField(default=datetime.datetime.now)

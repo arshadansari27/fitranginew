@@ -577,6 +577,7 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
         var values = $('[data-action-value]');
         var user, name, email, phone, enquiry, contact_pref;
+        var $name, $email, $phone, $enquiry;
         var model = $(this).attr('data-model-id');
         var slug = $(this).attr('data-model-slug');
         var user = $(this).attr('data-user-id');
@@ -593,14 +594,22 @@ jQuery(document).ready(function ($) {
                     user = $(elem).val();
                 } else if (value == 'name') {
                     name = $(elem).val();
+                    $name = $(elem);
                 } else if (value == 'email') {
                     email = $(elem).val();
+                    $email = $(elem);
                 } else if (value == 'phone') {
                     phone = $(elem).val();
+                    $phone = $(elem);
                 } else if (value == 'enquiry') {
                     enquiry = $(elem).val();
+                    $enquiry = $(elem);
                 } else if (value == 'contact-pref' && $(elem).is(":checked")) {
-                    contact_pref = $(elem).val();
+                    if (contact_pref != undefined && contact_pref.length > 0) {
+                        contact_pref += ", " + $(elem).val();
+                    } else {
+                        contact_pref = $(elem).val();
+                    }
                 }
 
             }
@@ -611,6 +620,8 @@ jQuery(document).ready(function ($) {
             App.profile.book_trip(user, name, email, phone, enquiry, contact_pref, model, function(data){
                 if (data.status=='success') {
                     BootstrapDialog.alert('Successfullly sent enquiry');
+                    $phone.val('');
+                    $enquiry.val('');
                 } else {
                     BootstrapDialog.alert('Failed to send enquiry, please try again later');
                 }
