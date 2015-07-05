@@ -6,10 +6,10 @@ from flask import g, redirect, request, url_for, abort
 from app.settings import MEDIA_FOLDER
 from rake import extract_keywords
 from PIL import Image
-import os, datetime, random
+import os, datetime, random, requests
 from app import cache
 from bson.son import SON
-
+from StringIO import StringIO
 from app import cache
 
 TAG_RE = re.compile(r'<[^>]+>')
@@ -147,3 +147,30 @@ def all_tags():
 
 def get_month(month):
     return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month - 1]
+
+def save_profile_image(profile, image):
+    from app.models.profile import Profile
+    try:
+        print '[*] Running image downloader in seperate thread for %s and %s' % (profile, image)
+        profile = Profile.objects(pk=profile).first()
+        response = requests.get(image)
+        data = response.content
+        content_type = response.headers['content-type']
+        if not content_type.startswith('image'):
+            return
+        format = content_type.split('/')[1]
+        p = '/tmp/' + str(random.randint(888888, 9999999)) + '.' + format
+        with open(p, 'wb') as _f:
+            _f.write(data)
+        img = Image.open(p)
+        buffer = StringIO()
+        img.save(buffer, img.format)
+        buffer.seek(0)
+        profile.cover_image.replace(buffer)
+        profile.save()
+        path = os.getcwd() + '/app/assets/' + profile.path_cover_image if profile.path_cover_image and len(profile.path_cover_image) > 0 else 'some-non-existent-path'
+        if os.path.exists(path):
+            os.remove(path)
+    except:
+        print 'Failed to save profile image'
+        raise

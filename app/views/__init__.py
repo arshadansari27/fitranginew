@@ -7,7 +7,7 @@ __author__ = 'arshad'
 
 
 from functools import wraps
-from flask import g, redirect, request, url_for, abort
+from flask import g, redirect, request, url_for, abort, session
 from datetime import timedelta
 from jinja2 import Environment, FileSystemLoader
 from app.settings import TEMPLATE_FOLDER
@@ -17,10 +17,12 @@ from app import USE_CDN
 env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER))
 
 @app.before_request
-def setup_user():
+def before_request():
     session.permanent = True
     if session.get('user') is not None:
         g.user = Profile.objects(pk=session['user']).first()
+    else:
+        g.user = None
     if session.get('just_logged_in', False):
         g.just_logged_in = True
         session['just_logged_in'] = False
@@ -84,5 +86,4 @@ class Menu(object):
         return "%s -> %s -> %s" % (self.app_name, self.main_menu, self.inner)
 
 
-from .common import *
 from .messaging import *
