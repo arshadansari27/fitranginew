@@ -89,9 +89,7 @@
 
                 <div class="container-fluid">
                     <ul class="nav navbar-nav">
-                        <li class="{% if menu.app_name == 'explore'%}active{% endif %}"><a href="/"></a></li>
-                        <!--li class="{% if menu.app_name == 'trip'%}active{% endif %}"><a href="/trips">Upcoming Trips</a>
-                        </li-->
+                        <li ><a href="/"></a></li>
                     </ul>
                     {% if user and user.id %}
                     <ul class="top-icons nav navbar-nav navbar-right pull-right" ng-controller="NotificationCtrl">
@@ -109,9 +107,7 @@
                     {% endif %}
                     <ul class="nav navbar-nav pull-right">
 	                        <li>
-                                {% if user and user.managed_profiles|length == 0 and user.managed_by|length == 0 %}
-                                <a class="business-pro-btn" href="/manage-profile?business=true" title="Business">Create business Profile</a>&nbsp;
-                                {% endif %}
+                                <a class="business-pro-btn" href="#" {% if user %}data-user="{{user.id}}"{% endif %} title="Business" data-action="create-business-profile">Create business Profile</a>&nbsp;
                             </li>
                             {% if user and user.is_admin %}<li><a class="btn-head" href="{% if user %}/contests{% else %}/login?target=/contests{% endif %}" title="Live Contests">Live Contests</a></li>{% endif %}
 	                        <li><a class="btn-head" href="/profiles" title="Members">Members</a></li>

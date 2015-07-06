@@ -967,6 +967,41 @@ jQuery(document).ready(function ($) {
     });
 
 
+    $('body').on('click', '[data-action="create-business-profile"]', function(e){
+        e.stopPropagation();
+
+        if ($(this).data('user') == undefined) {
+            BootstrapDialog.show({
+                title: 'Information',
+                message: 'You must be logged in to be able to create a Businees Profile for your Organisation. Please login from here.',
+                buttons: [
+                    {
+                        label: 'Close',
+                        action: function (dialog) {
+                            dialog.close();
+                        }
+                    },
+                    {
+                        label: 'Register',
+                        action: function (dialog) {
+                            window.location.href = '/register?target=' + window.location.href;
+                        }
+                    },
+                    {
+                        label: 'Login',
+                        cssClass: 'btn-primary',
+                        action: function (dialog) {
+                            window.location.href = '/login?target=' + window.location.href;
+                        }
+                    }
+                ]
+            });
+        } else {
+            window.location.href= '/manage-profile?business=true'
+        }
+    });
+
+
     $('body').on('click', '[data-action="edit-profile-password"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
