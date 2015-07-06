@@ -192,11 +192,13 @@ class ChatMessage(db.Document):
         result = ChatMessage._get_collection().aggregate(pipeline)['result']
         print '[**]', result
         for u in result:
-            p = Profile.objects(id=u['_id']).first()
-            if p == profile or not p:
+            _id = u['_id']
+            count = u['count']
+            p = Profile.objects(pk=str(_id)).first()
+            print '***', p, _id, count, type(profile) == type(p)
+            if not p or p.id == profile.id:
                 continue
-            user_list[p] = u['count']
-            print p, u['count']
+            user_list[str(p.id)] = int(u['count'])
         return user_list
 
     @classmethod

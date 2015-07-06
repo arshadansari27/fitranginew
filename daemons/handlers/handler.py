@@ -97,8 +97,10 @@ class AppSession(ApplicationSession):
                 _user_list.append(initial_user)
 
             for m, v in messages.iteritems():
-                if initial and m == initial:
+                if initial and m == str(initial.id):
                     continue
+
+                m = Profile.objects(pk=m).first()
                 data = dict(id=str(m.id), image=m.cover_image_path, name=m.name, notifications=str(v) if int(v) > 0 else '')
                 _user_list.append(data)
 

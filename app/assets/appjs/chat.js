@@ -125,6 +125,7 @@ function ChatCtrl($scope, $rootScope){
             console.log('Sending message: ' + $scope.txt_message);
             if ($scope.txt_message == undefined || $scope.txt_message.length == 0 || $scope.selected_user == undefined) return;
             var mesg = $scope.txt_message;
+            mesg = ('<div/>').text(mesg).html();
             if (mesg == undefined || mesg.length == 0) {
                 console.log('Cannot send empty...');
                 return;

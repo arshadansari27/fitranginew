@@ -572,6 +572,29 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    $('body').on('click', '[data-action="invite-to-trip"]', function(e) {
+        e.stopPropagation();
+        var user = $(this).data('user-id');
+        var trip = $(this).data('model-id');
+        var trip_slug = $(this).data('model-slug');
+        var invitee = $(this).data('target-id');
+        var invitee_name = $(this).data('target-name');
+
+        var message = 'Hi there<br/> I would like to invite you this check this trip out <a href="' + trip_slug + '">here</a>.';
+        alert('Inviting ' + trip + ', ' + user + ', ' + invitee);
+
+        window.App.async.call('com.fitrangi.messaging.send', [user, invitee, message], function (res) {
+            if (res == undefined || res.length == 0) {
+                console.log("Invalid response: " + res);
+                return;
+            }
+            var response_message = res.messages;
+            var response_user = res.id;
+            var response_notif = res.notifications;
+            BootstrapDialog.alert('Successfully invited '  + invitee_name + '.');
+        });
+    });
+
     $('body').on('click', '[data-action="send-enquiry"]', function(e){
         e.stopPropagation();
         e.preventDefault();
@@ -582,7 +605,7 @@ jQuery(document).ready(function ($) {
         var slug = $(this).attr('data-model-slug');
         var user = $(this).attr('data-user-id');
         if (user == undefined || user.length == 0) {
-            BootstrapDialog.alert('You must be logged in to make booking enquiry. Please login from <a href="' + slug +'">here.</a>');
+            BootstrapDialog.alert('You must be logged in to make booking enquiry. Please login from <a href="/login?target=' + slug +'">here.</a>');
             return;
         }
         if (values != undefined) {

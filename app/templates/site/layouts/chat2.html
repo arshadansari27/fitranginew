@@ -68,7 +68,7 @@
                 <figure class="profile-picture">
                     <img src="{{ message.image }}" class="img-circle img-responsive" alt="">
                 </figure>
-                <div class="message"> {{ message.message }}<div class="time">{{ message.since }}</div></div>
+                <div class="message"> <span ng-bind-html-unsafe="message.message">{{message.message}}</span><div class="time">{{ message.since }}</div></div>
             </li>
 
         </ul>

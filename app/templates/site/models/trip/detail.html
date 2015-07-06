@@ -19,7 +19,7 @@
         <a class="btn btn-primary"  href="#" data-action="remove-trip-interested" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-check orange"></span>&nbsp;Remove from Interest</a>
     {% endif %}
     {% if model in user.joined_trip %}
-        <a class="btn btn-primary"  href="#" data-action="remove-trip-joined" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-link green"></span>&nbsp;Unjoin</a>
+        <!--a class="btn btn-primary"  href="#" data-action="remove-trip-joined" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-link green"></span>&nbsp;Unjoin</a-->
     {% endif %}
     <a class="btn btn-primary"  href="#book-now" ><span class="fa fa-bookmark"></span>&nbsp;Booking Enquiry</a>
 </section>
@@ -107,7 +107,7 @@
                 <center>
                     {% for activity in model.activities %}
                         {% if activity and activity.icon_image_path and activity.icon_image_path |length > 0 %}
-                            <img src="{{activity.icon_image_path}}" class="img-thumbnail" width="64" alt="{{activity.name}}">
+                            <a href="{{activity.slug}}"><img src="{{activity.icon_image_path}}" class="img-thumbnail" width="64" alt="{{activity.name}}"></a>
                         {% endif %}
                     {% endfor %}
                 </center>
@@ -274,10 +274,10 @@
                 {% for u in user.followers[0: follower_length] %}
                 <li>
                     <div class="fitrangi-invite">
-                        <img src="{{u.cover_image_path}}" class="img-circle img-responsive pull-left p-5" width="60"
-                             height="100">
-                        <a href="" class="btn btn-default btn-xs mt-10 grey pull-right">Invite</a>
-                        <h4>{{u.name}}</h4>
+                        <a href="{{u.slug}}"><img src="{{u.cover_image_path}}" class="img-circle img-responsive pull-left p-5" width="60"
+                             height="100"></a>
+                        <a href="#" class="btn btn-default btn-xs mt-10 grey pull-right" data-action="invite-to-trip" data-user-id="{{user.id}}" data-model-id="{{model.id}}" data-model-slug="{{model.slug}}" data-target-id="{{u.id}}" data-target-name="{{u.name}}">Invite</a>
+                        <h4><a href="{{u.slug}}">{{u.name}}</a></h4>
                     </div>
                 </li>
                 {% endfor %}
