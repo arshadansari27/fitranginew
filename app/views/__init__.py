@@ -61,7 +61,7 @@ def get_menu_selection(request_path):
         ('/profiles', ('community', 'profile')),
         ('/discussions', ('community', 'discussion')),
         ('/events', ('community', 'event')),
-        ('/trips', ('trip', None)),
+        ('/trips', ('explore', 'trip')),
         ('/', ('explore', None))
     ]
 
