@@ -999,7 +999,7 @@ jQuery(document).ready(function ($) {
         if ($(this).data('user') == undefined) {
             BootstrapDialog.show({
                 title: 'Information',
-                message: 'You must be logged in to be able to create a Businees Profile for your Organisation. Please login from here.',
+                message: 'You must be already be logged in to create a business page for your organisation.',
                 buttons: [
                     {
                         label: 'Close',
