@@ -60,8 +60,8 @@
                             <i class="fa fa-calendar "></i>
                         </div>
                         <div>
-                            <strong>Date</strong>
-                            <p>{{model.total_date|safe}}</p>
+                            <strong class="dark-grey">Date</strong>
+                            <p class="dark-grey">{{model.total_date|safe}}</p>
                         </div>
                     </div>
                 </div>
@@ -70,9 +70,9 @@
                         <div>
                             <i class="fa fa-clock-o"></i>
                         </div>
-                        <div>
-                            <strong>Days</strong>
-                            <p> {{model.duration}} </p>
+                        <div >
+                            <strong class="dark-grey">Days</strong>
+                            <p class="dark-grey"> {{model.duration}} </p>
                         </div>
                     </div>
                 </div>
@@ -82,8 +82,8 @@
                             <i class="fa fa-map-marker"></i>
                         </div>
                         <div>
-                            <strong>Location</strong>
-                            <p>{% if model.optional_location_name %}{{ model.optional_location_name }}{% else %}{{model.location }}{% endif %}</p>
+                            <strong class="dark-grey">Location</strong>
+                            <p class="dark-grey">{% if model.optional_location_name %}{{ model.optional_location_name }}{% else %}{{model.location }}{% endif %}</p>
                         </div>
                     </div>
                 </div>
@@ -93,8 +93,8 @@
                             <i class="fa fa-inr"></i>
                         </div>
                         <div>
-                            <strong>Amount</strong>
-                            <p>{{model.price|int}} /- per person</p>
+                            <strong class="dark-grey">Amount</strong>
+                            <p class="dark-grey">{{model.price|int}} /- per person</p>
                         </div>
                     </div>
                 </div>
@@ -152,21 +152,15 @@
     <!--col5-close-->
 
     <div class="col-lg-12 col-md-12 col-xs-12 going-list">
-            {% if not user or user in model.joined %}
-                {% for u in model.joined %}
-                <img src="{{u.cover_image_path}}" class="" width="48">
-                {% endfor %}
-                <!--h3>45+</h3-->
-            {% else %}
-                {% for u in model.interested %}
-                <img src="{{u.cover_image_path}}" class="" width="48">
+
+            {% for u in model.interested %}
+                <a href="{{u.slug}}"><img src="{{u.cover_image_path}}" class="" width="48"></a>
                 {% else %}
                 <div class="well well-sm">
                     <h4>Be the first to show interest in this event</h4>
                 </div>
-                {% endfor %}
+            {% endfor %}
 
-            {% endif %}
          </div>
     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
         <div class="row-fluid adventure-trips-tabs">
@@ -266,8 +260,8 @@
             <!--input type="text" class="form-control" placeholder="+ Add Followers to this event"-->
 
             <ul class="media-list">
-                {% if user.followers|length > 4 %}
-                {% set follower_length = 4 %}
+                {% if user.followers|length > 10 %}
+                {% set follower_length = 10 %}
                 {% else %}
                 {% set follower_length = user.followers|length %}
                 {% endif %}

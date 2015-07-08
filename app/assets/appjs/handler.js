@@ -20,8 +20,7 @@ jQuery(document).ready(function ($) {
     };
 
     App.scroll_to_container = function(){
-        console.log($('#model-container-section').length);
-        if ($('#model-container-section') == undefined || $('#model-container-section') == null ){
+        if ($('#model-container-section') == undefined || $('#model-container-section') == null || $('#model-container-section').length == 0){
             return;
         }
         $('html, body').animate({
@@ -577,14 +576,14 @@ jQuery(document).ready(function ($) {
 
     $('body').on('click', '[data-action="invite-to-trip"]', function(e) {
         e.stopPropagation();
+        e.preventDefault();
         var user = $(this).data('user-id');
         var trip = $(this).data('model-id');
         var trip_slug = $(this).data('model-slug');
         var invitee = $(this).data('target-id');
         var invitee_name = $(this).data('target-name');
-
-        var message = 'Hi there<br/> I would like to invite you this check this trip out <a href="' + trip_slug + '">here</a>.';
-        alert('Inviting ' + trip + ', ' + user + ', ' + invitee);
+        var that = this;
+        var message = 'Hi there<br/> I would like to invite you to check this trip out <a href="' + trip_slug + '">here</a>.';
 
         window.App.async.call('com.fitrangi.messaging.send', [user, invitee, message], function (res) {
             if (res == undefined || res.length == 0) {
@@ -594,7 +593,9 @@ jQuery(document).ready(function ($) {
             var response_message = res.messages;
             var response_user = res.id;
             var response_notif = res.notifications;
-            BootstrapDialog.alert('Successfully invited '  + invitee_name + '.');
+            //BootstrapDialog.alert('Successfully invited '  + invitee_name + '.');
+            $(that).data('action', 'do-nothing-here');
+            $(that).html('<i class="fa fa-check"></i>&nbsp;Invited');
         });
     });
 
