@@ -1,6 +1,12 @@
 <div class="{% block grid_size %}{% endblock %}">
     <div class="thumbnail">
       <a href="{{model.slug}}"><img src="{{model.cover_image_path_small}}" alt="..."></a>
+        <div class="caption captop">
+        <article>
+			<h4>Organised by : </h4>
+			<a href="{{ model.organizer.slug}}"><img style="display: inline;" src="{{model.organizer.cover_image_path_small}}" class="img-rounded" width="52"></a>
+		</article>
+            </div>
 
       <div class="caption">
 

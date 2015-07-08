@@ -2163,11 +2163,15 @@ ul.my-list-right li:before{
 	max-height:auto;
 }
 .fitrangi-thumb .captop{
-	position:relative;
-	padding:15px 0;
+	position:absolute;
+	top:0px;
+	right:4px;
+	padding:15px 15px;
 }
 .fitrangi-thumb .capbottom{
-	position:relative;
+	position:absolute;
+	top:195px;
+	right:10px;
 	padding:0 20px;
 }
 .fitrangi-thumb .capbottom a span{
