@@ -590,3 +590,5 @@ def extractor_invoke():
             return jsonify(status='success', nodes=models)
     except Exception, e:
         return jsonify(dict(status='error', message='Something went wrong', exception=str(e)))
+
+from .mailers import *

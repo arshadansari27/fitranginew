@@ -1,0 +1,16 @@
+{% extends 'notifications/generic_mail_template.html'%}
+{% block body %}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 15px !important;">
+    <div class="text-muted">
+        <p>{% block message %}Someone just posted a booking enquiry for your trip {% if trip %}"{{trip.name}}"{% endif %}.{% endblock %}</p>
+        <p>Following are the details:</p>
+        <ul>
+            <li><b>Name</b>:&nbsp;&nbsp;{% if booking and booking.preferred_name %}{{booking.preferred_name}}{% else %}{{booking.booking_by.name}}{% endif %}</li>
+            <li><b>Email</b>:&nbsp;&nbsp;{% if booking and booking.preferred_email %}{{booking.preferred_email}}{% else %}{{booking.booking_by.email}}{% endif %}</li>
+            <li><b>Phone</b>:&nbsp;&nbsp;{% if booking and booking.preferred_phone %}{{booking.preferred_phone }}{% else %}{{booking.booking_by.phone}}{% endif %}</li>
+            <li><b>Preference for contact</b>:&nbsp;&nbsp;{% if booking and booking.contact_preference%}{{booking.contact_preference}}{% else %}Email{% endif %}</li>
+            <li><b>Message</b>:&nbsp;&nbsp;{% if booking and booking.enquiry %}{{booking.enquiry}}{% else %}No message{% endif %}</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

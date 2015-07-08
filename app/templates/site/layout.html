@@ -242,6 +242,8 @@
                                     href="/blog">Blog</a></li>
                         <li class="{% if menu.main_menu == 'discussion' %}active{% endif %}"><a
                                 href="/discussions">Discussions</a></li>
+                        {% if user and user.is_admin %}<li class="{% if menu.main_menu == 'trip' %}active{% endif %}"><a
+                                href="/trips">Trips</a></li>{% endif %}
                         <!--li class="{% if menu.main_menu == 'event' %}active{% endif %}"><a
                                 href="/events">Initiatives</a></li-->
                     </ul>

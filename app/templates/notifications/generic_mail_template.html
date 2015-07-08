@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+        
+    <link rel="icon" href="http://www.fitrangi.com/images/favicon.png">
+
+    <title>Fitrangi</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="http://www.fitrangi.com/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Fontawesome Icon CSS -->
+    <link href="http://www.fitrangi.com/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="http://www.fitrangi.com/css/my-style.css" rel="stylesheet">
+    
+  </head>
+    
+  <body>
+    <section class="container" style="width: 650px;">
+        <div class="container-fluid">
+            <div class="thumbnail" style="border: 0px;">
+              <img src="http://www.fitrangi.com/images/logo.png" alt="fitrangi_logo">
+            </div>
+
+            <h4>Hello <em>{% if user and user.name and user.name|length > 0 %}{{ user.name }}{% else %}there{% endif %}</em>,</h4>
+
+
+            {% block body %}
+
+            {% endblock %}
+
+
+
+            <div class="">
+                <div class="text-muted">
+                    <p><b>Kind regards,<br/> Team Fitrangi</b> </p>
+
+
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="http://www.fitrangi.com/profiles">Check who has joined recently!</a><br/>
+                <a href="http://www.fitrangi.com/blog">Latest Blog Posts</a><br/>
+                <a href="http://www.fitrangi.com/discussions">What is being discussed at fitrangi</a>
+            </div>
+
+            <div class="social">
+                <div>
+                            <div class="well text-center" >
+                                <h4>We're always here to help</h4>
+                                    <p>To fully benefit from fitrangi functionalities, please contact our <a href="mailto:go@fitrangi.com">support team</a>.</p>
+                            </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 social">
+                        <div class="text-center">
+                            <a href="" class="fa fa-facebook-square"></a>
+                            <a href="" class="fa fa-twitter-square"></a>
+                            <a href="" class="fa fa-google-plus-square"></a>
+                            <a href="" class="fa fa-youtube-square"></a>
+
+                            <h5>&copy;2014-2015-Fitrangi<sup>TM</sup>. All right Reserved</h5>
+                            <h4 Style="color: #000; font-weight: bold;">Fitrangi.com</h4>
+                            <h5>India's Complete Adventure Portal</h5>
+                            <h5><a href="#" Style="color: #777";>Edit Email Preferences</a> | <a href="#" Style="color: #777";>Contact Us</a></h5>
+                        </div>
+            </div>
+       </div>
+    </section>
+    </body>
+</html>

@@ -500,6 +500,36 @@ def book_trip(node,  data):
     trip = Trip.objects(pk=trip).first()
     if not node or not trip:
         raise Exception('Invalid profile or event')
-    trip.add_enquiry(node, name, email, phone, message, contact_pref)
+
+    booking = trip.add_enquiry(node, name, email, phone, message, contact_pref)
+    organizer = trip.organizer
+    admins = Profile.objects(roles__in=['Admin']).all()
+    print 'SEnding emails to ', organizer, ',', admins
+    if organizer and organizer.id:
+        try:
+            from app.views import env
+            template_path = 'notifications/trip_booking.html'
+            template = env.get_template(template_path)
+            context = {}
+            context['user']  = organizer
+            context['trip'] = trip
+            context['booking'] = booking
+            html = template.render(**context)
+            send_single_email("[Fitrangi] Booking Arrival for trip %s" % trip.name_short, to_list=[organizer.email], data=html)
+        except:
+            print '[ERROR] Unable to send email'
+    if admins and len(admins) > 0:
+        try:
+            template_path = 'notifications/trip_booking_admin.html'
+            template = env.get_template(template_path)
+            for a in admins:
+                context = {}
+                context['user']  = a
+                context['trip'] = trip
+                context['booking'] = booking
+                html = template.render(**context)
+                send_single_email("[Fitrangi] Booking Arrival for trip %s" % trip.name_short, to_list=[a.email], data=html)
+        except:
+            print '[ERROR] Unable to send email to admin'
     return node
 
