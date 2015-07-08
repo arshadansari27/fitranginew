@@ -20,7 +20,10 @@ jQuery(document).ready(function ($) {
     };
 
     App.scroll_to_container = function(){
-        console.log('Scrolling down');
+        console.log($('#model-container-section').length);
+        if ($('#model-container-section') == undefined || $('#model-container-section') == null ){
+            return;
+        }
         $('html, body').animate({
             scrollTop: $('#model-container-section').offset().top
         }, 1000);
@@ -1612,7 +1615,7 @@ jQuery(document).ready(function ($) {
     if (url.match('#')) {
         var second_part = url.split('#')[1];
         var should_scroll = false;
-        if (second_part.match('/?')) {
+        if (second_part.length > 0 && second_part.match('/?')) {
             second_part = second_part.split('?')[0];
             should_scroll = true;
         }

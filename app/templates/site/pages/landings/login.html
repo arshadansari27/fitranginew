@@ -84,7 +84,7 @@
     </div>
 </section>
 <script>
-    $("#error").hide();
+    $(".alert").hide();
     $("#btn-login1").click(function(e){
         e.preventDefault();
         e.stopPropagation();
@@ -107,12 +107,12 @@
                 } else if (msg.my_page != undefined && msg.my_page.length > 0) {
                     location = msg.my_page;
                 } else {
-                    location = '/explore';
+                    location = '/';
                 }
                 window.location.href= location;
             } else {
                 $("#message").html(msg.message);
-                $("#error").show();
+                $(".alert").show();
             }
         });
     });

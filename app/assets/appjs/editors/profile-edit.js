@@ -337,6 +337,7 @@ $(document).ready(function() {
             type: 'profile',
             command: 'register-profile'
         };
+        console.log('Trying to register');
         App.editor(options, callback);
     };
 

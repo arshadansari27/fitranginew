@@ -304,9 +304,9 @@ class NodeView(View):
         template = env.get_template(template_path)
         context = force_setup_context(context)
         context['model'] = model
-        print '[*] Context: ', context
         context['profile_types'] = [u for u in ProfileType.objects.all() if u.name != 'Enthusiast']
-        return template.render(**context)
+        data = template.render(**context)
+        return data
 
 
     @classmethod

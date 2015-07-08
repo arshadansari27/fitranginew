@@ -551,6 +551,17 @@ def manage_profile():
     context = PageManager.get_edit_title_and_page('profile', query=query, business=True)
     return render_template('site/pages/commons/view.html', **context)
 
+@app.route('/add-edit-trip')
+def add_edit_trip():
+    if not hasattr(g, 'user') and not g.user: return 'Forbidden', 403
+    pk = request.args.get('pk', None)
+    if pk:
+        query = 'pk:%s;' % pk
+    else:
+        query = None
+    context = PageManager.get_edit_title_and_page('trip', query=query)
+    return render_template('site/pages/commons/view.html', **context)
+
 @app.route('/editors/invoke', methods=['POST'])
 def editor_invoke():
     try:
