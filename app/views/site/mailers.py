@@ -1,6 +1,7 @@
 __author__ = 'arshad'
 
 from app.handlers.messaging import send_single_email
+from app.views import env
 from app.handlers import GENERIC_TITLE
 from app import app, USE_CDN
 from app.models import STREAM
@@ -30,4 +31,48 @@ def view_mail_template(template_name="generic_mail_template.html"):
     if not hasattr(g, 'user') or g.user is None or 'Admin' not in g.user.roles:
         return 'Forbidden', 403
     return render_template("/notifications/%s" % template_name, user=g.user)
+
+
+
+@app.route('/email-verification/<id>/<linkr>')
+def verify_email(id, linkr):
+    if not id or not linkr:
+        return 'Verification Failed', 400
+    try:
+        profile = Profile.verify_user(id, linkr)
+    except:
+        flash('Verification failed.', category='danger')
+
+    if profile is True or profile.id:
+        flash('Verified Successfully', category='success')
+    return redirect('/')
+
+@app.route('/generate-verification/<id>')
+def generate_verification(id):
+    if not id:
+        return 'Invalid id', 404
+    try:
+        profile = Profile.objects(pk=str(id)).first()
+        link = profile.create_verification_link()
+        print 'id: ', id, link
+        try:
+            template_path = 'notifications/email_verification.html'
+            template = env.get_template(template_path)
+            context = {}
+            context['user']  = profile
+            context['link']  = link
+            html = template.render(**context)
+            send_single_email("[Fitrangi] Verification email", to_list=[profile.email], data=html)
+            flash('Successfully sent verification email.', category='success')
+            return redirect('/')
+        except:
+            flash('Failed to send verification email, please try again later', category='danger')
+        if not profile:
+            flash('Failed to send verification email, please try again later', category='danger')
+        return redirect('/')
+    except:
+        return redirect('/')
+
+
+
 

@@ -6,13 +6,34 @@ from mongoengine import *
 from app.models import update_content, Entity, db, new_object, Location
 from activity import Activity
 from adventure import Adventure
-import datetime, hashlib
+import datetime, hashlib, random
 from ago import human
+from flask import flash
 
 class ProfileType(db.Document):
     name = db.StringField()
 
     def __unicode__(self): return self.name
+
+class Verification(db.EmbeddedDocument):
+    verification_link = db.StringField()
+    expiration = db.DateTimeField()
+
+    @classmethod
+    def create_verification_link(self, profile):
+        v = Verification()
+        v.verification_link = "/email-verification/%s/%s" % (str(profile.id), str(hashlib.md5(str(random.randrange(000000000, 1000000000))).hexdigest()))
+        v.expiration = datetime.datetime.now() + datetime.timedelta(days=2)
+        return v
+
+    def is_expired(self):
+        return self.expiration <= datetime.datetime.now()
+
+    def match(self, id, linkr):
+        val = '/email-verification/%s/%s' % (id, linkr)
+        print self.verification_link
+        print val
+        return self.verification_link ==  val
 
 @new_object.apply
 @update_content.apply
@@ -45,6 +66,7 @@ class Profile(Entity, db.Document, Location):
     type = db.ListField(db.ReferenceField('ProfileType'))
     deactivated = db.BooleanField(default=False)
     is_verified = db.BooleanField(default=False)
+    verification = db.EmbeddedDocumentField(Verification)
     is_social_login = db.BooleanField(default=False)
     uploaded_image_cover = db.BooleanField(default=False)
     public_activity_count = db.IntField(default=0)
@@ -61,6 +83,28 @@ class Profile(Entity, db.Document, Location):
             {'fields': ['email', 'slug', 'name'], 'unique': False, 'sparse': False, 'types': False },
         ],
     }
+
+    def create_verification_link(self):
+        self.verification = Verification.create_verification_link(self)
+        self.save()
+        print 'Verifiaction link', self.verification.verification_link
+        return self.verification.verification_link
+
+    @classmethod
+    def verify_user(cls, id, linkr):
+        profile = Profile.objects(pk=id).first()
+        if profile.is_verified:
+            flash('Already verified', category='warning')
+            return True
+        if profile.verification.is_expired() :
+            return False
+        elif not profile.verification.match(id, linkr):
+            return False
+        else:
+            flash('Successfully verified.', category='success')
+            profile.is_verified = True
+            profile.save()
+            return profile
 
     @property
     def is_admin(self):

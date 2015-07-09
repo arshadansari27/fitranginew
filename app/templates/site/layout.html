@@ -41,6 +41,26 @@
         <script type="text/javascript" src="{{cdn_url}}{{ ASSET_URL }}"></script>
     {% endassets %}
 
+    {% if user and not user.is_verified and not user.is_social_login %}
+    <div class="alert alert-warning alert-dismissible text-center" role="alert" style="margin-bottom:0;">
+        <strong>Info!</strong> Your email is not verified. <a href="/generate-verification/{{user.id}}">Request verification email</a>
+    </div>
+    {% endif %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div id="alert-message-container" class="container-fluid">
+                <div class="alert alert-info alert-dismissible" role="alert" style="margin-bottom:0;">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Info!</strong>
+                    {% for message in messages %}
+                        {{ message|safe }}<br/>
+                    {% endfor %}
+                </div>
+            </div>
+
+        {% endif %}
+    {% endwith %}
+
 <div class="wrap-site">
     <div id="fb-root"></div>
     <script>
@@ -119,7 +139,7 @@
                             <li class="dropdown">
                                 <a class="btn-head" href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <img src="{{user.cover_image_path}}" class="" alt="profile"
-                                         height="18">{{user.name}}
+                                         height="18">&nbsp;{{user.name}}
                                     <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu pull-right">
@@ -255,20 +275,7 @@
         </div>
     </nav>
     {%  endblock %}
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div id="alert-message-container" class="container-fluid">
-                <div class="alert alert-info alert-dismissible" role="alert" style="margin-bottom:0;">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Info!</strong>
-                    {% for message in messages %}
-                        {{ message|safe }}<br/>
-                    {% endfor %}
-                </div>
-            </div>
 
-        {% endif %}
-    {% endwith %}
     <div style="min-height: 100%;">
         {% block body %}{% endblock %}
     </div>

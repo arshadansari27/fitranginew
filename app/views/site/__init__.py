@@ -248,6 +248,7 @@ def social_login():
 
     if profile.is_social_login is None or not profile.is_social_login:
         profile.is_social_login = True
+        profile.is_verified = True
         profile.save()
 
 
