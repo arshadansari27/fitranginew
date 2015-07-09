@@ -1000,7 +1000,7 @@ jQuery(document).ready(function ($) {
         if ($(this).data('user') == undefined) {
             BootstrapDialog.show({
                 title: 'Information',
-                message: 'You must be already be logged in to create a business page for your organisation.',
+                message: 'You must be logged in to create a business page for your organization.',
                 buttons: [
                     {
                         label: 'Close',
