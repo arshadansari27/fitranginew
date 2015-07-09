@@ -53,7 +53,7 @@ def start_app():
     from app.models.profile import Profile
     app.secret_key = os.urandom(24)
 
-    app.permanent_session_lifetime = timedelta(minutes=120)
+    #app.permanent_session_lifetime = timedelta(minutes=120)
     app.session_interface = MongoSessionInterface()
 
     #from app.handlers.views import *
