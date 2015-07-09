@@ -1,4 +1,4 @@
-from app.handlers.messaging import send_single_email
+from app.handlers.messaging import send_single_email, send_email_from_template
 from app.models.profile import Profile, ProfileType
 from app.models.relationships import RelationShips
 from app.models.event import Event
@@ -310,11 +310,10 @@ def register_profile(data):
         from app.views import env
         session['user'] = str(profile.id)
         template_path = 'notifications/successfully_registered.html'
-        template = env.get_template(template_path)
-        context = {}
-        context['user']  = profile
-        html = template.render(**context)
-        send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=html)
+        context = dict(user=profile)
+        subject="[Fitrangi] Successfully registered"
+        to_list=[profile.email]
+        send_email_from_template(template_path, subject, to_list, **context)
     return profile
 
 @response_handler('Thank you for listing your business. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to register', login_required=True, flash_message=True)
@@ -372,13 +371,8 @@ def register_business_profile(data):
 
     if profile and profile.id:
         from app.views import env
-        #session['user'] = str(profile.id)
         template_path = 'notifications/successfully_registered.html'
-        template = env.get_template(template_path)
-        context = {}
-        context['user']  = profile
-        html = template.render(**context)
-        send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=html)
+        send_email_from_template(template_path, "[Fitrangi] Successfully registered", to_list=[profile.email], user=profile)
     return profile
 
 @response_handler('Successfully updated the profile', 'Failed to update', login_required=True)

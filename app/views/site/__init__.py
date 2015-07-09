@@ -178,10 +178,9 @@ def forgot_password():
             password = "%s%s%s" % (''.join(u[0:5]), ''.join(v[0:5]), ''.join(str(x) for x in w[0:3]))
             profile.password = password
             profile.save()
-            from app.handlers.messaging import send_single_email
+            from app.handlers.messaging import send_single_email, send_email_from_template
             flash("Successfully sent email with new password.", category='success')
-            mail_data = render_template('notifications/password_reset.html', user=profile, password=password)
-            send_single_email("[Fitrangi] Password reset on Fitrangi.com", to_list=[profile.email], data=mail_data)
+            send_email_from_template('notifications/password_reset.html', "[Fitrangi] Password reset on Fitrangi.com", to_list=[profile.email], **dict(user=profile, password=password))
             return jsonify(dict(status='success', message='Password has been reset, please check  your email.', node=str(profile.id)))
     except Exception,e:
         print e
@@ -285,8 +284,7 @@ def registration():
         if profile and profile.id:
             session['user'] = str(profile.id)
             session['just_logged_in'] = True
-            mail_data = render_template('notifications/successfully_registered.html', user=profile)
-            send_single_email("[Fitrangi] Successfully registered", to_list=[profile.email], data=mail_data)
+            send_email_from_template('notifications/successfully_registered.html', "[Fitrangi] Successfully registered", to_list=[profile.email], **dict(user=profile))
             return jsonify(dict(status='success', message='Profile created and logged in.', node=str(profile.id), my_page=target if target and len(target) > 0 else profile.slug))
         return jsonify(dict(status='error', message='Failed to register. Please try again.'))
     if hasattr(g, 'user') and g.user is not None:

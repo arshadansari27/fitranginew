@@ -87,7 +87,6 @@ class Profile(Entity, db.Document, Location):
     def create_verification_link(self):
         self.verification = Verification.create_verification_link(self)
         self.save()
-        print 'Verifiaction link', self.verification.verification_link
         return self.verification.verification_link
 
     @classmethod

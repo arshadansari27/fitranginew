@@ -1,6 +1,6 @@
 __author__ = 'arshad'
 
-from app.handlers.messaging import send_single_email
+from app.handlers.messaging import send_single_email, send_email_from_template
 from app.views import env
 from app.handlers import GENERIC_TITLE
 from app import app, USE_CDN
@@ -30,7 +30,9 @@ import random, os
 def view_mail_template(template_name="generic_mail_template.html"):
     if not hasattr(g, 'user') or g.user is None or 'Admin' not in g.user.roles:
         return 'Forbidden', 403
-    return render_template("/notifications/%s" % template_name, user=g.user)
+    b_file = open(os.getcwd() + '/app/assets/css/bootstrap.min.css', 'r').read().decode('utf-8')
+    m_file = open(os.getcwd() + '/app/assets/css/my-style.css','r').read().decode('utf-8')
+    return render_template("/notifications/%s" % template_name, user=g.user, b_file=b_file, m_file=m_file)
 
 
 
@@ -56,13 +58,12 @@ def generate_verification(id):
         link = profile.create_verification_link()
         print 'id: ', id, link
         try:
-            template_path = 'notifications/email_verification.html'
-            template = env.get_template(template_path)
-            context = {}
-            context['user']  = profile
-            context['link']  = link
-            html = template.render(**context)
-            send_single_email("[Fitrangi] Verification email", to_list=[profile.email], data=html)
+            if 'fitrangi.com' in request.host:
+                host = 'http://www.fitrangi.com'
+            else:
+                host = 'http://localhost:4500'
+            context = dict(user=profile, link="%s%s" % (host, link))
+            send_email_from_template('notifications/email_verification.html', "[Fitrangi] Verification email", to_list=[profile.email], **context)
             flash('Successfully sent verification email.', category='success')
             return redirect('/')
         except:

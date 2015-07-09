@@ -122,14 +122,13 @@ def __edit(node, type, data):
     content = obj.save()
     if content.published and (not hasattr(content, 'admin_published') or not content.admin_published):
         profiles = [u for u in Profile.objects(roles__in=['Admin']).all()]
-        from app.handlers.messaging import send_single_email
+        from app.handlers.messaging import send_single_email, send_email_from_template
         if not profiles or len(profiles) is 0:
             print '[*] Publish Mail: Unable to send email to admin'
         for p in profiles:
             if not p or not p.email or p.email != 'fitrangi@gmail.com':
                 continue
-            mail_data = render_template('notifications/content_posted_admin.html', user=p, content=content)
-            send_single_email("[Fitrangi] Content awaiting approval", to_list=[p.email], data=mail_data)
+            send_email_from_template('notifications/content_posted_admin.html', "[Fitrangi] Content awaiting approval", to_list=[p.email],user=p, content=content)
             print '[*] Publish Mail: Sending mail to %s' % p.name
         ActivityStream.push_content_to_stream(content)
     return obj
@@ -147,14 +146,13 @@ def publish(node, type):
     content.save()
     if content.published and (not hasattr(content, 'admin_published') or not content.admin_published):
         profiles = [u for u in Profile.objects(roles__in=['Admin']).all()]
-        from app.handlers.messaging import send_single_email
+        from app.handlers.messaging import send_single_email, send_email_from_template
         if not profiles or len(profiles) is 0:
             print '[*] Publish Mail: Unable to send email to admin'
         for p in profiles:
             if not p or not p.email or p.email != 'fitrangi@gmail.com':
                 continue
-            mail_data = render_template('notifications/content_posted_admin.html', user=p, content=content)
-            send_single_email("[Fitrangi] Content awaiting approval", to_list=[p.email], data=mail_data)
+            send_email_from_template('notifications/content_posted_admin.html', "[Fitrangi] Content awaiting approval", to_list=[p.email], user=p, content=content)
             print '[*] Publish Mail: Sending mail to %s' % p.name
     ActivityStream.push_content_to_stream(content)
     return content
