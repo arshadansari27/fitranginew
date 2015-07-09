@@ -213,7 +213,7 @@ def login_page():
                 flash('Please update your location by clicking <a href="/edit-profile">here</a>')
             response = dict(status='success', message='Successfully logged in.', node=str(profile.id), my_page=target if target and len(target) > 0 else profile.slug)
             return jsonify(response)
-        return jsonify(dict(status='error', message='Failed to login. Please try again.'))
+        return jsonify(dict(status='error', message='Incorrect email address and/or password.'))
 
     if hasattr(g, 'user') and g.user is not None:
         return redirect(g.user.slug)
@@ -245,21 +245,22 @@ def social_login():
         profile.password = ''
         profile.save()
 
-    if profile.is_social_login is None or not profile.is_social_login:
+    if profile:
         profile.is_social_login = True
         profile.is_verified = True
         profile.save()
-
-
-    if profile.is_social_login and profile.id and not profile.uploaded_image_cover:
-        img_uploaded = request.form['file']
-        if img_uploaded and len(img_uploaded) > 0:
-            #Thread(target=save_profile_image, args=(str(profile.id), img_uploaded)).start()
-            save_profile_image(str(profile.id), img_uploaded)
-
-    if profile:
         session['user'] = str(profile.id)
         session['just_logged_in'] = True
+
+    try:
+        if profile.is_social_login and profile.id and not profile.uploaded_image_cover:
+            img_uploaded = request.form['file']
+            if img_uploaded and len(img_uploaded) > 0:
+                save_profile_image(str(profile.id), img_uploaded)
+    except:
+        print '[ERROR]: Unable to download profile image for profile'
+
+    if profile:
         return jsonify(dict(location='/stream/me', status='success'))
 
     return jsonify(dict(location=url_for('login'), status='error'))
@@ -276,7 +277,7 @@ def registration():
             return jsonify(dict(status='error', message='Passwords do not match'))
         type = ProfileType.objects(name__icontains='subscription').first()
         if Profile.objects(email__iexact=email, type__nin=[str(type.id)]).first():
-            return jsonify(dict(status='error', message='Email already exists, have you forgotten your password?'))
+            return jsonify(dict(status='error', message='Email already exists, have you forgotten your password? <a href="#" class="show_forgot_password">Click</a> to reset it.'))
         type = ProfileType.objects(name__iexact='Enthusiast').first()
         profile = Profile(name=name, email=email, type=[type], roles=['Basic User'])
         profile.password  = password

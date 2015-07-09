@@ -102,7 +102,6 @@
             if (confirm != password) {
                 $("#message").html('Passwords do not match');
                 $(".alert").show();
-                console.log('Regsitration: Password matching issue..');
                 return;
 
             }
@@ -110,13 +109,11 @@
             all_good = true;
         }
         if (!all_good){
-            console.log('Regsitration: Not all good..');
             $("#message").html('Please enter all the fields');
             $(".alert").show();
             return;
         }
 
-        console.log('Regsitration: proceeding..');
         $.ajax({
             type: 'POST',
             url: '/register',

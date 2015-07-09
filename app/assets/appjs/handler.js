@@ -5,6 +5,52 @@ jQuery(document).ready(function ($) {
 
     var App = window.App;
 
+    $('body').on('click', ".show_forgot_password", function(e) {
+        e.stopPropagation();
+        window.$forgotpasswordDialog = new BootstrapDialog({
+            title: "Forgot Password",
+            message: $('<div></div>').load('/forgot-password-modal'),
+            buttons: [
+                {
+                    label: 'Reset Password',
+                    cssClass: 'btn-primary',
+                    action: function(dialogItself) {
+                        var email = $('#forgot-password-email').val();
+                        console.log("Forgot password: " + email);
+                        $.ajax({
+                            type: 'POST',
+                            url: '/forgot_password',
+                            data: {
+                                email: email
+                            }
+                        }).done(function (msg) {
+                            if (msg.status == 'success') {
+                                $("#success-message").html(msg.message);
+                                $("#fp-success").show();
+                                $("#forgotpassword").hide();
+                                dialogItself.close();
+                            } else {
+                                $("#error-message").html(msg.message);
+                                $("#fp-error").show();
+                            }
+                        });
+                    }
+                },
+                {
+                    label: 'Close',
+                    action: function (dialogItself) {
+                        dialogItself.close();
+                    }
+                }
+            ]
+        });
+        window.$forgotpasswordDialog.realize();
+        window.$forgotpasswordDialog.open();
+        if (window.$loginDialog != undefined || window.$loginDialog != null) {
+            window.$loginDialog.close();
+        }
+    });
+
     var show_dialog_message = function(dialogRef, status, message) {
 
         var box = '<div class="alert alert-'+ ((status=='success')?status: 'danger') +' fade in">'
