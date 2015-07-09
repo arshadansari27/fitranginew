@@ -104,7 +104,7 @@
                                 window.location.href=w;
                             }
                             else {
-                                window.location.reload();
+                                window.location.href= "/";
                             }
                         } else {
                             $("#message").html('Some went wrong. Please try again later.');

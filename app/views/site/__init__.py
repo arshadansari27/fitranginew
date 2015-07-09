@@ -243,12 +243,12 @@ def social_login():
         assert len(types) > 0
         profile = Profile(name=name, email=email, is_verified=True, roles=['Basic User'], type=types)
         profile.password = ''
-        profile.save()
+        profile = profile.save()
 
     if profile:
         profile.is_social_login = True
         profile.is_verified = True
-        profile.save()
+        profile = profile.save()
         session['user'] = str(profile.id)
         session['just_logged_in'] = True
 
@@ -332,6 +332,7 @@ def act_home():
 
 @app.route("/")
 def home():
+    from app.views import force_setup_context
     context = PageManager.get_landing_title_and_page('explore', user=g.user if hasattr(g, 'user') else None)
     return render_template('site/pages/commons/view.html', **context)
 

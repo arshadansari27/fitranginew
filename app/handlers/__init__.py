@@ -460,6 +460,7 @@ class PageManager(object):
 
     @classmethod
     def get_common_title_and_page(cls, page, **kwargs):
+        from app.views import force_setup_context
         from app.views import env
         if page == 'login':
             text = 'Login to'
@@ -470,6 +471,7 @@ class PageManager(object):
         template_path = COLLECTION_PATHS.get(page) + '.html'
         template = env.get_template(template_path)
         context = kwargs if kwargs and len(kwargs) > 0 else {}
+        context = force_setup_context(context)
         html = template.render(**context)
         return '%s fitrangi.com' % text, html, context
 
