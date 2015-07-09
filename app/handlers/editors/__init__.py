@@ -7,7 +7,7 @@ from flask import request, redirect, flash, g, render_template, jsonify, send_fi
 from app.handlers.messaging import send_single_email
 from app import app
 #from app.handlers import login_required, redirect_url
-#from app.models import Profile, Post, Content
+from app.models import BusinessException
 from StringIO import StringIO
 import random, os
 from PIL import Image
@@ -34,9 +34,14 @@ def response_handler(success, failure, login_required=True, flash_message=False)
                     flash(success)
                 return dict(status='success', message=success, node=str(node.id))
             except Exception, e:
-                if flash_message:
-                    flash(failure)
-                return dict(status='error', message=failure, exception=str(e))
+                if isinstance(e, BusinessException):
+                    if flash_message:
+                        flash(str(e))
+                    return dict(status='error', message=str(e), exception=str(e))
+                else:
+                    if flash_message:
+                        flash(failure)
+                    return dict(status='error', message=failure, exception=str(e))
         return wrapped_f
     return wrap
 

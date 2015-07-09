@@ -355,5 +355,8 @@ class NodeFactory(object):
         elif name == CONTEST: return Contest
         else: return None
 
+class BusinessException(Exception):
+    pass
+
 if __name__ == '__main__':
     print 'running models_init'

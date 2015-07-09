@@ -5,7 +5,7 @@ from app.models.event import Event
 from app.models.trip import Trip
 from app.models.activity import Activity
 from app.models.adventure import Adventure
-from app.models import Node, NodeFactory, LOCATION
+from app.models import Node, NodeFactory, LOCATION, BusinessException
 from app.models.feedbacks import ClaimProfile
 from app.handlers.editors import NodeEditor, response_handler
 from flask import session
@@ -328,7 +328,7 @@ def register_business_profile(data):
 
     user = Profile.objects(pk=by_user).first()
     if not user:
-        raise Exception("Not logged in")
+        raise BusinessException("Not logged in")
 
 
     email = email.strip()
@@ -336,7 +336,7 @@ def register_business_profile(data):
     subscription_type = ProfileType.objects(name__icontains='subscription').first()
     p = Profile.objects(email__iexact=email).first()
     if p and ((len(p.type) is 1 and p.type[0] != subscription_type) or len(p.type) > 1):
-        raise Exception('Profile already exists')
+        raise BusinessException('Profile with given email already exists')
 
     type = ProfileType.objects(name__iexact=type).first()
     profile = Profile.objects(email__iexact=email).first()
@@ -355,7 +355,7 @@ def register_business_profile(data):
             website=website.strip(), twitter=twitter.strip(), youtube_channel=youtube.strip(), blog_channel=blog.strip(), zipcode=zipcode.strip(), geo_location=geo_location,
             facebook=facebook.strip(), linked_in=linked_in.strip(), google_plus=google_plus.strip())
     else:
-        raise Exception('Profile already added by someone')
+        raise BusinessException('Profile already added by someone')
 
     for activity in activities:
         act = Activity.objects(name__iexact=activity.strip()).first()
@@ -387,12 +387,12 @@ def update_business_profile(node, data):
 
     user = Profile.objects(pk=by_user).first()
     if not user:
-        raise Exception("Not logged in")
+        raise BusinessException("Not logged in")
 
     type = ProfileType.objects(name__iexact=type.strip()).first()
     profile = Profile.objects(email__iexact=email.strip()).first()
     if not profile:
-        raise Exception("Profile does not exists")
+        raise BusinessException("Profile does not exists")
     if lat:
         lat = lat.strip()
     if lng:
