@@ -259,13 +259,8 @@
 
             <!--input type="text" class="form-control" placeholder="+ Add Followers to this event"-->
 
-            <ul class="media-list">
-                {% if user.followers|length > 10 %}
-                {% set follower_length = 10 %}
-                {% else %}
-                {% set follower_length = user.followers|length %}
-                {% endif %}
-                {% for u in user.followers[0: follower_length] %}
+            <ul class="media-list"  style="height: 300px; overflow: auto">
+                {% for u in user.followers %}
                 <li>
                     <div class="fitrangi-invite">
                         <a href="{{u.slug}}"><img src="{{u.cover_image_path}}" class="img-circle img-responsive pull-left p-5" width="60"
