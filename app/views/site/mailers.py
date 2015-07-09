@@ -47,6 +47,8 @@ def verify_email(id, linkr):
 
     if profile is True or profile.id:
         flash('Verified Successfully', category='success')
+        context = dict(user=profile)
+        send_email_from_template('notifications/email_verification_success.html', "[Fitrangi] Thank your for successful verification", to_list=[profile.email], **context)
     return redirect('/')
 
 @app.route('/generate-verification/<id>')

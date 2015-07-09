@@ -55,7 +55,7 @@
                         <div class="form-group">
                             <label class="sr-only">Full Name <span class="red">*</span></label>
                             <input id="signup-name" type="text" class="form-control" name="name" required data-validation-required-message="Please enter your name." placeholder="Name">
-                            <input type="hidden" data-history value="{{target}}"/>
+                            <input type="hidden" data-history value="{% target %}{{target}}{% endif %}"/>
                         </div>
 
                         <div class="form-group">
@@ -106,7 +106,6 @@
                 return;
 
             }
-            console.log('Regsitration: All Good..');
             all_good = true;
         }
         if (!all_good){
@@ -127,7 +126,8 @@
         }).done(function (msg) {
             if (msg.status == 'success') {
                 var location = null;
-                if ($('input[data-history]') != undefined && $('input[data-history]').val() != undefined && $('input[data-history]').val().length > 0) {
+                var val = $('input[data-history]');
+                if (val != undefined && val.val() != undefined && val.val().length > 0 && val.val() != 'None' && val.val().toLowerCase() != 'none') {
                     location = $('input[data-history]').val();
                 } else {
                     location = '/';

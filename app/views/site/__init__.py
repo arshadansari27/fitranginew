@@ -285,11 +285,20 @@ def registration():
         if profile and profile.id:
             session['user'] = str(profile.id)
             session['just_logged_in'] = True
-            send_email_from_template('notifications/successfully_registered.html', "[Fitrangi] Successfully registered", to_list=[profile.email], **dict(user=profile))
+            if profile.is_verified:
+                send_email_from_template('notifications/successfully_registered.html', "[Fitrangi] Successfully registered", to_list=[profile.email], **dict(user=profile))
+            else:
+                if 'fitrangi.com' in request.host:
+                    host = 'http://www.fitrangi.com'
+                else:
+                    host = 'http://localhost:4500'
+                link = profile.create_verification_link()
+                context = dict(user=profile, link="%s%s" % (host, link))
+                send_email_from_template('notifications/email_verification.html', "[Fitrangi] Verification email", to_list=[profile.email], **context)
             return jsonify(dict(status='success', message='Profile created and logged in.', node=str(profile.id), my_page=target if target and len(target) > 0 else profile.slug))
         return jsonify(dict(status='error', message='Failed to register. Please try again.'))
     if hasattr(g, 'user') and g.user is not None:
-        return redirect('/explore')
+        return redirect('/')
     from app.views import force_setup_context
     title, card, context = PageManager.get_common_title_and_page('register', target=target)
     context = force_setup_context(context)
