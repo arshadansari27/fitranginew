@@ -18,11 +18,16 @@ from app.utils import login_required
 from app import app
 from StringIO import StringIO
 from PIL import Image
-import random, os
+import random, os, requests
 
 (MODEL_DETAIL_VIEW, MODEL_LIST_ROW_VIEW, MODEL_LIST_GRID_VIEW, MODEL_LIST_POD_VIEW) = ('detail', 'row', 'grid', 'pod')
 
 FOLDER = os.getcwd() + '/content-images'
+
+
+@app.route('/test-api/youtube')
+def youtube_channel_test():
+    return requests.get('https://www.googleapis.com/youtube/v3/search?key=AIzaSyC2G0kvBLJBEnBCUPf053z6mL5tgbWON5o&channelId=UC9MLurIp4Afr3gF_r57ID4w&part=snippet,id&order=date&maxResults=20').content
 
 
 @app.route('/user-csv-download')
