@@ -126,9 +126,13 @@
                     </ul>
                     {% endif %}
                     <ul class="nav navbar-nav pull-right">
+
+                            {% if not user or (not user.is_business_profile and user.managed_profiles|length == 0) %}
 	                        <li>
                                 <a class="business-pro-btn" href="#" {% if user %}data-user="{{user.id}}"{% endif %} title="Business" data-action="create-business-profile">Create business Profile</a>&nbsp;
                             </li>
+                            {% endif %}
+
                             {% if user and user.is_admin %}<li><a class="btn-head" href="{% if user %}/contests{% else %}/login?target=/contests{% endif %}" title="Live Contests">Live Contests</a></li>{% endif %}
 	                        <li><a class="btn-head" href="/profiles" title="Members">Members</a></li>
                             {% if not (user and user.id) %}
