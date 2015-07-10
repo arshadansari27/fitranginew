@@ -567,10 +567,10 @@ class ClaimAdminView(ModelView):
         return False
 
     def profile_email_formatter(view, context, model, name):
-        return Markup("<a href='#'>%s</a>" % (model.profile.email))
+        return Markup("%s" % (model.profile.email if model.profile else 'No Profile (Invalid row)'))
 
     def claimed_email_formatter(view, context, model, name):
-        return Markup("<a href='#'>%s</a>" % (model.claimed.email))
+        return Markup("%s" % (model.claimed.email if model.claimed else 'No Profile Claimed (Invalid row)'))
 
     column_formatters = {'profile_email': profile_email_formatter, 'claimed_email': claimed_email_formatter}
 
