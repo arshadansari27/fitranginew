@@ -334,7 +334,7 @@ def register_profile(data):
         send_email_from_template(template_path, subject, to_list, **context)
     return profile
 
-@response_handler('Thank you for listing your business. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to register', login_required=True, flash_message=True)
+@response_handler('Thank you for listing your business. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to register', login_required=True, flash_message=True, no_flash_on_error=True)
 def register_business_profile(data):
     by_user = data['logged_in_user']
     assert by_user is not None
@@ -403,7 +403,7 @@ def register_business_profile(data):
 
     return profile
 
-@response_handler('Successfully updated the profile', 'Failed to update', login_required=True)
+@response_handler('Successfully updated the profile', 'Failed to update', login_required=True, no_flash_on_error=True)
 def update_business_profile(node, data):
     by_user, profile_id = data['logged_in_user'], node
     assert profile_id is not None and by_user is not None

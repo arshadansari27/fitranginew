@@ -619,24 +619,12 @@
             }
 
             if (profile_id == undefined || profile_id.length == 0) {
-                console.log('Sending data' + JSON.stringify(data));
                 profile_editor.business_profile_register(data, function (_data) {
                     if (_data.status == 'success') {
                         var url = window.location.href;
                         window.location.href = '/profiles';
-                        /*
-                        if (url.indexOf('?') == -1) {
-                            window.location.href = window.location.href + '?pk=' + _data.node;
-                        } else {
-                            window.location.href = window.location.href + '&pk=' + _data.node;
-                        }*/
                     } else {
-                        window.location.reload();
-                        $(".alert").html(data.message);
-                        $('.alert').show();
-                        setTimeout(function(){
-                            $('.alert').hide();
-                        }, 10000);
+                        BootstrapDialog.alert(_data.message);
                     }
                 });
             } else {
@@ -644,11 +632,7 @@
                     if (_data.status == 'success') {
                         window.location.reload();
                     } else {
-                        $(".alert").html(data.message);
-                        $('.alert').show();
-                        setTimeout(function(){
-                            $('.alert').hide();
-                        }, 10000);
+                        BootstrapDialog.alert(_data.message);
                     }
                 })
             }

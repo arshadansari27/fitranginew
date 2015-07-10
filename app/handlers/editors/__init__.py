@@ -22,7 +22,7 @@ __author__ = 'arshad'
 from flask import jsonify
 
 
-def response_handler(success, failure, login_required=True, flash_message=False):
+def response_handler(success, failure, login_required=True, flash_message=False, no_flash_on_error=False):
     def wrap(f):
         def wrapped_f(*kargs, **kwargs):
             if login_required:
@@ -35,11 +35,11 @@ def response_handler(success, failure, login_required=True, flash_message=False)
                 return dict(status='success', message=success, node=str(node.id))
             except Exception, e:
                 if isinstance(e, BusinessException):
-                    if flash_message:
+                    if flash_message and not no_flash_on_error:
                         flash(str(e))
                     return dict(status='error', message=str(e), exception=str(e))
                 else:
-                    if flash_message:
+                    if flash_message and not no_flash_on_error:
                         flash(failure)
                     return dict(status='error', message=failure, exception=str(e))
         return wrapped_f
