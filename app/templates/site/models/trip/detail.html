@@ -35,7 +35,11 @@
                     <a href=""><img src="{{p}}"></a>
                 {% endfor %}
             {% else %}
-                <a href=""><img src="/images/slider-3.jpg"></a>
+                {% if user and user.id == model.organizer.id %}
+                <a href=""><img src="/images/upload-gallery.jpg"></a>
+                {% else %}
+                <a href=""><img src="/images/no-gallery.jpg"></a>
+                {% endif %}
             {% endif %}
 
         </div>
