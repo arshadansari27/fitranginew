@@ -43,7 +43,7 @@
 
     {% if user and not user.is_verified and not user.is_social_login %}
     <div class="alert alert-warning alert-dismissible text-center" role="alert" style="margin-bottom:0;">
-        <strong>Info!</strong> Your email is not verified. <a href="/generate-verification/{{user.id}}">Request verification email</a>
+        <strong>Info!</strong>&nbsp;Verification link has been sent to your email, Please verify to start using Fitrangi website. if you not recieved the mail please <a href="/generate-verification/{{user.id}}">click here</a> to send it again
     </div>
     {% endif %}
     {% with messages = get_flashed_messages() %}

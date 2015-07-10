@@ -1654,7 +1654,7 @@ jQuery(document).ready(function ($) {
 
     if ($('.alert') != undefined) {
         setTimeout(function () {
-            $('.alert').hide();
+            $('.alert-info').hide();
         }, 10000);
     }
 
