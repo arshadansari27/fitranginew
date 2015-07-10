@@ -572,7 +572,7 @@ class ClaimAdminView(ModelView):
     def claimed_email_formatter(view, context, model, name):
         return Markup("%s" % (model.claimed.email if model.claimed else 'No Profile Claimed (Invalid row)'))
 
-    column_formatters = {'profile_email': profile_email_formatter, 'claimed_email': claimed_email_formatter}
+    #column_formatters = {'profile_email': profile_email_formatter, 'claimed_email': claimed_email_formatter}
 
 
 class ExtraPageAdminView(ModelView):
