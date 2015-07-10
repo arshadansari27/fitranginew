@@ -1,0 +1,5 @@
+{% extends 'notifications/generic_admin_mail_template.html'%}
+{% block message %}
+A user ({{flagger.email}}) has flagged a content http://www.fitrangi.com{{model.slug}} as not ok. Please take a look and verify the request to flag content.
+<a href="http://www.fitrangi.com/admin">Go to admin panel</a>
+{% endblock %}

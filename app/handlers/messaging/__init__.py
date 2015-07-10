@@ -4,7 +4,7 @@ from app import mandrill
 import os
 
 
-SEND_EMAILS = True or False if os.getenv('SEND_EMAILS', 0) in ['1', 1] else True
+SEND_EMAILS = False if os.getenv('SEND_EMAILS', 0) in ['1', 1] else True
 print 'SEND EMAILS SET TO', SEND_EMAILS
 
 def send_single_email(subject, from_email='admin@fitrangi.com', to_list=[], data=''):
