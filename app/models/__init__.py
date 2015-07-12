@@ -73,7 +73,7 @@ def update_slug(sender, document, type, title):
         _doc = document.__class__.objects(pk=str(document.id)).first()
     else:
         _doc = None
-    to_replace = [',', '.', '?', '/', '\\', ':', ';', '(', ')', '[', ']', '|', '*', '&', '^', '%', '$', '#', '@', '!', '~', '`', '<', '>']
+    to_replace = [',', '.', '?', '/', '\\', ':', ';', '(', ')', '[', ']', '|', '*', '&', '^', '%', '$', '#', '@', '!', '~', '`', '<', '>', ' ']
     for t in to_replace:
         title = title.replace(t, '-')
     original_slug = "/%s/%s" % (type, title.lower())
