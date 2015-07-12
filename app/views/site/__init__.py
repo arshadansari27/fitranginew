@@ -25,6 +25,10 @@ import random, os, requests
 FOLDER = os.getcwd() + '/content-images'
 
 
+def login_user_session(user):
+    session['user'] = str(user.id)
+    session['just_logged_in'] = True
+
 @app.route('/test-api/youtube')
 def youtube_channel_test():
     return requests.get('https://www.googleapis.com/youtube/v3/search?key=AIzaSyC2G0kvBLJBEnBCUPf053z6mL5tgbWON5o&channelId=UC9MLurIp4Afr3gF_r57ID4w&part=snippet,id&order=date&maxResults=20').content
@@ -212,8 +216,7 @@ def login_page():
         profile = Profile.authenticate(email, password)
         if profile and profile.id:
             target = request.args.get('target', None)
-            session['user'] = str(profile.id)
-            session['just_logged_in'] = True
+            login_user_session(profile)
             if not hasattr(profile, 'location') or not profile.location or len(profile.location) is 0:
                 flash('Please update your location by clicking <a href="/edit-profile">here</a>')
             response = dict(status='success', message='Successfully logged in.', node=str(profile.id), my_page=target if target and len(target) > 0 else profile.slug)
@@ -254,8 +257,7 @@ def social_login():
         profile.is_social_login = True
         profile.is_verified = True
         profile = profile.save()
-        session['user'] = str(profile.id)
-        session['just_logged_in'] = True
+        login_user_session(profile)
 
     try:
         if profile.is_social_login and profile.id and not profile.uploaded_image_cover:
@@ -288,8 +290,7 @@ def registration():
         profile.password  = password
         profile.save()
         if profile and profile.id:
-            session['user'] = str(profile.id)
-            session['just_logged_in'] = True
+            login_user_session(profile)
             if profile.is_verified:
                 send_email_from_template('notifications/successfully_registered.html', "[Fitrangi] Successfully registered", to_list=[profile.email], **dict(user=profile))
             else:

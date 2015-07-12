@@ -93,14 +93,12 @@ class Profile(Entity, db.Document, Location):
     def verify_user(cls, id, linkr):
         profile = Profile.objects(pk=id).first()
         if profile.is_verified:
-            flash('Already verified', category='warning')
             return True
         if profile.verification.is_expired() :
             return False
         elif not profile.verification.match(id, linkr):
             return False
         else:
-            flash('Successfully verified.', category='success')
             profile.is_verified = True
             profile.save()
             return profile

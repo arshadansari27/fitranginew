@@ -1,27 +1,12 @@
 __author__ = 'arshad'
 
 from app.handlers.messaging import send_single_email, send_email_from_template
-from app.views import env
-from app.handlers import GENERIC_TITLE
-from app import app, USE_CDN
-from app.models import STREAM
-from flask import render_template, request, g, redirect, jsonify, url_for, session, flash
-from app.handlers.editors import NodeEditor
-from app.handlers import NodeCollectionFactory, NodeExtractor
-from app.models import Node, NodeFactory, ACTIVITY, ADVENTURE, ARTICLE, DISCUSSION, PROFILE, EVENT, TRIP, CONTEST
+
 from app.models.profile import Profile, ProfileType
-from app.utils import login_required, all_tags, specific_tags_article, specific_channels_discussion, specific_tags_discussion, specific_channels_article, specific_channels, specific_tags, save_profile_image
-from app.handlers import  EditorView, PageManager
-from app.settings import CDN_URL
-from app.models import NodeFactory
-from app.models.profile import Profile, ProfileType
-import re, base64
 from flask import render_template, g, request, jsonify, send_file, flash, redirect, url_for, session, make_response
-from app.utils import login_required
 from app import app
-from StringIO import StringIO
-from PIL import Image
 import random, os
+from . import login_user_session
 
 
 @app.route('/mail-template')
@@ -44,11 +29,13 @@ def verify_email(id, linkr):
         profile = Profile.verify_user(id, linkr)
     except:
         flash('Verification failed.', category='danger')
+        return redirect('/')
 
     if profile is True or profile.id:
         flash('Verified Successfully', category='success')
         context = dict(user=profile)
         send_email_from_template('notifications/email_verification_success.html', "[Fitrangi] Thank your for successful verification", to_list=[profile.email], **context)
+        login_user_session(profile)
     return redirect('/')
 
 @app.route('/generate-verification/<id>')
