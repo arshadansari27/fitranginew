@@ -3,6 +3,14 @@
 
         <section class="container">
 
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                {% if user and (user.is_admin or user.is_organizer) %}
+                <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: window.location.href='/add-edit-trip'">Create a trip</a>
+                {% else %}
+                <a href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: BootstrapDialog.alert('You can only add the trip from a organizer profile.');">Create a trip</a>
+                {% endif %}
+            </div>
+
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 filter-adventuretrips-heading">
                 <h2>Find Near by Adventures. 2500+ Adventures and Counting </h2>
@@ -88,8 +96,8 @@
                     <div class="range range-primary">
                         <input id="duration-sorter" data-model="trip" data-category="upcoming" list="sorter" data-sorter="_duration" placeholder="Sort By"/>
                         <datalist id="sorter">
-                            <option value="high">Sort by greater number of days</option>
-                            <option value="low">Sort by lesser number of days</option>
+                            <option value="high">Longer Duration First</option>
+                            <option value="low">Shorter Duration First</option>
                         </datalist>
                     </div>
                 </div>
@@ -123,6 +131,9 @@
                     {% if user %}<li class=""><a href="#interesting" role="tab" data-toggle="tab" aria-controls="interesting"
                             aria-expanded="false">
                         <span class="fa fa-certificate"></span> <strong>Interesting or Joined Trips </strong> </a></li>{% endif %}
+                    {% if user and (user.is_organizer or user.is_admin) %}<li class=""><a href="#my-trips" role="tab" data-toggle="tab" aria-controls="my-trips"
+                            aria-expanded="false">
+                        <span class="fa fa-certificate"></span> <strong>Trips Added By Me</strong> </a></li>{% endif %}
                 </ul>
             </div>
         </div>
@@ -131,6 +142,7 @@
                 <div role="tabpanel" class="tab-pane fade active in" id="upcoming" aria-labelledby="upcoming">
                     <div class="container fitrangi-trips">
                         <input id="start-date-default-filter" data-category="upcoming" data-model="trip" data-filter="start_date__gt" type="hidden" name="start" value="{{now}}" data-filter-status="fixed">
+                        <input id="admin-published-1-filter" type="hidden" data-category="upcoming" data-model="trip" data-filter="admin_published" value="bool|True">
                         {{ upcoming|safe }}
                     </div>
                 </div>
@@ -138,7 +150,16 @@
                     <div class="container fitrangi-trips">
                         {% if user %}
                         <input id="interesting-trip-filter" data-category="interesting" data-model="trip" data-filter="relationship__interested__profile" type="hidden" value="{{user.id}}" data-filter-status="fixed">
+                        <input id="admin-published-2-filter" type="hidden" data-category="interesting" data-model="trip" data-filter="admin_published" value="bool|True">
                         {{ interesting|safe }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="my-trips" aria-labelledby="my-trips">
+                    <div class="container fitrangi-trips">
+                        {% if user and (user.is_organizer or user.is_admin) %}
+                        <input id="my-trip-filter" data-category="my-trips" data-model="trip" data-filter="organizer__profile__id" type="hidden" value="{{user.id}}" data-filter-status="fixed">
+                        {{ my_trips |safe }}
                         {% endif %}
                     </div>
                 </div>
@@ -179,6 +200,7 @@
         window.App.filter('start-date-default-filter');
         window.App.filter('interesting-trip-filter');
         window.App.filter('price_start_filter');
+        window.App.filter('my-trip-filter');
         window.App.sorter('location-sorter-lat');
         window.App.sorter('location-sorter-lng');
         window.App.sorter('location-sorter-locality');

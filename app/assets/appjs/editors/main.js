@@ -152,6 +152,64 @@ jQuery(document).ready(function($){
         });
     };
 
+    var display = '<div id="form-control-image-uploader"><div class="form-group"><label for="tags">Select Image to upload</label><input data-image="file-uploader" type="file" class="form-control" placeholder="Image selector" ></div></div>';
 
-	window.App = App;
+    App.image_upload_dialog = function(on_upload){
+        BootstrapDialog.show({
+            title: 'Upload Picture',
+            message: display,
+            buttons: [
+                {
+                    label: 'Close',
+                    action: function(dialogRef) {
+                        dialogRef.close();
+                    }
+                },
+                {
+                    label: 'Upload Image',
+                    cssClass: 'btn-primary',
+                    action: function(dialogRef) {
+                        var data = new FormData();
+                        jQuery.each($('input[data-image="file-uploader"]')[0].files, function(i, file) {
+                            data.append('file-'+i, file);
+                            console.log(file);
+                        });
+                        dialogRef.enableButtons(false);
+                        dialogRef.setClosable(false);
+                        dialogRef.getModalBody().html('<p>Uploading File.</p><br/><center><img src="/img/loading.gif"></center>');
+                        jQuery.ajax({
+                            url: '/dialog/upload_image',
+                            data: data,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            type: 'POST',
+                            success: function(data){
+                                on_upload(data.url)
+                                dialogRef.close();
+                            },
+                            error: function(data) {
+                                dialogRef.setMessage('Something went wrong when uploading the file. Please try again later or contact the administrator at go@fitrangi.com');
+                            }
+                        });
+
+                    }
+                }
+            ]
+        });
+    };
+
+    App.hashcode = function(st) {
+        var hash = 0, i, chr, len;
+        if (st.length == 0) return hash;
+        for (i = 0, len = st.length; i < len; i++) {
+            chr   = st.charCodeAt(i);
+            hash  = ((hash << 5) - hash) + chr;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
+    };
+
+
+    window.App = App;
 });

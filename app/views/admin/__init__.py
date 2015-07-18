@@ -212,8 +212,8 @@ class EventAdminView(ModelView):
 
 
 class TripAdminView(ModelView):
-    form_columns = ['name', 'description', 'optional_location_name', 'about', 'price', 'organizer',  'activities', 'start_date', 'end_date', 'itinerary', 'other_details', 'inclusive_exclusive', 'announcements', 'cover_image', 'path_cover_image', 'slug']
-    column_list = ('name', 'organizer_name', 'cover_image', 'location', 'bookings')
+    form_columns = ['name', 'description', 'optional_location_name', 'about', 'price', 'organizer',  'activities', 'start_date', 'end_date', 'itinerary', 'other_details', 'inclusive_exclusive', 'announcements', 'cover_image', 'path_cover_image', 'slug', 'published', 'admin_published']
+    column_list = ('name', 'organizer_name', 'cover_image', 'location', 'bookings', 'gallery')
     column_filters = ['name', FilterAdventure('adventure.id', 'Adventure'), FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name', )
     form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField, itinerary=SummernoteTextAreaField, other_details=SummernoteTextAreaField, inclusive_exclusive=SummernoteTextAreaField, announcements=SummernoteTextAreaField)
@@ -224,7 +224,14 @@ class TripAdminView(ModelView):
         return False
 
     def organizer(view, context, model, name):
-        return Markup('%s' % model.organizer.name)
+        return Markup('%s' % model.organizer.name if model.organizer else 'Unknown')
+
+    def gallery(view, context, model, name):
+        images = TripGalleryImage.objects(trip=model).all()
+        count = len(images)
+        '<a href="#"></a>'
+        paths = ['<img src="%s"/><br/>' % i.image_path_small for i in images]
+        return Markup("%d" % count)
 
     def _bookings(view, context, model, name):
         return Markup('<a href="%s" target="new">%s</a>' % (url_for('enquiries_for_trip_view.index_view', trip_id=str(model.id)), TripBooking.objects(trip=model).count()))
@@ -536,6 +543,46 @@ class ApprovalProfileAdminView(ModelView):
             return self.model.objects(__raw__=q)
         return None
 
+class ApprovalTripAdminView(ModelView):
+    can_create = False
+    can_edit = True
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
+    form_columns = ['name', 'slug', 'admin_published']
+    column_list = ('name', 'organizer', 'view', 'published', 'admin_published')
+
+    def view_formatter(view, context, model, name):
+        return Markup('<a href="%s">Click to view</a>' % model.slug)
+
+    def is_accessible(self):
+        if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
+            return True
+        return False
+
+    def get_query(self):
+        if 'Admin' in g.user.roles:
+            q = {'$and':
+                [
+                    {'published': True},
+                    {
+                        '$or':
+                        [
+                            {
+                                'admin_published': None
+                            },
+                            {
+                                'admin_published': False
+                            }
+                        ]
+                    }
+                ]
+            }
+
+            return self.model.objects(__raw__=q)
+        return None
+
+    column_formatters = dict(view=view_formatter)
+
 class NotOkAdminView(ModelView):
     can_create = False
     can_edit = True
@@ -761,6 +808,7 @@ class RestrictedAdminView(ModelView):
         return False
 
 
+admin.add_view(ApprovalTripAdminView(Trip, name='Trip', endpoint='approval.trip', category="Approvals"))
 admin.add_view(ApprovalContentAdminView(Article, name='Article', endpoint='approval.article', category="Approvals"))
 #admin.add_view(ApprovalContentAdminView(Blog, name='Blog', endpoint='approval.blog', category="Approvals"))
 admin.add_view(ApprovalContentAdminView(Discussion, name='Discussion', endpoint='approval.discussion', category="Approvals"))

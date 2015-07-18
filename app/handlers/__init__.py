@@ -389,19 +389,23 @@ class PageManager(object):
         query = kwargs.get('query', None)
         user = kwargs.get('user', None)
         is_business = kwargs.get('business', None)
+        print query
         if query:
             try:
                 model = NodeExtractor.factory(model_name).get_single(query)
             except Exception, e:
+                print e
                 model = None
         else:
             model = None
 
-        if model:
+        if model and isinstance(model, Profile):
             context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), is_business=any([model.is_business_profile, len(model.managed_by) > 0]))
-        else:
+        elif isinstance(model, Profile):
             context = dict(parent=None, user=user, query=None, filters=None, is_business=is_business)
-
+        else:
+            context = dict(model=model)
+        print model
         context.update(Page.factory(model_name, 'edit').get_context(context))
         context = force_setup_context(context)
         title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else GENERIC_TITLE)
@@ -487,7 +491,12 @@ class Page(object):
     @classmethod
     def factory(self, model_name, type):
         if type == 'edit':
-            return profile_edit_page
+            if model_name == PROFILE:
+                return profile_edit_page
+            elif model_name == TRIP:
+                return trip_edit_page
+            else:
+                raise Exception('Not implemented')
         elif type == 'detail':
             if model_name == ACTIVITY:
                 return activity_detail_page
@@ -624,7 +633,10 @@ class SearchPage(Page):
         elif self.model_name == EVENT:
             return dict(events_list=NodeCollectionFactory.resolve(EVENT, ROW_VIEW).get_card(context))
         elif self.model_name == TRIP:
-            return dict(upcoming=NodeCollectionFactory.resolve(TRIP, GRID_VIEW, category='upcoming').get_card(context), now=str(datetime.datetime.now()).split(' ')[0], interesting=NodeCollectionFactory.resolve(TRIP, GRID_VIEW, category='interesting').get_card(context))
+            interesting=NodeCollectionFactory.resolve(TRIP, GRID_VIEW, category='interesting').get_card(context)
+            upcoming=NodeCollectionFactory.resolve(TRIP, GRID_VIEW, category='upcoming').get_card(context)
+            my_trips = NodeCollectionFactory.resolve(TRIP, ROW_VIEW, category='my-trips').get_card(context)
+            return dict(upcoming=upcoming, now=str(datetime.datetime.now()).split(' ')[0], interesting=interesting, my_trips=my_trips)
         elif self.model_name == CONTEST:
             return dict(live=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='live').get_card(context), upcoming=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='upcoming').get_card(context), past=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='past').get_card(context), now=str(datetime.datetime.now()).split(' ')[0])
         else:
@@ -696,6 +708,8 @@ class EditPage(Page):
         super(EditPage, self).__init__(model_name)
 
     def get_context(self, context):
+        if self.model_name == TRIP:
+            return dict(activities=Activity.objects.all())
         return {} #dict(profiles_types=ProfileType.objects.all())
 
 
@@ -725,3 +739,4 @@ trip_detail_page        = DetailPage(TRIP)
 contest_detail_page     = DetailPage(CONTEST)
 
 profile_edit_page       = EditPage(PROFILE)
+trip_edit_page          = EditPage(TRIP)

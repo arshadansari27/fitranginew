@@ -1,186 +1,361 @@
 <section class="container edit-business">
 
+    <!-- col-lg-9 col-md-9 col-sm-12 col-xs-12 -->
+    <div class="">
+        <h2 class="title">Enter Trip Information</h2>
+
+        <form class="fitrangi-form">
+            <div class="form-group">
+                <label for="heading">Title</label>
+                <input type="text" class="form-control" name="title" placeholder="Enter Trip Title" data-name="title" value="{%if model and model.name %}{{model.name }}{% endif %}">
+                <input type="hidden" data-name="id" value="{%if model and model.id %}{{model.id}}{% endif %}">
+                <input type="hidden" data-name="user" value="{%if user and user.id %}{{user.id}}{% endif %}">
+            </div>
+
+            <div class="form-group">
+
+                <div class="row">
+                    <div class="col-md-4 col-sm-6 col-xs-6">
+                        <label for="heading">FROM</label><input type="date" class="form-control" name="fromdate" data-name="fromdate" value="{% if model and model.start_date %}{{model.from_date_only}}{% endif %}">
+                    </div>
+                    <div class="col-md-4 col-sm-6 col-xs-6">
+                        <label for="heading">TIME</label><input type="time" class="form-control" name="fromtime" data-name="fromtime" value="{%if model and model.start_date %}{{model.from_date_time}}{% endif %}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-sm-6 col-xs-6">
+                        <label for="heading">TO</label><input type="date" class="form-control" name="todate" data-name="todate" value="{%if model and model.end_date %}{{model.to_date_only}}{% endif %}">
+                    </div>
+                    <div class="col-md-4 col-sm-6 col-xs-6">
+                        <label for="heading">TIME</label><input type="time" class="form-control" name="totime" data-name="totime" value="{%if model and model.end_date %}{{model.to_date_time}}{% endif %}">
+                    </div>
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label for="heading">LOCATION</label>
+                            <input type="text" class="form-control geo-complete" value="{%if model and model.location %}{{model.location}}{% endif %}"/>
+                            <input type="hidden" name="formatted_address" data-name="geo_location_name" value="{% if model.location  and model.location|length > 0 %}{{ model.location }}{% endif %}"/>
+                            <input type="hidden" name="lat" data-name="geo_location_lat" value="{% if model.location and model.geo_location %}{{ model.geo_location['coordinates'][0] }}{% endif %}"/>
+                            <input type="hidden" name="lng" data-name="geo_location_long" value="{% if model.location and model.geo_location %}{{ model.geo_location['coordinates'][1] }}{% endif %}"/>
+                            <input type="hidden" name="locality_short" data-name="geo_city" value="{% if model.location and model.city %}{{ model.city }}{% endif %}"/>
+                            <input type="hidden" name="administrative_area_level_2" data-name="geo_region" value="{% if model.location and model.region %}{{ model.region }}{% endif %}"/>
+                            <input type="hidden" name="administrative_area_level_1" data-name="geo_state" value="{% if model.location and model.state %}{{ model.state }}{% endif %}"/>
+                            <input type="hidden" name="country_short" data-name="geo_country" value="{% if model.location and model.country %}{{ model.country }}{% endif %}"/>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label for="heading">Pincode / Zipcode</label>
+                            <input type="text" name="pincode" class="form-control" placeholder="Enter pincode / zipcode" data-name="zipcode" value="{%if model and model.zipcode %}{{model.zipcode}}{% endif %}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <label for="heading">Destination is famous as?</label>
+                                <input type="text" class="form-control" placeholder="Enter optional location name" data-name="optional_location_name" value="{%if model and model.optional_location_name %}{{model.optional_location_name}}{% endif %}">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+                        <div class="form-group">
+                            <label for="heading">Amount</label>
+
+                            <div class="input-group">
+                                <input type="number" class="form-control" placeholder="Enter Amount" data-name="price" value="{%if model and model.price %}{{model.price|int }}{% endif %}">
+                                <a href="#" class="input-group-addon"><i class="fa fa-money-circle fa-inr"></i></a>
+                            </div>
+
+                        </div>
 
 
-<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-<h2 class="title">Enter Trip Information</h2>
-<form class="fitrangi-form">
-<div class="form-group">
-	<label for="heading">Title</label>
-    <input type="text" class="form-control" name="title" placeholder="Enter Trip Title">
-</div>
+                    </div>
 
-<div class="form-group">
-<label for="heading">DATE</label>
-<div class="row">
-<div class="col-md-4">
-   <label for="heading">FROM</label><input type="date" class="form-control" name="fromdate">
-</div>
-<div class="col-md-4">
-    <label for="heading">TIME</label><input type="time" class="form-control" name="fromtime">
-</div>
-</div>
-<div class="row">
-<div class="col-md-4">
-    <label for="heading">TO</label><input type="date" class="form-control" name="todate">
-</div>
-<div class="col-md-4">
-    <label for="heading">TIME</label><input type="time" class="form-control" name="totime">
-</div>
-</div>
-<br>
-<label for="heading">LOCATION</label>
-<div class="row">
-<div class="col-md-4">
-<div class="form-group">
-	<label for="heading">City</label>
-    <select class="form-control" name="city">
-    	<option>Mumbai</option>
-        <option>Chennai</option>
-        <option>Kolkatta</option>
-        <option>Delhi</option>
-    </select>
-</div>
-</div>
+                </div>
+                <!--div class="form-group">
+                    <label for="heading">Detail Address</label>
+                    <textarea class="form-control" name="itinerary" placeholder="Enter ItenAddress"></textarea>
+                </div-->
+                <div class="container">
+                            <label for="heading">Activity</label>
 
-<div class="col-md-4">
-<div class="form-group">
-	<label for="heading">State</label>
-    <select class="form-control" name="state">
-    	<option>Maharashtra</option>
-        <option>Madhya Pradesh</option>
-        <option>Tamil Nadu</option>
-        <option>Uttar Pradesh</option>
-    </select>
-</div>
-</div>
-
-<div class="col-md-4">
-<div class="form-group">
-	<label for="heading">Pincode / Zipcode</label>
-    <input type="text" name="pincode" class="form-control" placeholder="Enter pincode / zipcode">
-</div>
-</div>
-</div>
-<div class="form-group">
-	<label for="heading">Detail Address</label>
-    <textarea class="form-control" name="title" placeholder="Enter Detail Address"></textarea>
-</div>
-
-<div class="row">
-<div class="col-md-6">
-
-	<div class="form-group">
-    <label for="heading">Amount</label>
-    	<div class="input-group">
-      		    <input type="number" class="form-control" placeholder="Enter Amount">
-      		<a href="" class="input-group-addon"><i class="fa fa-money-circle"></i></a>
-    	</div>
-
-  	</div>
+                            <div class="row-fluid">
+                                {% set ll = activities|length %}
+                                {% for i in range(0, ll, 3) %}
+                                <div class="row-fluid">
+                                    {% for j in range(3) %}
+                                        {% if (i + j) < ll %}
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                                {% set activity = activities[(i + j)]%}
+                                                <div class="checkbox">
+                                                    <p><input type="checkbox" data-name="activities" data-value="{{activity.id}}" {% if activity in model.activities %}checked{% endif %}> {{activity.name}}</p>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                </div>
+                <br/>
+                <hr/>
+                <br/>
+                <div class="form-group">
+                    <label for="cover-image">Upload Cover Image </label>
+                    <div class="thumbnail">
+                        <a href="#" data-action="cover-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/1366x500{% endif %}" width="70%"/></a>
+                        <div class="caption text-center">Click on the image to change(Optional)</div>
+                    </div>
+                    <input type="hidden" data-name="cover-image" value="{% if model.cover_image %}{{ model.cover_image_path }}{% endif %}"/>
+                </div>
 
 
-</div>
+                <div class="form-group">
+                    <label for="heading">Itinerary</label>
+                    <textarea class="form-control summernote" name="itinerary" rows="4" data-name="itinerary"
+                              placeholder="Write Brief About Itinerary...">{% if model and model.itinerary %}{{model.itinerary}}{% endif %}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="heading">Inclusive / Exclusive </label>
+                    <textarea class="form-control summernote" name="inclusive_exclusive" rows="4" data-name="inclusive_exclusive"
+                              placeholder="Write Brief About Inclusive and Exclusive...">{% if model and model.inclusive_exclusive%}{{model.inclusive_exclusive}}{% endif %}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="heading">Other details</label>
+                    <textarea class="form-control summernote" name="other_details" rows="4" data-name="other_details"
+                              placeholder="Write Brief About Other Details...">{% if model and model.other_details %}{{model.other_details }}{% endif %}</textarea>
+                </div>
+                <div class="form-group">
+                    <div class="row" style="vertical-align: middle;">
+                        <label for="heading" style="vertical-align: middle; height: 30px;">
+                            Upload Gallery Images
+                        </label>
+                        <a href="#" data-action="media-gallery-upload"><i class="fa fa-plus-circle fa-2x"></i></a>
+                    </div>
+                    <div id="media-gallery-uploads" class="container">
+                        {% for mg in model.media_gallery %}
+                        <div class="form-group col-lg-3 col-md-3 col-sm-6 col-xs-6" data-container-selector="{{mg.id}}">
+                            <div class="thumbnail"><img src="{{mg.image_path_small}}"/><div class="caption text-center"><a href="#"  data-type="saved" data-action="remove-image" data-selector="{{mg.id}}">Remove Image</a></div></div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
 
-<div class="col-md-6">
+            <br/>
+            <hr/>
+            <br/>
 
-	<div class="form-group">
-    <label for="heading">Activity</label>
-    	<div class="input-group">
-      	<select class="form-control" name="Activity">
-    	<option>Scuba Diving</option>
-        <option>Bungee Jumping</option>
-        <option>Trekking & Hiking</option>
-        <option>Mountaineering</option>
-    </select>
-    	</div>
-  	</div>
-</div>
-</div>
-<div class="form-group">
-    <label for="heading">Upload Cover Image</label>
-    	<div class="input-group">
-      		    <input type="file" class="form-control" placeholder="">
-      		<a href="" class="input-group-addon"><i class="fa fa-plus-circle"></i></a>
-    	</div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input data-name="toc" type="checkbox"> I accept the terms and conditions as per the agreement.
+                    </label>
+                </div>
+            </div>
 
-  	</div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input data-name="is-manager"  type="checkbox"> I am the administrator / manager / representative
+                    </label>
+                </div>
+            </div>
 
-<div class="form-group">
-    <label for="heading">Upload Gallery Images</label>
-    	<div class="input-group">
-      		    <input type="file" class="form-control" placeholder="">
-      			<a href="" class="input-group-addon"><i class="fa fa-plus-circle"></i></a>
-      </div>
-    	<div class="input-group">
-      		    <input type="file" class="form-control" placeholder="">
-      			<a href="" class="input-group-addon"><i class="fa fa-plus-circle"></i></a>
-      </div>
-    	<div class="input-group">
-      		    <input type="file" class="form-control" placeholder="">
-      			<a href="" class="input-group-addon"><i class="fa fa-plus-circle"></i></a>
-      </div>
+            <form class="form-group">
+                <button data-action="save-trip" class="btn btn-primary">Submit</button>
+            </form>
 
-  	</div>
-  	<div class="form-group">
-	<label for="heading">Overview</label>
-    <textarea class="form-control" name="overview" rows="4" placeholder="Write Brief About the trip..."></textarea>
-</div>
-
-<div class="form-group">
-	<label for="heading">Schedule</label>
-    <textarea class="form-control" name="schedule" rows="4" placeholder=""></textarea>
-</div>
-
-<div class="form-group">
-	<label for="heading">Things to carry</label>
-    <textarea class="form-control" name="things" rows="4" placeholder=""></textarea>
-</div>
-
-
-<div class="form-group">
-	<label for="heading">Inclusive and Exclusive</label>
-    <textarea class="form-control" name="inclusive" rows="4" placeholder=""></textarea>
-</div>
-
-</div>
-
-
-
-
-<div class="form-group">
-	<div class="checkbox">
-    	<label>
-          <input type="checkbox"> I accept the terms and conditions as per the agreement.
-        </label>
+        </form>
     </div>
-</div>
+    <!--Col9 End-->
 
-<div class="form-group">
-	<div class="checkbox">
-    	<label>
-          <input type="checkbox"> I am the administrator / manager / representative
-        </label>
+
+    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+        <div class="row">
+
+
+        </div>
     </div>
-</div>
-
-<form class="form-group">
-<button class="btn btn-primary">Submit</button>
-</form>
-
-</form>
-</div><!--Col9 End-->
-
-
-<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-<div class="row">
-
-
-
-
-
-
-</div>
-</div><!--Col3 End-->
+    <!--Col3 End-->
 
 </section>
+
+<script>
+    $(document).ready(function(){
+        var handle_success = function() {
+            window.location.href='/trips#my-trips';
+        };
+        var handle_failure = function(message) {
+            console.log('Handling failure:'  + message);
+            BootstrapDialog.alert({
+                title: 'Error message',
+                message: message,
+            });
+        };
+
+        $('body').on('click', '[data-action="save-trip"]', function(e){
+
+            var toc = $('[data-name="toc"]:checked');
+            var is_manager = $('[data-name="is-manager"]:checked');
+            if (toc == undefined || toc.length == 0)  {
+                BootstrapDialog.alert('Please accept the terms and then try again.');
+                return;
+            }
+            if (is_manager == undefined || is_manager.length == 0)  {
+                BootstrapDialog.alert('You have to be the administrator/manager/representative to save the trip.');
+                return;
+            }
+            var id = $('[data-name="id"]').val();
+            var organizer = $('[data-name="user"]').val();
+            var title = $('[data-name="title"]').val();
+            var fromdate = $('[data-name="fromdate"]').val();
+            var fromtime = $('[data-name="fromtime"]').val();
+            var from = '';
+            if (fromdate.length > 0){
+                from = fromdate + ' ';
+                if (fromtime.length > 0) {
+                    from += fromtime;
+                } else {
+                    from += '00:00:00';
+                }
+            }
+            var todate = $('[data-name="todate"]').val();
+            var totime = $('[data-name="totime"]').val();
+            var to = ''
+            if (todate.length > 0){
+                to = todate + ' ';
+                if (totime.length > 0) {
+                    to += totime;
+                } else {
+                    to += '00:00:00';
+                }
+            }
+            var location_name = $('[data-name="geo_location_name"]').val();
+            var location_lat = $('[data-name="geo_location_lat"]').val();
+            var location_lng = $('[data-name="geo_location_long"]').val();
+            var location_city = $('[data-name="geo_city"]').val();
+            var location_region = $('[data-name="geo_region"]').val();
+            var location_state = $('[data-name="geo_state"]').val();
+            var location_country = $('[data-name="geo_country"]').val();
+            //console.log("Location: " + location_name + ', ' + location_lat + ', '+ location_lng + ', '+ location_city + ', ' + location_region + ', ' + location_state + ', ' + location_country);
+            var zipcode = $('[data-name="zipcode"]').val();
+            var optional_location_name = $('[data-name="optional_location_name"]').val();
+            var price = $('[data-name="price"]').val();
+            var $activities = $('[data-name="activities"]:checked');
+            var activities = [];
+            for (var i = 0; i < $activities.length; i++){
+                activities.push($($activities[i]).attr('data-value'));
+            }
+            var cover_image = $('[data-name="cover-image"]').val();
+            if (cover_image.length == 0) {
+                BootstrapDialog.alert('Please select a cover image for the trip. This is mandatory.');
+                return;
+            }
+            var $media_gallery_images = $('[data-name="media-gallery-image"]');
+            var media_gallery_images = [];
+            for (var i = 0; i < $media_gallery_images.length; i++){
+                media_gallery_images.push($($media_gallery_images[i]).val());
+            }
+            console.log("Gallery: " + media_gallery_images);
+            var itinerary = $('[data-name="itinerary"]').val();
+            var incl_excl = $('[data-name="inclusive_exclusive"]').val();
+            var other_details = $('[data-name="other_details"]').val();
+            var data = {
+                title: title,
+                from: from,
+                to: to,
+                location_name: location_name,
+                location_lat: location_lat,
+                location_lng: location_lng,
+                location_city: location_city,
+                location_region: location_region,
+                location_state: location_state,
+                location_country:location_country,
+                zipcode: zipcode,
+                optional_location_name: optional_location_name,
+                price: price,
+                activities: activities,
+                cover_image: cover_image,
+                media_gallery_images: media_gallery_images,
+                itinerary: itinerary,
+                inclusive_exclusive: incl_excl,
+                other_details: other_details,
+                organizer: organizer
+            };
+            if (id != undefined && id.length > 0){
+                alert('editing')
+                App.trip.edit(id, data, function(data){
+                    if (data.status == 'success') {
+                        handle_success();
+                    } else {
+                        handle_failure(data.message);
+                    }
+                })
+            } else {
+                App.trip.add(data, function(data){
+                    if (data.status == 'success') {
+                        handle_success();
+                    } else {
+                        handle_failure(data.message);
+                    }
+                })
+            }
+
+        });
+
+
+        $('body').on('click', '[data-action="cover-image-upload"]', function(e){
+            e.stopPropagation();e.preventDefault();
+            var callback = function(url){
+                $('[data-name="cover-image-display"]').attr('src', url);
+                $('[data-name="cover-image"]').val(url);
+
+            };
+            App.image_upload_dialog(callback);
+        });
+        $('body').on('click', '[data-action="media-gallery-upload"]', function(e){
+            e.stopPropagation();e.preventDefault();
+            var callback = function(url){
+                var container = $('<div/>');
+                container.addClass('form-group');
+                container.addClass('col-lg-3');
+                container.addClass('col-md-3');
+                container.addClass('col-sm-6');
+                container.addClass('col-xs-6');
+
+                var d = App.hashcode(url);
+                container.attr('data-container-selector', d);
+                var values = '<div class="thumbnail"><img src="' + url + '" width="70%"/><div class="caption text-center"><a href="#" data-action="remove-image" data-selector="' + d + '">Remove Image</a></div></div>';
+                var ip = '<input type="hidden" data-name="media-gallery-image" value="' + url + '"/>';
+                container.html(values + ip);
+                $('#media-gallery-uploads').append(container);
+
+            };
+            App.image_upload_dialog(callback);
+        });
+
+        $('body').on('click', '[data-action="remove-image"]', function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            var selector = $(this).attr('data-selector');
+            if (selector != undefined && selector.length > 0 && $(this).attr('data-type') != 'saved'){
+                $('[data-container-selector="' + selector + '"]').remove();
+            } else {
+                alert('Removing existing...');
+                App.trip.delete_media("", selector, function(data){
+                    if (data.status=='success') {
+                        BootstrapDialog.alert(data.message);
+                        $('[data-container-selector="' + selector + '"]').remove();
+                    } else {
+                        BootstrapDialog.alert('Unable to delete the media');
+                    }
+                })
+            }
+        });
+
+    });
+</script>

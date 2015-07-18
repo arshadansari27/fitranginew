@@ -30,12 +30,67 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
     announcements = db.StringField()
     optional_location_name = db.StringField()
     _duration = db.IntField()
+    published = db.BooleanField(default=False)
+    published_timestamp = db.DateTimeField()
+    admin_published = db.BooleanField(default=False)
 
     meta = {
         'indexes': [
             {'fields': ['-modified_timestamp', 'slug', 'name'], 'unique': False, 'sparse': False, 'types': False },
         ],
     }
+
+    def __repr__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.__repr__()
+
+    @property
+    def from_date_only(self):
+        u = self.start_date
+        return u.date()
+        y = u.date().year
+        m = u.date().month
+        d = u.date().day
+        return "%s/%s/%s" % (m, d, y)
+
+    @property
+    def from_date_time(self):
+        u = self.start_date
+        return u.time()
+        h = int(u.time().hour)
+        m = u.time().minute
+        if h > 12:
+            xh = h - 12
+            a = 'PM'
+        else:
+            xh = h
+            a = 'AM'
+        return "%s:%s %s" % (xh, m, a)
+
+    @property
+    def to_date_only(self):
+        u = self.end_date
+        return u.date()
+        y = u.date().year
+        m = u.date().month
+        d = u.date().day
+        return "%s/%s/%s" % (m, d, y)
+
+    @property
+    def to_date_time(self):
+        u = self.end_date
+        return u.time()
+        h = u.time().hour
+        m = u.time().minute
+        if h > 12:
+            h = h - 12
+            a = 'PM'
+        else:
+            a = 'AM'
+        return "%s:%s %s" % (h, m, a)
+
 
     @property
     def media_gallery(self):
@@ -48,7 +103,7 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
 
     @property
     def duration(self):
-        self._duration = (self.end_date - self.start_date).days + 1
+        self._duration = ((self.end_date - self.start_date).days + 1) if self.start_date and self.end_date else 0
         self.save()
         return self._duration
 

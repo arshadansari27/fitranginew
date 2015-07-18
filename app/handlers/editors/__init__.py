@@ -8,6 +8,7 @@ from app.handlers.messaging import send_single_email
 from app import app
 #from app.handlers import login_required, redirect_url
 from app.models import BusinessException
+from app.settings import EXCEPTION_API
 from StringIO import StringIO
 import random, os
 from PIL import Image
@@ -34,6 +35,8 @@ def response_handler(success, failure, login_required=True, flash_message=False,
                     flash(success)
                 return dict(status='success', message=success, node=str(node.id))
             except Exception, e:
+                if EXCEPTION_API:
+                    raise
                 if isinstance(e, BusinessException):
                     if flash_message and not no_flash_on_error:
                         flash(str(e))
@@ -67,6 +70,8 @@ class NodeEditor(object):
             print '[Editor] Response:', response
             return jsonify(response)
         except Exception, e:
+            if EXCEPTION_API:
+                raise
             return jsonify(dict(status='error', message='Failed to execute the command'))
 
     def _invoke(self):
@@ -77,6 +82,7 @@ class NodeEditor(object):
         from app.handlers.editors.profile import ProfileEditor
         from app.handlers.editors.post import PostEditor
         from app.handlers.editors.content import ContentEditor
+        from app.handlers.editors.trip import TripEditor
 
         type = message['type']
         if type is None:
@@ -93,6 +99,10 @@ class NodeEditor(object):
             return ContentEditor(message, DISCUSSION)
         elif type == CONTEST:
             return ContentEditor(message, CONTEST)
+        elif type == TRIP:
+            return TripEditor(message, TRIP)
+        else:
+            raise Exception("Invalid Type")
 
 
 @response_handler(success="Successfully uploaded cover image", failure="Failed to upload cover image")

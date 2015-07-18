@@ -22,6 +22,9 @@
         <!--a class="btn btn-primary"  href="#" data-action="remove-trip-joined" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-link green"></span>&nbsp;Unjoin</a-->
     {% endif %}
     <a class="btn btn-primary"  href="#book-now" ><span class="fa fa-bookmark"></span>&nbsp;Booking Enquiry</a>
+    {% if user and (model.organizer.id == user.id) %}
+    <button data-user-id="{{user.id}}" data-model-id="{{model.id}}" class="btn btn-default btn-edi blue" type="button" onclick="javascript: window.location.href='/add-edit-trip?pk={{model.id}}'"><i class="fa fa-edit"></i> Edit </button>
+    {% endif %}
 </section>
 
 <section class="container adventure-trips-content">

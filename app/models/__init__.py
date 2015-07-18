@@ -165,7 +165,7 @@ class Node(object):
         from app.models.profile import Profile
         from app import USE_CDN
         path = self.cover_image_path if self.cover_image_path else None
-        if CDN_URL in path:
+        if path and CDN_URL in path:
             path = path.replace(CDN_URL, '')
         if path is None:
             if isinstance(self, Profile):
@@ -299,12 +299,16 @@ class ExternalNetwork(object):
 
 class Charge(object):
     price = db.DecimalField()
-    currency = db.StringField(choices=['INR', 'USD'])
+    currency = db.StringField(choices=['INR', 'USD'], default='INR')
     discount_percentage = db.IntField()
 
     @property
     def actual_price(self):
         return self.amount - (self.amount * (self.discount_percentage / 100.0))
+
+    @property
+    def price_without_decimal(self):
+        return int(self.price)
 
 class NodeFactory(object):
 
@@ -353,6 +357,7 @@ class NodeFactory(object):
         elif name == PROFILE_TYPE: return ProfileType
         elif name == ADVERTISEMENT: return Advertisement
         elif name == CONTEST: return Contest
+        elif name == TRIP: return Trip
         else: return None
 
 class BusinessException(Exception):

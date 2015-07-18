@@ -110,6 +110,15 @@ class Profile(Entity, db.Document, Location):
         return 'Admin' in self.roles
 
     @property
+    def is_organizer(self):
+        vals = [u.name.lower() for u in self.type]
+        return 'organizer' in vals or 'organiser' in vals
+
+    @property
+    def is_gear_dealer(self):
+        return 'gear dealer' in [u.name.lower() for u in self.type]
+
+    @property
     def is_admin_approved_business_profile(self):
         if hasattr(self, 'admin_approved') and self.admin_approved:
             return True

@@ -74,7 +74,8 @@ class ActivityStream(db.Document):
     def push_post_to_stream(cls, post, type):
         activity = ActivityStream(profile=post.author, action=type, object=post, view_html='', view_text='', view_json='')
         activity.save()
-        if post.author:
+        #TODO: CELERYFY
+        if False and post.author:
             author = Profile.objects(pk=post.author.id).first()
             author.increment_public_activity_count()
             if type == 'stream':
@@ -98,9 +99,23 @@ class ActivityStream(db.Document):
         if content.author:
             author = Profile.objects(pk=content.author.id).first()
             author.increment_public_activity_count()
+            #TODO: CELERYFY
+            """
             for u in author.followers:
                 u.increment_public_activity_count()
+            """
         return activity
+
+
+    @classmethod
+    def push_trip_to_stream(cls, content):
+        activity = ActivityStream(profile=content.organizer, action='added trip', object=content, view_html='', view_text='', view_json='')
+        activity.save()
+        if content.organizer:
+            author = Profile.objects(pk=content.author.id).first()
+            author.increment_public_activity_count()
+        return activity
+
 
     @classmethod
     def push_vote_to_stream(cls, post_vote):
@@ -109,8 +124,11 @@ class ActivityStream(db.Document):
         if post_vote.voter:
             voter = Profile.objects(pk=post_vote.voter.id).first()
             voter.increment_public_activity_count()
+            #TODO: CELERYFY
+            """
             for u in voter.followers:
                 u.increment_public_activity_count()
+            """
 
         if post_vote.post.author is not None:
             post = post_vote.post
@@ -127,9 +145,13 @@ class ActivityStream(db.Document):
         activity = ActivityStream(profile=relationship.subject, action=get_activity_display(relationship.relation), object=relationship.object, view_html='', view_text='', view_json='')
         activity.save()
         relationship.subject.increment_public_activity_count()
+        # TODO: CELERYFY
+        """
         for u in relationship.subject.followers:
             u.increment_public_activity_count()
+        """
         return activity
+
 
     @classmethod
     def push_message_to_stream(cls, to_profile, message):

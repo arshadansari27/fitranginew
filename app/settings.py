@@ -18,3 +18,6 @@ CDN_DOMAIN ='d3q5zq83v3a4xj.cloudfront.net'
 
 MANDRILL_API_KEY='AW8kuRPFtDyZpOrgSf-0BQ'
 MANDRILL_DEFAULT_FROM='noreply@fitrangi.com'
+
+
+EXCEPTION_API = True

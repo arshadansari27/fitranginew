@@ -1,6 +1,7 @@
 from app.handlers.messaging import send_single_email
 from app.handlers import GENERIC_TITLE
 from app import app, USE_CDN
+from app.settings import EXCEPTION_API
 from app.models import STREAM
 from flask import render_template, request, g, redirect, jsonify, url_for, session, flash
 from app.handlers.editors import NodeEditor
@@ -585,6 +586,8 @@ def editor_invoke():
         editor = NodeEditor.factory(message)
         return editor.invoke()
     except Exception, e:
+        if EXCEPTION_API:
+            raise
         return jsonify(dict(status='error', message='Something went wrong', exception=str(e)))
 
 
