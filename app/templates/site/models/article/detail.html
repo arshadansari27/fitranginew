@@ -102,7 +102,7 @@
             </div>
         </div>
         <hr/>
-        <div class="col-md-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <input id="post-filter" type="hidden" data-model="post" data-category="all" data-filter="parent__article__pk" value="{{model.id}}" data-filter-status="fixed" />
             {% import 'site/includes/post_box.html' as post %}
             {{ post.show_post_form(model, 'comment') }}
