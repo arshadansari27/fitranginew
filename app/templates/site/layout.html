@@ -134,7 +134,7 @@
                             {% endif %}
 
                             {% if user and user.is_admin %}<li><a class="btn-head" href="{% if user %}/contests{% else %}/login?target=/contests{% endif %}" title="Live Contests">Live Contests</a></li>{% endif %}
-	                        <li><a class="btn-head" href="/profiles" title="Members">Members</a></li>
+	                        <li><a class="btn-head" href="/profiles#finder-container" title="Members">Members</a></li>
                             {% if not (user and user.id) %}
                             <li><a class="btn-head" href="/login" title="Login">Login</a></li>
                             <li><a class="btn-head" href="/register" title="Register">Register</a></li>
