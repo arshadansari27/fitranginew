@@ -212,7 +212,7 @@ class EventAdminView(ModelView):
 
 
 class TripAdminView(ModelView):
-    form_columns = ['name', 'description', 'optional_location_name', 'about', 'price', 'organizer',  'activities', 'start_date', 'end_date', 'itinerary', 'other_details', 'inclusive_exclusive', 'announcements', 'cover_image', 'path_cover_image', 'slug', 'published', 'admin_published']
+    form_columns = ['name', 'description', 'optional_location_name', 'about', 'price', 'organizer',  'activities', 'start_date', 'end_date', 'itinerary', 'other_details', 'inclusive_exclusive', 'announcements', 'cover_image', 'path_cover_image', 'slug', 'published']
     column_list = ('name', 'organizer_name', 'cover_image', 'location', 'bookings', 'gallery')
     column_filters = ['name', FilterAdventure('adventure.id', 'Adventure'), FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name', )
@@ -543,46 +543,6 @@ class ApprovalProfileAdminView(ModelView):
             return self.model.objects(__raw__=q)
         return None
 
-class ApprovalTripAdminView(ModelView):
-    can_create = False
-    can_edit = True
-    create_template = 'admin/my_custom/create.html'
-    edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'slug', 'admin_published']
-    column_list = ('name', 'organizer', 'view', 'published', 'admin_published')
-
-    def view_formatter(view, context, model, name):
-        return Markup('<a href="%s">Click to view</a>' % model.slug)
-
-    def is_accessible(self):
-        if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
-            return True
-        return False
-
-    def get_query(self):
-        if 'Admin' in g.user.roles:
-            q = {'$and':
-                [
-                    {'published': True},
-                    {
-                        '$or':
-                        [
-                            {
-                                'admin_published': None
-                            },
-                            {
-                                'admin_published': False
-                            }
-                        ]
-                    }
-                ]
-            }
-
-            return self.model.objects(__raw__=q)
-        return None
-
-    column_formatters = dict(view=view_formatter)
-
 class NotOkAdminView(ModelView):
     can_create = False
     can_edit = True
@@ -808,7 +768,6 @@ class RestrictedAdminView(ModelView):
         return False
 
 
-admin.add_view(ApprovalTripAdminView(Trip, name='Trip', endpoint='approval.trip', category="Approvals"))
 admin.add_view(ApprovalContentAdminView(Article, name='Article', endpoint='approval.article', category="Approvals"))
 #admin.add_view(ApprovalContentAdminView(Blog, name='Blog', endpoint='approval.blog', category="Approvals"))
 admin.add_view(ApprovalContentAdminView(Discussion, name='Discussion', endpoint='approval.discussion', category="Approvals"))

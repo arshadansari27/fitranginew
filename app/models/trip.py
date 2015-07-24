@@ -32,7 +32,7 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
     _duration = db.IntField()
     published = db.BooleanField(default=False)
     published_timestamp = db.DateTimeField()
-    admin_published = db.BooleanField(default=False)
+    admin_published = db.BooleanField(default=True) # Deprecated
 
     meta = {
         'indexes': [
