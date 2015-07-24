@@ -3287,7 +3287,7 @@
         beforeCommand($editable);
         $image.css({
           display: '',
-          width: Math.min($editable.width(), $image.width())
+          width: '100%' //Math.min($editable.width(), $image.width())
         });
         range.create().insertNode($image[0]);
         range.createFromNode($image[0]).collapse().select();
