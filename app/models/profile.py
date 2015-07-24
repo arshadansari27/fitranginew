@@ -141,7 +141,7 @@ class Profile(Entity, db.Document, Location):
         return human(self.user_since, precision=1)
 
     def __repr__(self):
-        return self.name if self.name else (self.email if self.email else 'No name or email')
+        return "%s [%s]" % (self.name if self.name else '', self.email if self.email else '')
 
     def __unicode__(self):
         return self.__repr__()

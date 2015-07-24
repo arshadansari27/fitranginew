@@ -349,7 +349,7 @@ class ContestParticipantAdminView(ModelView):
     can_delete = False
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    column_list = ( 'name', 'email', 'contest', 'answers', 'correct_answers', 'possible_winner')
+    column_list = ( 'name', 'email', 'contest', 'answers', 'correct_answers')
 
 
     def _contest(view, context, model, name):
@@ -412,8 +412,8 @@ class PostForContentAdminView(PostAdminView):
 class ContestAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['title', 'sponsorer', 'description', 'cover_image', 'content', 'author', 'start_date', 'end_date', 'closed', 'associated_advertisements', 'winner', 'questions', 'published', 'tags', 'admin_published', 'slug', 'path_cover_image']
-    column_list = ('title', 'author', 'start_date', 'end_date', 'is_live', 'is_closed', 'winner', 'participants', 'published', 'admin_published')
+    form_columns = ['title', 'sponsorer', 'description', 'cover_image', 'content', 'author', 'start_date', 'end_date', 'closed', 'associated_advertisements', 'winner', 'winner2', 'winner3', 'questions', 'published', 'tags', 'admin_published', 'slug', 'path_cover_image']
+    column_list = ('title', 'author', 'start_date', 'end_date', 'is_live', 'is_closed', 'winner', 'winner2', 'winner3', 'participants', 'published', 'admin_published')
     column_searchable_list = ('title', )
     form_overrides = dict(content=SummernoteTextAreaField)
 

@@ -60,13 +60,52 @@
                             <div>
 
                                 {% if model.is_closed %}
-                                <div class="form-group text-center">
-                                    <label>Winner of the Contest</label>
+                                <div class="text-center">
+                                    <h3 class="">WINNERS FOR THE CONTEST</h3>
+                                    <hr class="w-100 clearfix border-grey-b"/>
                                 </div>
-                                <div class="text-center thumbnail">
-                                    <a href="{{model.winner.slug}}"><img src="{{model.winner.cover_image_path_small}}"/></a>
-                                    <div class="caption">
-                                        <a href="{{model.winner.slug}}"><h4 class="lg">{{model.winner.name}}</h4></a>
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+                                        <div class="form-group text-center">
+                                            <label>1<sup>st</sup> Winner of the Contest</label>
+                                        </div>
+                                        <div class="text-center thumbnail">
+                                            {% if model.winner %}
+                                            <a href="{{model.winner.slug}}"><img src="{{model.winner.cover_image_path_small}}"/></a>
+                                            <div class="caption"><a href="{{model.winner.slug}}"><h4 class="lg">{{model.winner.name}}</h4></a></div>
+                                            {% else %}
+                                            <a href="#"><img src="/img/Profile-Picture2.jpg" width="160"/></a>
+                                            <div class="caption"><h4 class="lg">No Winner</h4></div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+                                        <div class="form-group text-center">
+                                            <label>2<sup>nd</sup> Winner of the Contest</label>
+                                        </div>
+                                        <div class="text-center thumbnail">
+                                            {% if model.winner2 %}
+                                            <a href="{{model.winner2.slug}}"><img src="{{model.winner2.cover_image_path_small}}"/></a>
+                                            <div class="caption"><a href="{{model.winner2.slug}}"><h4 class="lg">{{model.winner2.name}}</h4></a></div>
+                                            {% else %}
+                                            <a href="#"><img src="/img/Profile-Picture2.jpg" width="160"/></a>
+                                            <div class="caption"><h4 class="lg">No Winner</h4></div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+                                        <div class="form-group text-center">
+                                            <label>3<sup>rd</sup> Winner of the Contest</label>
+                                        </div>
+                                        <div class="text-center thumbnail">
+                                            {% if model.winner3 %}
+                                            <a href="{{model.winner3.slug}}"><img src="{{model.winner3.cover_image_path_small}}"/></a>
+                                            <div class="caption"><a href="{{model.winner3.slug}}"><h4 class="lg">{{model.winner3.name}}</h4></a></div>
+                                            {% else %}
+                                            <a href="#"><img src="/img/Profile-Picture2.jpg" width="160"/></a>
+                                            <div class="caption"><h4 class="lg">No Winner</h4></div>
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                                 {% else %}

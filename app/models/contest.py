@@ -43,8 +43,10 @@ class Contest(Content):
     creator         = db.ReferenceField('Profile')
     questions       = db.ListField(db.EmbeddedDocumentField(ContestQuestion))
     winner          = db.ReferenceField('Profile')
+    winner2         = db.ReferenceField('Profile')
+    winner3         = db.ReferenceField('Profile')
     closed          = db.BooleanField(default=False)
-    sponsorer        = db.ReferenceField('Profile')
+    sponsorer       = db.ReferenceField('Profile')
     associated_advertisements = db.ListField(db.ReferenceField('Advertisement'))
 
     @property
