@@ -85,14 +85,18 @@ jQuery(document).ready(function($){
 
     App.uploader = function(dialogRef, aspect_ratio) {
         var data = new FormData();
+        var data_added = false;
         jQuery.each(dialogRef.getModalBody().find('input[type=file]')[0].files, function(i, file) {
             data.append('file-'+i, file);
+            data_added = true;
             console.log(i + "-" + JSON.stringify(file));
         });
-        if (data.length == 0) {
+        if (data.length == 0 || !data_added) {
+            BootstrapDialog.alert('Please select a file first');
             return;
         }
-        dialogRef.enableButtons(false);
+        $('.form-group').hide();
+        //dialogRef.enableButtons(false);
         dialogRef.setClosable(false);
         dialogRef.getModalBody().prepend('<img class="loading-icon" src="/img/loading.gif">');
         jQuery.ajax({
@@ -108,7 +112,7 @@ jQuery(document).ready(function($){
                     $(".img-container").html('<img src="' + data.url + '">');
                     $("#upload-image-view").show();
                     $(".upload-image").val(data.url);
-                    dialogRef.enableButtons(true);
+                    //dialogRef.enableButtons(true);
                     dialogRef.setClosable(true);
                     $('.alert').html('<div class="alert-message">Successfully uploaded the image.</div>');
                     $('.alert').addClass('alert-info');
@@ -146,7 +150,7 @@ jQuery(document).ready(function($){
                 $('.alert').html('<div class="alert-message">Failed to upload the image, try again later.</div>');
                 $('.alert').addClass('alert-warning');
                 $('.alert').show();
-                dialogRef.enableButtons(true);
+                dialogRef.enableButtons(false);
                 dialogRef.setClosable(true);
             }
         });
@@ -174,6 +178,10 @@ jQuery(document).ready(function($){
                             data.append('file-'+i, file);
                             console.log(file);
                         });
+                        if (data.length == 0) {
+                            BootstrapDialog.alert('Please select a file first');
+                            return;
+                        }
                         dialogRef.enableButtons(false);
                         dialogRef.setClosable(false);
                         dialogRef.getModalBody().html('<p>Uploading File.</p><br/><center><img src="/img/loading.gif"></center>');

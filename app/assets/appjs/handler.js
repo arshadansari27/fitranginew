@@ -1130,12 +1130,12 @@ jQuery(document).ready(function ($) {
         var model_id = $(this).attr('data-model-id');
         var aspect_ratio_x = $(this).attr('data-aspect-ratio-x');
         var aspect_ratio_y = $(this).attr('data-aspect-ratio-y');
-        if (aspect_ratio_x == undefined) {
+        if (aspect_ratio_x == undefined || aspect_ratio_x.length == 0) {
             aspect_ratio_x = 16;
         } else {
             aspect_ratio_x = parseInt(aspect_ratio_x);
         }
-        if (aspect_ratio_y == undefined) {
+        if (aspect_ratio_y == undefined || aspect_ratio_y.length == 0) {
             aspect_ratio_y = 9;
         } else {
             aspect_ratio_y = parseInt(aspect_ratio_y);
@@ -1163,7 +1163,6 @@ jQuery(document).ready(function ($) {
                     label: 'Upload',
                     cssClass: 'btn-primary',
                     action: function(dialog){
-                        $('.form-group').hide();
                         App.uploader(dialog, aspect_ratio_x/aspect_ratio_y);
                     }
                 },
@@ -1215,7 +1214,7 @@ jQuery(document).ready(function ($) {
                 {
                     id: "btn-save-image",
                     label: 'Save',
-                    cssClass: 'btn-primary',
+                    cssClass: 'btn-primary disabled',
                     action: function(dialog){
                         var url = $('.upload-image').val();
                         App.base_editor.save_image_cover(model, model_id, url);
