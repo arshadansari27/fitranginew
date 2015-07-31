@@ -97,6 +97,7 @@ jQuery(document).ready(function($){
         }
         $('.form-group').hide();
         //dialogRef.enableButtons(false);
+
         dialogRef.setClosable(false);
         dialogRef.getModalBody().prepend('<img class="loading-icon" src="/img/loading.gif">');
         jQuery.ajax({
