@@ -193,7 +193,6 @@ class Node(object):
                 im.thumbnail((s, 360), Image.ANTIALIAS)
                 if not isinstance(self, Profile):
                     p = '/tmp/' + str(random.randint(88888888, 999999999)) + '.' + format
-                    print '[*] Cropping files for small', p
                     im.save(p, format)
                     im = Image.open(p)
                     x, y = im.size
@@ -205,6 +204,7 @@ class Node(object):
                     im = im.crop((x1, y1, x2, y2))
                     if os.path.exists(p):
                         os.remove(p)
+                    print '[*] Cropping files for small', p, '->', small_path
                 im.save(base_path + small_path, format)
 
             img = small_path
