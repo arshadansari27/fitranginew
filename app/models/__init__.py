@@ -193,6 +193,7 @@ class Node(object):
                 im.thumbnail((s, 360), Image.ANTIALIAS)
                 if not isinstance(self, Profile):
                     p = '/tmp/' + str(random.randint(88888888, 999999999)) + '.' + format
+                    print '[*] Cropping files for small', p
                     im.save(p, format)
                     im = Image.open(p)
                     x, y = im.size
