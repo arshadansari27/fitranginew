@@ -73,6 +73,8 @@ class Media(db.Document):
 
                 im = im.crop((x1, y1, x2, y2))
                 im.save(base_path + small_path, format)
+                if os.path.exists(p):
+                    os.remove(p)
             img = small_path
         return img
 

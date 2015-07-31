@@ -171,6 +171,8 @@ def save_profile_image(profile, image):
         path = os.getcwd() + '/app/assets/' + profile.path_cover_image if profile.path_cover_image and len(profile.path_cover_image) > 0 else 'some-non-existent-path'
         if os.path.exists(path):
             os.remove(path)
+        if os.path.exists(p):
+            os.remove(p)
     except:
         print 'Failed to save profile image'
         raise
