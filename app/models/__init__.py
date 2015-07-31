@@ -180,7 +180,8 @@ class Node(object):
                 return ''
             name, ext = ux[0], ux[1]
             steps[-1] = name + '-thumbnail.' + ext
-            small_path = '/' + '/'.join(steps)
+            small_path = '/'.join(steps)
+            print 'Cropping will happen for ', small_path
             if not os.path.exists(base_path + small_path):
                 file_path = base_path + path
                 im  = Image.open(file_path)
