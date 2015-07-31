@@ -30,6 +30,12 @@ class ContestQuestion(db.EmbeddedDocument):
     def __unicode__(self):
         return self.__repr__()
 
+    def get_correct_answer(self):
+        for a in self.options:
+            if a.enumaration == self.correct_option:
+                return a.option
+        return None
+
     def get_answer_by_enumeration(self, enumeration):
         for a in self.options:
             if a.enumaration == enumeration:

@@ -108,13 +108,25 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group text-center">
+                                    <h4>Questions</h4>
+                                    <hr/>
+                                </div>
+                                <div>
+                                    {% for question in model.questions %}
+                                    <div class="well well-sm" style="background: #F0F8FF;">
+                                        <h4>{{question.enumeration}} - {{question.question}}</h4>
+                                        <p>Correct: {{question.correct_option}} - {{question.get_correct_answer()}}</p>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+
                                 {% else %}
                                 <div class="form-group text-center">
                                     <h4>Questions</h4>
                                     <hr/>
                                 </div>
-
-                                <div>
+                               <div>
                                     {% for question in model.questions %}
                                     <div class="well well-sm" style="background: #F0F8FF;">
                                         <h4>{{question.question}}</h4>
