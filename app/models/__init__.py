@@ -202,6 +202,8 @@ class Node(object):
                     y1, y2 = v - 180, v + 180
 
                     im = im.crop((x1, y1, x2, y2))
+                    if os.path.exists(p):
+                        os.remove(p)
                 im.save(base_path + small_path, format)
 
             img = small_path
