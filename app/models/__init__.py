@@ -181,7 +181,6 @@ class Node(object):
             name, ext = ux[0], ux[1]
             steps[-1] = name + '-thumbnail.' + ext
             small_path = '/'.join(steps)
-            print 'Cropping will happen for ', small_path
             if not os.path.exists(base_path + small_path):
                 file_path = base_path + path
                 im  = Image.open(file_path)
@@ -205,7 +204,6 @@ class Node(object):
                     im = im.crop((x1, y1, x2, y2))
                     if os.path.exists(p):
                         os.remove(p)
-                    print '[*] Cropping files for small', p, '->', small_path
                 im.save(base_path + small_path, format)
 
             img = small_path
