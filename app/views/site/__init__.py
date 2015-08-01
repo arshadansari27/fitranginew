@@ -54,6 +54,7 @@ def image_uploader_dialog():
     _id = str(random.randint(9999999999999, 999999999999999999))
     try:
         ig = request.form.get('images')
+        print ig[0: 100]
         perm = False
         if not request.args.get('permanent', False):
             path = os.getcwd() + '/tmp/' + _id

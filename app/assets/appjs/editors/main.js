@@ -84,38 +84,60 @@ jQuery(document).ready(function($){
     };
 
     App.upload_image = function(on_validation, success_callback, error_callback){
-        var data = new FormData();
-        var data_added = false;
         var dataURL;
         var file = jQuery('input[type=file]')[0].files[0];
         if (file == undefined || file.length == 0) {
             BootstrapDialog.alert('Please select a file first');
             return;
         }
-        console.log("Uploading file: " + file.size);
         if(file.size >= 0) {
-
-            if (file) {
                 var reader = new FileReader();
 
                 reader.onload = function(readerEvt) {
+                    var img = new Image();
+                    img.onload = function () {
+                        var MAX_SIZE = 1100;
+                        var width = img.width;
+                        var height = img.height;
+                        var ratio = width / height;
+                        var _width, _height;
+                        if (width > height) {
+                            if (width > MAX_SIZE) {
+                                _width = MAX_SIZE;
+                                _height = (1 / ratio) * MAX_SIZE;
+                            } else {
+                                _width = width;
+                                _height = height;
+                            }
+                        } else {
+                            if (height > MAX_SIZE) {
+                                _width = ratio * MAX_SIZE;
+                                _height = MAX_SIZE;
+                            } else {
+                                _width = width;
+                                _height = height;
+                            }
+                        }
+                        var canvas = document.createElement("canvas");
+                        canvas.width = _width;
+                        canvas.height = _height;
+                        canvas.getContext("2d").drawImage(this, 0, 0, width, height, 0, 0, _width, _height);
+                        dataURL = canvas.toDataURL('image/jpeg', 0.7);
+                        start_uploading(dataURL.split(',')[1]);
+                    };
                     var binaryString = readerEvt.target.result;
-                    dataURL = btoa(binaryString);
-                    start_uploading();
+                    img.src = 'data:image/jpeg;base64,' + btoa(binaryString);
                 };
-
                 reader.readAsBinaryString(file);
-            }
-
        }
 
-        function start_uploading() {
+        function start_uploading(url) {
 
             on_validation();
 
             jQuery.ajax({
                 url: '/dialog/upload_image',
-                data: {images: dataURL},
+                data: {images: url},
                 type: 'POST',
                 success: function (data) {
                     success_callback(data);
