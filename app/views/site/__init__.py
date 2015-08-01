@@ -19,7 +19,7 @@ from app.utils import login_required
 from app import app
 from StringIO import StringIO
 from PIL import Image
-import random, os, requests
+import random, os, requests, base64
 
 (MODEL_DETAIL_VIEW, MODEL_LIST_ROW_VIEW, MODEL_LIST_GRID_VIEW, MODEL_LIST_POD_VIEW) = ('detail', 'row', 'grid', 'pod')
 
@@ -53,7 +53,7 @@ def download_csv():
 def image_uploader_dialog():
     _id = str(random.randint(9999999999999, 999999999999999999))
     try:
-        f = request.files['file-0']
+        ig = request.form.get('images')
         perm = False
         if not request.args.get('permanent', False):
             path = os.getcwd() + '/tmp/' + _id
@@ -62,7 +62,10 @@ def image_uploader_dialog():
                 os.makedirs(FOLDER)
             perm = True
             path = FOLDER + '/' + _id
-        f.save(path)
+
+        fh = open(path, "wb")
+        fh.write(ig.decode('base64'))
+        fh.close()
         i = Image.open(path)
         originalImgWidth , originalImgHeight = i.size
         if not perm:
@@ -76,7 +79,7 @@ def image_uploader_dialog():
         return jsonify(response)
     except Exception, e:
         print '*' * 10, e
-        raise e
+        raise
 
 @app.route('/dialog/cropped_image', methods=['POST'])
 @login_required

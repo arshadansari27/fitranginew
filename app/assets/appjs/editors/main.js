@@ -83,78 +83,109 @@ jQuery(document).ready(function($){
         sorters_list.push(id);
     };
 
-    App.uploader = function(dialogRef, aspect_ratio) {
+    App.upload_image = function(on_validation, success_callback, error_callback){
         var data = new FormData();
         var data_added = false;
-        jQuery.each(dialogRef.getModalBody().find('input[type=file]')[0].files, function(i, file) {
-            data.append('file-'+i, file);
-            data_added = true;
-            console.log(i + "-" + JSON.stringify(file));
-        });
-        if (data.length == 0 || !data_added) {
+        var dataURL;
+        var file = jQuery('input[type=file]')[0].files[0];
+        if (file == undefined || file.length == 0) {
             BootstrapDialog.alert('Please select a file first');
             return;
         }
-        $('.form-group').hide();
-        //dialogRef.enableButtons(false);
+        console.log("Uploading file: " + file.size);
+        if(file.size >= 0) {
 
-        dialogRef.setClosable(false);
-        dialogRef.getModalBody().prepend('<img class="loading-icon" src="/img/loading.gif">');
-        jQuery.ajax({
-            url: '/dialog/upload_image',
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            success: function(data){
-                console.log(data);
-                if (data.status == 'success') {
-                    $(".img-container").html('<img src="' + data.url + '">');
-                    $("#upload-image-view").show();
-                    $(".upload-image").val(data.url);
-                    //dialogRef.enableButtons(true);
-                    dialogRef.setClosable(true);
-                    $('.alert').html('<div class="alert-message">Successfully uploaded the image.</div>');
-                    $('.alert').addClass('alert-info');
-                    $('.loading-icon').hide();
-                    var $image = $('.img-container > img'),
-                        $dataX = $('#dataX'),
-                        $dataY = $('#dataY'),
-                        $dataHeight = $('#dataHeight'),
-                        $dataWidth = $('#dataWidth'),
-                        $dataRotate = $('#dataRotate'),
-                        options = {
-                            aspectRatio: aspect_ratio,
-                            preview: '.cropped-image',
-                            crop: function (data) {
+            if (file) {
+                var reader = new FileReader();
+
+                reader.onload = function(readerEvt) {
+                    var binaryString = readerEvt.target.result;
+                    dataURL = btoa(binaryString);
+                    start_uploading();
+                };
+
+                reader.readAsBinaryString(file);
+            }
+
+       }
+
+        function start_uploading() {
+
+            on_validation();
+
+            jQuery.ajax({
+                url: '/dialog/upload_image',
+                data: {images: dataURL},
+                type: 'POST',
+                success: function (data) {
+                    success_callback(data);
+                },
+                error: function (data) {
+                    error_callback(data);
+                }
+            });
+        }
+
+    };
+
+    App.uploader = function(dialogRef, aspect_ratio) {
+        var on_validation = function(){
+            $('.form-group').hide();
+            dialogRef.setClosable(false);
+            dialogRef.getModalBody().prepend('<img class="loading-icon" src="/img/loading.gif">');
+        };
+
+        var on_success = function(data) {
+            console.log(data);
+            if (data.status == 'success') {
+                $(".img-container").html('<img src="' + data.url + '">');
+                $("#upload-image-view").show();
+                $(".upload-image").val(data.url);
+                dialogRef.setClosable(true);
+                $('.alert').html('<div class="alert-message">Successfully uploaded the image.</div>');
+                $('.alert').addClass('alert-info');
+                $('.loading-icon').hide();
+
+                var $image = $('.img-container > img'),
+                    $dataX = $('#dataX'),
+                    $dataY = $('#dataY'),
+                    $dataHeight = $('#dataHeight'),
+                    $dataWidth = $('#dataWidth'),
+                    $dataRotate = $('#dataRotate'),
+                    options = {
+                        aspectRatio: aspect_ratio,
+                        preview: '.cropped-image',
+                        crop: function (data) {
                                 $dataX.val(Math.round(data.x));
                                 $dataY.val(Math.round(data.y));
                                 $dataHeight.val(Math.round(data.height));
                                 $dataWidth.val(Math.round(data.width));
                                 $dataRotate.val(Math.round(data.rotate));
-                            }
-                        };
-                    $image.cropper(options);
-                    var $uploadButton = dialogRef.getButton('btn-upload-image');
-                    $uploadButton.addClass('disabled');
-                    var $cropButton = dialogRef.getButton('btn-crop-image');
-                    $cropButton.removeClass('disabled');
+                        }
+                    };
+                $image.cropper(options);
+                var $uploadButton = dialogRef.getButton('btn-upload-image');
+                $uploadButton.addClass('disabled');
+                var $cropButton = dialogRef.getButton('btn-crop-image');
+                $cropButton.removeClass('disabled');
 
-                } else {
-                    $('.alert').html('<div class="alert-message">Failed to upload the image, try again later.</div>');
-                    $('.alert').addClass('alert-warning');
-                }
-                $('.alert').show();
-            },
-            error: function(data) {
+            } else {
                 $('.alert').html('<div class="alert-message">Failed to upload the image, try again later.</div>');
                 $('.alert').addClass('alert-warning');
-                $('.alert').show();
-                dialogRef.enableButtons(false);
-                dialogRef.setClosable(true);
             }
-        });
+            $('.alert').show();
+
+        }
+
+        var on_error = function(data){
+            $('.alert').html('<div class="alert-message">Failed to upload the image, try again later.</div>');
+            $('.alert').addClass('alert-warning');
+            $('.alert').show();
+            dialogRef.enableButtons(false);
+            dialogRef.setClosable(true);
+        };
+
+        App.upload_image(on_validation, on_success, on_error);
     };
 
     var display = '<div id="form-control-image-uploader"><div class="form-group"><label for="tags">Select Image to upload</label><input data-image="file-uploader" type="file" class="form-control" placeholder="Image selector" ></div></div>';
@@ -174,34 +205,22 @@ jQuery(document).ready(function($){
                     label: 'Upload Image',
                     cssClass: 'btn-primary',
                     action: function(dialogRef) {
-                        var data = new FormData();
-                        jQuery.each($('input[data-image="file-uploader"]')[0].files, function(i, file) {
-                            data.append('file-'+i, file);
-                            console.log(file);
-                        });
-                        if (data.length == 0) {
-                            BootstrapDialog.alert('Please select a file first');
-                            return;
-                        }
-                        dialogRef.enableButtons(false);
-                        dialogRef.setClosable(false);
-                        dialogRef.getModalBody().html('<p>Uploading File.</p><br/><center><img src="/img/loading.gif"></center>');
-                        jQuery.ajax({
-                            url: '/dialog/upload_image',
-                            data: data,
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            type: 'POST',
-                            success: function(data){
-                                on_upload(data.url)
-                                dialogRef.close();
-                            },
-                            error: function(data) {
-                                dialogRef.setMessage('Something went wrong when uploading the file. Please try again later or contact the administrator at go@fitrangi.com');
-                            }
-                        });
+                        var on_validation = function() {
+                            dialogRef.enableButtons(false);
+                            dialogRef.setClosable(false);
+                            dialogRef.getModalBody().html('<p>Uploading File.</p><br/><center><img src="/img/loading.gif"></center>');
+                        };
 
+                        var on_success = function(data){
+                            on_upload(data.url)
+                            dialogRef.close();
+                        };
+
+                        var on_error = function(data){
+                            dialogRef.setMessage('Something went wrong when uploading the file. Please try again later or contact the administrator at go@fitrangi.com');
+                        };
+
+                        App.upload_image(on_validation, on_success, on_error);
                     }
                 }
             ]

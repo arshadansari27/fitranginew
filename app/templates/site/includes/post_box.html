@@ -89,31 +89,24 @@
                         label: 'Upload Image',
                         cssClass: 'btn-primary',
                         action: function(dialogRef) {
-                            var data = new FormData();
-                            jQuery.each(jQuery('input[type=file]')[0].files, function(i, file) {
-                                data.append('file-'+i, file);
-                            });
-                            dialogRef.enableButtons(false);
-                            dialogRef.setClosable(false);
-                            dialogRef.getModalBody().html('<p>Uploading File.</p><br/><img src="/img/loading.gif">');
-                            jQuery.ajax({
-                                url: '/dialog/upload_image',
-                                data: data,
-                                cache: false,
-                                contentType: false,
-                                processData: false,
-                                type: 'POST',
-                                success: function(data){
-                                    $("#cropContainerModal").html('<img src="' + data.url + '" width="100%">');
-                                    $(".upload-image-view").show();
-                                    $("#post_image_id").val(data.url);
-                                    dialogRef.close();
-                                },
-                                error: function(data) {
-                                    dialogRef.setMessage('Something went wrong when uploading the file.');
-                                }
-                            });
 
+                            var on_validation = function(){
+                                dialogRef.enableButtons(false);
+                                dialogRef.setClosable(false);
+                                dialogRef.getModalBody().html('<p>Uploading File.</p><br/><img src="/img/loading.gif">');
+                            };
+                            var on_success = function(data){
+                                $("#cropContainerModal").html('<img src="' + data.url + '" width="100%">');
+                                $(".upload-image-view").show();
+                                $("#post_image_id").val(data.url);
+                                dialogRef.close();
+                            };
+
+                            var on_error = function(data) {
+                                dialogRef.setMessage('Something went wrong when uploading the file.');
+                            };
+
+                            App.upload_image(on_validation, on_success, on_error);
                         }
                     }
                 ]
