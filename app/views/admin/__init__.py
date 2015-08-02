@@ -801,7 +801,7 @@ admin.add_view(TripBookingAdminView(TripBooking, category="Organizers"))
 admin.add_view(SelectedTripBookingAdminView(TripBooking, name="Bookings for trip", endpoint="enquiries_for_trip_view"))
 admin.add_view(RestrictedAdminView(TripGalleryImage, category="Organizers"))
 
-admin.add_view(NotOkAdminView(NotOkFeedBack, category="Flagged Content", endpoint='flagged'))
+admin.add_view(NotOkAdminView(NotOkFeedBack, category="Feedbacks", endpoint='feedback.not_ok'))
 
 admin.add_view(RestrictedAdminView(ProfileType, category="Tools"))
 #admin.add_view(LocationAdminView(Location, category="Tools"))
