@@ -146,6 +146,10 @@ def save_image_from_temp():
 def cover_image_modal():
     return render_template('site/modals/cover-edit.html')
 
+@app.route('/not-ok-modal', methods=['GET'])
+def not_ok_modal():
+    return render_template('site/modals/not-ok.html')
+
 @app.route('/login-modal', methods=['GET'])
 def login_modal():
     return render_template('site/modals/login.html')

@@ -33,6 +33,9 @@ jQuery(document).ready(function($){
                     setTimeout(function() { window.location.reload();}, 1000);
                 }
     		},
+            error: function(data){
+                $('#loadingImage').hide();
+            },
     		contentType: "application/json",
     		dataType: 'json'
 		});

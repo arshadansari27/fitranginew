@@ -6,7 +6,7 @@ from app.models.trip import Trip
 from app.models.activity import Activity
 from app.models.adventure import Adventure
 from app.models import Node, NodeFactory, LOCATION, BusinessException
-from app.models.feedbacks import ClaimProfile
+from app.models.feedbacks import ClaimProfile, NotOkFeedBack
 from app.handlers.editors import NodeEditor, response_handler
 from flask import session
 import hashlib
@@ -22,7 +22,7 @@ class ProfileEditor(NodeEditor):
         elif self.command == 'subscribe':
             return subscribe(self.data)
         elif self.command == 'not-ok':
-            return report_not_ok(self.node, self.data['node_type'], self.data['user_id'])
+            return report_not_ok(self.node, self.data['node_type'], self.data['user_id'], message=self.data.get('message', None), option=self.data.get('option', 'Other'))
         elif self.command == 'claim-profile':
             return claim_profile(self.node, self.data['node_type'], self.data['user_id'])
         elif self.command == 'cover-image-edit':
@@ -133,20 +133,20 @@ def subscribe(data):
     return node
 
 @response_handler('Thank you for the help in reporting. Admin will review and mark the status as appropriate.', 'Failed to report', login_required=True)
-def report_not_ok(node, node_type, user_id):
+def report_not_ok(node, node_type, user_id, message=None, option='Other'):
     assert node is not None and node_type is not None and user_id is not None
-    node = NodeFactory.get_class_by_name(node_type).get_by_id(node)
+    node_class = NodeFactory.get_class_by_name(node_type)
+    node = node_class.get_by_id(node)
     user = Profile.objects(pk=user_id).first()
     assert node is not None and user is not None
-    node.not_ok_count += 1
-    node.save()
+    feedback = NotOkFeedBack(profile=user, not_ok=node, message=message, option=option).save()
     try:
         template_path = 'notifications/flagged_content.html'
         admins = Profile.objects(roles__in=['Admin']).all()
         for a in admins:
             try:
                 context = dict(user=a, model=node, flagger=user)
-                subject="[Fitrangi] A profile was flagged by another user"
+                subject="[Fitrangi] A user has flagged as not ok"
                 to_list=[a.email]
                 send_email_from_template(template_path, subject, to_list, **context)
             except:

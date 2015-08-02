@@ -11,7 +11,7 @@
     	            <h4>{{model.since}}</h4>&nbsp;|&nbsp;
                     <h4>{{model.comments_count}}&nbsp;Comments</h4>&nbsp;|&nbsp;
                     <h4>{{model.views}}&nbsp;Views</h4>
-                    {% if user %}<h6><a href="#" class="btn btn-link uppercase red" data-action="not-ok" data-model="article" data-model-id="{{model.id}}" data-user-id="{{user.id}}">Report as Not Ok</a></h6>{% endif %}
+                    {% if user %}<h6><a href="#" class="btn btn-link uppercase red" data-action="not-ok" data-model="discussion" data-model-id="{{model.id}}" data-user-id="{{user.id}}">Report as Not Ok</a></h6>{% endif %}
 	            </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-3">

@@ -25,6 +25,7 @@ from app.models.contest import Contest, ContestAnswer
 from app.models.page import ExtraPage
 from app.models.booking import TripBooking
 from app.models.media import Media, TripGalleryImage
+from app.models.feedbacks import NotOkFeedBack, ClaimProfile
 from app.models.relationships import RelationShips
 import mongoengine
 from mongoengine import Q
@@ -545,20 +546,27 @@ class ApprovalProfileAdminView(ModelView):
 
 class NotOkAdminView(ModelView):
     can_create = False
-    can_edit = True
+    can_edit = False
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['slug', 'not_ok_count']
-    column_list = ('slug', 'cover_image')
+    form_columns = ['profile', 'not_ok', 'option', 'message']
+    column_list = ('flagged_by', 'not_ok_content', 'content_type',  'option', 'message')
+
+    def content_type_formatter(view, context, model, name):
+        return Markup("%s" % model.not_ok.__class__.__name__)
+
+    def node_formatter(view, context, model, name):
+        return Markup('<a href="%s" target="_new">%s</a>' % (model.not_ok.slug, model.not_ok))
+
+    def profile_formatter(view, context, model, name):
+        return Markup('<a href="%s" target="_new">%s</a>' % (model.profile.slug, model.profile))
+
+    column_formatters = {'content_type': content_type_formatter, 'not_ok_content': node_formatter, 'flagged_by': profile_formatter}
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
             return True
         return False
-
-    def get_query(self):
-        q = {'not_ok_count': {'$exists': 1, "$gt": 0}}
-        return self.model.objects(__raw__=q)
 
 class ClaimAdminView(ModelView):
     can_create = False
@@ -793,11 +801,7 @@ admin.add_view(TripBookingAdminView(TripBooking, category="Organizers"))
 admin.add_view(SelectedTripBookingAdminView(TripBooking, name="Bookings for trip", endpoint="enquiries_for_trip_view"))
 admin.add_view(RestrictedAdminView(TripGalleryImage, category="Organizers"))
 
-admin.add_view(NotOkAdminView(Profile, category="Flag Content", endpoint='flagged.profile'))
-admin.add_view(NotOkAdminView(Adventure, category="Flag Content", endpoint='flagged.adventure'))
-admin.add_view(NotOkAdminView(Article, category="Flag Content", endpoint='flagged.article'))
-admin.add_view(NotOkAdminView(Discussion, category="Flag Content", endpoint='flagged.discussion'))
-
+admin.add_view(NotOkAdminView(NotOkFeedBack, category="Flagged Content", endpoint='flagged'))
 
 admin.add_view(RestrictedAdminView(ProfileType, category="Tools"))
 #admin.add_view(LocationAdminView(Location, category="Tools"))

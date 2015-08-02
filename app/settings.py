@@ -20,4 +20,4 @@ MANDRILL_API_KEY='AW8kuRPFtDyZpOrgSf-0BQ'
 MANDRILL_DEFAULT_FROM='noreply@fitrangi.com'
 
 
-EXCEPTION_API = True
+EXCEPTION_API = True #and False

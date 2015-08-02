@@ -30,3 +30,13 @@ class GenericFeedBack(Feedback):
     def __unicode__(self):
         return self.__repr__()
 
+class NotOkFeedBack(Feedback):
+    not_ok = db.GenericReferenceField()
+    option = db.StringField(choices=['Indecency', 'Spam', 'Misinformation', 'Other'])
+
+    def __repr__(self):
+        return '%s marked %s as not ok' % (self.profile.name, self.not_ok.name if hasattr(self.not_ok, 'name') else self.not_ok.title)
+
+    def __unicode__(self):
+        return self.__repr__()
+
