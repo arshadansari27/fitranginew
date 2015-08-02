@@ -141,7 +141,7 @@ class Node(object):
     def cover_image_path(self):
         from app import USE_CDN
         path = str(self.path_cover_image) if hasattr(self, 'path_cover_image') and self.path_cover_image else '-'
-        if path and len(path) > 0 and os.path.exists(base_path + path):
+        if path and len(path) > 0 and os.path.exists(base_path + path) and os.path.getsize(base_path + path) > 0:
             img = path
         else:
             path = save_media_to_file(self, 'cover_image', 'cover')
@@ -181,7 +181,7 @@ class Node(object):
             name, ext = ux[0], ux[1]
             steps[-1] = name + '-thumbnail.' + ext
             small_path = '/'.join(steps)
-            if not os.path.exists(base_path + small_path):
+            if not os.path.exists(base_path + small_path) or os.path.getsize(base_path + small_path) is 0:
                 file_path = base_path + path
                 im  = Image.open(file_path)
                 format = im.format
