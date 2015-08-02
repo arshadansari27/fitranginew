@@ -284,7 +284,7 @@ class ProfileAdminView(ModelView):
     edit_template = 'admin/my_custom/edit.html'
     form_columns = ['name', 'email', 'address', 'alternative_email', 'featured', 'about', 'phone', 'alternative_phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image', 'type', 'managed_by', 'interest_in_activities', 'admin_approved', 'path_cover_image']
     column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login', 'type', 'featured', 'location')
-    column_filters = ['name'] #, FilterProfileType('type.id', 'Type')]
+    column_filters = ['name', 'is_verified'] #, FilterProfileType('type.id', 'Type')]
     column_searchable_list = ('name', 'email')
     form_overrides = dict(about=SummernoteTextAreaField)
 
