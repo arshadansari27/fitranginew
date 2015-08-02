@@ -144,10 +144,13 @@ def report_not_ok(node, node_type, user_id):
         template_path = 'notifications/flagged_content.html'
         admins = Profile.objects(roles__in=['Admin']).all()
         for a in admins:
-            context = dict(user=a, model=node, flagger=user)
-            subject="[Fitrangi] A profile was flagged by another user"
-            to_list=[a.email]
-            send_email_from_template(template_path, subject, to_list, **context)
+            try:
+                context = dict(user=a, model=node, flagger=user)
+                subject="[Fitrangi] A profile was flagged by another user"
+                to_list=[a.email]
+                send_email_from_template(template_path, subject, to_list, **context)
+            except:
+                print '[ERROR] Unable to send email to admin: ', a.email
     except:
         print '[ERROR] Unable to send email to admin'
     return node
@@ -162,10 +165,13 @@ def claim_profile(node, node_type, user_id):
         template_path = 'notifications/claimed_profile.html'
         admins = Profile.objects(roles__in=['Admin']).all()
         for a in admins:
-            context = dict(user=a, model=node, claimant=user)
-            subject="[Fitrangi] A profile was claimed by another user"
-            to_list=[a.email]
-            send_email_from_template(template_path, subject, to_list, **context)
+            try:
+                context = dict(user=a, model=node, claimant=user)
+                subject="[Fitrangi] A profile was claimed by another user"
+                to_list=[a.email]
+                send_email_from_template(template_path, subject, to_list, **context)
+            except:
+                print '[ERROR] Unable to send email to admin: ', a.email
     except:
         print '[ERROR] Unable to send email to admin'
     return node
@@ -325,13 +331,15 @@ def register_profile(data):
     profile.save()
 
     if profile and profile.id:
-        from app.views import env
-        session['user'] = str(profile.id)
-        template_path = 'notifications/successfully_registered.html'
-        context = dict(user=profile)
-        subject="[Fitrangi] Successfully registered"
-        to_list=[profile.email]
-        send_email_from_template(template_path, subject, to_list, **context)
+        try:
+            session['user'] = str(profile.id)
+            template_path = 'notifications/successfully_registered.html'
+            context = dict(user=profile)
+            subject="[Fitrangi] Successfully registered"
+            to_list=[profile.email]
+            send_email_from_template(template_path, subject, to_list, **context)
+        except:
+            print 'Unable to send email to user ', profile.email
     return profile
 
 @response_handler('Thank you for listing your business. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to register', login_required=True, flash_message=True, no_flash_on_error=True)
@@ -388,16 +396,22 @@ def register_business_profile(data):
     profile.save()
 
     if profile and profile.id:
-        template_path = 'notifications/successfully_registered.html'
-        send_email_from_template(template_path, "[Fitrangi] Successfully registered", to_list=[profile.email], user=profile)
+        try:
+            template_path = 'notifications/successfully_registered.html'
+            send_email_from_template(template_path, "[Fitrangi] Successfully registered", to_list=[profile.email], user=profile)
+        except:
+            print '[ERROR] Unable to send email to user', profile.email
         try:
             template_path = 'notifications/created_business_profile.html'
             admins = Profile.objects(roles__in=['Admin']).all()
             for a in admins:
-                context = dict(user=a, model=profile, owner=user)
-                subject="[Fitrangi] A business profile was created"
-                to_list=[a.email]
-                send_email_from_template(template_path, subject, to_list, **context)
+                try:
+                    context = dict(user=a, model=profile, owner=user)
+                    subject="[Fitrangi] A business profile was created"
+                    to_list=[a.email]
+                    send_email_from_template(template_path, subject, to_list, **context)
+                except:
+                    print '[ERROR] Unable to send email to admin', a.email
         except:
             print '[ERROR] Unable to send email to admin'
 
@@ -536,15 +550,19 @@ def book_trip(node,  data):
             send_email_from_template(template_path, subject, to_list, **context)
 
         except:
-            print '[ERROR] Unable to send email'
+            print '[ERROR] Unable to send email to organizer ', organizer.email
     if admins and len(admins) > 0:
         try:
             for a in admins:
-                template_path = 'notifications/trip_booking_admin.html'
-                context = dict(user=a, trip=trip, booking=booking)
-                subject="[Fitrangi] Booking enquiry arrived for the trip \"%s\"" % trip.name_short
-                to_list=[a.email]
-                send_email_from_template(template_path, subject, to_list, **context)
+                try:
+                    template_path = 'notifications/trip_booking_admin.html'
+                    context = dict(user=a, trip=trip, booking=booking)
+                    subject="[Fitrangi] Booking enquiry arrived for the trip \"%s\"" % trip.name_short
+                    to_list=[a.email]
+                    send_email_from_template(template_path, subject, to_list, **context)
+                except:
+                    print '[ERROR] Unable to send email to admin', a.email
+
         except:
             print '[ERROR] Unable to send email to admin'
     return node
