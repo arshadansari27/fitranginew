@@ -83,9 +83,20 @@ jQuery(document).ready(function($){
         sorters_list.push(id);
     };
 
-    App.upload_image = function(on_validation, success_callback, error_callback){
+    App.upload_image = function(options){
+        var on_validation = options.on_validation;
+        var success_callback = options.on_success;
+        var error_callback = options.on_error;
         var dataURL;
-        var file = jQuery('input[type=file]')[0].files[0];
+        var upload_url = (options.permanent && options.permanent == true)? "/dialog/upload_image?permanent=True": "/dialog/upload_image";
+        var file;
+        if (options.file != undefined && options.file.length > 0) {
+            file = options.file;
+        } else if (jQuery('input[data-image="file-uploader"]') && jQuery('input[data-image="file-uploader"]').length > 0){
+            file = jQuery('input[data-image="file-uploader"]')[0].files[0];
+        } else {
+            file = jQuery('input[type=file]')[0].files[0];
+        }
         if (file == undefined || file.length == 0) {
             BootstrapDialog.alert('Please select a file first');
             return;
@@ -136,7 +147,7 @@ jQuery(document).ready(function($){
             on_validation();
 
             jQuery.ajax({
-                url: '/dialog/upload_image',
+                url: upload_url,
                 data: {images: url},
                 type: 'POST',
                 success: function (data) {
@@ -207,7 +218,7 @@ jQuery(document).ready(function($){
             dialogRef.setClosable(true);
         };
 
-        App.upload_image(on_validation, on_success, on_error);
+        App.upload_image({on_validation: on_validation, on_success: on_success, on_error: on_error});
     };
 
     var display = '<div id="form-control-image-uploader"><div class="form-group"><label for="tags">Select Image to upload</label><input data-image="file-uploader" type="file" class="form-control" placeholder="Image selector" ></div></div>';
@@ -242,7 +253,7 @@ jQuery(document).ready(function($){
                             dialogRef.setMessage('Something went wrong when uploading the file. Please try again later or contact the administrator at go@fitrangi.com');
                         };
 
-                        App.upload_image(on_validation, on_success, on_error);
+                        App.upload_image({on_validation: on_validation, on_success: on_success, on_error: on_error});
                     }
                 }
             ]

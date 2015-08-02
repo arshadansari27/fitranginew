@@ -74,10 +74,11 @@
             });
         });
 
+        var display = '<div id="form-control-image-uploader"><div class="form-group"><label for="tags">Select Image to upload</label><input data-image="file-uploader" type="file" class="form-control" placeholder="Image selector" ></div></div>';
         $(".upload-image-button").click(function(e){
             BootstrapDialog.show({
                 title: 'Upload Image',
-                message: '<input type="file" name="img" class="form-control"/>',
+                message: display,
                 buttons: [
                     {
                         label: 'Close',
@@ -106,7 +107,7 @@
                                 dialogRef.setMessage('Something went wrong when uploading the file.');
                             };
 
-                            App.upload_image(on_validation, on_success, on_error);
+                            App.upload_image({on_validation: on_validation, on_success: on_success, on_error: on_error});
                         }
                     }
                 ]

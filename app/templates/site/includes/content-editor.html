@@ -267,32 +267,23 @@
                         label: 'Upload Image',
                         cssClass: 'btn-primary',
                         action: function(dialogRef) {
-                            var data = new FormData();
-                            jQuery.each($('input[data-image="file-uploader"]')[0].files, function(i, file) {
-                                data.append('file-'+i, file);
-                                console.log(file);
-                            });
-                            dialogRef.enableButtons(false);
-                            dialogRef.setClosable(false);
-                            dialogRef.getModalBody().html('<p>Uploading File.</p><br/><center><img src="/img/loading.gif"></center>');
-                            jQuery.ajax({
-                                url: '/dialog/upload_image',
-                                data: data,
-                                cache: false,
-                                contentType: false,
-                                processData: false,
-                                type: 'POST',
-                                success: function(data){
-                                    $('[data-name="cover-image-display"]').attr('src', data.url);
-                                    $('[data-name="cover-image"]').val(data.url);
-                                    $('[data-name="cover-image-necessary"]').val('');
-                                    dialogRef.close();
-                                },
-                                error: function(data) {
-                                    dialogRef.setMessage('Something went wrong when uploading the file.');
-                                }
-                            });
+                            var on_validation = function(){
+                                dialogRef.enableButtons(false);
+                                dialogRef.setClosable(false);
+                                dialogRef.getModalBody().html('<p>Uploading File.</p><br/><center><img src="/img/loading.gif"></center>');
+                            };
+                            var on_success = function(data){
+                                $('[data-name="cover-image-display"]').attr('src', data.url);
+                                $('[data-name="cover-image"]').val(data.url);
+                                $('[data-name="cover-image-necessary"]').val('');
+                                dialogRef.close();
+                            };
 
+                            var on_error = function(data) {
+                                dialogRef.setMessage('Something went wrong when uploading the file.');
+                            };
+
+                            App.upload_image({on_validation: on_validation, on_success: on_success, on_error: on_error});
                         }
                     }
                 ]

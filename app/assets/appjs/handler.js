@@ -1272,30 +1272,26 @@ jQuery(document).ready(function ($) {
     };
 
     var summernote_image_upload = function(file, editor, welEditable) {
-        data = new FormData();
-        data.append("file-0", file);
-        if (('#loadingImage') != undefined) {
-            $('#loadingImage').show();
-        }
-        jQuery.ajax({
-                url: '/dialog/upload_image?permanent=True',
-                data: data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                type: 'POST',
-                success: function(data){
-                    editor.insertImage(welEditable, data.url);
-                    if (('#loadingImage') != undefined) {
-                        $('#loadingImage').hide();
-                    }
-                },
-                error: function(data) {
-                    if (('#loadingImage') != undefined) {
-                        $('#loadingImage').hide();
-                    }
-                    BootstrapDialog.alert('Something went wrong when uploading the file.');
+        App.upload_image({
+            on_validation: function(){
+                if (('#loadingImage') != undefined) {
+                    $('#loadingImage').show();
                 }
+            },
+            on_success: function(data){
+                editor.insertImage(welEditable, data.url);
+                if (('#loadingImage') != undefined) {
+                    $('#loadingImage').hide();
+                }
+            },
+            on_error: function(data){
+                if (('#loadingImage') != undefined) {
+                    $('#loadingImage').hide();
+                }
+                BootstrapDialog.alert('Something went wrong when uploading the file.');
+            },
+            permanent: true,
+            file: file
         });
     };
 
