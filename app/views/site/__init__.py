@@ -7,6 +7,7 @@ from flask import render_template, request, g, redirect, jsonify, url_for, sessi
 from app.handlers.editors import NodeEditor
 from app.handlers import NodeCollectionFactory, NodeExtractor
 from app.models import Node, NodeFactory, ACTIVITY, ADVENTURE, ARTICLE, DISCUSSION, PROFILE, EVENT, TRIP, CONTEST
+from app.models.streams import ChatMessage
 from app.models.profile import Profile, ProfileType
 from app.utils import login_required, all_tags, specific_tags_article, specific_channels_discussion, specific_tags_discussion, specific_channels_article, specific_channels, specific_tags, save_profile_image
 from app.handlers import  EditorView, PageManager
@@ -298,6 +299,22 @@ def registration():
         profile = Profile(name=name, email=email, type=[type], roles=['Basic User'])
         profile.password  = password
         profile.save()
+        chat_mesg = """
+        Dear Adventurer,<br/>
+        Welcome to "Fitrangi.com"<br/><br/>
+        At Fitrangi, our goal is to promote the spirit of adventure and take it to new heights.<br/>
+        Do explore our website. Here are some quick suggestions to help you know better:<br/><br/>
+        &nbsp;&nbsp;* Once you login, upload your profile image and basic information about yourself so that other members can know you better.<br/>
+        &nbsp;&nbsp;* Visit our About page to know what you will find on the website.<br/>
+        &nbsp;&nbsp;* This is a Beta Version, so your feedback & suggestions are most awaited. :)<br/><br/>
+        This is your Admin Yuni. Please message me if you have any query or facing any issue while using our website. You can just drop a "Hello". We would love to hear from you!<br/><br/>
+        "Let's Contribute and Create Together"<br/>
+        INDIA'S FIRST ONLINE ADVENTURE COMMUNITY<br/><br/>
+        Warm Regards,<br/>
+        Yuni Fitrangi
+        """
+        admin = [p for p in Profile.objects(roles__in=['Admin']).all() if 'go' in p.email or 'yunus' in p.email][0]
+        ChatMessage.create_message(admin, profile, chat_mesg)
         if profile and profile.id:
             login_user_session(profile)
             if profile.is_verified:
