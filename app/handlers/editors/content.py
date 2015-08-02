@@ -128,7 +128,7 @@ def __edit(node, type, data):
         for p in profiles:
             if not p or not p.email or p.email != 'fitrangi@gmail.com':
                 continue
-            send_email_from_template('notifications/content_posted_admin.html', "[Fitrangi] Content awaiting approval", to_list=[p.email],user=p, content=content)
+            send_email_from_template('notifications/content_posted_admin.html', "[Fitrangi] Content awaiting approval", to_list=[p.email], force_send=True, user=p, content=content)
             print '[*] Publish Mail: Sending mail to %s' % p.name
         ActivityStream.push_content_to_stream(content)
     return obj
@@ -152,7 +152,7 @@ def publish(node, type):
         for p in profiles:
             if not p or not p.email or p.email != 'fitrangi@gmail.com':
                 continue
-            send_email_from_template('notifications/content_posted_admin.html', "[Fitrangi] Content awaiting approval", to_list=[p.email], user=p, content=content)
+            send_email_from_template('notifications/content_posted_admin.html', "[Fitrangi] Content awaiting approval", to_list=[p.email], force_send=True, user=p, content=content)
             print '[*] Publish Mail: Sending mail to %s' % p.name
     ActivityStream.push_content_to_stream(content)
     return content

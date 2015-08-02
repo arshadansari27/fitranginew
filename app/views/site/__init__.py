@@ -198,7 +198,7 @@ def forgot_password():
             profile.save()
             from app.handlers.messaging import send_single_email, send_email_from_template
             flash("Successfully sent email with new password.", category='success')
-            send_email_from_template('notifications/password_reset.html', "[Fitrangi] Password reset on Fitrangi.com", to_list=[profile.email], **dict(user=profile, password=password))
+            send_email_from_template('notifications/password_reset.html', "[Fitrangi] Password reset on Fitrangi.com", to_list=[profile.email], force_send=True, **dict(user=profile, password=password))
             return jsonify(dict(status='success', message='Password has been reset, please check  your email.', node=str(profile.id)))
     except Exception,e:
         print e
@@ -301,7 +301,7 @@ def registration():
         if profile and profile.id:
             login_user_session(profile)
             if profile.is_verified:
-                send_email_from_template('notifications/successfully_registered.html', "[Fitrangi] Successfully registered", to_list=[profile.email], **dict(user=profile))
+                send_email_from_template('notifications/successfully_registered.html', "[Fitrangi] Successfully registered", to_list=[profile.email], force_send=True, **dict(user=profile))
             else:
                 if 'fitrangi.com' in request.host:
                     host = 'http://www.fitrangi.com'
@@ -309,7 +309,7 @@ def registration():
                     host = 'http://localhost:4500'
                 link = profile.create_verification_link()
                 context = dict(user=profile, link="%s%s" % (host, link))
-                send_email_from_template('notifications/email_verification.html', "[Fitrangi] Verification email", to_list=[profile.email], **context)
+                send_email_from_template('notifications/email_verification.html', "[Fitrangi] Verification email", to_list=[profile.email], force_send=True, **context)
             return jsonify(dict(status='success', message='Profile created and logged in.', node=str(profile.id), my_page=target if target and len(target) > 0 else profile.slug))
         return jsonify(dict(status='error', message='Failed to register. Please try again.'))
     if hasattr(g, 'user') and g.user is not None:

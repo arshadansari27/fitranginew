@@ -148,7 +148,7 @@ def report_not_ok(node, node_type, user_id, message=None, option='Other'):
                 context = dict(user=a, model=node, flagger=user)
                 subject="[Fitrangi] A user has flagged as not ok"
                 to_list=[a.email]
-                send_email_from_template(template_path, subject, to_list, **context)
+                send_email_from_template(template_path, subject, to_list, force_send=True, **context)
             except:
                 print '[ERROR] Unable to send email to admin: ', a.email
     except:
@@ -169,7 +169,7 @@ def claim_profile(node, node_type, user_id):
                 context = dict(user=a, model=node, claimant=user)
                 subject="[Fitrangi] A profile was claimed by another user"
                 to_list=[a.email]
-                send_email_from_template(template_path, subject, to_list, **context)
+                send_email_from_template(template_path, subject, to_list, force_send=True, **context)
             except:
                 print '[ERROR] Unable to send email to admin: ', a.email
     except:
@@ -337,7 +337,7 @@ def register_profile(data):
             context = dict(user=profile)
             subject="[Fitrangi] Successfully registered"
             to_list=[profile.email]
-            send_email_from_template(template_path, subject, to_list, **context)
+            send_email_from_template(template_path, subject, to_list, force_send=True, **context)
         except:
             print 'Unable to send email to user ', profile.email
     return profile
@@ -398,7 +398,7 @@ def register_business_profile(data):
     if profile and profile.id:
         try:
             template_path = 'notifications/successfully_registered.html'
-            send_email_from_template(template_path, "[Fitrangi] Successfully registered", to_list=[profile.email], user=profile)
+            send_email_from_template(template_path, "[Fitrangi] Successfully registered", to_list=[profile.email], force_send=True, user=profile)
         except:
             print '[ERROR] Unable to send email to user', profile.email
         try:
@@ -409,7 +409,7 @@ def register_business_profile(data):
                     context = dict(user=a, model=profile, owner=user)
                     subject="[Fitrangi] A business profile was created"
                     to_list=[a.email]
-                    send_email_from_template(template_path, subject, to_list, **context)
+                    send_email_from_template(template_path, subject, to_list, force_send=True, **context)
                 except:
                     print '[ERROR] Unable to send email to admin', a.email
         except:
@@ -547,7 +547,7 @@ def book_trip(node,  data):
             context = dict(user=organizer, trip=trip, booking=booking)
             subject="[Fitrangi] Booking enquiry arrived for the trip \"%s\"" % trip.name_short
             to_list=[organizer.email]
-            send_email_from_template(template_path, subject, to_list, **context)
+            send_email_from_template(template_path, subject, to_list, force_send=True, **context)
 
         except:
             print '[ERROR] Unable to send email to organizer ', organizer.email
@@ -559,7 +559,7 @@ def book_trip(node,  data):
                     context = dict(user=a, trip=trip, booking=booking)
                     subject="[Fitrangi] Booking enquiry arrived for the trip \"%s\"" % trip.name_short
                     to_list=[a.email]
-                    send_email_from_template(template_path, subject, to_list, **context)
+                    send_email_from_template(template_path, subject, to_list, force_send=True, **context)
                 except:
                     print '[ERROR] Unable to send email to admin', a.email
 

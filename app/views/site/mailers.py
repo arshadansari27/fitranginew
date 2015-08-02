@@ -35,7 +35,7 @@ def verify_email(id, linkr):
         flash('Verified Successfully', category='success')
         try:
             context = dict(user=profile)
-            send_email_from_template('notifications/email_verification_success.html', "[Fitrangi] Thank your for successful verification", to_list=[profile.email], **context)
+            send_email_from_template('notifications/email_verification_success.html', "[Fitrangi] Thank your for successful verification", to_list=[profile.email], force_send=True, **context)
         except:
             pass
         login_user_session(profile)
@@ -55,7 +55,7 @@ def generate_verification(id):
             else:
                 host = 'http://localhost:4500'
             context = dict(user=profile, link="%s%s" % (host, link))
-            send_email_from_template('notifications/email_verification.html', "[Fitrangi] Verification email", to_list=[profile.email], **context)
+            send_email_from_template('notifications/email_verification.html', "[Fitrangi] Verification email", to_list=[profile.email], force_send=True, **context)
             flash('Successfully sent verification email.', category='success')
             return redirect('/')
         except:
