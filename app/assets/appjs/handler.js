@@ -759,6 +759,18 @@ jQuery(document).ready(function ($) {
     });
 
 
+    $('body').on('click', '[data-action="change-background"]', function (e) {
+        //var display = '<div id="form-control-image-uploader"><div class="form-group"><label for="tags">Select Image to upload</label><input data-image="file-uploader" type="file" class="form-control" placeholder="Image selector" ></div></div>';
+        e.stopPropagation();
+        e.preventDefault();
+        var that = this;
+        var node = $(this).attr('data-user-id');
+        App.image_upload_dialog(function(url){
+            App.profile.upload_background_image(node, url, function(data){
+                window.location.reload();
+            })
+        });
+    });
 
     $('body').on('click', '[data-action="not-ok"]', function (e) {
         e.stopPropagation();

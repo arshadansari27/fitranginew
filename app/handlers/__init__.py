@@ -77,7 +77,7 @@ WALL_IMAGE_NAMES = {
     ACTIVITY: dict(detail=lambda u: u.cover_image_path, search='', landing=''),
     STREAM: dict(detail=lambda u: None, search='', landing=''),
     ADVENTURE: dict(detail=lambda u: u.cover_image_path, search='%s/images/adventure-banner.jpg' % prepend, landing=''),
-    PROFILE: dict(detail=lambda u: '%s/images/userprofile-banner.jpg' % prepend, search='%s/images/finder-banner.jpg' % prepend, landing=''),
+    PROFILE: dict(detail=lambda u: '%s/images/userprofile-banner.jpg' % prepend if not u.background_image_path else u.background_image_path, search='%s/images/finder-banner.jpg' % prepend, landing=''),
     POST: dict(detail=lambda u: None, search='', landing=''),
     DISCUSSION: dict(detail=lambda u: u.cover_image_path if u.cover_image_path is not None and len(u.cover_image_path) > 0 else '%s/images/discussion-banner.jpg' % prepend, search='%s/images/discussion-banner.jpg' % prepend, landing=''),
     EVENT: dict(detail=lambda u: u.cover_image_path, search='%s/images/events-banner.jpg' % prepend, landing=''),

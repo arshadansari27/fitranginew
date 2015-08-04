@@ -69,8 +69,16 @@ class ProfileEditor(NodeEditor):
             return reset_activity_count(self.node, self.action)
         elif self.command == 'switch-profile':
             return switch_profile(self.node, self.data['profile'])
+        elif self.command == 'set-background-image':
+            return set_background_image(self.node, self.data['url'])
         else:
             raise Exception('Invalid command')
+
+@response_handler('Successfully updated the background for the user', 'Failed to update the background for the user', login_required=True)
+def set_background_image(node, url):
+    node = Profile.objects(pk=node).first()
+    node.set_background_cover(url)
+    return node
 
 @response_handler('Successfully switched the user', 'Failed to switch the user')
 def switch_profile(node, profile):

@@ -87,6 +87,7 @@ class ProfileGalleryImage(Media):
 class ActivityGalleryImage(Media):
     activity = db.ReferenceField('Activity')
 
-
+class BackgroundImage(Media):
+    profile = db.ReferenceField('Profile')
 
 

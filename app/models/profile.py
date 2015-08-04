@@ -9,6 +9,7 @@ from adventure import Adventure
 import datetime, hashlib, random
 from ago import human
 from flask import flash
+import os
 
 class ProfileType(db.Document):
     name = db.StringField()
@@ -76,13 +77,38 @@ class Profile(Entity, db.Document, Location):
     interest_in_activities = db.ListField(db.StringField())
     address = db.StringField()
     admin_approved = db.BooleanField(default=False)
-
+    background_image = db.ReferenceField('BackgroundImage')
 
     meta = {
         'indexes': [
             {'fields': ['email', 'slug', 'name'], 'unique': False, 'sparse': False, 'types': False },
         ],
     }
+
+    @property
+    def background_image_path(self):
+        if self.background_image:
+            return self.background_image.image_path
+        return None
+
+
+    def set_background_cover(self, url):
+        from app.models.media import BackgroundImage
+        image = url
+        if image and len(image) > 0:
+            image       = image.split('/')[-1]
+            path        = os.getcwd() + '/tmp/' + image
+        else:
+            raise Exception('Invalid image')
+        if path:
+            background_image = BackgroundImage()
+            background_image.image.replace(open(path, 'rb'))
+            background_image.save()
+            self.background_image = background_image
+            self.save()
+            return self.background_image
+        else:
+            return None
 
     def create_verification_link(self):
         self.verification = Verification.create_verification_link(self)

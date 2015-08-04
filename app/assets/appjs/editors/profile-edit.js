@@ -16,6 +16,18 @@ $(document).ready(function() {
         App.editor(options, callback);
     };
 
+    App.profile.upload_background_image = function(node, url, callback) {
+        var options = {
+            node: node,
+            data: {
+                url: url,
+            },
+            type: 'profile',
+            command: 'set-background-image'
+        };
+        App.editor(options, callback);
+    };
+
     App.profile.report_not_ok = function(node, node_type, user_id, message, option, callback) {
         var options = {
             node: node,
