@@ -82,6 +82,26 @@ class FilterProfileType(BaseMongoEngineFilter):
     def operation(self):
         return 'is'
 
+def create_named_filter():
+    class NameFilter(BaseMongoEngineFilter):
+        def apply(self, query, value):
+            return query.filter(name__icontains=value)
+
+        def operation(self):
+            return 'like'
+
+    return NameFilter('name', 'Name')
+
+def create_title_filter():
+    class TitleFilter(BaseMongoEngineFilter):
+        def apply(self, query, value):
+            return query.filter(title__icontains=value)
+
+        def operation(self):
+            return 'like'
+
+    return TitleFilter('title', 'Title')
+
 '''
 class TagAjaxModelLoader(QueryAjaxModelLoader):
     """
@@ -150,9 +170,10 @@ class ActivityAdminView(ModelView):
     edit_template = 'admin/my_custom/edit.html'
     form_columns = ['name', 'description', 'icon', 'about', 'dos', 'donts', 'safety_tips', 'tips', 'facts', 'highlights', 'cover_image', 'path_cover_image', ]
     column_list = ('name', 'description', 'cover_image')
-    column_filters = ['name']
+    column_filters = [create_named_filter()]
     column_searchable_list = ('name',)
     form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField)
+    column_default_sort = '-created_timestamp'
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
@@ -165,9 +186,10 @@ class AdventureAdminView(ModelView):
     edit_template = 'admin/my_custom/edit.html'
     form_columns = ['name', 'description', 'about', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'cover_image', 'activities', 'path_cover_image']
     column_list = ('name', 'description', 'cover_image', 'location')
-    column_filters = ['name', FilterActivities('activities.id', 'Activity')]
+    column_filters = [create_named_filter(), FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name',)
     form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField)
+    column_default_sort = '-created_timestamp'
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
@@ -191,9 +213,10 @@ class EventAdminView(ModelView):
     edit_template = 'admin/my_custom/edit.html'
     form_columns = ['name', 'description', 'about', 'scheduled_date', 'organizer','cover_image', 'external_link', 'path_cover_image']
     column_list = ('name', 'description', 'organizer', 'cover_image', 'location')
-    column_filters = ['name']
+    column_filters = [create_named_filter()]
     column_searchable_list = ('name', )
     form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField)
+    column_default_sort = '-created_timestamp'
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
@@ -215,9 +238,10 @@ class EventAdminView(ModelView):
 class TripAdminView(ModelView):
     form_columns = ['name', 'description', 'optional_location_name', 'about', 'price', 'organizer',  'activities', 'start_date', 'end_date', 'itinerary', 'other_details', 'inclusive_exclusive', 'announcements', 'cover_image', 'path_cover_image', 'slug', 'published']
     column_list = ('name', 'organizer_name', 'cover_image', 'location', 'bookings', 'gallery')
-    column_filters = ['name', FilterAdventure('adventure.id', 'Adventure'), FilterActivities('activities.id', 'Activity')]
+    column_filters = [create_named_filter(), FilterAdventure('adventure.id', 'Adventure'), FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name', )
     form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField, itinerary=SummernoteTextAreaField, other_details=SummernoteTextAreaField, inclusive_exclusive=SummernoteTextAreaField, announcements=SummernoteTextAreaField)
+    column_default_sort = '-created_timestamp'
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
@@ -253,6 +277,7 @@ class TripBookingAdminView(ModelView):
     column_list = ('trip', 'booking_by', 'preferred_name', 'preferred_email', 'preferred_phone', 'contact_preference', 'message', 'status', 'payment_status', 'total_charge', 'discount_percent', 'actual_charge')
     column_filters = [FilterTrip('trip.id', 'Trip'), 'status', 'payment_status']
     column_searchable_list = ('preferred_name', 'preferred_phone', 'preferred_email')
+    column_default_sort = '-created_timestamp'
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
@@ -284,10 +309,11 @@ class ProfileAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
     form_columns = ['name', 'email', 'address', 'alternative_email', 'featured', 'about', 'phone', 'alternative_phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image', 'type', 'managed_by', 'interest_in_activities', 'admin_approved', 'path_cover_image']
-    column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login', 'type', 'featured', 'location')
-    column_filters = ['name', 'is_verified'] #, FilterProfileType('type.id', 'Type')]
+    column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login', 'type', 'featured', 'location', 'is_verified')
+    column_filters = [create_named_filter(), 'is_verified'] #, FilterProfileType('type.id', 'Type')]
     column_searchable_list = ('name', 'email')
     form_overrides = dict(about=SummernoteTextAreaField)
+    column_default_sort = '-created_timestamp'
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
@@ -314,6 +340,7 @@ class CommentAdminView(ModelView):
     form_columns = ['content', 'author']
     column_list = ('author', 'content')
     form_overrides = dict(content=SummernoteTextAreaField)
+    column_default_sort = '-created_timestamp'
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None:
@@ -332,6 +359,7 @@ class PostAdminView(ModelView):
     form_columns = ['author', 'content', 'cover_image', 'type', 'video_embed', 'map_embed', 'parent', 'comments', 'parent', 'path_cover_image']
     column_list = ( 'author', 'content', 'vote_count', 'parent', 'type')
     form_overrides = dict(content=SummernoteTextAreaField)
+    column_default_sort = '-created_timestamp'
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None:
@@ -351,7 +379,8 @@ class ContestParticipantAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
     column_list = ( 'name', 'email', 'contest', 'answers', 'correct_answers')
-
+    column_default_sort = '-created_timestamp'
+    column_filters = [create_named_filter()] #, FilterProfileType('type.id', 'Type')]
 
     def _contest(view, context, model, name):
         return Markup("%s" % Contest.objects(pk=str(request.args.get('contest_id')).strip()).first())
@@ -417,6 +446,8 @@ class ContestAdminView(ModelView):
     column_list = ('title', 'author', 'start_date', 'end_date', 'is_live', 'is_closed', 'winner', 'winner2', 'winner3', 'participants', 'published', 'admin_published')
     column_searchable_list = ('title', )
     form_overrides = dict(content=SummernoteTextAreaField)
+    column_default_sort = '-created_timestamp'
+    column_filters = [create_title_filter(), 'published', 'admin_published'] #, FilterProfileType('type.id', 'Type')]
 
     form_args = dict(author=dict(default=get_current_user))
 
@@ -452,6 +483,8 @@ class ContentAdminView(ModelView):
     column_filters = ['title', FilterChannel('channel.id', 'Channel')]
     column_searchable_list = ('title', )
     form_overrides = dict(content=SummernoteTextAreaField)
+    column_default_sort = '-created_timestamp'
+    column_filters = [create_title_filter(), 'published', 'admin_published'] #, FilterProfileType('type.id', 'Type')]
 
     form_args = dict(author=dict(default=get_current_user))
 
@@ -482,6 +515,8 @@ class ChannelAdminView(ModelView):
     column_filters = ['name']
     column_searchable_list = ('name', )
     form_overrides = dict(description=SummernoteTextAreaField)
+    column_default_sort = '-created_timestamp'
+    column_filters = [create_named_filter()] #, FilterProfileType('type.id', 'Type')]
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
@@ -776,6 +811,15 @@ class RestrictedAdminView(ModelView):
         return False
 
 
+class TripGalleryAdminView(RestrictedAdminView):
+    column_list = ('image', 'trip_name')
+
+    def trip_name_formatter(view, context, model, name):
+        return Markup("%s" % model.trip.name)
+
+    column_formatters = dict(trip_name=trip_name_formatter)
+
+
 admin.add_view(ApprovalContentAdminView(Article, name='Article', endpoint='approval.article', category="Approvals"))
 #admin.add_view(ApprovalContentAdminView(Blog, name='Blog', endpoint='approval.blog', category="Approvals"))
 admin.add_view(ApprovalContentAdminView(Discussion, name='Discussion', endpoint='approval.discussion', category="Approvals"))
@@ -799,7 +843,7 @@ admin.add_view(EventAdminView(Event, category="Organizers"))
 admin.add_view(TripAdminView(Trip, category="Organizers"))
 admin.add_view(TripBookingAdminView(TripBooking, category="Organizers"))
 admin.add_view(SelectedTripBookingAdminView(TripBooking, name="Bookings for trip", endpoint="enquiries_for_trip_view"))
-admin.add_view(RestrictedAdminView(TripGalleryImage, category="Organizers"))
+#admin.add_view(TripGalleryAdminView(TripGalleryImage, category="Organizers"))
 
 admin.add_view(NotOkAdminView(NotOkFeedBack, category="Feedbacks", endpoint='feedback.not_ok'))
 
