@@ -134,7 +134,7 @@
                             {% endif %}
 
                             {% if user and user.is_admin %}<li><a class="btn-head" href="{% if user %}/contests{% else %}/login?target=/contests{% endif %}" title="Live Contests">Live Contests</a></li>{% endif %}
-	                        <li><a class="btn-head" href="/profiles#finder-container" title="Members">Members</a></li>
+	                        <li><a class="btn-head" href="/profiles?query=type__profile_type__name:Enthusiast;#finder-container" title="Members">Members</a></li>
                             {% if not (user and user.id) %}
                             <li><a class="btn-head" href="/login" title="Login">Login</a></li>
                             <li><a class="btn-head" href="/register" title="Register">Register</a></li>
@@ -265,11 +265,11 @@
                                 Finder
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="/profiles?query=type__profile_type__name:Organizer;">Organizers</a></li>
-                                <li><a href="/profiles?query=type__profile_type__name:Gear Dealer;">Gear Dealers</a></li>
-                                <li><a href="/profiles?query=type__profile_type__name:Camp Site;">Camp Sites </a></li>
-                                <li><a href="/profiles?query=type__profile_type__name:NGO or Club;">Club & NGO's</a></li>
-                                <li><a href="/profiles">All Profiles</a></li>
+                                <li><a href="/profiles?query=type__profile_type__name:Organizer;#finder-container">Organizers</a></li>
+                                <li><a href="/profiles?query=type__profile_type__name:Gear Dealer;#finder-container">Gear Dealers</a></li>
+                                <li><a href="/profiles?query=type__profile_type__name:Camp Site;#finder-container">Camp Sites </a></li>
+                                <li><a href="/profiles?query=type__profile_type__name:NGO or Club;#finder-container">Club & NGO's</a></li>
+                                <li><a href="/profiles#finder-container">All Profiles</a></li>
                             </ul>
                         </li>
                         <li class="{% if menu.main_menu in ['journal', 'article', 'blog'] %}active{% endif %} {{menu.main_menu}}">
