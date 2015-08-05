@@ -8,7 +8,7 @@ from app.models.adventure import Adventure
 from app.models import Node, NodeFactory, LOCATION, BusinessException
 from app.models.feedbacks import ClaimProfile, NotOkFeedBack
 from app.handlers.editors import NodeEditor, response_handler
-from flask import session
+from flask import session, request
 import hashlib
 
 __author__ = 'arshad'
@@ -178,10 +178,23 @@ def claim_profile(node, node_type, user_id):
                 subject="[Fitrangi] A profile was claimed by another user"
                 to_list=[a.email]
                 send_email_from_template(template_path, subject, to_list, force_send=True, **context)
+
             except:
                 print '[ERROR] Unable to send email to admin: ', a.email
+
+
     except:
         print '[ERROR] Unable to send email to admin'
+    try:
+        if 'fitrangi.com' in request.host:
+            host = 'http://www.fitrangi.com'
+        else:
+            host = 'http://localhost:4500'
+        link = node.create_verification_link()
+        context = dict(user=node, link="%s%s" % (host, link))
+        send_email_from_template('notifications/email_verification.html', "[Fitrangi] Verification email", to_list=[node.email], force_send=True, **context)
+    except:
+        print '[ERROR] Unable to send verification email to user : ', node.email
     return node
 
 @response_handler('Successfully updated the profile pic', 'Failed to update the profile pic')

@@ -313,8 +313,8 @@ def registration():
         Warm Regards,<br/>
         Yuni Fitrangi
         """
-        admin = [p for p in Profile.objects(roles__in=['Admin']).all() if 'go' in p.email or 'yunus' in p.email][0]
-        ChatMessage.create_message(admin, profile, chat_mesg)
+        #admin = [p for p in Profile.objects(roles__in=['Admin']).all() if 'go' in p.email or 'yunus' in p.email][0]
+        #ChatMessage.create_message(admin, profile, chat_mesg)
         if profile and profile.id:
             login_user_session(profile)
             if profile.is_verified:

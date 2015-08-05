@@ -609,12 +609,15 @@ class ClaimAdminView(ModelView):
 
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    column_list = ('profile', 'profile_email', 'claimed', 'claimed_email')
+    column_list = ('profile', 'profile_email', 'claimed', 'claimed_email', 'claimed_verified')
 
     def is_accessible(self):
         if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
             return True
         return False
+
+    def verified_email_formatter(view, context, model, name):
+        return Markup("%s" % model.claimed.is_verified)
 
     def profile_email_formatter(view, context, model, name):
         return Markup("%s" % (model.profile.email if model.profile else 'No Profile (Invalid row)'))
@@ -622,7 +625,7 @@ class ClaimAdminView(ModelView):
     def claimed_email_formatter(view, context, model, name):
         return Markup("%s" % (model.claimed.email if model.claimed else 'No Profile Claimed (Invalid row)'))
 
-    column_formatters = {'profile_email': profile_email_formatter, 'claimed_email': claimed_email_formatter}
+    column_formatters = {'profile_email': profile_email_formatter, 'claimed_email': claimed_email_formatter, 'claied_verified': claimed_email_formatter}
 
 
 class ExtraPageAdminView(ModelView):
