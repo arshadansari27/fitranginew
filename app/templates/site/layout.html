@@ -258,7 +258,19 @@
                         <li class="{% if menu.main_menu == 'adventure' %}active{% endif %}"><a
                                 href="/adventures">Destinations</a>
                         </li>
-                        <li class="{% if menu.main_menu == 'profile' %}active{% endif %}"><a href="/profiles">Finder</a>
+                        <!--li class="{% if menu.main_menu == 'profile' %}active{% endif %}"><a href="/profiles">Finder</a-->
+                        </li>
+                        <li class="dropdown {% if menu.main_menu == 'profile' %}active{% endif %}">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Finder
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/profiles?query=type__profile_type__name:Organizer;">Organizers</a></li>
+                                <li><a href="/profiles?query=type__profile_type__name:Gear Dealer;">Gear Dealers</a></li>
+                                <li><a href="/profiles?query=type__profile_type__name:Camp Site;">Camp Sites </a></li>
+                                <li><a href="/profiles?query=type__profile_type__name:NGO or Club;">Club & NGO's</a></li>
+                                <li><a href="/profiles">All Profiles</a></li>
+                            </ul>
                         </li>
                         <li class="{% if menu.main_menu in ['journal', 'article', 'blog'] %}active{% endif %} {{menu.main_menu}}">
                             <a

@@ -112,4 +112,11 @@
 
     });
 </script>
-
+{% if filters.get('type__profile_type__name') %}
+<script>
+    $(document).ready(function(){
+        var category = '{{filters.get("type__profile_type__name")}}';
+        $('#category-filter').val(category);
+    });
+</script>
+{% endif %}
