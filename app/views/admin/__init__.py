@@ -308,9 +308,9 @@ class SelectedTripBookingAdminView(TripBookingAdminView):
 class ProfileAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'email', 'address', 'alternative_email', 'featured', 'about', 'phone', 'alternative_phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image', 'type', 'managed_by', 'interest_in_activities', 'admin_approved', 'path_cover_image']
-    column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login', 'type', 'featured', 'location', 'is_verified')
-    column_filters = [create_named_filter(), 'is_verified'] #, FilterProfileType('type.id', 'Type')]
+    form_columns = ['name', 'email', 'address', 'alternative_email', 'featured', 'about', 'phone', 'alternative_phone', 'website', 'facebook', 'twitter', 'google_plus', 'linked_in',  'youtube_channel', 'blog_channel', 'email_enabled', 'email_frequency', 'bookmarks', 'is_business_profile', 'roles', 'cover_image', 'type', 'managed_by', 'interest_in_activities', 'admin_approved', 'path_cover_image', 'is_premium_profile']
+    column_list = ('name', 'email', 'cover_image', 'user_since', 'last_login', 'type', 'featured', 'location', 'is_verified', 'is_premium_profile')
+    column_filters = [create_named_filter(), 'is_verified', 'is_premium_profile'] #, FilterProfileType('type.id', 'Type')]
     column_searchable_list = ('name', 'email')
     form_overrides = dict(about=SummernoteTextAreaField)
     column_default_sort = '-created_timestamp'

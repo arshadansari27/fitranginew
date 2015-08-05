@@ -4,7 +4,7 @@
         <section class="container">
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                {% if user and (user.is_admin or user.is_organizer) %}
+                {% if user and (user.is_admin or (user.is_organizer and user.has_premium_status)) %}
                 <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: window.location.href='/add-edit-trip'">Add a trip</a>
                 {% endif %}
             </div>

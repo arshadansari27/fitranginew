@@ -78,12 +78,17 @@ class Profile(Entity, db.Document, Location):
     address = db.StringField()
     admin_approved = db.BooleanField(default=False)
     background_image = db.ReferenceField('BackgroundImage')
+    is_premium_profile = db.BooleanField(default=False)
 
     meta = {
         'indexes': [
             {'fields': ['email', 'slug', 'name'], 'unique': False, 'sparse': False, 'types': False },
         ],
     }
+
+    @property
+    def has_premium_status(self):
+        return True if hasattr(self, 'is_premium_profile') and self.is_premium_profile else False
 
     @property
     def background_image_path(self):
