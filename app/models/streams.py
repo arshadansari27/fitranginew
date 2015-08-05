@@ -112,7 +112,7 @@ class ActivityStream(db.Document):
         activity = ActivityStream(profile=content.organizer, action='added trip', object=content, view_html='', view_text='', view_json='')
         activity.save()
         if content.organizer:
-            author = Profile.objects(pk=content.author.id).first()
+            author = Profile.objects(pk=content.organizer.id).first()
             author.increment_public_activity_count()
         return activity
 

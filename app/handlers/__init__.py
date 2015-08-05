@@ -293,7 +293,6 @@ class NodeView(View):
             traceback.print_exc(file=sys.stdout)
             print e.message
             card = ''
-        print '[*] Card for', model_name, ', ', card_type, ': ', model
         return card
 
     @classmethod
@@ -387,7 +386,7 @@ class PageManager(object):
     def get_edit_title_and_page(cls, model_name, **kwargs):
         from app.views import force_setup_context
         query = kwargs.get('query', None)
-        user = kwargs.get('user', None)
+        user = kwargs.get('user', None) or str(g.user.id) if g.user and hasattr(g.user, 'id') else None
         is_business = kwargs.get('business', None)
         print query
         if query:
@@ -404,7 +403,7 @@ class PageManager(object):
         elif isinstance(model, Profile):
             context = dict(parent=None, user=user, query=None, filters=None, is_business=is_business)
         else:
-            context = dict(model=model)
+            context = dict(model=model, user=user, query=query, filters=convert_query_to_filter(query))
         print model
         context.update(Page.factory(model_name, 'edit').get_context(context))
         context = force_setup_context(context)
@@ -709,7 +708,16 @@ class EditPage(Page):
 
     def get_context(self, context):
         if self.model_name == TRIP:
+            if context.get('model'):
+                assert str(context.get('model').organizer.id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
             return dict(activities=Activity.objects.all())
+        elif self.model_name == PROFILE:
+            if context.get('parent'):
+                assert str(context.get('parent').id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
+        elif self.model_name in [DISCUSSION, ARTICLE, POST]:
+            if context.get('model'):
+                assert str(context.get('model').author.id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
+
         return {} #dict(profiles_types=ProfileType.objects.all())
 
 

@@ -78,7 +78,12 @@ def _edit(data, node=None):
 
     node = get_or_create_trip(node)
     node.name = data['title']
-    node.organizer = NodeExtractor.factory('profile').get_single("pk:%s" % data['organizer'])
+    if data.get('organizer') is None or len(data['organizer']) is 0:
+        raise Exception('Invalid organizer for the trip')
+    organizer = NodeExtractor.factory('profile').get_single("pk:%s" % data['organizer'])
+    if not organizer:
+        raise Exception('Invalid organizer for the trip')
+    node.organizer = organizer
     node.optional_location_name = data['optional_location_name']
     node.inclusive_exclusive = data['inclusive_exclusive']
     node.itinerary = data['itinerary']
@@ -126,15 +131,23 @@ def _edit(data, node=None):
         from_date_time = data['from']
         f_date, f_time = from_date_time.split(' ')
         YYYY, MM, DD = f_date.split('-')
-        hh, mm, ss = f_time.split(':')
-        YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY, MM, DD, hh, mm, ss]]
+        if len(f_time.split(':')) is 3:
+            hh, mm, ss = f_time.split(':')
+        else:
+            hh, mm = f_time.split(':')
+            ss = '0'
+        YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), hh.strip(), mm.strip(), ss.strip()]]
         node.start_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
     if data.get('to'):
         to_date_time = data['to']
         t_date, t_time = to_date_time.split(' ')
         YYYY, MM, DD = t_date.split('-')
-        hh, mm, ss = t_time.split(':')
-        YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY, MM, DD, hh, mm, ss]]
+        if len(t_time.split(':')) is 3:
+            hh, mm, ss = t_time.split(':')
+        else:
+            hh, mm = t_time.split(':')
+            ss = '0'
+        YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), hh.strip(), mm.strip(), ss.strip()]]
         node.end_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
     node.published = True
     if adding:

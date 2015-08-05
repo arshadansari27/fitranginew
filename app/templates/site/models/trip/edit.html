@@ -6,17 +6,17 @@
 
         <form class="fitrangi-form">
             <div class="form-group">
-                <label for="heading">Title</label>
+                <label for="heading">Title<span class="red">*</span> </label>
                 <input type="text" class="form-control" name="title" placeholder="Enter Trip Title" data-name="title" value="{%if model and model.name %}{{model.name }}{% endif %}">
                 <input type="hidden" data-name="id" value="{%if model and model.id %}{{model.id}}{% endif %}">
-                <input type="hidden" data-name="user" value="{%if user and user.id %}{{user.id}}{% endif %}">
+                <input type="hidden" data-name="user" value="{% if model and model.organizer %}{{model.organizer.id}}{%elif user and user.id %}{{user.id}}{% endif %}">
             </div>
 
             <div class="form-group">
 
                 <div class="row">
                     <div class="col-md-4 col-sm-6 col-xs-6">
-                        <label for="heading">FROM</label><input type="date" class="form-control" name="fromdate" data-name="fromdate" value="{% if model and model.start_date %}{{model.from_date_only}}{% endif %}">
+                        <label for="heading">FROM<span class="red">*</span></label><input type="date" class="form-control" name="fromdate" data-name="fromdate" value="{% if model and model.start_date %}{{model.from_date_only}}{% endif %}">
                     </div>
                     <div class="col-md-4 col-sm-6 col-xs-6">
                         <label for="heading">TIME</label><input type="time" class="form-control" name="fromtime" data-name="fromtime" value="{%if model and model.start_date %}{{model.from_date_time}}{% endif %}">
@@ -24,7 +24,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4 col-sm-6 col-xs-6">
-                        <label for="heading">TO</label><input type="date" class="form-control" name="todate" data-name="todate" value="{%if model and model.end_date %}{{model.to_date_only}}{% endif %}">
+                        <label for="heading">TO<span class="red">*</span></label><input type="date" class="form-control" name="todate" data-name="todate" value="{%if model and model.end_date %}{{model.to_date_only}}{% endif %}">
                     </div>
                     <div class="col-md-4 col-sm-6 col-xs-6">
                         <label for="heading">TIME</label><input type="time" class="form-control" name="totime" data-name="totime" value="{%if model and model.end_date %}{{model.to_date_time}}{% endif %}">
@@ -35,7 +35,7 @@
                 <div class="row">
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                         <div class="form-group">
-                            <label for="heading">LOCATION</label>
+                            <label for="heading">LOCATION<span class="red">*</span></label>
                             <input type="text" class="form-control geo-complete" value="{%if model and model.location %}{{model.location}}{% endif %}"/>
                             <input type="hidden" name="formatted_address" data-name="geo_location_name" value="{% if model.location  and model.location|length > 0 %}{{ model.location }}{% endif %}"/>
                             <input type="hidden" name="lat" data-name="geo_location_lat" value="{% if model.location and model.geo_location %}{{ model.geo_location['coordinates'][0] }}{% endif %}"/>
@@ -62,7 +62,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 
                         <div class="form-group">
-                            <label for="heading">Amount</label>
+                            <label for="heading">Amount<span class="red">*</span></label>
 
                             <div class="input-group">
                                 <input type="number" class="form-control" placeholder="Enter Amount" data-name="price" value="{%if model and model.price %}{{model.price|int }}{% endif %}">
@@ -80,7 +80,7 @@
                     <textarea class="form-control" name="itinerary" placeholder="Enter ItenAddress"></textarea>
                 </div-->
                 <div class="container">
-                            <label for="heading">Activity</label>
+                            <label for="heading">Activity<span class="red">*</span></label>
 
                             <div class="row-fluid">
                                 {% set ll = activities|length %}
@@ -104,7 +104,7 @@
                 <hr/>
                 <br/>
                 <div class="form-group">
-                    <label for="cover-image">Upload Cover Image </label>
+                    <label for="cover-image">Upload Cover Image <span class="red">*</span></label>
                     <div class="thumbnail">
                         <a href="#" data-action="cover-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/1366x500{% endif %}" width="70%"/></a>
                         <div class="caption text-center">Click on the image to change(Optional)</div>
@@ -114,12 +114,12 @@
 
 
                 <div class="form-group">
-                    <label for="heading">Itinerary</label>
+                    <label for="heading">Itinerary<span class="red">*</span></label>
                     <textarea class="form-control summernote" name="itinerary" rows="4" data-name="itinerary"
                               placeholder="Write Brief About Itinerary...">{% if model and model.itinerary %}{{model.itinerary}}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
-                    <label for="heading">Inclusive / Exclusive </label>
+                    <label for="heading">Inclusive / Exclusive <span class="red">*</span></label>
                     <textarea class="form-control summernote" name="inclusive_exclusive" rows="4" data-name="inclusive_exclusive"
                               placeholder="Write Brief About Inclusive and Exclusive...">{% if model and model.inclusive_exclusive%}{{model.inclusive_exclusive}}{% endif %}</textarea>
                 </div>
@@ -149,18 +149,18 @@
             <hr/>
             <br/>
 
-            <div class="form-group">
+            <div class="form-group {% if model %}hide{% endif %}">
                 <div class="checkbox">
                     <label>
-                        <input data-name="toc" type="checkbox"> I accept the terms and conditions as per the agreement.
+                        <input data-name="toc" type="checkbox" {% if model %}checked{% endif %}> I accept the terms and conditions as per the agreement.<span class="red">*</span>
                     </label>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group {% if model %}hide{% endif %}">
                 <div class="checkbox">
                     <label>
-                        <input data-name="is-manager"  type="checkbox"> I am the administrator / manager / representative
+                        <input data-name="is-manager" {% if model %}checked{% endif %} type="checkbox"> I am the administrator / manager / representative.<span class="red">*</span>
                     </label>
                 </div>
             </div>
