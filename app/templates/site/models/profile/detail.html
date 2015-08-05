@@ -107,11 +107,11 @@
             {% if model.email %}<h4><i class="fa fa-at">:</i>&nbsp;{{model.email}}</h4> {% endif %}
             {% if model.website %}<h4><i class="fa fa-globe">:</i>&nbsp;<a href="{% if 'http' not in model.website %}http://{% endif %}{{ model.website }}" target="_blank">{{model.website}}</a></h4> {% endif %}
             <h4 class="">
-                <a {% if model.facebook %}href="{{ model.facebook }}"  target="_blank"{% endif %}><i class="fa fa-facebook fa-2x"></i></a>
-                <a {% if model.twitter %}href="{{ model.twitter }}"  target="_blank"{% endif %}><i class="fa fa-twitter fa-2x"></i></a>
-                <a {% if model.google_plus %}href="{{ model.google_plus }}"  target="_blank"{% endif %}><i class="fa fa-google-plus fa-2x"></i></a>
-                <a {% if model.linked_in %}href="{{ model.linked_in }}"  target="_blank"{% endif %}><i class="fa fa-linkedin fa-2x"></i></a>
-                <a {% if model.youtube_channel %}href="{{ model.youtube_channel }}"  target="_blank"{% endif %}><i class="fa fa-youtube fa-2x"></i></a>
+                {% if model.facebook and model.facebook|length > 0 %}<a href="{{ model.facebook }}"  target="_blank"><i class="fa fa-facebook fa-2x"></i></a>{% endif %}
+                {% if model.twitter and model.twitter|length > 0 %}<a href="{{ model.twitter }}"  target="_blank"><i class="fa fa-twitter fa-2x"></i></a>{% endif %}
+                {% if model.google_plus and model.google_plus|length > 0 %}<a href="{{ model.google_plus }}"  target="_blank"><i class="fa fa-google-plus fa-2x"></i></a>{% endif %}
+                {% if model.linked_in and model.linked_in|length > 0 %}<a href="{{ model.linked_in }}"  target="_blank"><i class="fa fa-linkedin fa-2x"></i></a>{% endif %}
+                {% if model.youtube_channel and model.youtube_channel|length > 0 %}<a href="{{ model.youtube_channel }}"  target="_blank"><i class="fa fa-youtube fa-2x"></i></a>{% endif %}
                 <!--a {% if model.blog_channel %}href="{{ model.blog_channel }}"  target="_blank"{% endif %}><i class="fa fa-rss fa-2x"></i></a-->
             </h4>
         </div>
