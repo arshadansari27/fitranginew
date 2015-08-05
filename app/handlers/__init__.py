@@ -400,10 +400,12 @@ class PageManager(object):
 
         if model and isinstance(model, Profile):
             context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), is_business=any([model.is_business_profile, len(model.managed_by) > 0]))
-        elif isinstance(model, Profile):
-            context = dict(parent=None, user=user, query=None, filters=None, is_business=is_business)
         else:
-            context = dict(model=model, user=user, query=query, filters=convert_query_to_filter(query))
+            if model and hasattr(model, 'managed_by') and hasattr(model, 'is_business_profile'):
+                is_business_p = any([model.is_business_profile, len(model.managed_by) > 0])
+            else:
+                is_business_p = is_business
+            context = dict(model=model, parent=model, user=user, query=query, filters=convert_query_to_filter(query), is_business=is_business_p)
         print model
         context.update(Page.factory(model_name, 'edit').get_context(context))
         context = force_setup_context(context)
