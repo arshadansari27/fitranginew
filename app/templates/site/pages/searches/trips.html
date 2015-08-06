@@ -6,6 +6,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 {% if user and (user.is_admin or (user.is_organizer and user.has_premium_status)) %}
                 <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: window.location.href='/add-edit-trip'">Add a trip</a>
+                <input id="name-filter" data-filter="name__icontains" data-model="profile" type="hidden">
                 {% endif %}
             </div>
 
@@ -193,6 +194,7 @@
         });
 
 
+        window.App.filter('name-filter');
         window.App.filter('activity-filter');
         window.App.filter('start-date-filter');
         window.App.filter('start-date-default-filter');
@@ -212,6 +214,13 @@
   <script>
     $(document).ready(function(){
         $('#activity-filter').val('{{filters.get("activities__activity__name")}}');
+    });
+</script>
+{% endif %}
+{% if filters.get('name__icontains') %}
+  <script>
+    $(document).ready(function(){
+        $('#name-filter').val('{{filters.get("name__icontains")}}');
     });
 </script>
 {% endif %}

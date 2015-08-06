@@ -5,6 +5,7 @@
                 <h2>Explore, Review and get informed about all adventures in India! </h2>
                 <h3>Update your profile with experiences and stack your wish lists! </h3>
                 <h3>{{count}}+ Adventures and Counting. Go now!</h3>
+                <input id="name-filter" type="hidden" data-category="all" data-model="adventure" data-filter="name__icontains"/>
                 <br/>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
@@ -60,6 +61,7 @@
  <script>
     $(document).ready(function(){
         window.App.filter('activity-filter');
+        window.App.filter('name-filter');
         //window.App.filter('location-filter');
         window.App.sorter('location-sorter-lat');
         window.App.sorter('location-sorter-lng');
@@ -73,6 +75,13 @@
   <script>
     $(document).ready(function(){
         $('#activity-filter').val('{{filters.get("activities__activity__name")}}');
+    });
+</script>
+{% endif %}
+{% if filters.get('name__icontains') %}
+  <script>
+    $(document).ready(function(){
+        $('#name-filter').val('{{filters.get("name__icontains")}}');
     });
 </script>
 {% endif %}

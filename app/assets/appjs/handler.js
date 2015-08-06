@@ -810,6 +810,60 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    $('body').on('click', '[data-action="search-content"]', function(e){
+        e.stopPropagation();
+        e.preventDefault();
+        var type = $('[data-name="search-type"]').val();
+        var topic = $('[data-name="search-topic"]').val();
+        var path = '/';
+        var query = '';
+        console.log(type + ' -> ' + topic);
+        switch (type) {
+            case 'adventure':
+                path += 'adventures';
+                query = 'name__icontains';
+                break;
+            case 'article':
+                path += 'blog';
+                query = 'title__icontains';
+                break;
+            case 'profile':
+                path += 'profiles';
+                query = 'name__icontains';
+                break;
+            case 'discussion':
+                path += 'discussions';
+                query = 'title__icontains';
+                break;
+            case 'trip':
+                path += 'trips';
+                query = 'name__icontains';
+                break;
+            default:
+                BootstrapDialog.alert('Invalid choice');
+                return;
+        }
+        window.location.href = path+ '?query=' + query + ':'+ topic + ';';
+    });
+
+    $('[data-action="search"]').on('click', function(e){
+        e.stopPropagation();
+        e.preventDefault();
+        var dialog = new BootstrapDialog({
+            message: function(dialogRef){
+                var $message = $('<div></div>').load('/search-modal');
+                return $message;
+            },
+            closable: true
+        });
+        dialog.realize();
+        dialog.getModalHeader().hide();
+        dialog.getModalFooter().hide();
+        dialog.getModalDialog().css('width', '70%');
+        dialog.getModalBody().addClass('container');
+        dialog.open();
+    });
+
 
     $('body').on('click', '[data-action="switch-profile"]', function (e) {
         e.stopPropagation();

@@ -183,3 +183,10 @@
     });
 </script>
 {% endif %}
+{% if filters.get('title__icontains') %}
+  <script>
+    $(document).ready(function(){
+        $('#name-filter').val('{{filters.get("title__icontains")}}');
+    });
+</script>
+{% endif %}
