@@ -1750,7 +1750,7 @@ jQuery(document).ready(function ($) {
         if (should_scroll) {
             setTimeout(function () {
                 App.scroll_to_container();
-            }, 4000);
+            }, 1000);
         }
     }
 

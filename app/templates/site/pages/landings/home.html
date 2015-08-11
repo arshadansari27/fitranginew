@@ -135,6 +135,7 @@
 
 <div class="container">
     <input id="article-admin-published-filter" type="hidden" data-model="article" data-filter="admin_published" value="bool|True" data-filter-status="fixed"/>
+    <input id="article-published-filter" type="hidden" data-model="article" data-filter="published" value="bool|True" data-filter-status="fixed"/>
     {{journal|safe}}
 
 </div>
@@ -195,5 +196,6 @@
             var App = window.App;
             App.filter('discussion-admin-published-filter');
             App.filter('article-admin-published-filter');
+            App.filter('article-published-filter');
         });
 </script>
