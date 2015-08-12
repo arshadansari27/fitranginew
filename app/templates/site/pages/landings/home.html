@@ -104,6 +104,10 @@
 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 who-joined-community">
     <h2>Take a look at who has just joined</h2>
     <div class="row">
+
+        <input id="profile-enthusiast-filter" data-model="profile" data-filter="type__profile_type__name" type="hidden" value="Enthusiast"/>
+
+
         {{profile|safe}}
     </div>
     <a href="/profiles" class="btn btn-primary mb-10 pull-right">View all</a>
@@ -197,5 +201,6 @@
             App.filter('discussion-admin-published-filter');
             App.filter('article-admin-published-filter');
             App.filter('article-published-filter');
+            App.filter('profile-enthusiast-filter');
         });
 </script>
