@@ -38,7 +38,7 @@ class ContentEditor(NodeEditor):
         else:
             raise Exception('Invalid command')
 
-@response_handler('Successfully Answered the questions', 'Failed to submit the answers', flash_message=True)
+@response_handler('Thank you for participating! you will be notified once the results are announced', 'Failed to submit the answers', flash_message=True)
 def answer_contest(node, type, data):
     node = get_or_create_content(type, node)
     user = NodeExtractor.factory('profile').get_single('pk:%s;' % data['user'])

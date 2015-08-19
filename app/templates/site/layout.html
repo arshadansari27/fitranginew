@@ -136,7 +136,7 @@
                             </li>
                             {% endif %}
 
-                            {% if user and user.is_admin %}<li><a class="btn-head" href="{% if user %}/contests{% else %}/login?target=/contests{% endif %}" title="Live Contests">Live Contests</a></li>{% endif %}
+                            {% if user and user.is_admin %}<li><a class="btn-head" href="{% if user %}/contests{% else %}/login?target=/contests{% endif %}" title="Live Contests">Contests</a></li>{% endif %}
 	                        <li><a class="btn-head" href="/profiles?query=type__profile_type__name:Enthusiast;#finder-container" title="Members">Members</a></li>
                             {% if not (user and user.id) %}
                             <li><a class="btn-head" href="/login" title="Login">Login</a></li>
@@ -395,7 +395,9 @@
             }
         });
         var messages = parseInt('{% if user %}{{user.private_activity_count}}{% else %}0{% endif %}');
-        var show_notification = '{% if user %}{{show_message_notification}}{% else %}0{% endif %}';
+        //TODO: Temporary removal of cht notification message
+        var show_notification = false; //'{% if user %}{{show_message_notification}}{% else %}0{% endif %}';
+
         if (show_notification == 'True' && messages > 0) {
             BootstrapDialog.show({
                 title: 'You have ' + messages + ' message' + ((messages == 1)? '': 's'),

@@ -30,6 +30,11 @@
 {% endblock %}
 
 {% block page_body %}
+    {% assets filters="jsmin", output="app/my-lib.js",
+        "appjs/editors/main.js", "appjs/editors/profile-edit.js", "appjs/editors/post-edit.js", "appjs/editors/content-edit.js", "appjs/editors/trip-edit.js" %}
+        <script type="text/javascript" src="{{cdn_url}}{{ ASSET_URL }}"></script>
+    {% endassets %}
+
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
         <a class="brand" href="#">&nbsp;&nbsp;Fitrangi Manager</a>
@@ -103,10 +108,32 @@
 {% endblock %}
 {% block tail_js %}
         {{super()}}
-        <script src="/js/jquery.geocomplete.min.js"></script>
-        <script src="/js/summernote.min.js" type="text/javascript"></script>
+
         <script src="{{url_for('static', filename='js/bootstrap-dialog.min.js')}}"></script>
-        <script language="javascript">
+        <script src="{{url_for('static', filename='js/css3-mediaqueries.js')}}"></script>
+        <script src="{{url_for('static', filename='js/respond.min.js')}}"></script>
+        <script src="{{url_for('static', filename='js/html5shiv.js')}}"></script>
+        <script src="{{url_for('static', filename='js/modernizr.custom.85647.js')}}"></script>
+        <script src="{{url_for('static', filename='js/fotorama.js')}}"></script>
+        <script src="{{url_for('static', filename='js/summernote.js')}}"></script>
+        <script src="{{url_for('static', filename='js/bootstrap-tagsinput.js')}}"></script>
+        <script src="{{url_for('static', filename='js/jquery.geocomplete.min.js')}}"></script>
+        <script src="{{url_for('static', filename='js/autobahn.min.jgz')}}"></script>
+        <script src="{{url_for('static', filename='js/owl.carousel.js')}}"></script>
+        <script src="{{url_for('static', filename='appjs/handler.js')}}"></script>
+
+        {% assets filters="jsmin", output="app/my-handler.js", "appjs/handler.js", "appjs/async.js" %}
+            <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        {% endassets %}
+
+        <script>
+            $(function () {
+                $('#loadingImage').hide();
+            });
+
+        </script>
+
+        <!--script language="javascript">
         $(document).ready(function(){
           if ($(".geo-complete") != undefined) {
               $(".geo-complete").geocomplete().bind("geocode:result", function (event, result) {
@@ -120,25 +147,37 @@
               });
           }
           if ($(".summernote") != undefined) {
+                var clean_pasted_html = function(original) {
+                    u = document.createElement('div');
+                    u.innerHTML = original;
+                    return u.innerText;
+                  };
 
-            var summernote_image_upload = function(file, editor, welEditable) {
-                data = new FormData();
-                data.append("file-0", file);
-                jQuery.ajax({
-                    url: '/dialog/upload_image?permanent=True',
-                    data: data,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    type: 'POST',
-                    success: function(data){
-                        editor.insertImage(welEditable, data.url);
-                    },
-                    error: function(data) {
-                        alert('Something went wrong when uploading the file.');
-                    }
-                });
-            };
+                var summernote_image_upload = function(file, editor, welEditable) {
+                    App.upload_image({
+                        on_validation: function(){
+                            if (('#loadingImage') != undefined) {
+                                $('#loadingImage').show();
+                            }
+                        },
+                        on_success: function(data){
+                            editor.insertImage(welEditable, data.url);
+                            if (('#loadingImage') != undefined) {
+                                $('#loadingImage').hide();
+                            }
+                        },
+                        on_error: function(data){
+                            if (('#loadingImage') != undefined) {
+                                $('#loadingImage').hide();
+                            }
+                            BootstrapDialog.alert('Something went wrong when uploading the file.');
+                        },
+                        permanent: true,
+                        file: file
+                    });
+                };
+
+
 
             $('.summernote').each(function(){
                 var $textArea = $(this);
@@ -174,5 +213,5 @@
             {% endif %}
           }
         });
-        </script>
+        </script-->
 {% endblock %}

@@ -93,14 +93,14 @@ jQuery(document).ready(function($){
         var dataURL;
         var upload_url = (options.permanent && options.permanent == true)? "/dialog/upload_image?permanent=True": "/dialog/upload_image";
         var file;
-        if (options.file != undefined && options.file.length > 0) {
+        if (options.file != undefined && options.file.size > 0) {
             file = options.file;
         } else if (jQuery('input[data-image="file-uploader"]') && jQuery('input[data-image="file-uploader"]').length > 0){
             file = jQuery('input[data-image="file-uploader"]')[0].files[0];
         } else {
             file = jQuery('input[type=file]')[0].files[0];
         }
-        if (file == undefined || file.length == 0) {
+        if (file == undefined || file.size == 0) {
             BootstrapDialog.alert('Please select a file first');
             return;
         }
