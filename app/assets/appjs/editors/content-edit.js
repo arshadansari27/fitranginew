@@ -22,7 +22,7 @@ $(document).ready(function() {
             //window.location.reload();
             if (data.status == 'success') {
                 BootstrapDialog.show({
-                    message: 'Thank you for participating! you will be notified once the results announce',
+                    message: 'Thank you for participating! you will be notified once the results are announced',
                     onhidden: function (dialogRef) {
                         window.location.href="/contests";
                     }
