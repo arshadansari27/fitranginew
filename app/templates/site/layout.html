@@ -136,7 +136,7 @@
                             </li>
                             {% endif %}
 
-                            <li><a class="btn-head" href="{% if user %}/contests{% else %}/login?target=/contests{% endif %}" title="Live Contests">Contests</a></li>
+                            <li><a class="btn-head" href="/contests" title="Live Contests">Contests</a></li>
 	                        <li><a class="btn-head" href="/profiles?query=type__profile_type__name:Enthusiast;#finder-container" title="Members">Members</a></li>
                             {% if not (user and user.id) %}
                             <li><a class="btn-head" href="/login" title="Login">Login</a></li>
