@@ -846,7 +846,7 @@ admin.add_view(EventAdminView(Event, category="Organizers"))
 admin.add_view(TripAdminView(Trip, category="Organizers"))
 admin.add_view(TripBookingAdminView(TripBooking, category="Organizers"))
 admin.add_view(SelectedTripBookingAdminView(TripBooking, name="Bookings for trip", endpoint="enquiries_for_trip_view"))
-#admin.add_view(TripGalleryAdminView(TripGalleryImage, category="Organizers"))
+admin.add_view(TripGalleryAdminView(TripGalleryImage, category="Organizers"))
 
 admin.add_view(NotOkAdminView(NotOkFeedBack, category="Feedbacks", endpoint='feedback.not_ok'))
 
