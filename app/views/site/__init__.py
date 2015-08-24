@@ -21,6 +21,7 @@ from app.utils import login_required
 from app import app
 from StringIO import StringIO
 from PIL import Image
+from collections import defaultdict
 import random, os, requests, base64
 
 (MODEL_DETAIL_VIEW, MODEL_LIST_ROW_VIEW, MODEL_LIST_GRID_VIEW, MODEL_LIST_POD_VIEW) = ('detail', 'row', 'grid', 'pod')
@@ -47,8 +48,11 @@ def download_csv(contest_id=None):
         profiles = Profile.objects.all()
     else:
         contest = Contest.objects(pk=str(contest_id)).first()
-        profiles = (contest_answer.author for contest_answer in ContestAnswer.objects(contest=contest).all())
-        profiles = set([u for u in profiles])
+        _profiles = (contest_answer.author for contest_answer in ContestAnswer.objects(contest=contest).all())
+        _profile_emails = defaultdict(object)
+        for p in _profiles:
+            _profile_emails[str(p.id)] = p
+        profiles = _profile_emails.values()
 
     for p in profiles:
         csv.append(",".join([p.name if p.name else '', p.email, p.type[0].name if p.type and len(p.type) > 0 and p.type[0] is not None else '']))
