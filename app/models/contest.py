@@ -133,7 +133,7 @@ class Contest(Content):
         return user in users
 
     def get_user_score(self, user):
-        return len(filter(lambda a: a, [answer.correct_answer for answer in ContestAnswer.answers_by_contest_and_user(self, user)]))
+        return ContestAnswer.correct_answers_by_contest_and_user(self, user)
 
 
 class ContestAnswer(db.Document):
