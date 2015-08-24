@@ -48,6 +48,7 @@ def download_csv(contest_id=None):
     else:
         contest = Contest.objects(pk=str(contest_id)).first()
         profiles = (contest_answer.author for contest_answer in ContestAnswer.objects(contest=contest).all())
+        profiles = set([u for u in profiles])
 
     for p in profiles:
         csv.append(",".join([p.name if p.name else '', p.email, p.type[0].name if p.type and len(p.type) > 0 and p.type[0] is not None else '']))
