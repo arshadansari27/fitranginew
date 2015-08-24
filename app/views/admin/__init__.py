@@ -443,7 +443,7 @@ class ContestAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
     form_columns = ['title', 'sponsorer', 'description', 'cover_image', 'content', 'author', 'start_date', 'end_date', 'closed', 'associated_advertisements', 'winner', 'winner2', 'winner3', 'questions', 'published', 'tags', 'admin_published', 'slug', 'path_cover_image']
-    column_list = ('title', 'author', 'start_date', 'end_date', 'is_live', 'is_closed', 'winner', 'winner2', 'winner3', 'participants', 'published', 'admin_published')
+    column_list = ('title', 'author', 'start_date', 'end_date', 'is_live', 'is_closed', 'winner', 'winner2', 'winner3', 'participants', 'published', 'admin_published', 'download_participants')
     column_searchable_list = ('title', )
     form_overrides = dict(content=SummernoteTextAreaField)
     column_default_sort = '-created_timestamp'
@@ -472,7 +472,11 @@ class ContestAdminView(ModelView):
     def _participants(view, context, model, name):
         return Markup('<a href="%s" target="new">%s</a>' % (url_for('participants_for_context_view.index_view', contest_id=str(model.id)), ContestAnswer.get_all_participants_by_contest_count(model)))
 
-    column_formatters = {'is_closed': _is_closed, 'is_live': _is_live, 'participants': _participants}
+
+    def _participants_download(view, context, model, name):
+        return Markup('<a href="/user-csv-download/%s">Download User CSV</a>' % str(model.id))
+
+    column_formatters = {'is_closed': _is_closed, 'is_live': _is_live, 'participants': _participants, 'download_participants': _participants_download}
 
 
 class ContentAdminView(ModelView):

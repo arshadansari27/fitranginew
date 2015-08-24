@@ -7,6 +7,7 @@ from flask import render_template, request, g, redirect, jsonify, url_for, sessi
 from app.handlers.editors import NodeEditor
 from app.handlers import NodeCollectionFactory, NodeExtractor
 from app.models import Node, NodeFactory, ACTIVITY, ADVENTURE, ARTICLE, DISCUSSION, PROFILE, EVENT, TRIP, CONTEST
+from app.models.contest import Contest, ContestAnswer
 from app.models.streams import ChatMessage
 from app.models.profile import Profile, ProfileType
 from app.utils import login_required, all_tags, specific_tags_article, specific_channels_discussion, specific_tags_discussion, specific_channels_article, specific_channels, specific_tags, save_profile_image
@@ -37,11 +38,17 @@ def youtube_channel_test():
 
 
 @app.route('/user-csv-download')
-def download_csv():
+@app.route('/user-csv-download/<contest_id>')
+def download_csv(contest_id=None):
     if not hasattr(g, 'user') or g.user is None or 'Admin' not in g.user.roles:
         return 'Forbidden', 403
     csv = []
-    profiles = Profile.objects.all()
+    if contest_id is None:
+        profiles = Profile.objects.all()
+    else:
+        contest = Contest.objects(pk=str(contest_id)).first()
+        profiles = (contest_answer.author for contest_answer in ContestAnswer.objects(contest=contest).all())
+
     for p in profiles:
         csv.append(",".join([p.name if p.name else '', p.email, p.type[0].name if p.type and len(p.type) > 0 and p.type[0] is not None else '']))
     data = '\n'.join(csv)
