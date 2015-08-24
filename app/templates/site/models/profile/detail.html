@@ -25,7 +25,7 @@
                         {% if user and model.id != user.id %}
                             <small><a href="#" class="btn btn-link uppercase red" data-action="not-ok" data-model="profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}">Report as Not Ok</a></small>
                         {% else %}
-                            <small><a href="#" class="btn btn-link uppercase" data-action="change-background" data-model="profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="label label-as-badge black">Change Background</span></a></small>
+                            <small><a href="#" class="btn btn-link uppercase" data-action="change-background" data-model="profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="label label-as-badge black">Change Background<br/>(1366 x 500 pixels)</span></a></small>
                         {% endif %}
                     </h2>
                     <h4><i class="fa fa-map-marker"></i>&nbsp;{% if model.location %} {{model.location}} {% else %}{% if model.id == user.id %}<a href="#" data-action="edit-profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}" >Change location</a>{% else %}Location not known{% endif %}{% endif %}</h4>
