@@ -216,7 +216,6 @@ class ContestAnswer(db.Document):
             contest = Contest.objects(pk=str(contest)).first()
         user_dicts = dict([(str(c.author.id), c.author) for c in ContestAnswer.objects(contest=contest).all()])
         users = [user_dicts[u] for u in set(user_dicts.keys())]
-        print users
         return users
 
     @classmethod
