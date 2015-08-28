@@ -127,7 +127,6 @@ class Contest(Content):
         if isinstance(user, str) or isinstance(user, unicode) or isinstance(user, ObjectId):
             user = Profile.objects(pk=str(user)).first()
         users = ContestAnswer.get_all_participants_by_contest(self)
-        print user, users
         if len(users) is 0:
             return False
         return user in users
