@@ -38,7 +38,11 @@ from app import app
 @app.context_processor
 def process_context_admin():
     if g.user:
-        return dict(user=g.user, is_admin='Admin' in g.user.roles)
+        types = ProfileType.objects.all()
+        data = {}
+        for _type in types:
+            data[_type.name] = Profile.objects(type__in=[_type]).count()
+        return dict(user=g.user, is_admin='Admin' in g.user.roles, data=data, All=Profile.objects.count())
     else:
         return {}
 

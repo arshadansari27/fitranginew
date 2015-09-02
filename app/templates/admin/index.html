@@ -5,6 +5,28 @@
     <div class="span12">
         <h1>Dashboard</h1>
         <hr/>
+        {% if user and user.is_admin %}
+            <h3>User Counts ({{ All }})</h3>
+            <table class="table table-stripped">
+                <tr>
+                    <td><strong>Type</strong></td>
+                    <td><strong>Count</strong></td>
+                </tr>
+                {% for k, v in data.iteritems() %}
+                <tr>
+                    <td>
+                        {{ k }}
+                    </td>
+                    <td>
+                        {{ v }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        <hr/>
+        {% endif %}
+
         <p class="lead">Manage your content. {% if 'Admin' in user.roles %} Also, the entire site. {% endif %} Or you can go <a href="/"> back</a> to the portal.</p>
         <p>
             Fitrangi portal changes are managed from here. This is your dashboard to add content and manage the content.
