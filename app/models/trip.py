@@ -36,6 +36,8 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
     published_timestamp = db.DateTimeField()
     admin_published = db.BooleanField(default=True) # Deprecated
     departure_type = db.StringField(choices=DEPARTURE_TYPES, default=FIXED_DEPARTURE_TYPE)
+    expected_duration = db.StringField()
+    expected_conditions = db.StringField()
 
     meta = {
         'indexes': [
