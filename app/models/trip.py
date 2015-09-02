@@ -7,6 +7,9 @@ from app.models.media import TripGalleryImage
 from app.models.profile import Profile
 from app import utils
 
+
+DEPARTURE_TYPES = (FIXED_DEPARTURE_TYPE, ON_REQUEST_DEPARTURE_TYPE) = ('Fixed', 'On Request')
+
 @update_content.apply
 class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
     starting_from = db.StringField() # deprecated
@@ -26,13 +29,13 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
     inclusive_exclusive = db.StringField()
     others = db.StringField() # deprecated
     other_details = db.StringField()
-    #comments = db.ListField(db.ReferenceField('Post'))
     announcements = db.StringField()
     optional_location_name = db.StringField()
     _duration = db.IntField()
     published = db.BooleanField(default=False)
     published_timestamp = db.DateTimeField()
     admin_published = db.BooleanField(default=True) # Deprecated
+    departure_type = db.StringField(choices=DEPARTURE_TYPES, default=FIXED_DEPARTURE_TYPE)
 
     meta = {
         'indexes': [
@@ -90,7 +93,6 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
         else:
             a = 'AM'
         return "%s:%s %s" % (h, m, a)
-
 
     @property
     def media_gallery(self):

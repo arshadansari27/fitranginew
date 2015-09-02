@@ -39,8 +39,9 @@ class Media(db.Document):
 
     @property
     def image_path_small(self):
-        path = self.path if self.path else None
-        if path is None:
+        path = self.image_path
+        print base_path + path
+        if path is None or not os.path.exists(base_path + path):
             return ''
         else:
             steps = path.split('/')
