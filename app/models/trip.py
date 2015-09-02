@@ -12,8 +12,8 @@ DEPARTURE_TYPES = (FIXED_DEPARTURE_TYPE, ON_REQUEST_DEPARTURE_TYPE) = ('Fixed', 
 
 @update_content.apply
 class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
-    starting_from = db.StringField() # deprecated
-    geo_starting_from = db.PointField() # deprecated
+    starting_from = db.StringField()
+    geo_starting_from = db.PointField()
     organizer = db.ReferenceField('Profile')
     activities = db.ListField(db.ReferenceField('Activity'))
     adventure = db.ReferenceField('Adventure') # deprecated
