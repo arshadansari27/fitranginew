@@ -17,7 +17,7 @@
     {% else %}
     {% set user_is_owner = False %}
     {% endif %}
-    <div class="{% if user_is_owner %}col-lg-7 col-md-7{% else %}col-lg-9 col-md-9{% endif %} col-xs-12 going-list well well-sm">
+    <div class="{% if user_is_owner %}col-lg-7 col-md-7{% else %}col-lg-8 col-md-8{% endif %} col-xs-12 going-list well well-sm">
 
             {% for u in model.interested %}
                 <a href="{{u.slug}}"><img src="{{u.cover_image_path}}" class="" width="48"></a>
