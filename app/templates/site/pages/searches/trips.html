@@ -167,8 +167,8 @@
                 <div role="tabpanel" class="tab-pane fade" id="on-request" aria-labelledby="on-request">
                     <div class="container fitrangi-trips">
                         {% if user %}
-                        <input id="on-request-trip-filter" data-category="on-request" data-model="trip" data-filter="departure_type__iexact" type="hidden" value="On Request" data-filter-status="fixed">
-                        {{ interesting|safe }}
+                        <input id="on-request-trip-filter" data-category="on-request" data-model="trip" data-filter="departure_type__exact" type="hidden" value="On Request" data-filter-status="fixed">
+                        {{ on_request|safe }}
                         {% endif %}
                     </div>
                 </div>
