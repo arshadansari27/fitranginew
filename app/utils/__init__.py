@@ -51,7 +51,7 @@ def convert_query_to_filter(query):
             if not u or len(u) is 0:
                 continue
             filters.append(u)
-    return dict([tuple(f.split(':')) for f in filters])
+    return dict([tuple(f.split(':')) if len(f.split(':')) > 1 and len(f.split(':')[1]) > 0 else (f.split(':')[0] if len(f.split(':')) > 0 else f) for f in filters])
 
 
 def login_required(func):

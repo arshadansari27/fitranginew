@@ -90,14 +90,22 @@
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 fitrangi-datalist fitrangi-range">
                 <div class="form-group">
-                    <h3>Sort</h3>
+                    <h3>Departure Location</h3>
 
                     <div class="range range-primary">
-                        <input id="duration-sorter" data-model="trip" data-category="upcoming" list="sorter" data-sorter="_duration" placeholder="Sort By"/>
-                        <datalist id="sorter">
-                            <option value="high">Longer Duration First</option>
-                            <option value="low">Shorter Duration First</option>
+                        <input id="departure-filter" data-model="trip" list="departure-from" data-filter="starting_from__icontains" placeholder="Starting Location"/>
+                        <datalist id="departure-from">
+                                <option value="">
                         </datalist>
+                        <script>
+                            $(document).ready(function(){
+                                $.ajax({
+                                    url: '/options2?model_name=trip&method=distinct_starting_cities'
+                                }).done(function (data) {
+                                    $('#departure-from').append(data);
+                                });
+                            });
+                        </script>
                     </div>
                 </div>
 
@@ -127,12 +135,15 @@
                 <ul id="myTab" class="nav nav-tabs" role="tablist">
                     <li class="active"><a href="#upcoming" role="tab" data-toggle="tab" aria-controls="upcoming" aria-expanded="false">
                         <span class="fa fa-home"></span> <strong>Upcoming Trips</strong></a></li>
-                    {% if user %}<li class=""><a href="#interesting" role="tab" data-toggle="tab" aria-controls="interesting"
+                    <li class=""><a href="#on-request" role="tab" data-toggle="tab" aria-controls="on-request"
                             aria-expanded="false">
-                        <span class="fa fa-certificate"></span> <strong>Interesting or Joined Trips </strong> </a></li>{% endif %}
+                        <span class="fa fa-certificate"></span> <strong>On Request Trips</strong> </a></li>
+                    {% if user %}<!--li class=""><a href="#interesting" role="tab" data-toggle="tab" aria-controls="interesting"
+                            aria-expanded="false">
+                        <span class="fa fa-certificate"></span> <strong>Interesting or Joined Trips </strong> </a></li-->{% endif %}
                     {% if user and (user.is_organizer or user.is_admin) %}<li class=""><a href="#my-trips" role="tab" data-toggle="tab" aria-controls="my-trips"
                             aria-expanded="false">
-                        <span class="fa fa-certificate"></span> <strong>Trips Added By Me</strong> </a></li>{% endif %}
+                        <span class="fa fa-certificate"></span> <strong>My Trips</strong> </a></li>{% endif %}
                 </ul>
             </div>
         </div>
@@ -141,6 +152,7 @@
                 <div role="tabpanel" class="tab-pane fade active in" id="upcoming" aria-labelledby="upcoming">
                     <div class="container fitrangi-trips">
                         <input id="start-date-default-filter" data-category="upcoming" data-model="trip" data-filter="start_date__gt" type="hidden" name="start" value="{{now}}" data-filter-status="fixed">
+                        <input id="fixed-trip-filter" data-category="upcoming" data-model="trip" data-filter="departure_type__iexact" type="hidden" value="Fixed" data-filter-status="fixed">
                         {{ upcoming|safe }}
                     </div>
                 </div>
@@ -148,6 +160,14 @@
                     <div class="container fitrangi-trips">
                         {% if user %}
                         <input id="interesting-trip-filter" data-category="interesting" data-model="trip" data-filter="relationship__interested__profile" type="hidden" value="{{user.id}}" data-filter-status="fixed">
+                        {{ interesting|safe }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="on-request" aria-labelledby="on-request">
+                    <div class="container fitrangi-trips">
+                        {% if user %}
+                        <input id="on-request-trip-filter" data-category="on-request" data-model="trip" data-filter="departure_type__iexact" type="hidden" value="On Request" data-filter-status="fixed">
                         {{ interesting|safe }}
                         {% endif %}
                     </div>
@@ -201,13 +221,15 @@
         window.App.filter('interesting-trip-filter');
         window.App.filter('price_start_filter');
         window.App.filter('my-trip-filter');
+        window.App.filter('fixed-trip-filter');
+        window.App.filter('on-request-trip-filter');
+        window.App.filter('departure-filter');
         window.App.sorter('location-sorter-lat');
         window.App.sorter('location-sorter-lng');
         window.App.sorter('location-sorter-locality');
         window.App.sorter('location-sorter-region2');
         window.App.sorter('location-sorter-region1');
         window.App.sorter('location-sorter-country');
-        window.App.sorter('duration-sorter');
     });
 </script>
 {% if filters.get('activities__activity__name') %}

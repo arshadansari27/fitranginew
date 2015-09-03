@@ -51,6 +51,11 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
     def __unicode__(self):
         return self.__repr__()
 
+    @classmethod
+    def distinct_starting_cities(cls):
+        # TODO: Make sure to use flask cache with this.
+        return list(set([trip.starting_from for trip in Trip.objects.all()]))
+
     @property
     def from_date_only(self):
         u = self.start_date

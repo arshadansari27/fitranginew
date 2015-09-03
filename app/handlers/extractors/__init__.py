@@ -26,9 +26,10 @@ class JSONEncoder(json.JSONEncoder):
 class NodeExtractor(object):
 
 
-    def __init__(self, model_name, init_filters={}):
+    def __init__(self, model_name, init_filters={}, sorter_default={}):
         self.model_class = NodeFactory.get_class_by_name(model_name)
         self.init_filters = init_filters
+        self.sorter_default = sorter_default
 
     def get_list(self, query, paged, page, size, sort=None):
         query_set = self.get_query(query, sort=sort)
@@ -56,10 +57,21 @@ class NodeExtractor(object):
         page = (count / int(size)) + 1
         return page
 
+    def default_sorter(self):
+        return self.sorter_default if hasattr(self, 'sorter_default') and self.sorter_default else None
+
     def get_query(self, query, sort=None):
         use_filters = convert_query_to_filter(query)
-        if sort:
+        default_sorters = self.default_sorter()
+        if sort or (default_sorters and len(default_sorters) > 0):
             sorters = convert_query_to_filter(sort)
+            if not sorters:
+                sorters = {}
+            if default_sorters and len(default_sorters) > 0:
+                for k, v in default_sorters.iteritems():
+                    if sorters.has_key(k):
+                        continue
+                    sorters[k] = v
         else:
             sorters = {}
         filters = dict((u, v) for u, v in self.init_filters.iteritems())
@@ -214,7 +226,7 @@ discussion_extractor = NodeExtractor(DISCUSSION)
 post_extractor = NodeExtractor(POST)
 adventure_extractor = NodeExtractor(ADVENTURE)
 event_extractor = NodeExtractor(EVENT)
-trip_extractor = NodeExtractor(TRIP)
+trip_extractor = NodeExtractor(TRIP, sorter_default=dict(start_date='low'))
 profile_extractor = NodeExtractor(PROFILE, init_filters=dict(type__ne=ProfileType.objects(name__iexact='Subscription Only').first()))
 all_profile_extractor = NodeExtractor(PROFILE)
 relationship_extractor = NodeExtractor(RELATIONSHIPS)

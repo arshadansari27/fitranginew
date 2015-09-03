@@ -498,7 +498,27 @@ def paged_list():
 @app.route('/notifications-count')
 def get_notifications_count():
     if hasattr(g, 'user') and g.user:
-        return jsonify(dict(public_activity_count=g.user.public_activity_count, private_activity_count=g.user.private_activity_count))
+        return jsonify(
+            dict(
+                public_activity_count=g.user.public_activity_count,
+                private_activity_count=g.user.private_activity_count
+            )
+        )
+    else:
+        return jsonify(dict(status='error'))
+
+@app.route('/options2')
+def ajax_options2():
+    model_name = request.args.get('model_name', '')
+    method = request.args.get('method', '')
+    if not model_name or not method:
+        return ''
+    else:
+        vals = getattr(NodeFactory.get_class_by_name(model_name), method)()
+        str_to_use = '<option value="%s">%s</option>'
+        results = set([str_to_use % (u, u) for u in vals])
+        return ''.join(results)
+
 
 @app.route('/options')
 def ajax_options():
