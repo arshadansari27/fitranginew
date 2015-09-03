@@ -12,7 +12,22 @@
     </div>
 </section>
 <section class="container border-grey-b text-right p-10 mb-20">
+    {% if user and (model.organizer.id == user.id) %}
+    {% set user_is_owner = True %}
+    {% else %}
+    {% set user_is_owner = False %}
+    {% endif %}
+    <div class="{% if user_is_owner %}col-lg-7 col-md-7{% else %}col-lg-9 col-md-9{% endif %} col-xs-12 going-list well well-sm">
 
+            {% for u in model.interested %}
+                <a href="{{u.slug}}"><img src="{{u.cover_image_path}}" class="" width="48"></a>
+                {% else %}
+                <div class="">
+                    <h4>Be the first to show interest in this event, from here -></h4>
+                </div>
+            {% endfor %}
+
+    </div>
     {% if not model in user.interested_trip %}
         <a class="btn btn-primary" href="#" data-action="add-trip-interested" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-link"></span>&nbsp;Interested</a>
     {% else %}
@@ -22,7 +37,7 @@
         <!--a class="btn btn-primary"  href="#" data-action="remove-trip-joined" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-link green"></span>&nbsp;Unjoin</a-->
     {% endif %}
     <a class="btn btn-primary"  href="#book-now" ><span class="fa fa-bookmark"></span>&nbsp;Booking Enquiry</a>
-    {% if user and (model.organizer.id == user.id) %}
+    {% if user_is_owner %}
     <button data-user-id="{{user.id}}" data-model-id="{{model.id}}" class="btn btn-default btn-edi blue" type="button" onclick="javascript: window.location.href='/add-edit-trip?pk={{model.id}}'"><i class="fa fa-edit"></i> Edit </button>
     {% endif %}
 </section>
@@ -61,30 +76,28 @@
             </div>
 
             <article>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <div class="row">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <div>
                             <i class="fa fa-calendar "></i>
                         </div>
                         <div>
                             <strong class="dark-grey">Date</strong>
-                            <p class="dark-grey">{{model.total_date|safe}}</p>
+                            <p class="dark-grey">
+                                {% if model.departure_type == 'Fixed' %}{{model.total_date|safe}}{% else %}On Request{% endif %}
+                            </p>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <div>
                             <i class="fa fa-clock-o"></i>
                         </div>
                         <div >
-                            <strong class="dark-grey">Days</strong>
-                            <p class="dark-grey"> {{model.duration}} </p>
+                            <strong class="dark-grey">{% if model.departure_type == 'Fixed' %}Days{% else %}Duration{% endif %}</strong>
+                            <p class="dark-grey"> {% if model.departure_type == 'Fixed' %}{{model.duration}}{% else %}{{model.expected_duration}}{% endif %} </p>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <div>
                             <i class="fa fa-map-marker"></i>
                         </div>
@@ -93,9 +106,16 @@
                             <p class="dark-grey">{% if model.optional_location_name %}{{ model.optional_location_name }}{% else %}{{model.location }}{% endif %}</p>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <div>
+                            <i class="fa fa-map-marker"></i>
+                        </div>
+                        <div>
+                            <strong class="dark-grey">Departure From</strong>
+                            <p class="dark-grey">{% if model.starting_from %}{{ model.starting_from }}{% else %}Not Specified{% endif %}</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <div>
                             <i class="fa fa-inr"></i>
                         </div>
@@ -158,37 +178,35 @@
     </div>
     <!--col5-close-->
 
-    <div class="col-lg-12 col-md-12 col-xs-12 going-list">
 
-            {% for u in model.interested %}
-                <a href="{{u.slug}}"><img src="{{u.cover_image_path}}" class="" width="48"></a>
-                {% else %}
-                <div class="well well-sm">
-                    <h4>Be the first to show interest in this event</h4>
-                </div>
-            {% endfor %}
-
-         </div>
     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
         <div class="row-fluid adventure-trips-tabs">
             <ul class="nav nav-pills " role="tablist">
-                <li class="active"><a href="#discussion" aria-controls="discussion" role="tab" data-toggle="tab">
-                    </i> <strong>Event Discussion</strong></a></li>
 
 
-                <li><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">
+                {% if model.about and model.about|length > 0 %}
+                <li class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">
                      <strong>Overview</strong></a></li>
+                {% endif %}
 
+                {% if model.itinerary and model.itinerary|length > 0 %}
                 <li><a href="#itinerary" aria-controls="schedule" role="tab" data-toggle="tab">
                      <strong>Itinerary</strong></a></li>
+                {% endif %}
 
 
+                {% if model.inclusive_exclusive and model.inclusive_exclusive|length > 0 %}
                 <li><a href="#inclusive-exclusive" aria-controls="details" role="tab" data-toggle="tab">
-                     <strong>Inclusive/Exclusive</strong></a></li>
+                    <strong>Inclusive/Exclusive</strong></a></li>
+                {% endif %}
 
+                {% if model.other_details and model.other_details|length > 0 %}
                 <li><a href="#other-details" aria-controls="things_to_carry" role="tab" data-toggle="tab">
                      <strong>Other Details</strong></a></li>
+                {% endif %}
 
+                <li><a href="#discussion" aria-controls="discussion" role="tab" data-toggle="tab">
+                    </i> <strong>Event Discussion</strong></a></li>
 
             </ul>
 
@@ -202,7 +220,7 @@
                     </article>
                 </div>
                 <!-- End of Tab Pane -->
-                <div class="tab-pane  active" id="discussion">
+                <div class="tab-pane" id="discussion">
 
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div>
@@ -214,7 +232,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane" id="overview">
+                <div class="tab-pane active" id="overview">
                     <!--h3>Overview Underconstructions</h3-->
                     {% if model.about %}{{ model.about|safe }}{% endif %}
                 </div>
