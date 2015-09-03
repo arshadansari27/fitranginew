@@ -11,26 +11,47 @@
                 <input type="hidden" data-name="id" value="{%if model and model.id %}{{model.id}}{% endif %}">
                 <input type="hidden" data-name="user" value="{% if model and model.organizer %}{{model.organizer.id}}{%elif user and user.id %}{{user.id}}{% endif %}">
             </div>
+            <div class="form-group">
+                <label for="heading">Departure Type<span class="red">*</span> </label>
+                <select data-name="departure-type">
+                    <option value="On Request" {% if model.departure_type and model.departure_type == 'On Request' %}selected{% endif %}>On Request</option>
+                    <option value="Fixed" {% if not model.departure_type or model.departure_type|length == 0 or model.departure_type == 'Fixed' %}selected{% endif %}>Fixed</option>
+                </select>
+            </div>
 
             <div class="form-group">
+                <div class="fixed-trip-container well" style="display:none;">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <label for="heading">FROM<span class="red">*</span></label><input type="date" class="form-control" name="fromdate" data-name="fromdate" value="{% if model and model.start_date %}{{model.from_date_only}}{% endif %}">
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <label for="heading">TIME</label><input type="time" class="form-control" name="fromtime" data-name="fromtime" value="{%if model and model.start_date %}{{model.from_date_time}}{% endif %}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <label for="heading">TO<span class="red">*</span></label><input type="date" class="form-control" name="todate" data-name="todate" value="{%if model and model.end_date %}{{model.to_date_only}}{% endif %}">
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <label for="heading">TIME</label><input type="time" class="form-control" name="totime" data-name="totime" value="{%if model and model.end_date %}{{model.to_date_time}}{% endif %}">
+                        </div>
+                    </div>
+                </div>
+                <div class="on-request-trip-container well" style="display:none;">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <label for="heading">No. of days/nights<span class="red">*</span></label><input type="text" class="form-control" name="requestduration" data-name="request-duration" value="{% if model and model.request_duration %}{{model.request_duration}}{% endif %}">
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <label for="heading">Operating Seasons/Conditions etc.</label><input type="text" class="form-control" name="requestconditions" data-name="request-conditions" value="{%if model and model.request_conditions %}{{model.request_conditions }}{% endif %}">
+                        </div>
+                    </div>
+                </div>
 
-                <div class="row">
-                    <div class="col-md-4 col-sm-6 col-xs-6">
-                        <label for="heading">FROM<span class="red">*</span></label><input type="date" class="form-control" name="fromdate" data-name="fromdate" value="{% if model and model.start_date %}{{model.from_date_only}}{% endif %}">
-                    </div>
-                    <div class="col-md-4 col-sm-6 col-xs-6">
-                        <label for="heading">TIME</label><input type="time" class="form-control" name="fromtime" data-name="fromtime" value="{%if model and model.start_date %}{{model.from_date_time}}{% endif %}">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 col-sm-6 col-xs-6">
-                        <label for="heading">TO<span class="red">*</span></label><input type="date" class="form-control" name="todate" data-name="todate" value="{%if model and model.end_date %}{{model.to_date_only}}{% endif %}">
-                    </div>
-                    <div class="col-md-4 col-sm-6 col-xs-6">
-                        <label for="heading">TIME</label><input type="time" class="form-control" name="totime" data-name="totime" value="{%if model and model.end_date %}{{model.to_date_time}}{% endif %}">
-                    </div>
-                </div>
-                <br>
+            </div>
+
+            <div class="form-group">
 
                 <div class="row">
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
@@ -49,8 +70,8 @@
 
                     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                         <div class="form-group">
-                            <label for="heading">Pincode / Zipcode</label>
-                            <input type="text" name="pincode" class="form-control" placeholder="Enter pincode / zipcode" data-name="zipcode" value="{%if model and model.zipcode %}{{model.zipcode}}{% endif %}">
+                            <label for="heading">Departure From</label>
+                            <input type="text" name="departure_from" class="form-control" placeholder="Departure From Location" data-name="departure-from" value="{%if model and model.starting_from %}{{model.starting_from }}{% endif %}">
                         </div>
                     </div>
                 </div>
@@ -212,28 +233,38 @@
             var id = $('[data-name="id"]').val();
             var organizer = $('[data-name="user"]').val();
             var title = $('[data-name="title"]').val();
-            var fromdate = $('[data-name="fromdate"]').val();
-            var fromtime = $('[data-name="fromtime"]').val();
+            var departure_type = $('[data-name="departure-type"]').val();
+
             var from = '';
-            if (fromdate.length > 0){
-                from = fromdate + ' ';
-                if (fromtime.length > 0) {
-                    from += fromtime;
-                } else {
-                    from += '00:00:00';
+            var to = '';
+            var request_duration = $('[data-name="request-duration"]').val();
+            var request_conditions = $('[data-name="request-conditions"]').val();
+            if (departure_type == 'Fixed'){
+                from = '';
+                to = ''
+                var fromdate = $('[data-name="fromdate"]').val();
+                var fromtime = $('[data-name="fromtime"]').val();
+                if (fromdate.length > 0){
+                    from = fromdate + ' ';
+                    if (fromtime.length > 0) {
+                        from += fromtime;
+                    } else {
+                        from += '00:00:00';
+                    }
+                }
+                var todate = $('[data-name="todate"]').val();
+                var totime = $('[data-name="totime"]').val();
+                if (todate.length > 0){
+                    to = todate + ' ';
+                    if (totime.length > 0) {
+                        to += totime;
+                    } else {
+                        to += '00:00:00';
+                    }
                 }
             }
-            var todate = $('[data-name="todate"]').val();
-            var totime = $('[data-name="totime"]').val();
-            var to = ''
-            if (todate.length > 0){
-                to = todate + ' ';
-                if (totime.length > 0) {
-                    to += totime;
-                } else {
-                    to += '00:00:00';
-                }
-            }
+
+
             var location_name = $('[data-name="geo_location_name"]').val();
             var location_lat = $('[data-name="geo_location_lat"]').val();
             var location_lng = $('[data-name="geo_location_long"]').val();
@@ -242,7 +273,7 @@
             var location_state = $('[data-name="geo_state"]').val();
             var location_country = $('[data-name="geo_country"]').val();
             //console.log("Location: " + location_name + ', ' + location_lat + ', '+ location_lng + ', '+ location_city + ', ' + location_region + ', ' + location_state + ', ' + location_country);
-            var zipcode = $('[data-name="zipcode"]').val();
+            var starting_from = $('[data-name="departure-from"]').val();
             var optional_location_name = $('[data-name="optional_location_name"]').val();
             var price = $('[data-name="price"]').val();
             var $activities = $('[data-name="activities"]:checked');
@@ -275,7 +306,7 @@
                 location_region: location_region,
                 location_state: location_state,
                 location_country:location_country,
-                zipcode: zipcode,
+                starting_from: starting_from,
                 optional_location_name: optional_location_name,
                 price: price,
                 activities: activities,
@@ -284,7 +315,10 @@
                 itinerary: itinerary,
                 inclusive_exclusive: incl_excl,
                 other_details: other_details,
-                organizer: organizer
+                organizer: organizer,
+                departure_type: departure_type,
+                request_duration: request_duration,
+                request_conditions: request_conditions
             };
             if (id != undefined && id.length > 0){
                 alert('editing')
@@ -356,6 +390,26 @@
                 })
             }
         });
+
+        $('body').on('change', '[data-name="departure-type"]', function(e){
+            var departure_type = $('[data-name="departure-type"]').val();
+            if (departure_type == 'Fixed') {
+                $('.fixed-trip-container').show();
+                $('.on-request-trip-container').hide();
+            } else {
+                $('.fixed-trip-container').hide();
+                $('.on-request-trip-container').show();
+            }
+        });
+
+        var pre_departure_type = $('[data-name="departure-type"]').val();
+        if (pre_departure_type == 'Fixed') {
+            $('.fixed-trip-container').show();
+            $('.on-request-trip-container').hide();
+        } else {
+            $('.fixed-trip-container').hide();
+            $('.on-request-trip-container').show();
+        }
 
     });
 </script>

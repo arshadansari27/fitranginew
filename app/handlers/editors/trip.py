@@ -78,6 +78,39 @@ def _edit(data, node=None):
 
     node = get_or_create_trip(node)
     node.name = data['title']
+    node.starting_from = data['starting_from']
+    node.departure_type = data['departure_type']
+    if not node.departure_type or len(node.departure_type) is 0:
+        raise Exception('Invalid departure type for the trip')
+        if node.departure_type == 'Fixed':
+            if data.get('from'):
+                from_date_time = data['from']
+                f_date, f_time = from_date_time.split(' ')
+                YYYY, MM, DD = f_date.split('-')
+                if len(f_time.split(':')) is 3:
+                    hh, mm, ss = f_time.split(':')
+                else:
+                    hh, mm = f_time.split(':')
+                ss = '0'
+                YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), hh.strip(), mm.strip(), ss.strip()]]
+                node.start_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
+            if data.get('to'):
+                to_date_time = data['to']
+                t_date, t_time = to_date_time.split(' ')
+                YYYY, MM, DD = t_date.split('-')
+                if len(t_time.split(':')) is 3:
+                    hh, mm, ss = t_time.split(':')
+                else:
+                    hh, mm = t_time.split(':')
+                ss = '0'
+                YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), hh.strip(), mm.strip(), ss.strip()]]
+                node.end_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
+    elif node.departure_type == 'On Request':
+        node.expected_duration = data['request_duration']
+        node.expected_conditions = data['request_conditions']
+    else:
+        raise Exception('Invalid departure type for the trip')
+
     if data.get('organizer') is None or len(data['organizer']) is 0:
         raise Exception('Invalid organizer for the trip')
     organizer = NodeExtractor.factory('profile').get_single("pk:%s" % data['organizer'])
@@ -127,28 +160,7 @@ def _edit(data, node=None):
                 media = media.save()
                 print 'Gallery image uploaded:', media.image_path
 
-    if data.get('from'):
-        from_date_time = data['from']
-        f_date, f_time = from_date_time.split(' ')
-        YYYY, MM, DD = f_date.split('-')
-        if len(f_time.split(':')) is 3:
-            hh, mm, ss = f_time.split(':')
-        else:
-            hh, mm = f_time.split(':')
-            ss = '0'
-        YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), hh.strip(), mm.strip(), ss.strip()]]
-        node.start_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
-    if data.get('to'):
-        to_date_time = data['to']
-        t_date, t_time = to_date_time.split(' ')
-        YYYY, MM, DD = t_date.split('-')
-        if len(t_time.split(':')) is 3:
-            hh, mm, ss = t_time.split(':')
-        else:
-            hh, mm = t_time.split(':')
-            ss = '0'
-        YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), hh.strip(), mm.strip(), ss.strip()]]
-        node.end_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
+
     node.published = True
     if adding:
         node.admin_published = False
