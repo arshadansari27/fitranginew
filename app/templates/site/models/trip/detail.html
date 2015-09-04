@@ -121,7 +121,7 @@
                         </div>
                         <div>
                             <strong class="dark-grey">Amount</strong>
-                            <p class="dark-grey">{{model.price|int}} /- per person</p>
+                            <p class="dark-grey">{% if model.price_on_request %}Price on request{% else %}{{model.price|int}} /- per person {% endif %}</p>
                         </div>
                     </div>
                 </div>

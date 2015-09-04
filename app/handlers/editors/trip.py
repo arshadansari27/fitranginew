@@ -82,29 +82,29 @@ def _edit(data, node=None):
     node.departure_type = data['departure_type']
     if not node.departure_type or len(node.departure_type) is 0:
         raise Exception('Invalid departure type for the trip')
-        if node.departure_type == 'Fixed':
-            if data.get('from'):
-                from_date_time = data['from']
-                f_date, f_time = from_date_time.split(' ')
-                YYYY, MM, DD = f_date.split('-')
-                if len(f_time.split(':')) is 3:
-                    hh, mm, ss = f_time.split(':')
-                else:
-                    hh, mm = f_time.split(':')
-                ss = '0'
-                YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), hh.strip(), mm.strip(), ss.strip()]]
-                node.start_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
-            if data.get('to'):
-                to_date_time = data['to']
-                t_date, t_time = to_date_time.split(' ')
-                YYYY, MM, DD = t_date.split('-')
-                if len(t_time.split(':')) is 3:
-                    hh, mm, ss = t_time.split(':')
-                else:
-                    hh, mm = t_time.split(':')
-                ss = '0'
-                YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), hh.strip(), mm.strip(), ss.strip()]]
-                node.end_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
+    if node.departure_type == 'Fixed':
+        if data.get('from'):
+            from_date_time = data['from']
+            f_date, f_time = from_date_time.split(' ')
+            YYYY, MM, DD = f_date.split('-')
+            if len(f_time.split(':')) is 3:
+                hh, mm, ss = f_time.split(':')
+            else:
+                hh, mm = f_time.split(':')
+            ss = '0'
+            YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), hh.strip(), mm.strip(), ss.strip()]]
+            node.start_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
+        if data.get('to'):
+            to_date_time = data['to']
+            t_date, t_time = to_date_time.split(' ')
+            YYYY, MM, DD = t_date.split('-')
+            if len(t_time.split(':')) is 3:
+                hh, mm, ss = t_time.split(':')
+            else:
+                hh, mm = t_time.split(':')
+            ss = '0'
+            YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), hh.strip(), mm.strip(), ss.strip()]]
+            node.end_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
     elif node.departure_type == 'On Request':
         node.expected_duration = data['request_duration']
         node.expected_conditions = data['request_conditions']
@@ -135,7 +135,8 @@ def _edit(data, node=None):
             node.country = data['location_country']
     if data.get('zipcode'):
         node.zipcode = data['zipcode']
-    if data.get('price'):
+    node.price_on_request = data['price_on_request']
+    if data.get('price') and not node.price_on_request:
         node.price = float(data['price'])
     if data.get('activities'):
         activities = []

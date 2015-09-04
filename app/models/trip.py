@@ -38,6 +38,7 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
     departure_type = db.StringField(choices=DEPARTURE_TYPES, default=FIXED_DEPARTURE_TYPE)
     expected_duration = db.StringField()
     expected_conditions = db.StringField()
+    price_on_request = db.BooleanField(default=False)
 
     meta = {
         'indexes': [
