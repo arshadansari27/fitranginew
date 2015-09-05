@@ -7,7 +7,7 @@
         <form class="fitrangi-form">
             <div class="form-group">
                 <label for="heading">Title<span class="red">*</span> </label>
-                <input type="text" class="form-control" name="title" placeholder="Enter Trip Title" data-name="title" value="{%if model and model.name %}{{model.name }}{% endif %}">
+                <input type="text" class="form-control" name="title" placeholder="Write Trip Title" data-name="title" value="{%if model and model.name %}{{model.name }}{% endif %}">
                 <input type="hidden" data-name="id" value="{%if model and model.id %}{{model.id}}{% endif %}">
                 <input type="hidden" data-name="user" value="{% if model and model.organizer %}{{model.organizer.id}}{%elif user and user.id %}{{user.id}}{% endif %}">
             </div>
@@ -83,7 +83,7 @@
                 <div class="row">
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                         <div class="form-group">
-                            <label for="heading">Departure From</label>
+                            <label for="heading">Departure From (Starting From)</label>
                             <input type="text" name="departure_from" class="form-control" placeholder="Departure From Location" data-name="departure-from" value="{%if model and model.starting_from %}{{model.starting_from }}{% endif %}">
                         </div>
                     </div>
@@ -142,13 +142,13 @@
                     <input type="hidden" data-name="cover-image" value="{% if model.cover_image %}{{ model.cover_image_path }}{% endif %}"/>
                 </div>
                 <div class="form-group">
-                    <label for="heading">Overview about the trip<span class="red">*</span></label>
+                    <label for="heading">Overview <small>(About the destination)</small><span class="red">*</span></label>
                     <textarea class="form-control summernote" name="itinerary" rows="4" data-name="overview"
                               placeholder="Write Brief About The Trip...">{% if model and model.about %}{{model.about}}{% endif %}</textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="heading">Itinerary<span class="red">*</span></label>
+                    <label for="heading">Itinerary <small>(Schedule, Things to carry, etc)</small><span class="red">*</span></label>
                     <textarea class="form-control summernote" name="itinerary" rows="4" data-name="itinerary"
                               placeholder="Write Brief About Itinerary...">{% if model and model.itinerary %}{{model.itinerary}}{% endif %}</textarea>
                 </div>
@@ -158,7 +158,7 @@
                               placeholder="Write Brief About Inclusive and Exclusive...">{% if model and model.inclusive_exclusive%}{{model.inclusive_exclusive}}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
-                    <label for="heading">Other details</label>
+                    <label for="heading">Other details <small>(Notes, Highlights, Cancellation, etc)</small></label>
                     <textarea class="form-control summernote" name="other_details" rows="4" data-name="other_details"
                               placeholder="Write Brief About Other Details...">{% if model and model.other_details %}{{model.other_details }}{% endif %}</textarea>
                 </div>
@@ -167,7 +167,7 @@
                         <label for="heading" style="vertical-align: middle; height: 30px;">
                             Upload Gallery Images
                         </label>
-                        <a href="#" data-action="media-gallery-upload"><i class="fa fa-plus-circle fa-2x"></i></a>
+                        <a href="#" data-action="media-gallery-upload"><i class="fa fa-plus-circle fa-3x"></i></a>
                     </div>
                     <div id="media-gallery-uploads" class="container">
                         {% for mg in model.media_gallery %}
