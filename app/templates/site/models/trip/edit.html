@@ -94,14 +94,14 @@
                         <div class="form-group">
                             <label for="heading">Amount<span class="red">*</span></label>
                             <div class="input-group">
-                                <input type="number" class="form-control" placeholder="Enter Amount" data-name="price" value="{%if model and model.price %}{{model.price|int }}{% endif %}">
+                                <input type="number" class="form-control" placeholder="Enter Amount" data-name="price" value="{%if model and model.price and not model.price_on_request %}{{model.price|int }}{% endif %}">
                                 <a href="#" class="input-group-addon"><i class="fa fa-money-circle fa-inr"></i></a>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                         OR Price on request&nbsp;
-                        <input type="checkbox" class="" placeholder="Select for quote" data-name="price-on-request" {%if model and model.price_on_request %}checked{% endif %}>
+                        <input type="checkbox" class="" placeholder="Select for quote" data-name="price-on-request" {% if model and model.price_on_request == True %}checked{% endif %}>
                     </div>
                 </div>
 
@@ -143,7 +143,7 @@
                 </div>
                 <div class="form-group">
                     <label for="heading">Overview about the trip<span class="red">*</span></label>
-                    <textarea class="form-control summernote" name="itinerary" rows="4" data-name="itinerary"
+                    <textarea class="form-control summernote" name="itinerary" rows="4" data-name="overview"
                               placeholder="Write Brief About The Trip...">{% if model and model.about %}{{model.about}}{% endif %}</textarea>
                 </div>
 
@@ -183,7 +183,7 @@
             <hr/>
             <br/>
 
-            <div class="form-group {% if model %}hide{% endif %}">
+            <!--div class="form-group {% if model %}hide{% endif %}">
                 <div class="checkbox">
                     <label>
                         <input data-name="toc" type="checkbox" {% if model %}checked{% endif %}> I accept the terms and conditions as per the agreement.<span class="red">*</span>
@@ -197,7 +197,7 @@
                         <input data-name="is-manager" {% if model %}checked{% endif %} type="checkbox"> I am the administrator / manager / representative.<span class="red">*</span>
                     </label>
                 </div>
-            </div>
+            </div-->
 
             <form class="form-group">
                 <button data-action="save-trip" class="btn btn-primary">Submit</button>
@@ -290,7 +290,13 @@
             var starting_from = $('[data-name="departure-from"]').val();
             var optional_location_name = $('[data-name="optional_location_name"]').val();
             var price = $('[data-name="price"]').val();
-            var price_on_request = ($('[data-name="price-on-request"]').val() == undefined)? false: true;
+            var price_on_request = ($('[data-name="price-on-request"]:checked').val() == undefined)? false: true;
+            if (!price_on_request && (price == undefined || price.length == 0)) {
+                BootstrapDialog.alert('Price is mandatory if "Price on request" is not checked');
+                return;
+            } else if (price_on_request == true) {
+                price = '';
+            }
             var $activities = $('[data-name="activities"]:checked');
             var activities = [];
             for (var i = 0; i < $activities.length; i++){
@@ -306,6 +312,7 @@
             for (var i = 0; i < $media_gallery_images.length; i++){
                 media_gallery_images.push($($media_gallery_images[i]).val());
             }
+            var overview = $('[data-name="overview"]').val();
             var itinerary = $('[data-name="itinerary"]').val();
             var incl_excl = $('[data-name="inclusive_exclusive"]').val();
             var other_details = $('[data-name="other_details"]').val();
@@ -313,6 +320,7 @@
                 title: title,
                 from: from,
                 to: to,
+                about: overview,
                 location_name: location_name,
                 location_lat: location_lat,
                 location_lng: location_lng,
@@ -337,7 +345,6 @@
             };
 
             if (id != undefined && id.length > 0){
-                alert('editing')
                 App.trip.edit(id, data, function(data){
                     if (data.status == 'success') {
                         handle_success();
@@ -440,6 +447,7 @@
             }
         });
         var current_price_value = undefined;
+        current_price_value = $('[data-name="price"]').val();
         $('[data-name="price-on-request"]').on('change', function(e){
             e.stopPropagation();
             if($('[data-name="price-on-request"]:checked').val() == undefined){
@@ -449,7 +457,6 @@
                 current_price_value = $('[data-name="price"]').val();
                 $('[data-name="price"]').val('');
                 $('[data-name="price"]').addClass('disabled');
-
             }
         });
     });

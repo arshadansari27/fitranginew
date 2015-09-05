@@ -67,6 +67,7 @@ def edit(node, data):
     return _edit(data, node)
 
 def _edit(data, node=None):
+    print 'Trip Data:', data
     if not node:
         if not data.get('title'):
             raise Exception('Invalid title for the trip')
@@ -136,6 +137,7 @@ def _edit(data, node=None):
     if data.get('zipcode'):
         node.zipcode = data['zipcode']
     node.price_on_request = data['price_on_request']
+    node.about = data['about']
     if data.get('price') and not node.price_on_request:
         node.price = float(data['price'])
     if data.get('activities'):
