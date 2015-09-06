@@ -81,6 +81,18 @@ def _edit(data, node=None):
     node.name = data['title']
     node.starting_from = data['starting_from']
     node.departure_type = data['departure_type']
+    other_activities = data.get('other_activities', None)
+
+    if other_activities or len(other_activities) is 0:
+        other_activities = [u.strip() for u in other_activities.split(',') if u and len(u.strip()) > 0]
+    else:
+        other_activities = None
+
+    if other_activities and len(other_activities) > 0:
+        node.extra_activities = other_activities
+
+
+
     if not node.departure_type or len(node.departure_type) is 0:
         raise Exception('Invalid departure type for the trip')
     if node.departure_type == 'Fixed':

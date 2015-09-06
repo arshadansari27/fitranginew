@@ -16,25 +16,26 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
     geo_starting_from = db.PointField()
     organizer = db.ReferenceField('Profile')
     activities = db.ListField(db.ReferenceField('Activity'))
-    adventure = db.ReferenceField('Adventure') # deprecated
-    difficulty_rating = db.IntField() # deprecated
-    registration = db.StringField() # deprecated
+    extra_activities = db.ListField(db.StringField())
+    adventure = db.ReferenceField('Adventure')  # deprecated
+    difficulty_rating = db.IntField()  # deprecated
+    registration = db.StringField()  # deprecated
     start_date = db.DateTimeField()
     end_date = db.DateTimeField()
-    schedule = db.StringField() # deprecated
+    schedule = db.StringField()  # deprecated
     itinerary = db.StringField()
-    things_to_carry = db.StringField() #deprecated
-    inclusive = db.StringField() # deprecated
-    exclusive = db.StringField() # deprecated
+    things_to_carry = db.StringField()  #deprecated
+    inclusive = db.StringField()  # deprecated
+    exclusive = db.StringField()  # deprecated
     inclusive_exclusive = db.StringField()
-    others = db.StringField() # deprecated
+    others = db.StringField()  # deprecated
     other_details = db.StringField()
     announcements = db.StringField()
     optional_location_name = db.StringField()
     _duration = db.IntField()
     published = db.BooleanField(default=False)
     published_timestamp = db.DateTimeField()
-    admin_published = db.BooleanField(default=True) # Deprecated
+    admin_published = db.BooleanField(default=True)  # Deprecated
     departure_type = db.StringField(choices=DEPARTURE_TYPES, default=FIXED_DEPARTURE_TYPE)
     expected_duration = db.StringField()
     expected_conditions = db.StringField()

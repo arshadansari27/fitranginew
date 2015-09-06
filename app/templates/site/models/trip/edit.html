@@ -111,25 +111,31 @@
                     <textarea class="form-control" name="itinerary" placeholder="Enter ItenAddress"></textarea>
                 </div-->
                 <div class="container">
-                            <label for="heading">Activity<span class="red">*</span></label>
+                    <label for="heading">Activity<span class="red">*</span></label>
 
-                            <div class="row-fluid">
-                                {% set ll = activities|length %}
-                                {% for i in range(0, ll, 3) %}
-                                <div class="row-fluid">
-                                    {% for j in range(3) %}
-                                        {% if (i + j) < ll %}
-                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
-                                                {% set activity = activities[(i + j)]%}
-                                                <div class="checkbox">
-                                                    <p><input type="checkbox" data-name="activities" data-value="{{activity.id}}" {% if activity in model.activities %}checked{% endif %}> {{activity.name}}</p>
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                                {% endfor %}
-                            </div>
+                    <div class="row-fluid">
+                        {% set ll = activities|length %}
+                        {% for i in range(0, ll, 3) %}
+                        <div class="row-fluid">
+                            {% for j in range(3) %}
+                                {% if (i + j) < ll %}
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                        {% set activity = activities[(i + j)]%}
+                                        <div class="checkbox">
+                                            <p><input type="checkbox" data-name="activities" data-value="{{activity.id}}" {% if activity in model.activities %}checked{% endif %}> {{activity.name}}</p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="row-fluid">
+                        <br/>
+                        <span><u>Others, please specify</u></span>
+                        <input class="form-control" type="text" data-name="other-activities" placeholder="Enter other activities as comma seperated list"/>
+                    </div>
                 </div>
                 <br/>
                 <hr/>
@@ -168,7 +174,6 @@
                         <label for="heading" style="vertical-align: middle; height: 30px;">
                             Upload Gallery Images
                         </label>
-                        <a href="#" data-action="media-gallery-upload"><i class="fa fa-plus-circle fa-3x"></i></a>
                     </div>
                     <div id="media-gallery-uploads" class="container">
                         {% for mg in model.media_gallery %}
@@ -176,6 +181,11 @@
                             <div class="thumbnail"><img src="{{mg.image_path_small}}"/><div class="caption text-center"><a href="#"  data-type="saved" data-action="remove-image" data-selector="{{mg.id}}">Remove Image</a></div></div>
                         </div>
                         {% endfor %}
+                        <div class="form-group col-lg-3 col-md-3 col-sm-6 col-xs-6" data-container-selector="add-button">
+                            <div class="thumbnail text-center">
+                                <a href="#" data-action="media-gallery-upload"><i class="fa fa-plus-circle fa-3x"></i></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -241,6 +251,8 @@
                 return;
             }
              */
+            var other_activities = $('[data-name="other-activities"]').val();
+
             var is_manager = $('[data-name="is-manager"]:checked');
             if (is_manager == undefined || is_manager.length == 0)  {
                 BootstrapDialog.alert('You have to be the administrator/manager/representative to save the trip.');
@@ -342,7 +354,8 @@
                 departure_type: departure_type,
                 request_duration: request_duration,
                 request_conditions: request_conditions,
-                price_on_request: price_on_request
+                price_on_request: price_on_request,
+                other_activities: other_activities
             };
 
             if (id != undefined && id.length > 0){
@@ -390,7 +403,8 @@
                 var values = '<div class="thumbnail"><img src="' + url + '" width="70%"/><div class="caption text-center"><a href="#" data-action="remove-image" data-selector="' + d + '">Remove Image</a></div></div>';
                 var ip = '<input type="hidden" data-name="media-gallery-image" value="' + url + '"/>';
                 container.html(values + ip);
-                $('#media-gallery-uploads').append(container);
+                $('[data-container-selector="add-button"]').before(container);
+                //$('#media-gallery-uploads').prepend(container);
 
             };
             App.image_upload_dialog(callback);
