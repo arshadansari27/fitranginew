@@ -14,8 +14,9 @@
             <div class="form-group">
                 <label for="heading">Departure Type<span class="red">*</span> </label>
                 <select data-name="departure-type">
+                    <option value="" {% if not model.departure_type %}selected{% endif %}>--</option>
                     <option value="On Request" {% if model.departure_type and model.departure_type == 'On Request' %}selected{% endif %}>On Request</option>
-                    <option value="Fixed" {% if not model.departure_type or model.departure_type|length == 0 or model.departure_type == 'Fixed' %}selected{% endif %}>Fixed</option>
+                    <option value="Fixed" {% if model.departure_type and  model.departure_type == 'Fixed' %}selected{% endif %}>Fixed</option>
                 </select>
             </div>
 
@@ -189,7 +190,7 @@
                         <input data-name="toc" type="checkbox" {% if model %}checked{% endif %}> I accept the terms and conditions as per the agreement.<span class="red">*</span>
                     </label>
                 </div>
-            </div>
+            </div-->
 
             <div class="form-group {% if model %}hide{% endif %}">
                 <div class="checkbox">
@@ -197,7 +198,7 @@
                         <input data-name="is-manager" {% if model %}checked{% endif %} type="checkbox"> I am the administrator / manager / representative.<span class="red">*</span>
                     </label>
                 </div>
-            </div-->
+            </div>
 
             <form class="form-group">
                 <button data-action="save-trip" class="btn btn-primary">Submit</button>
@@ -235,16 +236,16 @@
 
             /*
             var toc = $('[data-name="toc"]:checked');
-            var is_manager = $('[data-name="is-manager"]:checked');
             if (toc == undefined || toc.length == 0)  {
                 BootstrapDialog.alert('Please accept the terms and then try again.');
                 return;
             }
+             */
+            var is_manager = $('[data-name="is-manager"]:checked');
             if (is_manager == undefined || is_manager.length == 0)  {
                 BootstrapDialog.alert('You have to be the administrator/manager/representative to save the trip.');
                 return;
             }
-            */
             var id = $('[data-name="id"]').val();
             var organizer = $('[data-name="user"]').val();
             var title = $('[data-name="title"]').val();
