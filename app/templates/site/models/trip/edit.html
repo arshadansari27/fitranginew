@@ -24,18 +24,18 @@
                 <div class="fixed-trip-container well" style="display:none;">
                     <div class="row">
                         <div class="col-md-4 col-sm-6 col-xs-6">
-                            <label for="heading">FROM<span class="red">*</span></label><input type="date" class="form-control" name="fromdate" data-name="fromdate" value="{% if model and model.start_date %}{{model.from_date_only}}{% endif %}">
+                            <label for="heading">FROM<span class="red">*</span></label><input type="date" class="form-control" name="fromdate" data-name="fromdate" value="{% if model and model.start_date %}{{model.from_date_only}}{% endif %}" placeholder="YYYY-MM-DD">
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-6">
-                            <label for="heading">TIME</label><input type="time" class="form-control" name="fromtime" data-name="fromtime" value="{%if model and model.start_date %}{{model.from_date_time}}{% endif %}">
+                            <label for="heading">TIME</label><input type="time" class="form-control" name="fromtime" data-name="fromtime" value="{%if model and model.start_date %}{{model.from_date_time}}{% endif %}" placeholder="HH:MM">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4 col-sm-6 col-xs-6">
-                            <label for="heading">TO<span class="red">*</span></label><input type="date" class="form-control" name="todate" data-name="todate" value="{%if model and model.end_date %}{{model.to_date_only}}{% endif %}">
+                            <label for="heading">TO<span class="red">*</span></label><input type="date" class="form-control" name="todate" data-name="todate" value="{%if model and model.end_date %}{{model.to_date_only}}{% endif %}" placeholder="YYYY-MM-DD">
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-6">
-                            <label for="heading">TIME</label><input type="time" class="form-control" name="totime" data-name="totime" value="{%if model and model.end_date %}{{model.to_date_time}}{% endif %}">
+                            <label for="heading">TIME</label><input type="time" class="form-control" name="totime" data-name="totime" value="{%if model and model.end_date %}{{model.to_date_time}}{% endif %}" placeholder="HH:MM">
                         </div>
                     </div>
                 </div>
@@ -244,6 +244,10 @@
 
         $('body').on('click', '[data-action="save-trip"]', function(e){
 
+            var fromdate = $('[data-name="fromdate"]').val();
+            var fromtime = $('[data-name="fromtime"]').val();
+            console.log(fromdate);
+            console.log(fromtime);
             /*
             var toc = $('[data-name="toc"]:checked');
             if (toc == undefined || toc.length == 0)  {
