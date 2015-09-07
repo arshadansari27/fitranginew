@@ -1,8 +1,7 @@
 __author__ = 'arshad'
 
-import sys, traceback, random, datetime
-
-from BeautifulSoup import BeautifulSoup
+import sys, traceback, datetime
+from collections import defaultdict
 from flask import g, request
 from app.utils import convert_query_to_filter, get_descriptions
 from app.settings import CDN_URL
@@ -12,12 +11,10 @@ from app.handlers.extractors import NodeExtractor, article_extractor, advertisem
     activity_extractor, discussion_extractor, profile_type_extractor, event_extractor, profile_extractor, \
     trip_extractor, post_extractor, stream_extractor
 from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, POST, STREAM, Node, ADVERTISEMENT, CONTEST
-from app.models.streams import ActivityStream
 from app.models.content import Content, Post, Article, Discussion
 from app.models.adventure import Adventure
 from app.models.contest import Contest
 from app.models.activity import Activity
-from app.models.event import Event
 from app.models.trip import Trip
 from app.models.profile import Profile, ProfileType
 from app.models.page import ExtraPage
@@ -711,9 +708,13 @@ class EditPage(Page):
 
     def get_context(self, context):
         if self.model_name == TRIP:
+            categories_activities = defaultdict(list)
             if context.get('model'):
                 assert str(context.get('model').organizer.id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
-            return dict(activities=Activity.objects.all())
+            activities = Activity.objects.all()
+            for activity in activities:
+                categories_activities[activity.category].append(activity)
+            return dict(activities=categories_activities)
         elif self.model_name == PROFILE:
             if context.get('parent'):
                 assert str(context.get('parent').id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]

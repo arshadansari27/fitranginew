@@ -3,6 +3,35 @@ __author__ = 'arshad'
 from app.models import update_content, db, Entity
 from app.models.relationships import RelationShips
 
+ACTIVITY_CATEGORY = {
+    'Trekking and Hiking': 'Land Activities',
+    'Camping': 'Land Activities',
+    'Rock Climbing': 'Land Activities',
+    'Cycling and Biking': 'Land Activities',
+    'Marathons': 'Land Activities',
+    'Mountaineering': 'Land Activities',
+    'Rappelling and Valley Crossing': 'Land Activities',
+    'Canyoning': 'Land Activities',
+    'Horse Riding': 'Land Activities',
+    'Zorbing': 'Land Activities',
+    'Skiing': 'Land Activities',
+    'Snowboarding': 'Land Activities',
+    'Scuba Diving': 'Water Activities',
+    'Water Rafting': 'Water Activities',
+    'Kayaking': 'Water Activities',
+    'Surfing': 'Water Activities',
+    'Kite Surfing': 'Water Activities',
+    'Snorkelling': 'Water Activities',
+    'Paragliding': 'Air Activities',
+    'Parasailing': 'Air Activities',
+    'Bungee jumping': 'Air Activities',
+    'Bungee Jumping': 'Air Activities',
+    'Hot Air Ballooning': 'Air Activities',
+    'Sky Diving': 'Air Activities',
+    'Zip Line': 'Air Activities'
+}
+
+
 ICONS = {
 "hillstation" :"/images/adventure-icons/air-activities/hot-air-balooning.png",
 "hotairballooning" :"/images/adventure-icons/air-activities/hot-air-balooning.png",
@@ -48,6 +77,10 @@ class Activity(Entity, db.Document):
             {'fields': ['-modified_timestamp', 'slug', 'name'], 'unique': False, 'sparse': False, 'types': False },
         ],
     }
+
+    @property
+    def category(self):
+        return ACTIVITY_CATEGORY.get(self.name)
 
     @property
     def favorited_by(self):
