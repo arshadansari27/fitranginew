@@ -75,7 +75,7 @@ class NodeExtractor(object):
         else:
             sorters = {}
         filters = dict((u, v) for u, v in self.init_filters.iteritems())
-        print 'Pre', self.model_class.__name__, use_filters, sorters, filters
+        # print 'Pre', self.model_class.__name__, use_filters, sorters, filters
         merge = []
         if len(use_filters) > 0:
             filters = {}
@@ -145,7 +145,7 @@ class NodeExtractor(object):
         _order_by = []
         if sorters and len(sorters) > 0:
             if sorters.has_key('location_lat') and sorters.has_key('location_lng'):
-                print 'Sorting by location', str([(u, v) for u, v in sorters.iteritems() if u.startswith('location')])
+                # print 'Sorting by location', str([(u, v) for u, v in sorters.iteritems() if u.startswith('location')])
                 if sorters.has_key('location_locality') and len(sorters['location_locality']) > 0:
                     filters['city__iexact'] = sorters['location_locality']
                 elif sorters.has_key('location_region2') and len(sorters['location_region2']) > 0:
@@ -176,7 +176,7 @@ class NodeExtractor(object):
                 criteria = Q(**d)
             else:
                 criteria &= Q(**d)
-        print '[*] Filters and Sort: ', filters, order_by
+        # print '[*] Filters and Sort: ', filters, order_by
         return self.model_class.objects(criteria).order_by(*order_by.split(',') if ',' in order_by else order_by)
 
 

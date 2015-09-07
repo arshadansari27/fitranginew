@@ -137,7 +137,9 @@ def _edit(data, node=None):
     if data.get('location_name'):
         node.location = data['location_name']
         if data.get('location_lat') and data.get('location_lng'):
-            node.geo_location = [float(data['location_lat']), float(data['location_lng'])]
+            loc_lng = [float(data['location_lat']), float(data['location_lng'])]
+            print 'Lat/Long', loc_lng
+            node.geo_location = loc_lng  # [float(data['location_lat']), float(data['location_lng'])]
         if data.get('location_city'):
             node.city = data['location_city']
         if data.get('location_region'):
