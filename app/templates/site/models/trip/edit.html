@@ -42,10 +42,10 @@
                 <div class="on-request-trip-container well" style="display:none;">
                     <div class="row">
                         <div class="col-md-4 col-sm-6 col-xs-6">
-                            <label for="heading">No. of days/nights<span class="red">*</span></label><input type="text" class="form-control" name="requestduration" data-name="request-duration" value="{% if model and model.request_duration %}{{model.request_duration}}{% endif %}">
+                            <label for="heading">No. of days/nights<span class="red">*</span></label><input type="text" class="form-control" name="requestduration" data-name="request-duration" value="{% if model and model.expected_duration %}{{model.expected_duration }}{% endif %}">
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-6">
-                            <label for="heading">Operating Seasons/Conditions etc.</label><input type="text" class="form-control" name="requestconditions" data-name="request-conditions" value="{%if model and model.request_conditions %}{{model.request_conditions }}{% endif %}">
+                            <label for="heading">Operating Seasons/Conditions etc.</label><input type="text" class="form-control" name="requestconditions" data-name="request-conditions" value="{%if model and model.expected_conditions %}{{model.expected_conditions }}{% endif %}">
                         </div>
                     </div>
                 </div>

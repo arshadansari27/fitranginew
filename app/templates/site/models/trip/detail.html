@@ -184,23 +184,23 @@
             <ul class="nav nav-pills " role="tablist">
 
 
-                {% if model.about and model.about|length > 0 %}
+                {% if model.about and model.about.strip()|length > 0 %}
                 <li class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">
                      <strong>Overview</strong></a></li>
                 {% endif %}
 
-                {% if model.itinerary and model.itinerary|length > 0 %}
+                {% if model.itinerary and model.itinerary.strip()|length > 0 %}
                 <li><a href="#itinerary" aria-controls="schedule" role="tab" data-toggle="tab">
                      <strong>Itinerary</strong></a></li>
                 {% endif %}
 
 
-                {% if model.inclusive_exclusive and model.inclusive_exclusive|length > 0 %}
+                {% if model.inclusive_exclusive and model.inclusive_exclusive.strip()|length > 0 %}
                 <li><a href="#inclusive-exclusive" aria-controls="details" role="tab" data-toggle="tab">
                     <strong>Inclusive/Exclusive</strong></a></li>
                 {% endif %}
 
-                {% if model.other_details and model.other_details|length > 0 %}
+                {% if model.other_details and model.other_details.strip()|length > 0 %}
                 <li><a href="#other-details" aria-controls="things_to_carry" role="tab" data-toggle="tab">
                      <strong>Other Details</strong></a></li>
                 {% endif %}
