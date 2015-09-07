@@ -35,6 +35,8 @@ jQuery(document).ready(function($){
     		},
             error: function(data){
                 $('#loadingImage').hide();
+                BootstrapDialog.alert('Something went wrong. Please try again later');
+                console.log('[ERROR]: ' + data);
             },
     		contentType: "application/json",
     		dataType: 'json'
