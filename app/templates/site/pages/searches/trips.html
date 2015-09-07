@@ -18,7 +18,7 @@
             </div>
 
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
-                <input id="activity-filter" data-category="upcoming" data-model="trip" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
+                <input id="activity-filter" data-model="trip" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
                 <datalist id="activity">
                     <option value="">
                 </datalist>
@@ -35,7 +35,7 @@
             </div>
 
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
-                <input class="geo-complete" placeholder="SORT BY LOCATION" data-category="upcoming" data-sorter="location" data-model="trip">
+                <input class="geo-complete" placeholder="SORT BY LOCATION" data-sorter="location" data-model="trip">
                 <form>
                     <input type="hidden" id="location-sorter-lat" name="lat" data-category="upcoming" data-model="trip" data-sorter="location_lat"/>
                     <input type="hidden" id="location-sorter-lng" name="lng" data-category="upcoming" data-model="trip" data-sorter="location_lng"/>
@@ -50,7 +50,7 @@
                     <h3>Search by Organizer</h3>
 
                     <div class="range range-primary">
-                        <input id="organizer-filter" data-category="upcoming" data-model="trip" data-filter="organizer__profile__name" list="organizer" placeholder="FILTER BY ORGANIZER">
+                        <input id="organizer-filter" data-model="trip" data-filter="organizer__profile__name" list="organizer" placeholder="FILTER BY ORGANIZER">
                         <datalist id="organizer">
                             <option value="">
                         </datalist>
@@ -156,14 +156,14 @@
                         {{ upcoming|safe }}
                     </div>
                 </div>
-                <div role="tabpanel" class="tab-pane fade" id="interesting" aria-labelledby="interesting">
+                <!--div role="tabpanel" class="tab-pane fade" id="interesting" aria-labelledby="interesting">
                     <div class="container fitrangi-trips">
                         {% if user %}
                         <input id="interesting-trip-filter" data-category="interesting" data-model="trip" data-filter="relationship__interested__profile" type="hidden" value="{{user.id}}" data-filter-status="fixed">
                         {{ interesting|safe }}
                         {% endif %}
                     </div>
-                </div>
+                </div-->
                 <div role="tabpanel" class="tab-pane fade" id="on-request" aria-labelledby="on-request">
                     <div class="container fitrangi-trips">
                         {% if user %}

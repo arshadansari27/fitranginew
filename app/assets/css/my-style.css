@@ -2899,6 +2899,17 @@ fitrangi-trips .caption h3:after{
 .fitrangi-trips .caption .days:after{
 	content:' Days ) |'
 }
+
+.fitrangi-trips .caption .days2{
+	color: #95a5a6;
+}
+.fitrangi-trips .caption .days2:before{
+	content:'('
+}
+.fitrangi-trips .caption .days2:after{
+	content:' ) |'
+}
+
 .fitrangi-trips .caption .rs{
 	color: #95a5a6;
 }
