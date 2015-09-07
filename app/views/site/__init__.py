@@ -530,11 +530,11 @@ def ajax_options():
     if model_name == 'tag':
         options = [(u[0], u[0]) for u in all_tags()]
     elif model_name == 'location' and attr == 'name':
-        options = ((str(getattr(u, 'id')), u.name) for u in NodeFactory.get_class_by_name(model_name).objects.all())
+        options = ((str(getattr(u, 'id')), u.name) for u in NodeFactory.get_class_by_name(model_name).objects.all() if u)
     elif attr2 is not None and attr3 is None:
-        options = ((str(getattr(getattr(u, attr), 'id')), getattr(getattr(u, attr), attr2)) for u in NodeFactory.get_class_by_name(model_name).objects.all())
+        options = ((str(getattr(getattr(u, attr), 'id')), getattr(getattr(u, attr), attr2)) for u in NodeFactory.get_class_by_name(model_name).objects.all() if u)
     elif attr2 is not None and attr3 is not None:
-        objs = [getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all()]
+        objs = [getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all() if u]
         _options = {}
         for obj in objs:
             for a in obj:
