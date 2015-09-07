@@ -265,6 +265,11 @@
             var title = $('[data-name="title"]').val();
             var departure_type = $('[data-name="departure-type"]').val();
 
+            if (departure_type == undefined || (departure_type != 'Fixed' && departure_type != 'On Request')) {
+                BootstrapDialog.alert('Please select the departure type, it is mandatory field');
+                return;
+            }
+
             var from = '';
             var to = '';
             var request_duration = $('[data-name="request-duration"]').val();
