@@ -12,7 +12,7 @@
             </h3>
             <p class="sub-title"><em>{% if model.description %}{% if model.description|length > 100 %}{{model.description[:100]|safe}}...{% else %}{{model.description|safe}}{% endif %}{% endif %}</em></p>
             <a href="{{model.slug}}">
-                <h4>{{ model.partial_date|safe }} &nbsp;<smalL>Days {% if model.departure_type == 'Fixed' %}{{model.duration}}{% else %}{{ model.expected_duration }}{% endif %} and Amount <i class="fa fa-inr"></i>{{ model.price|int }}/-</smalL> </h4>
+                <h4>{{ model.partial_date|safe }} &nbsp;<smalL>Days {% if model.departure_type == 'Fixed' %}{{model.duration}}{% else %}{{ model.expected_duration }}{% endif %} and Amount {% if not model.price_on_request %}<i class="fa fa-inr"></i>{{ model.price|int }}/-{% else %}On Request{% endif %}</smalL> </h4>
 
             </a>
             {% if not model.organizer.id == user.id %}
