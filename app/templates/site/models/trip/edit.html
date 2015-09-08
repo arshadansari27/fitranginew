@@ -114,10 +114,10 @@
                     <label for="heading">Activity<span class="red">*</span></label>
 
                     <div class="row-fluid">
-                        {% for k, _activities in activities.iteritems() %}
+                        {% for k in ['Land Activities', 'Water Activities', 'Air Activities'] %}
                         <div class="row-fluid">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center"><strong><u>{{k}}</u></strong></div>
-                            {% for activity in _activities %}
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><strong><u>{{k}}</u></strong></div>
+                            {% for activity in activities.get(k, []) %}
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
                                 <div class="checkbox">
                                     <p><input type="checkbox" data-name="activities" data-value="{{activity.id}}" {% if activity in model.activities %}checked{% endif %}> {{activity.name}}</p>
@@ -447,7 +447,7 @@
 
         var pre_departure_type = $('[data-name="departure-type"]').val();
         if (pre_departure_type == undefined || pre_departure_type == '--') {
-            $('.fixed-trip-container').hide();
+            $('.fixed-trip-container').show();
             $('.on-request-trip-container').hide();
         }  else if (pre_departure_type != 'Fixed') {
             $('.fixed-trip-container').hide();
