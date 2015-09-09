@@ -446,10 +446,7 @@
         });
 
         var pre_departure_type = $('[data-name="departure-type"]').val();
-        if (pre_departure_type == undefined || pre_departure_type == '--') {
-            $('.fixed-trip-container').show();
-            $('.on-request-trip-container').hide();
-        }  else if (pre_departure_type != 'Fixed') {
+        if (pre_departure_type != 'Fixed') {
             $('.fixed-trip-container').hide();
             $('.on-request-trip-container').show();
         } else {
