@@ -13,7 +13,7 @@
             </a>
 
             {% if model.departure_type == 'Fixed' %}<span class="days">{{ model.duration }}</span>{% else %}<span class="days2">{% if model.expected_duration %}{{ model.expected_duration }}{% else %}Dates on request{% endif %}</span>{% endif %}
-            {% if not model.price_on_request %}<span class="rs">{{ model.price|int }}</span>{% else %}<span class="days2">On Request Price</span>{% endif %}
+            {% if not model.price_on_request %}<span class="rs">{{ model.price|int }}</span>{% else %}<span class="days2">Price On Request</span>{% endif %}
         </div>
 
     </div>
