@@ -446,13 +446,10 @@
         });
 
         var pre_departure_type = $('[data-name="departure-type"]').val();
-        console.log(pre_departure_type);
-        if (pre_departure_type != 'Fixed') {
-            console.log('hiding dates');
+        if (pre_departure_type == 'On Request') {
             $('.fixed-trip-container').hide();
             $('.on-request-trip-container').show();
         } else {
-            console.log('hiding on request');
             $('.fixed-trip-container').show();
             $('.on-request-trip-container').hide();
         }
