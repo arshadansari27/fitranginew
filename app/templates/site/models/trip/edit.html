@@ -436,12 +436,12 @@
 
         $('body').on('change', '[data-name="departure-type"]', function(e){
             var departure_type = $('[data-name="departure-type"]').val();
-            if (departure_type == 'Fixed') {
-                $('.fixed-trip-container').show();
-                $('.on-request-trip-container').hide();
-            } else {
+            if (departure_type != 'Fixed') {
                 $('.fixed-trip-container').hide();
                 $('.on-request-trip-container').show();
+            } else {
+                $('.fixed-trip-container').show();
+                $('.on-request-trip-container').hide();
             }
         });
 
