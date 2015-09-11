@@ -4,7 +4,7 @@
         <section class="container">
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                {% if user and (user.is_admin or (user.is_organizer and user.has_premium_status)) %}
+                {% if user and (user.is_admin or user.is_organizer or user.managed_organizer_profile) %}
                 <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: window.location.href='/add-edit-trip'">Add a trip</a>
                 <input id="name-filter" data-filter="name__icontains" data-model="profile" type="hidden">
                 {% endif %}
@@ -166,10 +166,8 @@
                 </div-->
                 <div role="tabpanel" class="tab-pane fade" id="on-request" aria-labelledby="on-request">
                     <div class="container fitrangi-trips">
-                        {% if user %}
                         <input id="on-request-trip-filter" data-category="on-request" data-model="trip" data-filter="departure_type__exact" type="hidden" value="On Request" data-filter-status="fixed">
                         {{ on_request|safe }}
-                        {% endif %}
                     </div>
                 </div>
                 {% if user and (user.is_organizer or user.is_admin) %}

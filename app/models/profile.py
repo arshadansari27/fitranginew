@@ -290,6 +290,14 @@ class Profile(Entity, db.Document, Location):
         return Profile.objects(managed_by__in=[self.id]).all()
 
     @property
+    def managed_organizer_profile(self):
+        profiles = [p for p in Profile.objects(managed_by__in=[self.id]).all() if p.is_organizer]
+        if len(profiles) > 0:
+            return profiles[0]
+        return None
+
+
+    @property
     def owned_profiles(self):
         return Profile.objects(owned_by=self.id).all()
 
