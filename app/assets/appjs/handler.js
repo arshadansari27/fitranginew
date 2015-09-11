@@ -312,6 +312,7 @@ jQuery(document).ready(function ($) {
             App.show_login();
         }
     });
+
     $('body').on('click', '[data-action="publish-article"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -404,6 +405,7 @@ jQuery(document).ready(function ($) {
             }
         });
     });
+
     $('body').on('click', '[data-action="add-adventure-accomplished"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -457,6 +459,7 @@ jQuery(document).ready(function ($) {
             }
         });
     });
+
     $('body').on('click', '[data-action="add-activity-favorite"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -486,6 +489,7 @@ jQuery(document).ready(function ($) {
             }
         });
     });
+
     $('body').on('click', '[data-action="remove-activity-favorite"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -514,6 +518,7 @@ jQuery(document).ready(function ($) {
             }
         });
     });
+
     $('body').on('click', '[data-action="follow-profile"]', function (e) {
 
         e.stopPropagation();
@@ -540,6 +545,7 @@ jQuery(document).ready(function ($) {
             }
         });
     });
+
     $('body').on('click', '[data-action="unfollow-profile"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -565,6 +571,7 @@ jQuery(document).ready(function ($) {
             }
         });
     });
+
     $('body').on('click', '[data-action="add-trip-joined"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -572,6 +579,7 @@ jQuery(document).ready(function ($) {
         var model = $(this).attr('data-model-id');
         App.profile.add_trip_to_join(user, model);
     });
+
     $('body').on('click', '[data-action="remove-trip-joined"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -579,6 +587,7 @@ jQuery(document).ready(function ($) {
         var model = $(this).attr('data-model-id');
         App.profile.remove_trip_from_join(user, model);
     });
+
     $('body').on('click', '[data-action="add-trip-interested"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -599,6 +608,7 @@ jQuery(document).ready(function ($) {
             }
         });
     });
+
     $('body').on('click', '[data-action="remove-trip-interested"]', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -654,6 +664,7 @@ jQuery(document).ready(function ($) {
         var model = $(this).attr('data-model-id');
         var slug = $(this).attr('data-model-slug');
         var user = $(this).attr('data-user-id');
+        var model_name = $(this).attr('data-model');
         if (user == undefined || user.length == 0) {
             BootstrapDialog.alert('You must be logged in to make booking enquiry. Please login from <a href="/login?target=' + slug +'">here.</a>');
             return;
@@ -690,18 +701,181 @@ jQuery(document).ready(function ($) {
         if ((name == undefined || name.length == 0) || (email == undefined || email.length == 0) || (contact_pref == undefined || contact_pref.length == 0)) {
             BootstrapDialog.alert('Please enter your name, email, phone and contact preference. They are mandatory.');
         } else {
-            App.profile.book_trip(user, name, email, phone, enquiry, contact_pref, model, function(data){
-                if (data.status=='success') {
-                    BootstrapDialog.alert('Successfullly sent enquiry');
-                    $phone.val('');
-                    $enquiry.val('');
-                } else {
-                    BootstrapDialog.alert('Failed to send enquiry, please try again later');
-                }
-            });
+            if (model_name == 'campsite'){
+                App.profile.book_campsite(user, name, email, phone, enquiry, contact_pref, model, function (data) {
+                    if (data.status == 'success') {
+                        BootstrapDialog.alert('Successfullly sent enquiry');
+                        $phone.val('');
+                        $enquiry.val('');
+                    } else {
+                        BootstrapDialog.alert('Failed to send enquiry, please try again later');
+                    }
+                });
+            } else {
+                App.profile.book_trip(user, name, email, phone, enquiry, contact_pref, model, function (data) {
+                    if (data.status == 'success') {
+                        BootstrapDialog.alert('Successfullly sent enquiry');
+                        $phone.val('');
+                        $enquiry.val('');
+                    } else {
+                        BootstrapDialog.alert('Failed to send enquiry, please try again later');
+                    }
+                });
+            }
         }
 
     });
+
+    $('body').on('click', '[data-action="add-campsite-interested"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var user = $(this).attr('data-user-id');
+        var model = $(this).attr('data-model-id');
+        var that = $(this);
+        App.profile.add_campsite_to_interest(user, model, function(data){
+            if(data.status == 'success') {
+                var html = '<span class="fa fa-check orange"></span>&nbsp;Remove from Interest';
+                that.html(html);
+                that.attr('data-action', 'remove-campsite-interested');
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
+    });
+
+    $('body').on('click', '[data-action="remove-campsite-interested"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var user = $(this).attr('data-user-id');
+        var model = $(this).attr('data-model-id');
+        var that = $(this);
+        App.profile.remove_campsite_from_interest(user, model, function(data){
+            if(data.status == 'success') {
+                var html = '<span class="fa fa-link"></span> Interested';
+                that.html(html);
+                that.attr('data-action', 'add-campsite-interested');
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
+    });
+
+    $('body').on('click', '[data-action="add-campsite-accomplished"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var user = $(this).attr('data-user-id');
+        var model = $(this).attr('data-model-id');
+        var that = $(this);
+        var html = '';
+        if (that.html().indexOf('this') > -1) {
+            html = '<span class="fa fa-flag green"></span>&nbsp;Undo this';
+        } else {
+            html = '<span class="fa fa-flag green"></span>&nbsp;';
+        }
+        App.profile.add_campsite_to_done(user, model, function(data){
+            if(data.status == 'success') {
+                that.html(html);
+                that.attr('data-content', 'Undo this');
+                that.attr('data-action', 'remove-campsite-accomplished');
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
+    });
+    $('body').on('click', '[data-action="remove-campsite-accomplished"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var user = $(this).attr('data-user-id');
+
+        var model = $(this).attr('data-model-id');
+        var that = $(this);
+        var html = '';
+        if (that.html().indexOf('this') > -1) {
+            html = '<span class="fa fa-flag grey"></span>&nbsp;Done this';
+        } else {
+            html = '<span class="fa fa-flag grey"></span>&nbsp;';
+        }
+        App.profile.remove_campsite_from_done(user, model, function(data){
+            if(data.status == 'success') {
+                that.html(html);
+                that.attr('data-content', 'Done this');
+                that.attr('data-action', 'add-campsite-accomplished');
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
+    });
+
+    $('body').on('click', '[data-action="add-campsite-wishlist"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var user = $(this).attr('data-user-id');
+        var model = $(this).attr('data-model-id');
+        var that = $(this);
+        var html = '';
+        if (that.html().indexOf('Add to') > -1) {
+            html = '<span class="fa fa-list yellow"></span>&nbsp;Wishlisted';
+        } else {
+            html = '<span class="fa fa-list yellow"></span>&nbsp;';
+        }
+        App.profile.add_campsite_to_wish_list(user, model, function(data){
+            if(data.status == 'success') {
+                that.html(html);
+                that.attr('data-content', 'Remove from wishlist');
+                that.attr('data-action', 'remove-campsite-wishlist');
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
+    });
+
+    $('body').on('click', '[data-action="remove-campsite-wishlist"]', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var user = $(this).attr('data-user-id');
+        var model = $(this).attr('data-model-id');
+        var that = $(this);
+        var html = '';
+        if (that.html().indexOf('Wishlisted') > -1) {
+            html = '<span class="fa fa-list grey"></span>&nbsp;Add to Wishlist';
+        } else {
+            html = '<span class="fa fa-list grey"></span>&nbsp;';
+        }
+        App.profile.remove_campsite_from_wish_list(user, model, function(data){
+            if(data.status == 'success') {
+                that.html(html);
+                that.attr('data-content', 'Add to wishlist');
+                that.attr('data-action', 'add-campsite-wishlist');
+            } else {
+                $('.alert').html(data.message);
+                $('.alert').show();
+                setTimeout(function(){
+                    $('.alert').hide()
+                }, 3000);
+            }
+        });
+    });
+
 
     $('body').on('click', '[data-action="delete-discussion"]', function (e) {
         e.stopPropagation();

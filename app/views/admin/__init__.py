@@ -23,7 +23,8 @@ from app.models.event import Event
 from app.models.trip import Trip
 from app.models.contest import Contest, ContestAnswer
 from app.models.page import ExtraPage
-from app.models.booking import TripBooking
+from app.models.booking import TripBooking, CampsiteBooking
+from app.models.campsite import Campsite
 from app.models.media import Media, TripGalleryImage
 from app.models.feedbacks import NotOkFeedBack, ClaimProfile
 from app.models.relationships import RelationShips
@@ -304,6 +305,78 @@ class SelectedTripBookingAdminView(TripBookingAdminView):
             return TripBooking.objects(trip=trip_id)
         else:
             return TripBooking.objects()
+
+    def is_visible(self):
+        return False
+
+class CampsiteAdminView(ModelView):
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
+    form_columns = ['name', 'best_season', 'nearby_stay','nearby_eat', 'nearby_station', 'nearby_airport','extremity_level', 'reach_by_air', 'reach_by_train', 'reach_by_road', 'reach_by_sea', 'description', 'optional_location_name', 'about', 'tariff', 'accommodations', 'price', 'price_on_request', 'host',  'activities', 'announcements', 'cover_image', 'path_cover_image', 'slug']
+    column_list = ('name', 'host_name', 'cover_image', 'location', 'bookings', 'gallery')
+    column_filters = [create_named_filter(), FilterActivities('activities.id', 'Activity')]
+    column_searchable_list = ('name',)
+    form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField, announcements=SummernoteTextAreaField, tariff=SummernoteTextAreaField, accommodations=SummernoteTextAreaField)
+
+    column_default_sort = '-created_timestamp'
+
+    def is_accessible(self):
+        if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
+            return True
+        return False
+
+    def host(view, context, model, name):
+        return Markup('%s' % model.host.name if model.host else 'Unknown')
+
+    def gallery(view, context, model, name):
+        images = TripGalleryImage.objects(trip=model).all()
+        count = len(images)
+        '<a href="#"></a>'
+        paths = ['<img src="%s"/><br/>' % i.image_path_small for i in images]
+        return Markup("%d" % count)
+
+    def _bookings(view, context, model, name):
+        return Markup('<a href="%s" target="new">%s</a>' % (url_for('enquiries_for_campsite_view.index_view', campsite_id=str(model.id)), CampsiteBooking.objects(campsite=model).count()))
+
+    def _location_formatter(view, context, model, name):
+        url = '/admin/location_update?model_id=%s&model_type=%s&back=%s' % (str(model.id), model.__class__.__name__, '/admin/campsite/')
+        if model.location:
+            text = '%s<br/><a href="%s">Change</a>' % (model.location, url)
+        else:
+            text = '<a href="%s">Set Location</a>' % url
+
+        return Markup(text)
+
+    column_formatters = {'location': _location_formatter, 'bookings': _bookings, 'host_name': host}
+
+class CampsiteBookingAdminView(ModelView):
+    form_columns = ['campsite', 'booking_by', 'preferred_name', 'preferred_email', 'preferred_phone', 'contact_preference', 'enquiry', 'total_charge', 'discount_percent', 'status',  'payment_status']
+    column_list = ('campsite', 'booking_by', 'preferred_name', 'preferred_email', 'preferred_phone', 'contact_preference', 'message', 'status', 'payment_status', 'total_charge', 'discount_percent', 'actual_charge')
+    column_filters = [FilterTrip('campsite.id', 'Campsite'), 'status', 'payment_status']
+    column_searchable_list = ('preferred_name', 'preferred_phone', 'preferred_email')
+    column_default_sort = '-created_timestamp'
+
+    def is_accessible(self):
+        if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
+            return True
+        return False
+
+    def _actual_charge(view, context, model, name):
+        return Markup(model.actual_charge)
+
+    def _message(view, context, model, name):
+        return Markup('<a href="#" onclick="javascript:BootstrapDialog.alert(\''+ model.enquiry +'\');">Click to view</a>')
+
+    column_formatters = {'actual_charge': _actual_charge, 'message': _message}
+
+
+class SelectedCampsiteBookingAdminView(CampsiteBookingAdminView):
+    def get_query(self):
+        campsite_id = request.args.get('campsite_id', None)
+        if campsite_id is not None:
+            return CampsiteBooking.objects(campsite=campsite_id)
+        else:
+            return CampsiteBooking.objects()
 
     def is_visible(self):
         return False
@@ -855,11 +928,14 @@ admin.add_view(TripAdminView(Trip, category="Organizers"))
 admin.add_view(TripBookingAdminView(TripBooking, category="Organizers"))
 admin.add_view(SelectedTripBookingAdminView(TripBooking, name="Bookings for trip", endpoint="enquiries_for_trip_view"))
 admin.add_view(TripGalleryAdminView(TripGalleryImage, category="Organizers"))
+admin.add_view(CampsiteAdminView(Campsite, category="Organizers"))
+admin.add_view(CampsiteBookingAdminView(CampsiteBooking, category="Organizers"))
+admin.add_view(SelectedCampsiteBookingAdminView(CampsiteBooking, name="Bookings for campsites", endpoint="enquiries_for_campsite_view"))
 
 admin.add_view(NotOkAdminView(NotOkFeedBack, category="Feedbacks", endpoint='feedback.not_ok'))
 
 admin.add_view(RestrictedAdminView(ProfileType, category="Tools"))
-#admin.add_view(LocationAdminView(Location, category="Tools"))
+# admin.add_view(LocationAdminView(Location, category="Tools"))
 admin.add_view(ChannelAdminView(Channel, category="Tools"))
 admin.add_view(ExtraPageAdminView(ExtraPage, category="Tools"))
 admin.add_view(PreferenceView(name='Preference', endpoint='settings.preference', category="Settings"))

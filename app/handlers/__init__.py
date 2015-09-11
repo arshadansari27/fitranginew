@@ -10,7 +10,7 @@ from app.models.feedbacks import ClaimProfile
 from app.handlers.extractors import NodeExtractor, article_extractor, advertisement_extractor, adventure_extractor, \
     activity_extractor, discussion_extractor, profile_type_extractor, event_extractor, profile_extractor, \
     trip_extractor, post_extractor, stream_extractor
-from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, POST, STREAM, Node, ADVERTISEMENT, CONTEST
+from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, POST, STREAM, Node, ADVERTISEMENT, CONTEST, CAMPSITE
 from app.models.content import Content, Post, Article, Discussion
 from app.models.adventure import Adventure
 from app.models.contest import Contest
@@ -31,6 +31,7 @@ COLLECTION_PATHS = {
     ARTICLE: 'site/pages/searches/articles',
     TRIP: 'site/pages/searches/trips',
     CONTEST: 'site/pages/searches/contests',
+    CAMPSITE: 'site/pages/searches/campsites',
     "explore": 'site/pages/landings/home',
     "community": 'site/pages/landings/community',
     'aboutus': 'site/pages/landings/extra',
@@ -52,6 +53,7 @@ CAPITALIZED_NAMES = {
     ARTICLE: 'Articles',
     TRIP: 'Trips',
     CONTEST: "Contests",
+    CAMPSITE: "Campsites",
     "explore": 'Home',
     "community": 'Community',
     'aboutus': 'About Fitrangi',
@@ -81,6 +83,7 @@ WALL_IMAGE_NAMES = {
     ARTICLE: dict(detail=lambda u: u.cover_image_path, search='%s/images/journal-banner.jpg' % prepend, landing=''),
     TRIP: dict(detail=lambda u: u.cover_image_path, search='%s/images/adventure-trips-banner.jpg' % prepend, landing=''),
     CONTEST: dict(detail=lambda u: u.cover_image_path if u.cover_image_path is not None else '%s/images/userprofile-banner.jpg' % prepend, search='%s/images/contest-cover.jpg' % prepend, landing=''),
+    CAMPSITE: dict(detail=lambda u: u.cover_image_path if u.cover_image_path is not None else '%s/images/userprofile-banner.jpg' % prepend, search='%s/images/finder-banner.jpg' % prepend, landing=''),
     "explore": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner2.jpg' % prepend),
     "community": dict(detail=lambda u: None, search=None, landing='%s/images/community-banner.jpg' % prepend),
     "aboutus": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
@@ -334,6 +337,8 @@ class PageManager(object):
             type = 'article'
         elif type == TRIP:
             type = 'article'
+        elif type == CAMPSITE:
+            type = 'article'
         elif type == ARTICLE:
             pass
         elif type == EVENT:
@@ -510,6 +515,8 @@ class Page(object):
                 return trip_detail_page
             elif model_name == CONTEST:
                 return contest_detail_page
+            elif model_name == CAMPSITE:
+                return campsite_detail_page
             else:
                 raise Exception("Not implemented")
         elif type == 'search':
@@ -528,6 +535,8 @@ class Page(object):
                 return trip_search_page
             elif model_name == CONTEST:
                 return contest_search_page
+            elif model_name == CAMPSITE:
+                return campsite_search_page
             else:
                 raise Exception("Not implemented")
         elif type == 'landing':
@@ -638,6 +647,8 @@ class SearchPage(Page):
             return dict(upcoming=upcoming, now=str(datetime.datetime.now()).split(' ')[0], interesting=interesting, my_trips=my_trips, on_request=on_request)
         elif self.model_name == CONTEST:
             return dict(live=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='live').get_card(context), upcoming=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='upcoming').get_card(context), past=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='past').get_card(context), now=str(datetime.datetime.now()).split(' ')[0])
+        elif self.model_name == CAMPSITE:
+            return dict(site_list=NodeCollectionFactory.resolve(CAMPSITE, GRID_VIEW).get_card(context))
         else:
             raise Exception("not implemented")
 
@@ -698,6 +709,11 @@ class DetailPage(Page):
             else:
                 ad_view = ''
             return dict(ad_views=ad_views)
+        elif self.model_name == CAMPSITE:
+            other_sites_list = NodeCollectionFactory.resolve(CAMPSITE, GRID_ROW_VIEW, fixed_size=3).get_card(context)
+            reviews = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
+            other_sites = NodeCollectionFactory.resolve(CAMPSITE, GRID_ROW_VIEW, category="other", fixed_size=4).get_card(context)
+            return dict(other_sites_list=other_sites_list, reviews=reviews, other_sites=other_sites)
         else:
             return {}
 
@@ -741,6 +757,7 @@ discussion_search_page  = SearchPage(DISCUSSION)
 event_search_page       = SearchPage(EVENT)
 trip_search_page        = SearchPage(TRIP)
 contest_search_page     = SearchPage(CONTEST)
+campsite_search_page    = SearchPage(CAMPSITE)
 
 activity_detail_page    = DetailPage(ACTIVITY)
 adventure_detail_page   = DetailPage(ADVENTURE)
@@ -749,6 +766,8 @@ article_detail_page     = DetailPage(ARTICLE)
 discussion_detail_page  = DetailPage(DISCUSSION)
 trip_detail_page        = DetailPage(TRIP)
 contest_detail_page     = DetailPage(CONTEST)
+campsite_detail_page    = DetailPage(CAMPSITE)
 
 profile_edit_page       = EditPage(PROFILE)
 trip_edit_page          = EditPage(TRIP)
+campsite_edit_page      = EditPage(CAMPSITE)

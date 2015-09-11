@@ -96,7 +96,6 @@ class Profile(Entity, db.Document, Location):
             return self.background_image.image_path
         return None
 
-
     def set_background_cover(self, url):
         from app.models.media import BackgroundImage
         image = url
@@ -261,6 +260,16 @@ class Profile(Entity, db.Document, Location):
         return [u for u in RelationShips.get_accomplished(self) if isinstance(u, Adventure)]
 
     @property
+    def wish_list_campsite(self):
+        from campsite import Campsite
+        return [u for u in RelationShips.get_wish_listed(self) if isinstance(u, Campsite)]
+
+    @property
+    def accomplished_campsite(self):
+        from campsite import Campsite
+        return [u for u in RelationShips.get_accomplished(self) if isinstance(u, Campsite)]
+
+    @property
     def bought_products(self):
         from app.models.store import Product
         return [u for u in RelationShips.get_accomplished(self) if isinstance(u, Product)]
@@ -269,6 +278,11 @@ class Profile(Entity, db.Document, Location):
     def interested_trip(self):
         from app.models.trip import Trip
         return [u for u in RelationShips.get_interested(self) if isinstance(u, Trip)]
+
+    @property
+    def interested_campsite(self):
+        from app.models.campsite import Campsite
+        return [u for u in RelationShips.get_interested(self) if isinstance(u, Campsite)]
 
     @property
     def interested_event(self):
@@ -295,7 +309,6 @@ class Profile(Entity, db.Document, Location):
         if len(profiles) > 0:
             return profiles[0]
         return None
-
 
     @property
     def owned_profiles(self):

@@ -44,6 +44,7 @@ class RelationShips(db.Document):
     def create_relationship(cls, subject, object, relation):
         from app.models.profile import Profile
         from app.models.streams import ActivityStream
+        relationship1, relationship2 = None, None
         if RelationShips.objects(subject=subject, object=object, relation=relation).first() is None:
             relationship1 = RelationShips(subject=subject, object=object, relation=relation)
             relationship1.save()

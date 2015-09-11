@@ -1,0 +1,142 @@
+<section class="container-fluid p1">
+    <div class="trips-banner" style="{{background_cover}}">
+
+        <section class="container">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                {% if user and (user.is_admin or user.is_organizer or user.managed_organizer_profile) %}
+                <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: window.location.href='/add-edit-trip'">Add a trip</a>
+                <input id="name-filter" data-filter="name__icontains" data-model="profile" type="hidden">
+                {% endif %}
+            </div>
+
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 filter-adventuretrips-heading">
+                <h2>Find, Connect and Experience</h2>
+
+                <h3>Search campsites you may wanna visit!</h3>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
+                <input id="activity-filter" data-model="campsite" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
+                <datalist id="activity">
+                    <option value="">
+                </datalist>
+                <script>
+                    $(document).ready(function(){
+                        $.ajax({
+                            url: '/options?model_name=campsite&attr=activities&attr2=activity&attr3=name'
+                        }).done(function (data) {
+                            $('#activity').append(data);
+
+                        });
+                    });
+                </script>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
+                <input class="geo-complete" placeholder="SORT BY LOCATION" data-sorter="location" data-model="campsite">
+                <form>
+                    <input type="hidden" id="location-sorter-lat" name="lat" data-category="upcoming" data-model="trip" data-sorter="location_lat"/>
+                    <input type="hidden" id="location-sorter-lng" name="lng" data-category="upcoming" data-model="trip" data-sorter="location_lng"/>
+                    <input type="hidden" id="location-sorter-locality" name="locality_short" data-category="upcoming" data-model="trip" data-sorter="location_locality"/>
+                    <input type="hidden" id="location-sorter-region2" name="administrative_area_level_2" data-category="upcoming" data-model="trip" data-sorter="location_region2"/>
+                    <input type="hidden" id="location-sorter-region1" name="administrative_area_level_1" data-category="upcoming" data-model="trip" data-sorter="location_region1"/>
+                    <input type="hidden" id="location-sorter-country" name="country_short" data-model="trip" data-category="upcoming" data-sorter="location_country"/>
+                </form>
+            </div>
+            <!--div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 fitrangi-datalist fitrangi-range">
+                <div class="form-group">
+                    <h3>Search by Host</h3>
+
+                    <div class="range range-primary">
+                        <input id="host-filter" data-model="campsite" data-filter="host__profile__name" list="host" placeholder="FILTER BY HOST">
+                        <datalist id="host">
+                            <option value="">
+                        </datalist>
+                        <script>
+                            $(document).ready(function(){
+                                $.ajax({
+                                    url: '/options?model_name=campsite&attr=host&attr2=name'
+                                }).done(function (data) {
+                                    $('#host').append(data);
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+
+            </div-->
+            <!--div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 fitrangi-range">
+                <div class="form-group">
+                    <h3>Price Range</h3>
+
+                    <div class="range range-primary">
+                        <input id="rangePrimary0" type="range" min="0" max="20000" step="1000" onchange="rangePrimary1.value='upto Rs. ' + value;price_start_filter.value=value">
+                        <output id="rangePrimary1"></output>
+                        <output class="hide" id="price_start_filter" data-model="campsite" data-filter="price__lte" data-filter-type="float"></output>
+                    </div>
+                </div>
+            </div-->
+
+
+            <div class="col-lg-offset-3 col-md-offset-3 col-sm-offset-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <a data-model="trip" data-filter-submit="search" href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">GO</a>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <a data-model="trip" data-filter-submit="reset"  href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">RESET</a>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+    </div>
+</section>
+<hr class="clearfix"/>
+<section  id="model-container-section" class="container-fluid p-0">
+    <div class="container fitrangi-trips">
+        {{ site_list|safe }}
+    </div>
+
+</section>
+
+ <script>
+     $('#activity-filter').val('');
+     //$('#rangePrimary0').val('0');
+     //$('#rangePrimary1').val('0');
+     //$('price_start_filter').html('');
+     //$('price_end_filter').html('');
+    $(document).ready(function(){
+
+
+        window.App.filter('name-filter');
+        window.App.filter('activity-filter');
+        window.App.filter('price_start_filter');
+        window.App.sorter('location-sorter-lat');
+        window.App.sorter('location-sorter-lng');
+        window.App.sorter('location-sorter-locality');
+        window.App.sorter('location-sorter-region2');
+        window.App.sorter('location-sorter-region1');
+        window.App.sorter('location-sorter-country');
+    });
+</script>
+{% if filters.get('activities__activity__name') %}
+  <script>
+    $(document).ready(function(){
+        $('#activity-filter').val('{{filters.get("activities__activity__name")}}');
+    });
+</script>
+{% endif %}
+{% if filters.get('name__icontains') %}
+  <script>
+    $(document).ready(function(){
+        $('#name-filter').val('{{filters.get("name__icontains")}}');
+    });
+</script>
+{% endif %}

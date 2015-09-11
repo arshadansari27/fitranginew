@@ -1,0 +1,483 @@
+<section class="container edit-business">
+
+    <!-- col-lg-9 col-md-9 col-sm-12 col-xs-12 -->
+    <div class="">
+        <h2 class="title">Enter Trip Information <small>{% if not model and not user.is_organizer and user.managed_organizer_profile %}&nbsp;&nbsp;&nbsp;<span style="font-size: 10pt;">Adding as</span> <span class="text-primary">{{user.managed_organizer_profile.name}}</span>{% endif %}</small></h2>
+
+        <form class="fitrangi-form">
+            <div class="form-group">
+                <label for="heading">Title<span class="red">*</span> </label>
+                <input type="text" class="form-control" name="title" placeholder="Write Trip Title" data-name="title" value="{%if model and model.name %}{{model.name }}{% endif %}">
+                <input type="hidden" data-name="id" value="{%if model and model.id %}{{model.id}}{% endif %}">
+                <input type="hidden" data-name="user" value="{% if model and model.organizer %}{{model.organizer.id}}{% elif user and user.id %}{% if user.is_organizer %}{{user.id}}{% else %}{{ user.managed_organizer_profile.id }}{% endif %}{% endif %}">
+            </div>
+            <div class="form-group">
+                <label for="heading">Departure Type<span class="red">*</span> </label>
+                <select data-name="departure-type">
+                    <option value="" {% if not model.departure_type %}selected{% endif %}>--</option>
+                    <option value="On Request" {% if model.departure_type and model.departure_type == 'On Request' %}selected{% endif %}>On Request</option>
+                    <option value="Fixed" {% if model.departure_type and  model.departure_type == 'Fixed' %}selected{% endif %}>Fixed</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <div class="fixed-trip-container well">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <label for="heading">FROM<span class="red">*</span></label><input type="date" class="form-control" name="fromdate" data-name="fromdate" value="{% if model and model.start_date %}{{model.from_date_only}}{% endif %}" placeholder="YYYY-MM-DD">
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <label for="heading">TIME</label><input type="time" class="form-control" name="fromtime" data-name="fromtime" value="{%if model and model.start_date %}{{model.from_date_time}}{% endif %}" placeholder="HH:MM">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <label for="heading">TO<span class="red">*</span></label><input type="date" class="form-control" name="todate" data-name="todate" value="{%if model and model.end_date %}{{model.to_date_only}}{% endif %}" placeholder="YYYY-MM-DD">
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <label for="heading">TIME</label><input type="time" class="form-control" name="totime" data-name="totime" value="{%if model and model.end_date %}{{model.to_date_time}}{% endif %}" placeholder="HH:MM">
+                        </div>
+                    </div>
+                </div>
+                <div class="on-request-trip-container well" style="display:none;">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <label for="heading">No. of days/nights<span class="red">*</span></label><input type="text" class="form-control" name="requestduration" data-name="request-duration" value="{% if model and model.expected_duration %}{{model.expected_duration }}{% endif %}">
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-6">
+                            <label for="heading">Operating Seasons/Conditions etc.</label><input type="text" class="form-control" name="requestconditions" data-name="request-conditions" value="{%if model and model.expected_conditions %}{{model.expected_conditions }}{% endif %}">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <div class="row">
+                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label for="heading">
+                                LOCATION
+                                <span class="red">*</span>
+                                <p class="text-muted" style="font-size: 9pt;">
+                                    (If you don't find your trip location in the list Or have more than one location? <a href="#" id="toggle-destination-link">Click Here</a>)
+                                </p>
+                            </label>
+                            <input type="text" class="form-control geo-complete" value="{%if model and model.location %}{{model.location}}{% endif %}"/>
+                            <input type="hidden" name="formatted_address" data-name="geo_location_name" value="{% if model.location  and model.location|length > 0 %}{{ model.location }}{% endif %}"/>
+                            <input type="hidden" name="lat" data-name="geo_location_lat" value="{% if model.location and model.geo_location %}{{ model.geo_location['coordinates'][0] }}{% endif %}"/>
+                            <input type="hidden" name="lng" data-name="geo_location_long" value="{% if model.location and model.geo_location %}{{ model.geo_location['coordinates'][1] }}{% endif %}"/>
+                            <input type="hidden" name="locality_short" data-name="geo_city" value="{% if model.location and model.city %}{{ model.city }}{% endif %}"/>
+                            <input type="hidden" name="administrative_area_level_2" data-name="geo_region" value="{% if model.location and model.region %}{{ model.region }}{% endif %}"/>
+                            <input type="hidden" name="administrative_area_level_1" data-name="geo_state" value="{% if model.location and model.state %}{{ model.state }}{% endif %}"/>
+                            <input type="hidden" name="country_short" data-name="geo_country" value="{% if model.location and model.country %}{{ model.country }}{% endif %}"/>
+                        </div>
+                    </div>
+                </div>
+                <div id="destination_toggleable" class="row" style="display: none;">
+                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                        <label for="heading">Destination is famous as?</label>
+                        <input type="text" class="form-control" placeholder="Enter optional location name" data-name="optional_location_name" value="{%if model and model.optional_location_name %}{{model.optional_location_name}}{% endif %}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label for="heading">Departure From (Starting From)</label>
+                            <input type="text" name="departure_from" class="form-control" placeholder="Departure From Location" data-name="departure-from" value="{%if model and model.starting_from %}{{model.starting_from }}{% endif %}">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label for="heading">Amount<span class="red">*</span></label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" placeholder="Enter Amount" data-name="price" value="{%if model and model.price and not model.price_on_request %}{{model.price|int }}{% endif %}">
+                                <a href="#" class="input-group-addon"><i class="fa fa-money-circle fa-inr"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        OR Price on request&nbsp;
+                        <input type="checkbox" class="" placeholder="Select for quote" data-name="price-on-request" {% if model and model.price_on_request == True %}checked{% endif %}>
+                    </div>
+                </div>
+
+                <!--div class="form-group">
+                    <label for="heading">Detail Address</label>
+                    <textarea class="form-control" name="itinerary" placeholder="Enter ItenAddress"></textarea>
+                </div-->
+                <div class="container">
+                    <label for="heading">Activity<span class="red">*</span></label>
+
+                    <div class="row-fluid">
+                        {% for k in ['Land Activities', 'Water Activities', 'Air Activities'] %}
+                        <div class="row-fluid">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><strong><u>{{k}}</u></strong></div>
+                            {% for activity in activities.get(k, []) %}
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                <div class="checkbox">
+                                    <p><input type="checkbox" data-name="activities" data-value="{{activity.id}}" {% if activity in model.activities %}checked{% endif %}> {{activity.name}}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <br/>
+
+                    <div class="row-fluid">
+                        <br/>
+                        <span><u>Others, please specify</u></span>
+                        <input class="form-control" type="text" data-name="other-activities" placeholder="Enter other activities as comma seperated list"/>
+                    </div>
+                </div>
+                <br/>
+                <hr/>
+                <br/>
+                <div class="form-group">
+                    <label for="cover-image">Upload Cover Image <span class="red">*</span></label>
+                    <div class="thumbnail">
+                        <a href="#" data-action="cover-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/1366x500{% endif %}" width="70%"/></a>
+                        <div class="caption text-center">Click on the image to change(Optional)</div>
+                    </div>
+                    <input type="hidden" data-name="cover-image" value="{% if model.cover_image %}{{ model.cover_image_path }}{% endif %}"/>
+                </div>
+                <div class="form-group">
+                    <label for="heading">Overview <small>(About the destination)</small><span class="red">*</span></label>
+                    <textarea class="form-control summernote" name="itinerary" rows="4" data-name="overview"
+                              placeholder="Write Brief About The Trip...">{% if model and model.about %}{{model.about}}{% endif %}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="heading">Itinerary <small>(Schedule, Things to carry, etc)</small><span class="red">*</span></label>
+                    <textarea class="form-control summernote" name="itinerary" rows="4" data-name="itinerary"
+                              placeholder="Write Brief About Itinerary...">{% if model and model.itinerary %}{{model.itinerary}}{% endif %}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="heading">Inclusive / Exclusive <span class="red">*</span></label>
+                    <textarea class="form-control summernote" name="inclusive_exclusive" rows="4" data-name="inclusive_exclusive"
+                              placeholder="Write Brief About Inclusive and Exclusive...">{% if model and model.inclusive_exclusive%}{{model.inclusive_exclusive}}{% endif %}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="heading">Other details <small>(Notes, Highlights, Cancellation, etc)</small></label>
+                    <textarea class="form-control summernote" name="other_details" rows="4" data-name="other_details"
+                              placeholder="Write Brief About Other Details...">{% if model and model.other_details %}{{model.other_details }}{% endif %}</textarea>
+                </div>
+                <div class="form-group">
+                    <div class="row" style="vertical-align: middle;">
+                        <label for="heading" style="vertical-align: middle; height: 30px;">
+                            Upload Gallery Images
+                        </label>
+                    </div>
+                    <div id="media-gallery-uploads" class="container">
+                        {% for mg in model.media_gallery %}
+                        <div class="form-group col-lg-3 col-md-3 col-sm-6 col-xs-6" data-container-selector="{{mg.id}}">
+                            <div class="thumbnail"><img src="{{mg.image_path_small}}"/><div class="caption text-center"><a href="#"  data-type="saved" data-action="remove-image" data-selector="{{mg.id}}">Remove Image</a></div></div>
+                        </div>
+                        {% endfor %}
+                        <div class="form-group col-lg-3 col-md-3 col-sm-6 col-xs-6" data-container-selector="add-button">
+                            <div class="thumbnail text-center">
+                                <a href="#" data-action="media-gallery-upload"><i class="fa fa-plus-circle fa-3x"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br/>
+            <hr/>
+            <br/>
+
+            <div class="form-group {% if model %}hide{% endif %}">
+                <div class="checkbox">
+                    <label>
+                        <input data-name="toc" type="checkbox" {% if model %}checked{% endif %}> I accept the terms and conditions as per the agreement.<span class="red">*</span>
+                    </label>
+                </div>
+            </div>
+
+            <!--div class="form-group {% if model %}hide{% endif %}">
+                <div class="checkbox">
+                    <label>
+                        <input data-name="is-manager" {% if model %}checked{% endif %} type="checkbox"> I am the administrator / manager / representative.<span class="red">*</span>
+                    </label>
+                </div>
+            </div-->
+
+            <form class="form-group">
+                <button data-action="save-trip" class="btn btn-primary">Submit</button>
+            </form>
+
+        </form>
+    </div>
+    <!--Col9 End-->
+
+
+    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+        <div class="row">
+
+
+        </div>
+    </div>
+    <!--Col3 End-->
+
+</section>
+
+<script>
+    $(document).ready(function(){
+        var handle_success = function() {
+            window.location.href='/trips#my-trips';
+        };
+        var handle_failure = function(message) {
+            console.log('Handling failure:'  + message);
+            BootstrapDialog.alert({
+                title: 'Error message',
+                message: message,
+            });
+        };
+
+        $('body').on('click', '[data-action="save-trip"]', function(e){
+
+
+            var toc = $('[data-name="toc"]:checked');
+            if (toc == undefined || toc.length == 0)  {
+                BootstrapDialog.alert('Please accept the terms and then try again.');
+                return;
+            }
+
+            /*
+            var is_manager = $('[data-name="is-manager"]:checked');
+            if (is_manager == undefined || is_manager.length == 0)  {
+                BootstrapDialog.alert('You have to be the administrator/manager/representative to save the trip.');
+                return;
+            }
+            */
+
+            var other_activities = $('[data-name="other-activities"]').val();
+            var id = $('[data-name="id"]').val();
+            var organizer = $('[data-name="user"]').val();
+            var title = $('[data-name="title"]').val();
+            var departure_type = $('[data-name="departure-type"]').val();
+
+            if (departure_type == undefined || (departure_type != 'Fixed' && departure_type != 'On Request')) {
+                BootstrapDialog.alert('Please select the departure type, it is mandatory field');
+                return;
+            }
+
+            var from = '';
+            var to = '';
+            var request_duration = $('[data-name="request-duration"]').val();
+            var request_conditions = $('[data-name="request-conditions"]').val();
+            if (departure_type == 'Fixed'){
+                from = '';
+                to = '';
+                var fromdate = $('[data-name="fromdate"]').val();
+                var fromtime = $('[data-name="fromtime"]').val();
+                if (fromdate.length > 0){
+                    from = fromdate + ' ';
+                    if (fromtime.length > 0) {
+                        from += fromtime;
+                    } else {
+                        from += '00:00:00';
+                    }
+                }
+                var todate = $('[data-name="todate"]').val();
+                var totime = $('[data-name="totime"]').val();
+                if (todate.length > 0){
+                    to = todate + ' ';
+                    if (totime.length > 0) {
+                        to += totime;
+                    } else {
+                        to += '00:00:00';
+                    }
+                }
+            }
+
+
+            var location_name = $('[data-name="geo_location_name"]').val();
+            var location_lat = $('[data-name="geo_location_lat"]').val();
+            var location_lng = $('[data-name="geo_location_long"]').val();
+            var location_city = $('[data-name="geo_city"]').val();
+            var location_region = $('[data-name="geo_region"]').val();
+            var location_state = $('[data-name="geo_state"]').val();
+            var location_country = $('[data-name="geo_country"]').val();
+            var starting_from = $('[data-name="departure-from"]').val();
+            var optional_location_name = $('[data-name="optional_location_name"]').val();
+            var price = $('[data-name="price"]').val();
+            var price_on_request = ($('[data-name="price-on-request"]:checked').val() == undefined)? false: true;
+            if (!price_on_request && (price == undefined || price.length == 0)) {
+                BootstrapDialog.alert('Price is mandatory if "Price on request" is not checked');
+                return;
+            } else if (price_on_request == true) {
+                price = '';
+            }
+            var $activities = $('[data-name="activities"]:checked');
+            var activities = [];
+            for (var i = 0; i < $activities.length; i++){
+                activities.push($($activities[i]).attr('data-value'));
+            }
+            var cover_image = $('[data-name="cover-image"]').val();
+            if (cover_image.length == 0) {
+                BootstrapDialog.alert('Please select a cover image for the trip. This is mandatory.');
+                return;
+            }
+            var $media_gallery_images = $('[data-name="media-gallery-image"]');
+            var media_gallery_images = [];
+            for (var i = 0; i < $media_gallery_images.length; i++){
+                media_gallery_images.push($($media_gallery_images[i]).val());
+            }
+            var overview = $('[data-name="overview"]').val();
+            var itinerary = $('[data-name="itinerary"]').val();
+            var incl_excl = $('[data-name="inclusive_exclusive"]').val();
+            var other_details = $('[data-name="other_details"]').val();
+            var data = {
+                title: title,
+                from: from,
+                to: to,
+                about: overview,
+                location_name: location_name,
+                location_lat: location_lat,
+                location_lng: location_lng,
+                location_city: location_city,
+                location_region: location_region,
+                location_state: location_state,
+                location_country:location_country,
+                starting_from: starting_from,
+                optional_location_name: optional_location_name,
+                price: price,
+                activities: activities,
+                cover_image: cover_image,
+                media_gallery_images: media_gallery_images,
+                itinerary: itinerary,
+                inclusive_exclusive: incl_excl,
+                other_details: other_details,
+                organizer: organizer,
+                departure_type: departure_type,
+                request_duration: request_duration,
+                request_conditions: request_conditions,
+                price_on_request: price_on_request,
+                other_activities: other_activities
+            };
+
+            if (id != undefined && id.length > 0){
+                App.trip.edit(id, data, function(data){
+                    if (data.status == 'success') {
+                        handle_success();
+                    } else {
+                        handle_failure(data.message);
+                    }
+                })
+            } else {
+                App.trip.add(data, function(data){
+                    if (data.status == 'success') {
+                        handle_success();
+                    } else {
+                        handle_failure(data.message);
+                    }
+                })
+            }
+
+        });
+
+
+        $('body').on('click', '[data-action="cover-image-upload"]', function(e){
+            e.stopPropagation();e.preventDefault();
+            var callback = function(url){
+                $('[data-name="cover-image-display"]').attr('src', url);
+                $('[data-name="cover-image"]').val(url);
+
+            };
+            App.image_upload_dialog(callback);
+        });
+        $('body').on('click', '[data-action="media-gallery-upload"]', function(e){
+            e.stopPropagation();e.preventDefault();
+            var callback = function(url){
+                var container = $('<div/>');
+                container.addClass('form-group');
+                container.addClass('col-lg-3');
+                container.addClass('col-md-3');
+                container.addClass('col-sm-6');
+                container.addClass('col-xs-6');
+
+                var d = App.hashcode(url);
+                container.attr('data-container-selector', d);
+                var values = '<div class="thumbnail"><img src="' + url + '" width="70%"/><div class="caption text-center"><a href="#" data-action="remove-image" data-selector="' + d + '">Remove Image</a></div></div>';
+                var ip = '<input type="hidden" data-name="media-gallery-image" value="' + url + '"/>';
+                container.html(values + ip);
+                $('[data-container-selector="add-button"]').before(container);
+                //$('#media-gallery-uploads').prepend(container);
+
+            };
+            App.image_upload_dialog(callback);
+        });
+
+        $('body').on('click', '[data-action="remove-image"]', function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            var selector = $(this).attr('data-selector');
+            if (selector != undefined && selector.length > 0 && $(this).attr('data-type') != 'saved'){
+                $('[data-container-selector="' + selector + '"]').remove();
+            } else {
+                alert('Removing existing...');
+                App.trip.delete_media("", selector, function(data){
+                    if (data.status=='success') {
+                        BootstrapDialog.alert(data.message);
+                        $('[data-container-selector="' + selector + '"]').remove();
+                    } else {
+                        BootstrapDialog.alert('Unable to delete the media');
+                    }
+                })
+            }
+        });
+
+        $('body').on('change', '[data-name="departure-type"]', function(e){
+            var departure_type = $('[data-name="departure-type"]').val();
+            if (departure_type != 'Fixed') {
+                $('.fixed-trip-container').hide();
+                $('.on-request-trip-container').show();
+            } else {
+                $('.fixed-trip-container').show();
+                $('.on-request-trip-container').hide();
+            }
+        });
+
+        var pre_departure_type = $('[data-name="departure-type"]').val();
+        if (pre_departure_type == 'On Request') {
+            $('.fixed-trip-container').hide();
+            $('.on-request-trip-container').show();
+        } else {
+            $('.fixed-trip-container').show();
+            $('.on-request-trip-container').hide();
+        }
+
+        var toggle_state = false;
+        $('#toggle-destination-link').on('click', function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            if (toggle_state == false){
+                toggle_state = true;
+                $('#destination_toggleable').show();
+            } else {
+                toggle_state = false;
+                $('#destination_toggleable').hide();
+            }
+        });
+        var current_price_value = undefined;
+        current_price_value = $('[data-name="price"]').val();
+        $('[data-name="price-on-request"]').on('change', function(e){
+            e.stopPropagation();
+            if($('[data-name="price-on-request"]:checked').val() == undefined){
+                $('[data-name="price"]').removeClass('disabled');
+                $('[data-name="price"]').val(current_price_value);
+            } else {
+                current_price_value = $('[data-name="price"]').val();
+                $('[data-name="price"]').val('');
+                $('[data-name="price"]').addClass('disabled');
+            }
+        });
+    });
+</script>

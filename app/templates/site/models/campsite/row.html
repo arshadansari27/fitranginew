@@ -1,0 +1,25 @@
+<li>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="{{model.slug}}"><img class="blog-img img-responsive img-thumbnail" src="{{model.cover_image_path_small}}" alt=""></a>
+        </div>
+        <div class="col-md-8">
+            <h3 class="title"><a href="{{model.slug}}">
+                {{model.name }}</a>
+                {% if model.host.id == user.id %}
+                    <button data-user-id="{{user.id}}" data-model-id="{{model.id}}" class="btn btn-default btn-edi blue pull-right" type="button" onclick="javascript: window.location.href='/add-edit-trip?pk={{model.id}}'"><i class="fa fa-edit"></i> Edit </button>
+                {% endif %}
+            </h3>
+            <p class="sub-title"><em>{% if model.description %}{% if model.description|length > 100 %}{{model.description[:100]|safe}}...{% else %}{{model.description|safe}}{% endif %}{% endif %}</em></p>
+            {% if not model.host.id == user.id %}
+            <div class="media">
+                <h4>Oragnizer by</h4>
+                <img src="{{model.host.cover_image_path_small}}" class="img-circle img-responsive pull-left p-5 media-object" width="48">
+                <h5>{{model.host.name}}</h5>
+            </div>
+
+            {% endif %}
+        </div>
+    </div>
+</li>
+

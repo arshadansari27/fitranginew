@@ -5,6 +5,7 @@ from app.models.event import Event
 from app.models.trip import Trip
 from app.models.activity import Activity
 from app.models.adventure import Adventure
+from app.models.campsite import Campsite
 from app.models import Node, NodeFactory, LOCATION, BusinessException
 from app.models.feedbacks import ClaimProfile, NotOkFeedBack
 from app.handlers.editors import NodeEditor, response_handler
@@ -33,6 +34,10 @@ class ProfileEditor(NodeEditor):
             return wish_list_adventure(self.action, self.node, self.message['adventure'])
         elif self.command == 'accomplish-adventure':
             return accomplish_adventure(self.action, self.node, self.message['adventure'])
+        elif self.command == 'wish-list-campsite':
+            return wish_list_campsite(self.action, self.node, self.message['campsite'])
+        elif self.command == 'accomplish-campsite':
+            return accomplish_campsite(self.action, self.node, self.message['campsite'])
         elif self.command == 'favorite-activity':
             return favorite_activity(self.action, self.node, self.message['activity'])
         elif self.command == 'follow-profile':
@@ -45,6 +50,8 @@ class ProfileEditor(NodeEditor):
             return join_event(self.action, self.node, self.message['event'])
         elif self.command == 'interest-trip':
             return interest_trip(self.action, self.node, self.message['trip'])
+        elif self.command == 'interest-campsite':
+            return interest_campsite(self.action, self.node, self.message['campsite'])
         elif self.command == 'join-trip':
             return join_trip(self.action, self.node, self.message['trip'])
         elif self.command == 'verify-profile':
@@ -65,6 +72,8 @@ class ProfileEditor(NodeEditor):
             return deactivate_profile(self.action, self.node)
         elif self.command == 'book-enquiry-trip':
             return book_trip(self.node, self.message['data'])
+        elif self.command == 'book-enquiry-campsite':
+            return book_campsite(self.node, self.message['data'])
         elif self.command == 'reset-activity-count':
             return reset_activity_count(self.node, self.action)
         elif self.command == 'switch-profile':
@@ -80,7 +89,7 @@ def set_background_image(node, url):
     node.set_background_cover(url)
     return node
 
-@response_handler('Successfully switched the user', 'Failed to switch the user')
+@response_handler('Successfully switched the user', 'Failed to switch the user', login_required=True)
 def switch_profile(node, profile):
     from flask import g
     user = g.user if hasattr(g, 'user') else None
@@ -93,7 +102,7 @@ def switch_profile(node, profile):
     return node
 
 
-@response_handler('Successfully updated the counter', 'Failed to update the counter')
+@response_handler('Successfully updated the counter', 'Failed to update the counter', login_required=True)
 def reset_activity_count(profile, action):
     if not profile:
         from flask import g
@@ -109,7 +118,7 @@ def reset_activity_count(profile, action):
     return node
 
 
-@response_handler('Successfully updated the profile', 'Failed to update the profile')
+@response_handler('Successfully updated the profile', 'Failed to update the profile', login_required=True)
 def edit_profile(profile, data):
     node = Profile.objects(pk=profile).first()
     for k, v in data.iteritems():
@@ -197,13 +206,13 @@ def claim_profile(node, node_type, user_id):
         print '[ERROR] Unable to send verification email to user : ', node.email
     return node
 
-@response_handler('Successfully updated the profile pic', 'Failed to update the profile pic')
+@response_handler('Successfully updated the profile pic', 'Failed to update the profile pic', login_required=True)
 def edit_cover_image(profile, data):
     node = Profile.objects(pk=profile).first()
     print '****', node, data
     return node
 
-@response_handler('Successfully updated the password', 'Failed to update the password')
+@response_handler('Successfully updated the password', 'Failed to update the password', login_required=True)
 def change_password(profile, data):
     node = Profile.objects(pk=profile).first()
     old = hashlib.md5(data.get('old')).hexdigest()
@@ -214,7 +223,7 @@ def change_password(profile, data):
     node.save()
     return node
 
-@response_handler('Successfully updated wish list', 'Failed to update wish list')
+@response_handler('Successfully updated wish list', 'Failed to update wish list', login_required=True)
 def wish_list_adventure(action, profile, adventure):
     node = Profile.objects(pk=profile).first()
     adventure = Adventure.objects(pk=adventure).first()
@@ -224,7 +233,7 @@ def wish_list_adventure(action, profile, adventure):
         RelationShips.unwishlist(node, adventure)
     return node
 
-@response_handler('Successfully updated adventure accomplishment', 'Failed to update adventure accomplishment')
+@response_handler('Successfully updated adventure accomplishment', 'Failed to update adventure accomplishment', login_required=True)
 def accomplish_adventure(action, profile, adventure):
     node = Profile.objects(pk=profile).first()
     adventure = Adventure.objects(pk=adventure).first()
@@ -234,7 +243,7 @@ def accomplish_adventure(action, profile, adventure):
         RelationShips.unaccomplish(node, adventure)
     return node
 
-@response_handler('Successfully updated favorite activities', 'Failed to update favorite activities')
+@response_handler('Successfully updated favorite activities', 'Failed to update favorite activities', login_required=True)
 def favorite_activity(action, profile, activity):
     node = Profile.objects(pk=profile).first()
     activity = Activity.objects(pk=activity).first()
@@ -244,7 +253,7 @@ def favorite_activity(action, profile, activity):
         RelationShips.un_favorite(node, activity)
     return node
 
-@response_handler('Successfully updated subscription', 'Failed to update subscription')
+@response_handler('Successfully updated subscription', 'Failed to update subscription', login_required=True)
 def follow_profile(action, profile, profile2):
     node = Profile.objects(pk=profile).first()
     other = Profile.objects(pk=profile2).first()
@@ -257,12 +266,12 @@ def follow_profile(action, profile, profile2):
         RelationShips.un_follow(node, other)
     return node
 
-@response_handler('Successfully updated bookmarks', 'Failed to update bookmarks')
+@response_handler('Successfully updated bookmarks', 'Failed to update bookmarks', login_required=True)
 def bookmark_article(action, profile, article):
     node = Profile.objects(pk=profile).first()
     return node
 
-@response_handler('Successfully updated interests in event', 'Failed to update interests in events')
+@response_handler('Successfully updated interests in event', 'Failed to update interests in events', login_required=True)
 def interest_event(action, profile, event):
     node = Profile.objects(pk=profile).first()
     event = Event.objects(pk=event).first()
@@ -276,7 +285,7 @@ def interest_event(action, profile, event):
         raise Exception("Invalid action")
     return node
 
-@response_handler('Successfully updated joining status', 'Failed to update joining status')
+@response_handler('Successfully updated joining status', 'Failed to update joining status', login_required=True)
 def join_event(action, profile, event):
     node = Profile.objects(pk=profile).first()
     event = Event.objects(pk=event).first()
@@ -290,7 +299,7 @@ def join_event(action, profile, event):
         raise Exception("Invalid action")
     return node
 
-@response_handler('Successfully updated interests in trip', 'Failed to update interests in trip')
+@response_handler('Successfully updated interests in trip', 'Failed to update interests in trip', login_required=True)
 def interest_trip(action, profile, trip):
     node = Profile.objects(pk=profile).first()
     trip = Trip.objects(pk=trip).first()
@@ -304,7 +313,41 @@ def interest_trip(action, profile, trip):
         raise Exception("Invalid action")
     return node
 
-@response_handler('Successfully updated joining status', 'Failed to update joining status')
+@response_handler('Successfully updated interests in campsite', 'Failed to update interests in campsite', login_required=True)
+def interest_campsite(action, profile, campsite):
+    node = Profile.objects(pk=profile).first()
+    campsite = Campsite.objects(pk=campsite).first()
+    if not node or not campsite:
+        raise Exception('Invalid profile or event')
+    if action == 'add':
+        RelationShips.interested(node, campsite)
+    elif action == 'remove':
+        RelationShips.uninterested(node, campsite)
+    else:
+        raise Exception("Invalid action")
+    return node
+
+@response_handler('Successfully updated wish list', 'Failed to update wish list', login_required=True)
+def wish_list_campsite(action, profile, campsite):
+    node = Profile.objects(pk=profile).first()
+    campsite = Campsite.objects(pk=campsite).first()
+    if action == 'add':
+        RelationShips.wishlist(node, campsite)
+    else:
+        RelationShips.unwishlist(node, campsite)
+    return node
+
+@response_handler('Successfully updated campsite accomplishment', 'Failed to update campsite accomplishment', login_required=True)
+def accomplish_campsite(action, profile, campsite):
+    node = Profile.objects(pk=profile).first()
+    campsite = Campsite.objects(pk=campsite).first()
+    if action == 'add':
+        RelationShips.accomplish(node, campsite)
+    else:
+        RelationShips.unaccomplish(node, campsite)
+    return node
+
+@response_handler('Successfully updated joining status', 'Failed to update joining status', login_required=True)
 def join_trip(action, profile, trip):
     node = Profile.objects(pk=profile).first()
     trip = Trip.objects(pk=trip).first()
@@ -325,7 +368,7 @@ def verify_profile(action, profile):
     node.save()
     return node
 
-@response_handler('Successfully updated preferences', 'Failed to update preferences')
+@response_handler('Successfully updated preferences', 'Failed to update preferences', login_required=True)
 def edit_profile_preference(profile, data):
     node = Profile.objects(pk=profile).first()
     email_enabled = data.get('email_enabled', True)
@@ -503,14 +546,14 @@ def update_business_profile(node, data):
 
     return profile
 
-@response_handler('Successfully updated business status', 'Failed to update business status')
+@response_handler('Successfully updated business status', 'Failed to update business status', login_required=True)
 def business_profile_edit(action, profile):
     node = Profile.objects(pk=profile).first()
     node.is_business_profile = True if action == 'make' else False
     node.save()
     return node
 
-@response_handler('Successfully updated role', 'Failed to update role')
+@response_handler('Successfully updated role', 'Failed to update role', login_required=True)
 def edit_role(action, profile, role):
     node = Profile.objects(pk=profile).first()
     if action == 'add':
@@ -522,7 +565,7 @@ def edit_role(action, profile, role):
     node.save()
     return node
 
-@response_handler('Successfully updated profile type', 'Failed to update profile type')
+@response_handler('Successfully updated profile type', 'Failed to update profile type', login_required=True)
 def edit_type(action, profile, type):
     node = Profile.objects(pk=profile).first()
     type = ProfileType.objects(name__iexact=type).first()
@@ -535,7 +578,7 @@ def edit_type(action, profile, type):
     node.save()
     return node
 
-@response_handler('Successfully updated activation status', 'Failed to update activation status')
+@response_handler('Successfully updated activation status', 'Failed to update activation status', login_required=True)
 def deactivate_profile(action, profile):
     node = Profile.objects(pk=profile).first()
     node.deactivate = True if action == 'deactivate' else False
@@ -561,7 +604,6 @@ def book_trip(node,  data):
     booking = trip.add_enquiry(node, name, email, phone, message, contact_pref)
     organizer = trip.organizer
     admins = Profile.objects(roles__in=['Admin']).all()
-    print 'SEnding emails to ', organizer, ',', admins
     if organizer and organizer.id:
         try:
             template_path = 'notifications/trip_booking.html'
@@ -579,6 +621,52 @@ def book_trip(node,  data):
                     template_path = 'notifications/trip_booking_admin.html'
                     context = dict(user=a, trip=trip, booking=booking)
                     subject="[Fitrangi] Booking enquiry arrived for the trip \"%s\"" % trip.name_short
+                    to_list=[a.email]
+                    send_email_from_template(template_path, subject, to_list, force_send=True, **context)
+                except:
+                    print '[ERROR] Unable to send email to admin', a.email
+
+        except:
+            print '[ERROR] Unable to send email to admin'
+    return node
+
+
+@response_handler('Successfully sent enquiry regarding campsite', 'Failed to send the enquiry regarding campsite', login_required=True)
+def book_campsite(node,  data):
+    name = data['name']
+    email = data['email']
+    phone = data['phone']
+    message = data['message']
+    contact_pref = data['contact_pref']
+    campsite = data['campsite']
+    node = Profile.objects(pk=node).first()
+    if not node:
+        type = ProfileType.objects(name__iexact='Subscription Only').first()
+        node = Profile(name=name, email=email, phone=phone, type=[type]).save()
+    campsite = Campsite.objects(pk=campsite).first()
+    if not node or not campsite:
+        raise Exception('Invalid profile or event')
+
+    booking = campsite.add_enquiry(node, name, email, phone, message, contact_pref)
+    host = campsite.host
+    admins = Profile.objects(roles__in=['Admin']).all()
+    if host and host.id:
+        try:
+            template_path = 'notifications/trip_booking.html'
+            context = dict(user=host, campsite=campsite, booking=booking)
+            subject="[Fitrangi] Booking enquiry arrived for the campsite \"%s\"" % campsite.name_short
+            to_list=[host.email]
+            send_email_from_template(template_path, subject, to_list, force_send=True, **context)
+
+        except:
+            print '[ERROR] Unable to send email to organizer ', host.email
+    if admins and len(admins) > 0:
+        try:
+            for a in admins:
+                try:
+                    template_path = 'notifications/trip_booking_admin.html'
+                    context = dict(user=a, campsite=campsite, booking=booking)
+                    subject="[Fitrangi] Booking enquiry arrived for the trip \"%s\"" % campsite.name_short
                     to_list=[a.email]
                     send_email_from_template(template_path, subject, to_list, force_send=True, **context)
                 except:

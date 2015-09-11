@@ -296,6 +296,93 @@ $(document).ready(function() {
         App.editor(options, callback);
     };
 
+    App.profile.add_campsite_to_wish_list= function(node, campsite, callback) {
+        var options = {
+            node: node,
+            campsite: campsite,
+            type: 'profile',
+            command: 'wish-list-campsite',
+            action: 'add'
+        };
+        App.editor(options, callback);
+    };
+
+    App.profile.remove_campsite_from_wish_list = function(node, campsite, callback) {
+        var options = {
+            node: node,
+            campsite: campsite,
+            type: 'profile',
+            command: 'wish-list-campsite',
+            action: 'remove'
+        };
+        App.editor(options, callback);
+    };
+
+    App.profile.add_campsite_to_done = function(node, campsite, callback) {
+        var options = {
+            node: node,
+            campsite: campsite,
+            type: 'profile',
+            command: 'accomplish-campsite',
+            action: 'add'
+        };
+        App.editor(options, callback);
+    };
+
+    App.profile.remove_campsite_from_done = function(node, campsite, callback) {
+        var options = {
+            node: node,
+            campsite: campsite,
+            type: 'profile',
+            command: 'accomplish-campsite',
+            action: 'remove'
+        }
+        App.editor(options, callback);
+    };
+
+    App.profile.add_campsite_to_interest= function(node, campsite, callback) {
+        var options = {
+            node: node,
+            campsite: campsite,
+            type: 'profile',
+            command: 'interest-campsite',
+            action: 'add'
+        };
+        App.editor(options, callback);
+    };
+
+    App.profile.remove_campsite_from_interest= function(node, campsite, callback) {
+        var options = {
+            node: node,
+            campsite: campsite,
+            type: 'profile',
+            command: 'interest-campsite',
+            action: 'remove'
+        };
+        App.editor(options, callback);
+    };
+
+
+    App.profile.book_campsite = function(user, name, email, phone, message, contact_pref, campsite, callback) {
+        var data = {
+            name: name,
+            email: email,
+            phone: phone,
+            message: message,
+            contact_pref: contact_pref,
+            campsite: campsite
+        };
+        var options = {
+            node: user,
+            type: 'profile',
+            command: 'book-enquiry-campsite',
+            action: 'enquiry',
+            data: data
+        };
+        App.editor(options, callback);
+    };
+
+
     App.profile.book_trip = function(user, name, email, phone, message, contact_pref, trip, callback) {
         var data = {
             name: name,

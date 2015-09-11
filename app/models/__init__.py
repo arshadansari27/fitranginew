@@ -19,10 +19,10 @@ db.ListField = ListField
 
 (ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, PRODUCT, ARTICLE,
  LOCATION, POST, DISCUSSION, CHANNEL, STREAM, MESSAGE,
- RELATIONSHIPS, PROFILE_TYPE, ADVERTISEMENT, CONTEST) =  (
+ RELATIONSHIPS, PROFILE_TYPE, ADVERTISEMENT, CONTEST, CAMPSITE) =  (
     "activity", "adventure", "event", "trip", "profile", "product",
     "article", "location", "post", "discussion", "channel",
-    "stream", "message", "relationships", "profile_type", "advertisement", "contest"
+    "stream", "message", "relationships", "profile_type", "advertisement", "contest", "campsite"
 )
 
 def handler(event):
@@ -341,6 +341,7 @@ class NodeFactory(object):
         from app.models.streams import ActivityStream, ChatMessage
         from app.models.relationships import RelationShips
         from app.models.contest import Contest
+        from app.models.campsite import Campsite
         name = name.lower()
 
         if name == ACTIVITY: return Activity
@@ -360,6 +361,7 @@ class NodeFactory(object):
         elif name == ADVERTISEMENT: return Advertisement
         elif name == CONTEST: return Contest
         elif name == TRIP: return Trip
+        elif name == CAMPSITE: return Campsite
         else: return None
 
 class BusinessException(Exception):

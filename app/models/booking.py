@@ -1,9 +1,6 @@
 __author__ = 'arshad'
 
-from app.models import update_content, Node, ExternalNetwork, Charge, db, Location
-from app.models.relationships import RelationShips
-from app.models.profile import Profile
-from app import utils
+from app.models import db
 import datetime
 
 class Booking(db.Document):
@@ -37,3 +34,6 @@ class TripBooking(Booking):
 
 class EventBooking(Booking):
     event = db.ReferenceField('Event')
+
+class CampsiteBooking(Booking):
+    campsite = db.ReferenceField('Campsite')
