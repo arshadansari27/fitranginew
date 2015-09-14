@@ -524,7 +524,7 @@ def ajax_options2():
     else:
         vals = getattr(NodeFactory.get_class_by_name(model_name), method)()
         str_to_use = '<option value="%s">%s</option>'
-        results = set([str_to_use % (u, u) for u in vals])
+        results = set([str_to_use % (u, u) for u in vals if u])
         return ''.join(results)
 
 
@@ -550,7 +550,7 @@ def ajax_options():
 
         options = _options.items()
     else:
-        options = ((str(getattr(u, 'id')), getattr(u, attr)) for u in NodeFactory.get_class_by_name(model_name).objects.all())
+        options = ((str(getattr(u, 'id')), getattr(u, attr)) for u in NodeFactory.get_class_by_name(model_name).objects.all() if u)
     if not select:
         str_to_use = '<option id="%s" value="%s">'
     else:
@@ -567,25 +567,25 @@ def ajax_names():
     if model_name == 'tag':
         if model_type is not None:
             if model_type == 'article':
-                options = [u[0] for u in specific_tags_article()]
+                options = [u[0] for u in specific_tags_article() if u and len(u) > 0]
             elif model_type == 'discussion':
-                options = [u[0] for u in specific_tags_discussion()]
+                options = [u[0] for u in specific_tags_discussion() if u and len(u) > 0]
             else:
-                options = [u[0] for u in specific_tags(model_type)]
+                options = [u[0] for u in specific_tags(model_type) if u and len(u) > 0]
         else:
-            options = [u[0] for u in all_tags()]
+            options = [u[0] for u in all_tags() if u and len(u) > 0]
         if size:
             options = options[0: int(size)]
     elif model_name == 'channel':
         from app.models.content import Channel
         if model_type == 'article':
-            options = [Channel.objects(pk=str(u[0])).first().name for u in specific_channels_article()]
+            options = [Channel.objects(pk=str(u[0])).first().name for u in specific_channels_article() if u and len(u) > 0]
         elif model_type == 'discussion':
-            options = [Channel.objects(pk=str(u[0])).first().name for u in specific_channels_discussion()]
+            options = [Channel.objects(pk=str(u[0])).first().name for u in specific_channels_discussion() if u and len(u) > 0]
         else:
-            options = [Channel.objects(pk=str(u[0])).first().name for u in specific_channels(model_type)]
+            options = [Channel.objects(pk=str(u[0])).first().name for u in specific_channels(model_type) if u and len(u) > 0]
     else:
-        options = (getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all())
+        options = (getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all() if u)
     results = (u for u in options)
     return ','.join(results)
 
@@ -596,7 +596,7 @@ def ajax_buttons():
     if model_name == 'tag':
         options = [u[0] for u in all_tags()][:30]
     else:
-        options = (getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all())
+        options = (getattr(u, attr) for u in NodeFactory.get_class_by_name(model_name).objects.all() if u)
     results = ('<a href="#"> %s </a>' % u for u in options)
     return ''.join(results)
 
