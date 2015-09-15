@@ -5,7 +5,7 @@
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: window.location.href='/add-edit-campsite'">Add a Campsite</a>
-                <input id="name-filter" data-filter="name__icontains" data-model="profile" type="hidden">
+                <input id="name-filter" data-filter="name__icontains" data-model="campsite" type="hidden">
             </div>
 
 
@@ -43,48 +43,13 @@
                     <input type="hidden" id="location-sorter-country" name="country_short" data-model="trip" data-category="upcoming" data-sorter="location_country"/>
                 </form>
             </div>
-            <!--div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 fitrangi-datalist fitrangi-range">
-                <div class="form-group">
-                    <h3>Search by Host</h3>
-
-                    <div class="range range-primary">
-                        <input id="host-filter" data-model="campsite" data-filter="host__profile__name" list="host" placeholder="FILTER BY HOST">
-                        <datalist id="host">
-                            <option value="">
-                        </datalist>
-                        <script>
-                            $(document).ready(function(){
-                                $.ajax({
-                                    url: '/options?model_name=campsite&attr=host&attr2=name'
-                                }).done(function (data) {
-                                    $('#host').append(data);
-                                });
-                            });
-                        </script>
-                    </div>
-                </div>
-
-            </div-->
-            <!--div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 fitrangi-range">
-                <div class="form-group">
-                    <h3>Price Range</h3>
-
-                    <div class="range range-primary">
-                        <input id="rangePrimary0" type="range" min="0" max="20000" step="1000" onchange="rangePrimary1.value='upto Rs. ' + value;price_start_filter.value=value">
-                        <output id="rangePrimary1"></output>
-                        <output class="hide" id="price_start_filter" data-model="campsite" data-filter="price__lte" data-filter-type="float"></output>
-                    </div>
-                </div>
-            </div-->
-
-
             <div class="col-lg-offset-3 col-md-offset-3 col-sm-offset-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <a data-model="trip" data-filter-submit="search" href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">GO</a>
+                        <a data-model="campsite" data-filter-submit="search" href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">GO</a>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <a data-model="trip" data-filter-submit="reset"  href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">RESET</a>
+                        <a data-model="campsite" data-filter-submit="reset"  href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">RESET</a>
                     </div>
                 </div>
 
@@ -98,10 +63,39 @@
 </section>
 <hr class="clearfix"/>
 <section  id="model-container-section" class="container-fluid p-0">
-    <div class="container fitrangi-trips">
-        {{ site_list|safe }}
-    </div>
+    <div role="tabpanel" data-example-id="togglable-tabs">
 
+        <div class="border-grey-t border-grey-b h-56">
+            <div class="container text-center">
+                <ul id="myTab" class="nav nav-tabs" role="tablist">
+                    <li class="active"><a href="#all" role="tab" data-toggle="tab" aria-controls="all" aria-expanded="false">
+                        <span class="fa fa-home"></span> <strong>All Campsites</strong></a></li>
+                    {% if user and (user.is_campsite_owner or user.is_admin) %}<li class=""><a href="#my-campsites" role="tab" data-toggle="tab" aria-controls="my-campsites"
+                            aria-expanded="false">
+                        <span class="fa fa-certificate"></span> <strong>My Campsites</strong> </a></li>{% endif %}
+                </ul>
+            </div>
+        </div>
+        <div class="container">
+            <div id="myTabContent" class="tab-content">
+                <div role="tabpanel" class="tab-pane fade active in" id="all" aria-labelledby="upcoming">
+                    <div class="container fitrangi-trips">
+                        {{ site_list|safe }}
+                    </div>
+                </div>
+                {% if user and (user.is_campsite_owner or user.is_admin) %}
+                <div role="tabpanel" class="tab-pane fade" id="my-campsites" aria-labelledby="my-trips">
+                    <div class="container fitrangi-trips">
+                        {% if user and (user.is_campsite_owner or user.is_admin) %}
+                        <input id="my-campsite-filter" data-category="my-campsites" data-model="campsite" data-filter="host__profile__id" type="hidden" value="{{user.id}}" data-filter-status="fixed">
+                        {{ my_campsites |safe }}
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </section>
 
  <script>
@@ -115,7 +109,7 @@
 
         window.App.filter('name-filter');
         window.App.filter('activity-filter');
-        window.App.filter('price_start_filter');
+        window.App.filter('my-campsite-filter');
         window.App.sorter('location-sorter-lat');
         window.App.sorter('location-sorter-lng');
         window.App.sorter('location-sorter-locality');

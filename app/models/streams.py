@@ -106,7 +106,6 @@ class ActivityStream(db.Document):
             """
         return activity
 
-
     @classmethod
     def push_trip_to_stream(cls, content):
         activity = ActivityStream(profile=content.organizer, action='added trip', object=content, view_html='', view_text='', view_json='')
@@ -116,6 +115,23 @@ class ActivityStream(db.Document):
             author.increment_public_activity_count()
         return activity
 
+    @classmethod
+    def push_gear_to_stream(cls, content):
+        activity = ActivityStream(profile=content.owner, action='added gear/product ', object=content, view_html='', view_text='', view_json='')
+        activity.save()
+        if content.owner:
+            author = Profile.objects(pk=content.owner.id).first()
+            author.increment_public_activity_count()
+        return activity
+
+    @classmethod
+    def push_campsite_to_stream(cls, content):
+        activity = ActivityStream(profile=content.host, action='added campsite', object=content, view_html='', view_text='', view_json='')
+        activity.save()
+        if content.host:
+            author = Profile.objects(pk=content.host.id).first()
+            author.increment_public_activity_count()
+        return activity
 
     @classmethod
     def push_vote_to_stream(cls, post_vote):

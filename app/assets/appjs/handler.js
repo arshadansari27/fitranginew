@@ -698,30 +698,17 @@ jQuery(document).ready(function ($) {
 
             }
         }
-        if ((name == undefined || name.length == 0) || (email == undefined || email.length == 0) || (contact_pref == undefined || contact_pref.length == 0)) {
+        if ((name == undefined || name.length == 0) || (phone == undefined || phone.length == 0) || (email == undefined || email.length == 0) || (contact_pref == undefined || contact_pref.length == 0)) {
             BootstrapDialog.alert('Please enter your name, email, phone and contact preference. They are mandatory.');
         } else {
-            if (model_name == 'campsite'){
-                App.profile.book_campsite(user, name, email, phone, enquiry, contact_pref, model, function (data) {
+            App.profile.booking(user, name, email, phone, enquiry, contact_pref, model_name, model, function (data) {
                     if (data.status == 'success') {
                         BootstrapDialog.alert('Successfullly sent enquiry');
-                        $phone.val('');
                         $enquiry.val('');
                     } else {
                         BootstrapDialog.alert('Failed to send enquiry, please try again later');
                     }
-                });
-            } else {
-                App.profile.book_trip(user, name, email, phone, enquiry, contact_pref, model, function (data) {
-                    if (data.status == 'success') {
-                        BootstrapDialog.alert('Successfullly sent enquiry');
-                        $phone.val('');
-                        $enquiry.val('');
-                    } else {
-                        BootstrapDialog.alert('Failed to send enquiry, please try again later');
-                    }
-                });
-            }
+            });
         }
 
     });

@@ -1,7 +1,7 @@
 from bson import ObjectId
 from mongoengine import Q
 from app.models import ACTIVITY, ADVENTURE, TRIP, EVENT, PROFILE, ARTICLE, POST, DISCUSSION, STREAM, RELATIONSHIPS, \
-    PROFILE_TYPE, ADVERTISEMENT, CHANNEL, NodeFactory, CONTEST, CAMPSITE
+    PROFILE_TYPE, ADVERTISEMENT, CHANNEL, NodeFactory, CONTEST, CAMPSITE, GEAR
 from app.models.streams import ActivityStream
 from app.models.activity import Activity
 from app.models.adventure import Adventure
@@ -215,6 +215,8 @@ class NodeExtractor(object):
             return contest_extractor
         elif model_name == CAMPSITE:
             return campsite_extractor
+        elif model_name == GEAR:
+            return gear_extractor
         else:
             raise Exception("Invalid model name for extractor")
 
@@ -234,3 +236,4 @@ all_profile_extractor = NodeExtractor(PROFILE)
 relationship_extractor = NodeExtractor(RELATIONSHIPS)
 contest_extractor = NodeExtractor(CONTEST)
 campsite_extractor = NodeExtractor(CAMPSITE)
+gear_extractor = NodeExtractor(GEAR)

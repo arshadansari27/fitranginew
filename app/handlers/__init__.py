@@ -10,7 +10,7 @@ from app.models.feedbacks import ClaimProfile
 from app.handlers.extractors import NodeExtractor, article_extractor, advertisement_extractor, adventure_extractor, \
     activity_extractor, discussion_extractor, profile_type_extractor, event_extractor, profile_extractor, \
     trip_extractor, post_extractor, stream_extractor
-from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, POST, STREAM, Node, ADVERTISEMENT, CONTEST, CAMPSITE
+from app.models import ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, DISCUSSION, ARTICLE, POST, STREAM, Node, ADVERTISEMENT, CONTEST, CAMPSITE, GEAR
 from app.models.content import Content, Post, Article, Discussion
 from app.models.adventure import Adventure
 from app.models.contest import Contest
@@ -32,6 +32,7 @@ COLLECTION_PATHS = {
     TRIP: 'site/pages/searches/trips',
     CONTEST: 'site/pages/searches/contests',
     CAMPSITE: 'site/pages/searches/campsites',
+    GEAR: 'site/pages/searches/gears',
     "explore": 'site/pages/landings/home',
     "community": 'site/pages/landings/community',
     'aboutus': 'site/pages/landings/extra',
@@ -84,6 +85,7 @@ WALL_IMAGE_NAMES = {
     TRIP: dict(detail=lambda u: u.cover_image_path, search='%s/images/adventure-trips-banner.jpg' % prepend, landing=''),
     CONTEST: dict(detail=lambda u: u.cover_image_path if u.cover_image_path is not None else '%s/images/userprofile-banner.jpg' % prepend, search='%s/images/contest-cover.jpg' % prepend, landing=''),
     CAMPSITE: dict(detail=lambda u: u.cover_image_path if u.cover_image_path is not None else '%s/images/userprofile-banner.jpg' % prepend, search='%s/images/finder-banner.jpg' % prepend, landing=''),
+    GEAR: dict(detail=lambda u: '', search='%s/images/finder-banner.jpg' % prepend, landing=''),
     "explore": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner2.jpg' % prepend),
     "community": dict(detail=lambda u: None, search=None, landing='%s/images/community-banner.jpg' % prepend),
     "aboutus": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
@@ -409,7 +411,11 @@ class PageManager(object):
                 is_business_p = is_business
             context = dict(model=model, parent=model, user=user, query=query, filters=convert_query_to_filter(query), is_business=is_business_p)
         print model
-        context.update(Page.factory(model_name, 'edit').get_context(context))
+
+        page = Page.factory(model_name, 'edit')
+        ncontext = page.get_context(context)
+        print '[*]', ncontext
+        context.update(ncontext)
         context = force_setup_context(context)
         title = model.name if hasattr(model, 'name') and model.name is not None else (model.title if hasattr(model, 'title') and model.title is not None else GENERIC_TITLE)
         context['title'] = title
@@ -498,6 +504,10 @@ class Page(object):
                 return profile_edit_page
             elif model_name == TRIP:
                 return trip_edit_page
+            elif model_name == CAMPSITE:
+                return campsite_edit_page
+            elif model_name == GEAR:
+                return gear_edit_page
             else:
                 raise Exception('Not implemented')
         elif type == 'detail':
@@ -517,10 +527,11 @@ class Page(object):
                 return contest_detail_page
             elif model_name == CAMPSITE:
                 return campsite_detail_page
+            elif model_name == GEAR:
+                return gear_detail_page
             else:
                 raise Exception("Not implemented")
         elif type == 'search':
-            print 'TS', model_name == CONTEST
             if model_name == ADVENTURE:
                 return adventure_search_page
             elif model_name == PROFILE:
@@ -537,6 +548,8 @@ class Page(object):
                 return contest_search_page
             elif model_name == CAMPSITE:
                 return campsite_search_page
+            elif model_name == GEAR:
+                return gear_search_page
             else:
                 raise Exception("Not implemented")
         elif type == 'landing':
@@ -648,7 +661,13 @@ class SearchPage(Page):
         elif self.model_name == CONTEST:
             return dict(live=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='live').get_card(context), upcoming=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='upcoming').get_card(context), past=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='past').get_card(context), now=str(datetime.datetime.now()).split(' ')[0])
         elif self.model_name == CAMPSITE:
-            return dict(site_list=NodeCollectionFactory.resolve(CAMPSITE, GRID_VIEW).get_card(context))
+            site_list=NodeCollectionFactory.resolve(CAMPSITE, GRID_VIEW).get_card(context)
+            my_campsites = NodeCollectionFactory.resolve(CAMPSITE, GRID_VIEW, category='my-campsites').get_card(context)
+            return dict(site_list=site_list, my_campsites=my_campsites)
+        elif self.model_name == GEAR:
+            gear_list=NodeCollectionFactory.resolve(GEAR, ROW_VIEW).get_card(context)
+            my_gears = NodeCollectionFactory.resolve(GEAR, ROW_VIEW, category='my-gears').get_card(context)
+            return dict(gear_list=gear_list, my_gears=my_gears)
         else:
             raise Exception("not implemented")
 
@@ -714,6 +733,11 @@ class DetailPage(Page):
             reviews = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
             other_sites = NodeCollectionFactory.resolve(CAMPSITE, GRID_ROW_VIEW, category="other", fixed_size=4).get_card(context)
             return dict(other_sites_list=other_sites_list, reviews=reviews, other_sites=other_sites)
+        elif self.model_name == GEAR:
+            reviews = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
+            other_gears= NodeCollectionFactory.resolve(GEAR, ROW_VIEW, fixed_size=3).get_card(context)
+            return dict(other_gears=other_gears, reviews=reviews)
+
         else:
             return {}
 
@@ -734,11 +758,24 @@ class EditPage(Page):
         elif self.model_name == PROFILE:
             if context.get('parent'):
                 assert str(context.get('parent').id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
+            return {}
         elif self.model_name in [DISCUSSION, ARTICLE, POST]:
             if context.get('model'):
                 assert str(context.get('model').author.id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
-
-        return {} #dict(profiles_types=ProfileType.objects.all())
+            return {}
+        elif self.model_name == CAMPSITE:
+            categories_activities = defaultdict(list)
+            if context.get('model'):
+                assert str(context.get('model').organizer.id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
+            activities = Activity.objects.all()
+            for activity in activities:
+                categories_activities[activity.category].append(activity)
+            return dict(activities=categories_activities)
+        elif self.model_name == GEAR:
+            from app.models.gear import CATEGORIES
+            return dict(categories=CATEGORIES)
+        else:
+            return {}
 
 
 explore_landing_page    = LandingPage('explore')
@@ -758,6 +795,7 @@ event_search_page       = SearchPage(EVENT)
 trip_search_page        = SearchPage(TRIP)
 contest_search_page     = SearchPage(CONTEST)
 campsite_search_page    = SearchPage(CAMPSITE)
+gear_search_page        = SearchPage(GEAR)
 
 activity_detail_page    = DetailPage(ACTIVITY)
 adventure_detail_page   = DetailPage(ADVENTURE)
@@ -767,7 +805,9 @@ discussion_detail_page  = DetailPage(DISCUSSION)
 trip_detail_page        = DetailPage(TRIP)
 contest_detail_page     = DetailPage(CONTEST)
 campsite_detail_page    = DetailPage(CAMPSITE)
+gear_detail_page        = DetailPage(GEAR)
 
 profile_edit_page       = EditPage(PROFILE)
 trip_edit_page          = EditPage(TRIP)
 campsite_edit_page      = EditPage(CAMPSITE)
+gear_edit_page          = EditPage(GEAR)

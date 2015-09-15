@@ -146,6 +146,15 @@ class Profile(Entity, db.Document, Location):
 
     @property
     def is_gear_dealer(self):
+        vals = [u.name.lower() for u in self.type]
+        return 'gear dealer' in vals or 'gear' in vals
+
+    @property
+    def is_campsite_owner(self):
+        return any(u.name.lower() in ['camp site', 'camp site owner'] for u in self.type)
+
+    @property
+    def is_gear_dealer(self):
         return 'gear dealer' in [u.name.lower() for u in self.type]
 
     @property
@@ -302,6 +311,14 @@ class Profile(Entity, db.Document, Location):
     @property
     def managed_profiles(self):
         return Profile.objects(managed_by__in=[self.id]).all()
+
+    @property
+    def managed_campsite_owner_profile(self):
+        profiles = [p for p in Profile.objects(managed_by__in=[self.id]).all() if p.is_campsite_owner]
+        if len(profiles) > 0:
+            return profiles[0]
+        return None
+
 
     @property
     def managed_organizer_profile(self):

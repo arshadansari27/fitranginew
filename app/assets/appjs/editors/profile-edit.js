@@ -363,39 +363,20 @@ $(document).ready(function() {
     };
 
 
-    App.profile.book_campsite = function(user, name, email, phone, message, contact_pref, campsite, callback) {
+    App.profile.booking = function(user, name, email, phone, message, contact_pref, model_name, model, callback) {
         var data = {
             name: name,
             email: email,
             phone: phone,
             message: message,
             contact_pref: contact_pref,
-            campsite: campsite
+            model: model,
+            type: model_name
         };
         var options = {
             node: user,
             type: 'profile',
-            command: 'book-enquiry-campsite',
-            action: 'enquiry',
-            data: data
-        };
-        App.editor(options, callback);
-    };
-
-
-    App.profile.book_trip = function(user, name, email, phone, message, contact_pref, trip, callback) {
-        var data = {
-            name: name,
-            email: email,
-            phone: phone,
-            message: message,
-            contact_pref: contact_pref,
-            trip: trip
-        };
-        var options = {
-            node: user,
-            type: 'profile',
-            command: 'book-enquiry-trip',
+            command: 'book-enquiry',
             action: 'enquiry',
             data: data
         };

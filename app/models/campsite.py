@@ -3,33 +3,38 @@ __author__ = 'arshad'
 from app.models import update_content, Entity, ExternalNetwork, Charge, db, Location
 from app.models.relationships import RelationShips
 from app.models.booking import CampsiteBooking
-from app.models.media import TripGalleryImage
+from app.models.media import CampsiteGalleryImage
 from app.models.profile import Profile
 
+CAMPSITE_TYPES = (CAMPSITE_TYPE, ADVENTURE_RESORT_TYPE,
+                  ECO_LODGE_RESORT, JUNGLE_LODGE_RESORT) = ('Camp Site', 'Adventure Resort',
+                                                            'Eco Lodge/Resort', 'Jungle Lodge/Resort')
 
 @update_content.apply
 class Campsite(Entity, ExternalNetwork, Charge, db.Document, Location):
+    site_type = db.StringField(choices=CAMPSITE_TYPES)
     host = db.ReferenceField('Profile')
     activities = db.ListField(db.ReferenceField('Activity'))
     extra_activities = db.ListField(db.StringField())
     accommodations = db.StringField()
     tariff = db.StringField()
     how_to_reach = db.StringField()
+    activities_details = db.StringField()
     announcements = db.StringField()
     optional_location_name = db.StringField()
     published = db.BooleanField(default=False)
     published_timestamp = db.DateTimeField()
     price_on_request = db.BooleanField(default=False)
     best_season = db.ListField(db.StringField(choices=['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']))
-    nearby_stay = db.ListField(db.StringField())
-    nearby_eat = db.ListField(db.StringField())
-    nearby_station = db.ListField(db.StringField())
-    nearby_airport = db.ListField(db.StringField())
-    extremity_level = db.StringField(choices=['Easy', 'Medium', 'Difficult'])
-    reach_by_air = db.ListField(db.StringField())
-    reach_by_train = db.ListField(db.StringField())
-    reach_by_road = db.ListField(db.StringField())
-    reach_by_sea = db.ListField(db.StringField())
+    nearby_stay = db.ListField(db.StringField()) # Deprecated
+    nearby_eat = db.ListField(db.StringField()) # Deprecated
+    nearby_station = db.ListField(db.StringField()) # Deprecated
+    nearby_airport = db.ListField(db.StringField()) # Deprecated
+    extremity_level = db.StringField(choices=['Easy', 'Medium', 'Difficult']) # Deprecated
+    reach_by_air = db.ListField(db.StringField()) # Deprecated
+    reach_by_train = db.ListField(db.StringField()) # Deprecated
+    reach_by_road = db.ListField(db.StringField()) # Deprecated
+    reach_by_sea = db.ListField(db.StringField()) # Deprecated
 
     meta = {
         'indexes': [
@@ -42,6 +47,10 @@ class Campsite(Entity, ExternalNetwork, Charge, db.Document, Location):
 
     def __unicode__(self):
         return self.__repr__()
+
+    @property
+    def manager(self):
+        return self.host
 
     @property
     def wish_listed_by(self):
@@ -91,7 +100,7 @@ class Campsite(Entity, ExternalNetwork, Charge, db.Document, Location):
 
     @property
     def media_gallery(self):
-        return TripGalleryImage.objects(trip=self).all()
+        return CampsiteGalleryImage.objects(campsite=self).all()
 
     @property
     def media_gallery_path(self):

@@ -1,0 +1,26 @@
+<li>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="{{model.slug}}"><img class="blog-img img-responsive img-thumbnail" src="{{model.media_gallery_single_path_small}}" alt=""></a>
+        </div>
+        <div class="col-md-8">
+            <h3 class="title">
+                <a href="{{model.slug}}">{{model.name }}</a>
+                {% if user and model.owner.id == user.id %}
+                    <button data-user-id="{{user.id}}" data-model-id="{{model.id}}" class="btn btn-default btn-edi blue pull-right" type="button" onclick="javascript: window.location.href='/add-edit-gear?pk={{model.id}}'"><i class="fa fa-edit"></i> Edit </button>
+                {% endif %}
+            </h3>
+            <p class="sub-title"><h4>{{ model.price }}</h4></p>
+            <p class="sub-title"><em>{{ model.description}}</em></p>
+            {% if not user or model.owner.id != user.id %}
+            <div class="media">
+                <h4>Added by</h4>
+                <img src="{{model.owner.cover_image_path_small}}" class="img-circle img-responsive pull-left p-5 media-object" width="48">
+                <h5>{{model.owner.name}}</h5>
+            </div>
+
+            {% endif %}
+        </div>
+    </div>
+</li>
+

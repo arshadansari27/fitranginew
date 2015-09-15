@@ -37,7 +37,10 @@
 
 <body data-logged-in-as="{% if user %}{{user.id}}{% else %}null{% endif %}" data-logged-in-url="{% if user %}{{user.slug}}{%endif%}" ng-app="myApp">
     {% assets filters="jsmin", output="app/my-lib.js",
-        "appjs/editors/main.js", "appjs/editors/profile-edit.js", "appjs/editors/post-edit.js", "appjs/editors/content-edit.js", "appjs/editors/trip-edit.js" %}
+        "appjs/editors/main.js", "appjs/editors/profile-edit.js",
+    "appjs/editors/post-edit.js", "appjs/editors/content-edit.js",
+    "appjs/editors/trip-edit.js", "appjs/editors/campsite-edit.js",
+    "appjs/editors/gear-edit.js" %}
         <script type="text/javascript" src="{{cdn_url}}{{ ASSET_URL }}"></script>
     {% endassets %}
 

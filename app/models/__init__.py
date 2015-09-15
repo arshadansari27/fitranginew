@@ -19,10 +19,10 @@ db.ListField = ListField
 
 (ACTIVITY, ADVENTURE, EVENT, TRIP, PROFILE, PRODUCT, ARTICLE,
  LOCATION, POST, DISCUSSION, CHANNEL, STREAM, MESSAGE,
- RELATIONSHIPS, PROFILE_TYPE, ADVERTISEMENT, CONTEST, CAMPSITE) =  (
+ RELATIONSHIPS, PROFILE_TYPE, ADVERTISEMENT, CONTEST, CAMPSITE, GEAR) =  (
     "activity", "adventure", "event", "trip", "profile", "product",
     "article", "location", "post", "discussion", "channel",
-    "stream", "message", "relationships", "profile_type", "advertisement", "contest", "campsite"
+    "stream", "message", "relationships", "profile_type", "advertisement", "contest", "campsite", 'gear'
 )
 
 def handler(event):
@@ -302,7 +302,7 @@ class ExternalNetwork(object):
 class Charge(object):
     price = db.DecimalField()
     currency = db.StringField(choices=['INR', 'USD'], default='INR')
-    discount_percentage = db.IntField()
+    discount_percentage = db.IntField(default=0)
 
     @property
     def actual_price(self):
@@ -342,6 +342,7 @@ class NodeFactory(object):
         from app.models.relationships import RelationShips
         from app.models.contest import Contest
         from app.models.campsite import Campsite
+        from app.models.gear import Gear
         name = name.lower()
 
         if name == ACTIVITY: return Activity
@@ -362,6 +363,7 @@ class NodeFactory(object):
         elif name == CONTEST: return Contest
         elif name == TRIP: return Trip
         elif name == CAMPSITE: return Campsite
+        elif name == GEAR: return Gear
         else: return None
 
 class BusinessException(Exception):

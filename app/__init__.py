@@ -51,13 +51,11 @@ def start_app():
     global admin
     from app.models.extra.sessions import MongoSessionInterface
     from app.models.profile import Profile
+    from app.models.media import BackgroundImage
     app.secret_key = os.urandom(24)
 
-    #app.permanent_session_lifetime = timedelta(minutes=120)
     app.session_interface = MongoSessionInterface()
 
-    #from app.handlers.views import *
-    #from app.handlers.editors import *
     print Profile.objects.count()
     admin_user = Profile.objects(roles__in=['Admin']).first()
     if admin_user is None:
@@ -90,5 +88,4 @@ if not state or state != 'BACK':
     start_app()
     from app.views.admin import *
     from app.views.site import *
-#from app.handlers.examples import *
 

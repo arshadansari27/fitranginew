@@ -59,6 +59,10 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
         return list(set([trip.starting_from for trip in Trip.objects.all()]))
 
     @property
+    def manager(self):
+        return self.organizer
+
+    @property
     def from_date_only(self):
         u = self.start_date
         return u.date()

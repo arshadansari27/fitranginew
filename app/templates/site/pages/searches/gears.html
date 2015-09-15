@@ -1,0 +1,86 @@
+<section class="container-fluid p1">
+    <div class="trips-banner" style="{{background_cover}}">
+
+        <section class="container">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: window.location.href='/add-edit-gear'">Add a Gear</a>
+                <input id="name-filter" data-filter="name__icontains" data-model="gear" type="hidden">
+            </div>
+
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 filter-adventuretrips-heading">
+                <h2>Find, Connect and Experience</h2>
+
+                <h3>Search gears and products you may wanna visit!</h3>
+            </div>
+        </section>
+    </div>
+</section>
+
+<hr class="clearfix"/>
+
+<section  id="model-container-section" class="container-fluid p-0">
+    <div role="tabpanel" data-example-id="togglable-tabs">
+
+        <div class="border-grey-t border-grey-b h-56">
+            <div class="container text-center">
+                <ul id="myTab" class="nav nav-tabs" role="tablist">
+                    <li class="active"><a href="#all" role="tab" data-toggle="tab" aria-controls="all" aria-expanded="false">
+                        <span class="fa fa-home"></span> <strong>All Gears and Products</strong></a></li>
+                    {% if user %}<li class=""><a href="#my-campsites" role="tab" data-toggle="tab" aria-controls="my-gears"
+                            aria-expanded="false">
+                        <span class="fa fa-certificate"></span> <strong>My Gears/Produts</strong> </a></li>{% endif %}
+                </ul>
+            </div>
+        </div>
+        <div class="container">
+            <div id="myTabContent" class="tab-content">
+                <div role="tabpanel" class="tab-pane fade active in" id="all" aria-labelledby="upcoming">
+                    <div class="container fitrangi-trips">
+                        {{ gear_list|safe }}
+                    </div>
+                </div>
+                {% if user %}
+                <div role="tabpanel" class="tab-pane fade" id="my-gears" aria-labelledby="my-trips">
+                    <div class="container fitrangi-trips">
+                        {% if user %}
+                        <input id="my-gear-filter" data-category="my-gears" data-model="gear" data-filter="owner__profile__id" type="hidden" value="{{user.id}}" data-filter-status="fixed">
+                        {{ my_gears |safe }}
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+ <script>
+     $('#activity-filter').val('');
+     //$('#rangePrimary0').val('0');
+     //$('#rangePrimary1').val('0');
+     //$('price_start_filter').html('');
+     //$('price_end_filter').html('');
+    $(document).ready(function(){
+
+
+        window.App.filter('name-filter');
+        window.App.filter('my-gear-filter');
+
+    });
+</script>
+{% if filters.get('activities__activity__name') %}
+  <script>
+    $(document).ready(function(){
+        $('#activity-filter').val('{{filters.get("activities__activity__name")}}');
+    });
+</script>
+{% endif %}
+{% if filters.get('name__icontains') %}
+  <script>
+    $(document).ready(function(){
+        $('#name-filter').val('{{filters.get("name__icontains")}}');
+    });
+</script>
+{% endif %}

@@ -6,7 +6,7 @@ from app.models import STREAM
 from flask import render_template, request, g, redirect, jsonify, url_for, session, flash
 from app.handlers.editors import NodeEditor
 from app.handlers import NodeCollectionFactory, NodeExtractor
-from app.models import Node, NodeFactory, ACTIVITY, ADVENTURE, ARTICLE, DISCUSSION, PROFILE, EVENT, TRIP, CONTEST, CAMPSITE
+from app.models import Node, NodeFactory, ACTIVITY, ADVENTURE, ARTICLE, DISCUSSION, PROFILE, EVENT, TRIP, CONTEST, CAMPSITE, GEAR
 from app.models.contest import Contest, ContestAnswer
 from app.models.streams import ChatMessage
 from app.models.profile import Profile, ProfileType
@@ -415,6 +415,15 @@ def list_campsites():
     context = PageManager.get_search_title_and_page(CAMPSITE, query=query, title='Campsites @ Fitrangi')
     return render_template('site/pages/commons/view.html', **context)
 
+@app.route("/gears")
+def list_gears():
+    query = request.args.get('query', '')
+    if not query or len(query) is 0:
+        query = None
+    context = PageManager.get_search_title_and_page(GEAR, query=query, title='Gears @ Fitrangi')
+    return render_template('site/pages/commons/view.html', **context)
+
+
 @app.route('/journals')
 @app.route('/blog')
 def list_journal():
@@ -611,6 +620,7 @@ def ajax_buttons():
 @app.route('/post/<slug>')
 @app.route('/contest/<slug>')
 @app.route('/campsite/<slug>')
+@app.route('/gear/<slug>')
 def model_view(slug):
     model_type = [u for u in request.path.split('/') if u and len(u) > 0][0]
 
@@ -649,6 +659,28 @@ def add_edit_trip():
     else:
         query = None
     context = PageManager.get_edit_title_and_page('trip', query=query)
+    return render_template('site/pages/commons/view.html', **context)
+
+@app.route('/add-edit-campsite')
+def add_edit_campsite():
+    if not hasattr(g, 'user') and not g.user: return 'Forbidden', 403
+    pk = request.args.get('pk', None)
+    if pk:
+        query = 'pk:%s;' % pk
+    else:
+        query = None
+    context = PageManager.get_edit_title_and_page('campsite', query=query)
+    return render_template('site/pages/commons/view.html', **context)
+
+@app.route('/add-edit-gear')
+def add_edit_gear():
+    if not hasattr(g, 'user') and not g.user: return 'Forbidden', 403
+    pk = request.args.get('pk', None)
+    if pk:
+        query = 'pk:%s;' % pk
+    else:
+        query = None
+    context = PageManager.get_edit_title_and_page('gear', query=query)
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/editors/invoke', methods=['POST'])

@@ -195,7 +195,7 @@
     </div>
 
 
-    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
+    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 ">
         <div class="row-fluid adventure-trips-tabs">
             <ul class="nav nav-pills " role="tablist">
 
@@ -224,73 +224,6 @@
                             campsite</h4>
 
                         <div>{{ model.about|safe}}</div>
-                        <hr/>
-                        <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span> Nearby
-                            Facilities</h4>
-                        {% if model.nearby_stay|length > 0 %}
-                        <div class="row">
-                            <div class="col-sm-6 col-xs-6">
-                                <h4>Near by Stay</h4>
-                            </div>
-                            <div class="col-sm-6 col-xs-6">
-                                {% for n in model.nearby_stay %}
-                                <p>{{n}}</p>
-                                {% if not loop.last %}
-                                <hr/>
-                                {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-                        <hr/>
-                        {% if model.nearby_eat|length > 0 %}
-                        <div class="row">
-                            <div class="col-sm-6 col-xs-6">
-                                <h4>Near by Eating places</h4>
-                            </div>
-                            <div class="col-sm-6 col-xs-6">
-                                {% for n in model.nearby_eat %}
-                                <p>{{n}}</p>
-                                {% if not loop.last %}
-                                <hr/>
-                                {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-                        <hr/>
-                        {% if model.nearby_station|length > 0 %}
-                        <div class="row">
-                            <div class="col-sm-6 col-xs-6">
-                                <h4>Near by Stations</h4>
-                            </div>
-                            <div class="col-sm-6 col-xs-6">
-                                {% for n in model.nearby_station %}
-                                <p>{{n}}</p>
-                                {% if not loop.last %}
-                                <hr/>
-                                {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-                        <hr/>
-                        {% if model.nearby_airport|length > 0 %}
-                        <div class="row">
-                            <div class="col-sm-6 col-xs-6">
-                                <h4>Near by Airports</h4>
-                            </div>
-                            <div class="col-sm-6 col-xs-6">
-                                {% for n in model.nearby_airport %}
-                                <p>{{n}}</p>
-                                {% if not loop.last %}
-                                <hr/>
-                                {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-
                     </div>
                     <hr class="clearfix"/>
 
@@ -307,7 +240,7 @@
 
                 </div>
 
-                <div class="tab-pane active" id="tariff">
+                <div class="tab-pane" id="tariff">
                     <h3>Tariff (COSTS)</h3>
                     <div>
                         {% if model.tariff %}{{ model.tariff|safe }}{% endif %}
@@ -322,10 +255,9 @@
                     </div>
                 </div>
 
-                <div role="tabpanel" class="tab-pane fade" id="how-to-reach" aria-labelledby="how-to-reach">
-                    <div class="container">
-                        <h4>How to Reach</h4>
-                        {% if model.location %}
+                <div class="tab-pane fade" id="how-to-reach" aria-labelledby="how-to-reach">
+                    <h4>How to Reach</h4>
+                    {% if model.location %}
                         <h4 class="border-grey-b pb-5 oswald"><span class="fa fa-map-marker grey fs-22"></span>
                             {{model.location}}</h4>
 
@@ -338,106 +270,22 @@
                             </div>
                         </div>
                         <hr class="divider clearfix">
-                        {% endif %}
-                        <div>
-                            {% if model.reach_by_air|length > 0 %}
-                            <strong>By Air : </strong>
-                            {% for a in model.reach_by_air %}
-                            <p>{{a|safe}}</p>
-                            {% endfor %}
-                            {% endif %}
-                        </div>
-
-                        <div>
-                            {% if model.reach_by_train|length > 0 %}
-                            <strong>By Train : </strong>
-                            {% for a in model.reach_by_train %}
-                            <p>{{a|safe}}</p>
-                            {% endfor %}
-                            {% endif %}
-
-                        </div>
-
-                        <div>
-                            {% if model.reach_by_road|length > 0 %}
-                            <strong>By Road : </strong>
-                            {% for a in model.reach_by_road %}
-                            <p>{{a|safe}}</p>
-                            {% endfor %}
-                            {% endif %}
-
-                        </div>
-
-                        <div>
-                            {% if model.reach_by_sea|length > 0 %}
-                            <strong>By Sea :</strong>
-                            {% for a in model.reach_by_sea %}
-                            <p>{{a|safe}}</p>
-                            {% endfor %}
-                            {% endif %}
-
-                        </div>
-                    </div>
-
+                    {% endif %}
+                    <div>{{ model.how_to_reach }}</div>
                 </div>
-
-                <div role="tabpanel" class="tab-pane fade" id="nearby-facilities" aria-labelledby="nearby-facilities">
-
-
-                </div>
-
             </div>
-            <!-- Tab content end -->
-
-
         </div>
-
-
     </div>
     <!--col7-close-->
 
 
-    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-
-        {% if user and user.followers|length > 0 %}
-        <div class="row box-bg">
-            <div class="heading">
-                <h4>Invite Followers</h4>
-            </div>
-
-            <!--input type="text" class="form-control" placeholder="+ Add Followers to this event"-->
-
-            <ul class="media-list" style="max-height: 300px; overflow: auto">
-                {% for u in user.followers %}
-                <li>
-                    <div class="fitrangi-invite">
-                        <a href="{{u.slug}}"><img src="{{u.cover_image_path}}"
-                                                  class="img-circle img-responsive pull-left p-5" width="60"
-                                                  height="100"></a>
-                        <a href="#" class="btn btn-default btn-xs mt-10 grey pull-right" data-action="invite-to-trip"
-                           data-user-id="{{user.id}}" data-model-id="{{model.id}}" data-model-slug="{{model.slug}}"
-                           data-target-id="{{u.id}}" data-target-name="{{u.name}}">Invite</a>
-                        <h4><a href="{{u.slug}}">{{u.name}}</a></h4>
-                    </div>
-                </li>
-                {% endfor %}
-
-            </ul>
-
-
-        </div>
-        {% endif %}
-
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
 
         <div class="row box-bg">
             <div id="book-now" class="heading">
                 <h4>Booking Enquiry</h4>
             </div>
             <h4 style="text-align: center;"><strong>"{{model.name}}"</strong></h4> <br>
-
-            <!--p style="text-align: center; color: grey;">“**This trip is listed by the said organiser on the
-                Fitrangi.com, It will be cordinated & executed by the organiser and Fitrangi.com is just a promoting
-                partner for it. “</p-->
 
 
             <div class="sub-heading">
@@ -517,13 +365,8 @@
             </div>
             <input id="campsite-not-same-filter" type="hidden" data-category="other" data-model="campsite" data-filter="id__ne"
                    value="{{model.id}}"/>
-            {% if model.location %}
-            <!--input id="campsite-location-filter" type="hidden" data-category="other" data-model="campsite" data-filter="location__location__id" value="{{model.location.id}}"/-->
-            {% endif %}
             {{other_sites|safe}}
         </div>
-
-
     </div>
     <!--col5-close-->
 

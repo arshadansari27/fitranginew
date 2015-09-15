@@ -3,20 +3,10 @@ __author__ = 'arshad'
 
 from flask import request, redirect, flash, g, render_template, jsonify, send_file, url_for
 
-#from app.handlers.editors.model_editor import ModelEditor
-from app.handlers.messaging import send_single_email
-from app import app
-#from app.handlers import login_required, redirect_url
+from app.models import PROFILE, CONTEST, CAMPSITE, ARTICLE, POST, TRIP, DISCUSSION, GEAR
 from app.models import BusinessException
 from app.settings import EXCEPTION_API
-from StringIO import StringIO
-import random, os
-from PIL import Image
-
-
-
-from app.models import PROFILE, CONTEST, ADVENTURE, ARTICLE, POST, EVENT, TRIP, DISCUSSION
-#from app.views.site.extractors import NodeExtractor
+import os
 
 __author__ = 'arshad'
 
@@ -83,6 +73,8 @@ class NodeEditor(object):
         from app.handlers.editors.post import PostEditor
         from app.handlers.editors.content import ContentEditor
         from app.handlers.editors.trip import TripEditor
+        from app.handlers.editors.campsite import CampsiteEditor
+        from app.handlers.editors.gear import GearEditor
 
         type = message['type']
         if type is None:
@@ -101,6 +93,10 @@ class NodeEditor(object):
             return ContentEditor(message, CONTEST)
         elif type == TRIP:
             return TripEditor(message, TRIP)
+        elif type == CAMPSITE:
+            return CampsiteEditor(message, CAMPSITE)
+        elif type == GEAR:
+            return GearEditor(message, GEAR)
         else:
             raise Exception("Invalid Type")
 

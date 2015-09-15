@@ -8,6 +8,7 @@ from app.models.adventure import Adventure
 from app.models.campsite import Campsite
 from app.models import Node, NodeFactory, LOCATION, BusinessException
 from app.models.feedbacks import ClaimProfile, NotOkFeedBack
+from app.handlers.extractors import NodeExtractor
 from app.handlers.editors import NodeEditor, response_handler
 from flask import session, request
 import hashlib
@@ -70,10 +71,8 @@ class ProfileEditor(NodeEditor):
             return edit_role(self.action, self.node, self.message['role'])
         elif self.command == 'deactivate-profile':
             return deactivate_profile(self.action, self.node)
-        elif self.command == 'book-enquiry-trip':
-            return book_trip(self.node, self.message['data'])
-        elif self.command == 'book-enquiry-campsite':
-            return book_campsite(self.node, self.message['data'])
+        elif self.command == 'book-enquiry':
+            return booking(self.node, self.message['data'])
         elif self.command == 'reset-activity-count':
             return reset_activity_count(self.node, self.action)
         elif self.command == 'switch-profile':
@@ -585,94 +584,34 @@ def deactivate_profile(action, profile):
     node.save()
     return node
 
-@response_handler('Successfully sent enquiry regarding trip', 'Failed to send the enquiry regarding trip', login_required=True)
-def book_trip(node,  data):
+@response_handler('Successfully sent the enquiry', 'Failed to send the enquiry', login_required=True)
+def booking(node,  data):
     name = data['name']
     email = data['email']
     phone = data['phone']
     message = data['message']
     contact_pref = data['contact_pref']
-    trip = data['trip']
+    model = data['model']
+    model_name = data['type']
     node = Profile.objects(pk=node).first()
     if not node:
         type = ProfileType.objects(name__iexact='Subscription Only').first()
         node = Profile(name=name, email=email, phone=phone, type=[type]).save()
-    trip = Trip.objects(pk=trip).first()
-    if not node or not trip:
-        raise Exception('Invalid profile or event')
+    model = NodeExtractor.factory(model_name=model_name).get_single("pk:%s" % model)
+    if not node or not model:
+        raise Exception('Invalid profile or model')
 
-    booking = trip.add_enquiry(node, name, email, phone, message, contact_pref)
-    organizer = trip.organizer
-    admins = Profile.objects(roles__in=['Admin']).all()
-    if organizer and organizer.id:
+    booking = model.add_enquiry(node, name, email, phone, message, contact_pref)
+    manager = model.manager
+    email_list = [u.email for u in Profile.objects(roles__in=['Admin']).all() if u and u.email]
+    if manager and manager.id:
         try:
-            template_path = 'notifications/trip_booking.html'
-            context = dict(user=organizer, trip=trip, booking=booking)
-            subject="[Fitrangi] Booking enquiry arrived for the trip \"%s\"" % trip.name_short
-            to_list=[organizer.email]
-            send_email_from_template(template_path, subject, to_list, force_send=True, **context)
+            template_path = 'notifications/booking.html'
+            context = dict(user=manager, model=model, booking=booking)
+            subject = "[Fitrangi] Booking enquiry arrived for \"%s\"" % manager.name_short
+            email_list.insert(0, manager.email)
+            send_email_from_template(template_path, subject, email_list, force_send=True, **context)
 
         except:
-            print '[ERROR] Unable to send email to organizer ', organizer.email
-    if admins and len(admins) > 0:
-        try:
-            for a in admins:
-                try:
-                    template_path = 'notifications/trip_booking_admin.html'
-                    context = dict(user=a, trip=trip, booking=booking)
-                    subject="[Fitrangi] Booking enquiry arrived for the trip \"%s\"" % trip.name_short
-                    to_list=[a.email]
-                    send_email_from_template(template_path, subject, to_list, force_send=True, **context)
-                except:
-                    print '[ERROR] Unable to send email to admin', a.email
-
-        except:
-            print '[ERROR] Unable to send email to admin'
+            print '[ERROR] Unable to send email to manager', manager.email
     return node
-
-
-@response_handler('Successfully sent enquiry regarding campsite', 'Failed to send the enquiry regarding campsite', login_required=True)
-def book_campsite(node,  data):
-    name = data['name']
-    email = data['email']
-    phone = data['phone']
-    message = data['message']
-    contact_pref = data['contact_pref']
-    campsite = data['campsite']
-    node = Profile.objects(pk=node).first()
-    if not node:
-        type = ProfileType.objects(name__iexact='Subscription Only').first()
-        node = Profile(name=name, email=email, phone=phone, type=[type]).save()
-    campsite = Campsite.objects(pk=campsite).first()
-    if not node or not campsite:
-        raise Exception('Invalid profile or event')
-
-    booking = campsite.add_enquiry(node, name, email, phone, message, contact_pref)
-    host = campsite.host
-    admins = Profile.objects(roles__in=['Admin']).all()
-    if host and host.id:
-        try:
-            template_path = 'notifications/trip_booking.html'
-            context = dict(user=host, campsite=campsite, booking=booking)
-            subject="[Fitrangi] Booking enquiry arrived for the campsite \"%s\"" % campsite.name_short
-            to_list=[host.email]
-            send_email_from_template(template_path, subject, to_list, force_send=True, **context)
-
-        except:
-            print '[ERROR] Unable to send email to organizer ', host.email
-    if admins and len(admins) > 0:
-        try:
-            for a in admins:
-                try:
-                    template_path = 'notifications/trip_booking_admin.html'
-                    context = dict(user=a, campsite=campsite, booking=booking)
-                    subject="[Fitrangi] Booking enquiry arrived for the trip \"%s\"" % campsite.name_short
-                    to_list=[a.email]
-                    send_email_from_template(template_path, subject, to_list, force_send=True, **context)
-                except:
-                    print '[ERROR] Unable to send email to admin', a.email
-
-        except:
-            print '[ERROR] Unable to send email to admin'
-    return node
-

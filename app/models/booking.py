@@ -37,3 +37,6 @@ class EventBooking(Booking):
 
 class CampsiteBooking(Booking):
     campsite = db.ReferenceField('Campsite')
+
+class GearBooking(Booking):
+    gear = db.ReferenceField('Gear')

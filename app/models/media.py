@@ -1,9 +1,6 @@
 __author__ = 'arshad'
 
-from app.models import update_content, Node, ExternalNetwork, Charge, db, Location, base_path, save_media_to_file
-from app.models.relationships import RelationShips
-from app.models.profile import Profile
-from app import utils
+from app.models import db, base_path, save_media_to_file
 from PIL import Image
 from fractions import Fraction
 import datetime, random, os
@@ -79,16 +76,22 @@ class Media(db.Document):
             img = small_path
         return img
 
+class BackgroundImage(Media):
+    profile = db.ReferenceField('Profile')
+
 class TripGalleryImage(Media):
     trip = db.ReferenceField('Trip')
+
+class CampsiteGalleryImage(Media):
+    campsite = db.ReferenceField('Campsite')
+
+class GearGalleryImage(Media):
+    gear = db.ReferenceField('Gear')
 
 class ProfileGalleryImage(Media):
     profile = db.ReferenceField('Profile')
 
 class ActivityGalleryImage(Media):
     activity = db.ReferenceField('Activity')
-
-class BackgroundImage(Media):
-    profile = db.ReferenceField('Profile')
 
 

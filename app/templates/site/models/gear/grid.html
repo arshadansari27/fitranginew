@@ -1,0 +1,12 @@
+<div class="{% block grid_size %}{% endblock %}">
+    <div class="thumbnail">
+        <a href="{{model.slug}}"><img src="{{model.media_gallery_single_path}}" alt="..."></a>
+        <div class="caption">
+            <a href="{{ model.owner.slug}}"><img src="{{model.owner.cover_image_path_small}}" class="img-rounded pull-right" width="52"></a>
+            <h4><a href="{{model.slug}}">{{ model.name }}</a></h4>
+            <span class="rs">{{ model.price|int }}</span>
+        </div>
+
+    </div>
+</div>
+

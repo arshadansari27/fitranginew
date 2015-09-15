@@ -2,56 +2,25 @@
 
     <!-- col-lg-9 col-md-9 col-sm-12 col-xs-12 -->
     <div class="">
-        <h2 class="title">Enter Trip Information <small>{% if not model and not user.is_organizer and user.managed_organizer_profile %}&nbsp;&nbsp;&nbsp;<span style="font-size: 10pt;">Adding as</span> <span class="text-primary">{{user.managed_organizer_profile.name}}</span>{% endif %}</small></h2>
+        <h2 class="title">Enter Site Information <small>{% if not model and not user.is_organizer and user.managed_organizer_profile %}&nbsp;&nbsp;&nbsp;<span style="font-size: 10pt;">Adding as</span> <span class="text-primary">{{user.managed_organizer_profile.name}}</span>{% endif %}</small></h2>
 
         <form class="fitrangi-form">
             <div class="form-group">
                 <label for="heading">Title<span class="red">*</span> </label>
-                <input type="text" class="form-control" name="title" placeholder="Write Trip Title" data-name="title" value="{%if model and model.name %}{{model.name }}{% endif %}">
+                <input type="text" class="form-control" name="title" placeholder="Write Camspite Title" data-name="title" value="{%if model and model.name %}{{model.name }}{% endif %}">
                 <input type="hidden" data-name="id" value="{%if model and model.id %}{{model.id}}{% endif %}">
-                <input type="hidden" data-name="user" value="{% if model and model.organizer %}{{model.organizer.id}}{% elif user and user.id %}{% if user.is_organizer %}{{user.id}}{% else %}{{ user.managed_organizer_profile.id }}{% endif %}{% endif %}">
+                <input type="hidden" data-name="user" value="{% if model and model.host %}{{model.host.id}}{% elif user and user.id %}{% if user.is_campsite_owner %}{{user.id}}{% else %}{{ user.managed_campsite_owner_profile.id }}{% endif %}{% endif %}">
             </div>
-            <div class="form-group">
-                <label for="heading">Departure Type<span class="red">*</span> </label>
-                <select data-name="departure-type">
-                    <option value="" {% if not model.departure_type %}selected{% endif %}>--</option>
-                    <option value="On Request" {% if model.departure_type and model.departure_type == 'On Request' %}selected{% endif %}>On Request</option>
-                    <option value="Fixed" {% if model.departure_type and  model.departure_type == 'Fixed' %}selected{% endif %}>Fixed</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <div class="fixed-trip-container well">
-                    <div class="row">
-                        <div class="col-md-4 col-sm-6 col-xs-6">
-                            <label for="heading">FROM<span class="red">*</span></label><input type="date" class="form-control" name="fromdate" data-name="fromdate" value="{% if model and model.start_date %}{{model.from_date_only}}{% endif %}" placeholder="YYYY-MM-DD">
-                        </div>
-                        <div class="col-md-4 col-sm-6 col-xs-6">
-                            <label for="heading">TIME</label><input type="time" class="form-control" name="fromtime" data-name="fromtime" value="{%if model and model.start_date %}{{model.from_date_time}}{% endif %}" placeholder="HH:MM">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 col-sm-6 col-xs-6">
-                            <label for="heading">TO<span class="red">*</span></label><input type="date" class="form-control" name="todate" data-name="todate" value="{%if model and model.end_date %}{{model.to_date_only}}{% endif %}" placeholder="YYYY-MM-DD">
-                        </div>
-                        <div class="col-md-4 col-sm-6 col-xs-6">
-                            <label for="heading">TIME</label><input type="time" class="form-control" name="totime" data-name="totime" value="{%if model and model.end_date %}{{model.to_date_time}}{% endif %}" placeholder="HH:MM">
-                        </div>
-                    </div>
+            <div class="well well-sm">
+                <label for="heading">Select Type<span class="red">*</span> </label>
+                <div class="row">
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-6">Camp Site: <input type="radio" name="site-type" data-name="site-type" value="Camp Site"></div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-6">Adventure Resort: <input type="radio" name="site-type" data-name="site-type" value="Adventure Resort"></div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-6">Eco Lodge/Resort: <input type="radio" name="site-type" data-name="site-type" value="Eco Lodge/Resort"></div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-6">Jungle Lodge/Resort: <input type="radio" name="site-type" data-name="site-type" value="Jungle Lodge/Resort"></div>
                 </div>
-                <div class="on-request-trip-container well" style="display:none;">
-                    <div class="row">
-                        <div class="col-md-4 col-sm-6 col-xs-6">
-                            <label for="heading">No. of days/nights<span class="red">*</span></label><input type="text" class="form-control" name="requestduration" data-name="request-duration" value="{% if model and model.expected_duration %}{{model.expected_duration }}{% endif %}">
-                        </div>
-                        <div class="col-md-4 col-sm-6 col-xs-6">
-                            <label for="heading">Operating Seasons/Conditions etc.</label><input type="text" class="form-control" name="requestconditions" data-name="request-conditions" value="{%if model and model.expected_conditions %}{{model.expected_conditions }}{% endif %}">
-                        </div>
-                    </div>
-                </div>
-
             </div>
-
+            <br/>
             <div class="form-group">
 
                 <div class="row">
@@ -77,15 +46,19 @@
                 </div>
                 <div id="destination_toggleable" class="row" style="display: none;">
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                        <label for="heading">Destination is famous as?</label>
+                        <label for="heading">Location is famous as?</label>
                         <input type="text" class="form-control" placeholder="Enter optional location name" data-name="optional_location_name" value="{%if model and model.optional_location_name %}{{model.optional_location_name}}{% endif %}">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                         <div class="form-group">
-                            <label for="heading">Departure From (Starting From)</label>
-                            <input type="text" name="departure_from" class="form-control" placeholder="Departure From Location" data-name="departure-from" value="{%if model and model.starting_from %}{{model.starting_from }}{% endif %}">
+                            <label for="heading">Best Season</label>
+                            <select class="form-control" data-name="best-season" multiple size="6">
+                                {% for month in ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']  %}
+                                <option value="{{month}}" {% if model and month in model.best_season %}selected{% endif %}>{{month}}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
 
@@ -106,10 +79,6 @@
                     </div>
                 </div>
 
-                <!--div class="form-group">
-                    <label for="heading">Detail Address</label>
-                    <textarea class="form-control" name="itinerary" placeholder="Enter ItenAddress"></textarea>
-                </div-->
                 <div class="container">
                     <label for="heading">Activity<span class="red">*</span></label>
 
@@ -147,25 +116,30 @@
                     <input type="hidden" data-name="cover-image" value="{% if model.cover_image %}{{ model.cover_image_path }}{% endif %}"/>
                 </div>
                 <div class="form-group">
-                    <label for="heading">Overview <small>(About the destination)</small><span class="red">*</span></label>
-                    <textarea class="form-control summernote" name="itinerary" rows="4" data-name="overview"
-                              placeholder="Write Brief About The Trip...">{% if model and model.about %}{{model.about}}{% endif %}</textarea>
+                    <label for="heading">Overview <small>(About the Campsite)</small><span class="red">*</span></label>
+                    <textarea class="form-control summernote" rows="4" data-name="overview"
+                              placeholder="Write Brief About The Campsite...">{% if model and model.about %}{{model.about}}{% endif %}</textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="heading">Itinerary <small>(Schedule, Things to carry, etc)</small><span class="red">*</span></label>
-                    <textarea class="form-control summernote" name="itinerary" rows="4" data-name="itinerary"
-                              placeholder="Write Brief About Itinerary...">{% if model and model.itinerary %}{{model.itinerary}}{% endif %}</textarea>
+                    <label for="heading">Accommodations<span class="red">*</span></label>
+                    <textarea class="form-control summernote" rows="4" data-name="accommodations"
+                              placeholder="Write Brief About Accommodations...">{% if model and model.accommodations %}{{model.accommodations }}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
-                    <label for="heading">Inclusive / Exclusive <span class="red">*</span></label>
-                    <textarea class="form-control summernote" name="inclusive_exclusive" rows="4" data-name="inclusive_exclusive"
-                              placeholder="Write Brief About Inclusive and Exclusive...">{% if model and model.inclusive_exclusive%}{{model.inclusive_exclusive}}{% endif %}</textarea>
+                    <label for="heading">Tariff (Cost)<span class="red">*</span></label>
+                    <textarea class="form-control summernote" rows="4" data-name="tariff"
+                              placeholder="Write Brief About Tariff and Costs...">{% if model and model.tariff %}{{model.tariff }}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
-                    <label for="heading">Other details <small>(Notes, Highlights, Cancellation, etc)</small></label>
-                    <textarea class="form-control summernote" name="other_details" rows="4" data-name="other_details"
-                              placeholder="Write Brief About Other Details...">{% if model and model.other_details %}{{model.other_details }}{% endif %}</textarea>
+                    <label for="heading">Actitivies<span class="red">*</span></label>
+                    <textarea class="form-control summernote" rows="4" data-name="activities-details"
+                              placeholder="Write Brief More Details About Activities...">{% if model and model.activities_details %}{{model.activities_details}}{% endif %}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="heading">How to Reach<small>(Routes, Fares, etc)</small></label>
+                    <textarea class="form-control summernote" rows="4" data-name="how-to-reach"
+                              placeholder="Write Brief About How To Reach...">{% if model and model.how_to_reach %}{{model.how_to_reach}}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
                     <div class="row" style="vertical-align: middle;">
@@ -209,7 +183,7 @@
             </div-->
 
             <form class="form-group">
-                <button data-action="save-trip" class="btn btn-primary">Submit</button>
+                <button data-action="save-model" class="btn btn-primary">Submit</button>
             </form>
 
         </form>
@@ -230,7 +204,7 @@
 <script>
     $(document).ready(function(){
         var handle_success = function() {
-            window.location.href='/trips#my-trips';
+            window.location.href='/campsites';
         };
         var handle_failure = function(message) {
             console.log('Handling failure:'  + message);
@@ -240,7 +214,7 @@
             });
         };
 
-        $('body').on('click', '[data-action="save-trip"]', function(e){
+        $('body').on('click', '[data-action="save-model"]', function(e){
 
 
             var toc = $('[data-name="toc"]:checked');
@@ -249,53 +223,24 @@
                 return;
             }
 
-            /*
-            var is_manager = $('[data-name="is-manager"]:checked');
-            if (is_manager == undefined || is_manager.length == 0)  {
-                BootstrapDialog.alert('You have to be the administrator/manager/representative to save the trip.');
-                return;
-            }
-            */
 
             var other_activities = $('[data-name="other-activities"]').val();
+            var activities_details = $('[data-name="activities-details"]').val();
             var id = $('[data-name="id"]').val();
-            var organizer = $('[data-name="user"]').val();
+            var host = $('[data-name="user"]').val();
             var title = $('[data-name="title"]').val();
-            var departure_type = $('[data-name="departure-type"]').val();
+            var site_type = $('[data-name="site-type"]').val();
 
-            if (departure_type == undefined || (departure_type != 'Fixed' && departure_type != 'On Request')) {
+            if (host == undefined || host.length == 0) {
+                BootstrapDialog.alert('Something is wrong when the organizer information is not there!!!');
+                return;
+            }
+
+            if (site_type == undefined || site_type.length == 0) {
                 BootstrapDialog.alert('Please select the departure type, it is mandatory field');
                 return;
             }
 
-            var from = '';
-            var to = '';
-            var request_duration = $('[data-name="request-duration"]').val();
-            var request_conditions = $('[data-name="request-conditions"]').val();
-            if (departure_type == 'Fixed'){
-                from = '';
-                to = '';
-                var fromdate = $('[data-name="fromdate"]').val();
-                var fromtime = $('[data-name="fromtime"]').val();
-                if (fromdate.length > 0){
-                    from = fromdate + ' ';
-                    if (fromtime.length > 0) {
-                        from += fromtime;
-                    } else {
-                        from += '00:00:00';
-                    }
-                }
-                var todate = $('[data-name="todate"]').val();
-                var totime = $('[data-name="totime"]').val();
-                if (todate.length > 0){
-                    to = todate + ' ';
-                    if (totime.length > 0) {
-                        to += totime;
-                    } else {
-                        to += '00:00:00';
-                    }
-                }
-            }
 
 
             var location_name = $('[data-name="geo_location_name"]').val();
@@ -305,7 +250,6 @@
             var location_region = $('[data-name="geo_region"]').val();
             var location_state = $('[data-name="geo_state"]').val();
             var location_country = $('[data-name="geo_country"]').val();
-            var starting_from = $('[data-name="departure-from"]').val();
             var optional_location_name = $('[data-name="optional_location_name"]').val();
             var price = $('[data-name="price"]').val();
             var price_on_request = ($('[data-name="price-on-request"]:checked').val() == undefined)? false: true;
@@ -331,13 +275,11 @@
                 media_gallery_images.push($($media_gallery_images[i]).val());
             }
             var overview = $('[data-name="overview"]').val();
-            var itinerary = $('[data-name="itinerary"]').val();
-            var incl_excl = $('[data-name="inclusive_exclusive"]').val();
-            var other_details = $('[data-name="other_details"]').val();
+            var accommodations = $('[data-name="accommodations"]').val();
+            var tariff = $('[data-name="tariff"]').val();
+            var how_to_reach = $('[data-name="how-to-reach"]').val();
             var data = {
                 title: title,
-                from: from,
-                to: to,
                 about: overview,
                 location_name: location_name,
                 location_lat: location_lat,
@@ -346,25 +288,23 @@
                 location_region: location_region,
                 location_state: location_state,
                 location_country:location_country,
-                starting_from: starting_from,
                 optional_location_name: optional_location_name,
                 price: price,
                 activities: activities,
+                activities_details: activities_details,
                 cover_image: cover_image,
                 media_gallery_images: media_gallery_images,
-                itinerary: itinerary,
-                inclusive_exclusive: incl_excl,
-                other_details: other_details,
-                organizer: organizer,
-                departure_type: departure_type,
-                request_duration: request_duration,
-                request_conditions: request_conditions,
+                how_to_reach: how_to_reach,
+                accommodations: accommodations,
+                tariff: tariff,
+                host: host,
+                site_type: site_type,
                 price_on_request: price_on_request,
                 other_activities: other_activities
             };
 
             if (id != undefined && id.length > 0){
-                App.trip.edit(id, data, function(data){
+                App.campsite.edit(id, data, function(data){
                     if (data.status == 'success') {
                         handle_success();
                     } else {
@@ -372,7 +312,7 @@
                     }
                 })
             } else {
-                App.trip.add(data, function(data){
+                App.campsite.add(data, function(data){
                     if (data.status == 'success') {
                         handle_success();
                     } else {
@@ -423,7 +363,7 @@
                 $('[data-container-selector="' + selector + '"]').remove();
             } else {
                 alert('Removing existing...');
-                App.trip.delete_media("", selector, function(data){
+                App.campsite.delete_media("", selector, function(data){
                     if (data.status=='success') {
                         BootstrapDialog.alert(data.message);
                         $('[data-container-selector="' + selector + '"]').remove();
@@ -433,26 +373,6 @@
                 })
             }
         });
-
-        $('body').on('change', '[data-name="departure-type"]', function(e){
-            var departure_type = $('[data-name="departure-type"]').val();
-            if (departure_type != 'Fixed') {
-                $('.fixed-trip-container').hide();
-                $('.on-request-trip-container').show();
-            } else {
-                $('.fixed-trip-container').show();
-                $('.on-request-trip-container').hide();
-            }
-        });
-
-        var pre_departure_type = $('[data-name="departure-type"]').val();
-        if (pre_departure_type == 'On Request') {
-            $('.fixed-trip-container').hide();
-            $('.on-request-trip-container').show();
-        } else {
-            $('.fixed-trip-container').show();
-            $('.on-request-trip-container').hide();
-        }
 
         var toggle_state = false;
         $('#toggle-destination-link').on('click', function(e){
@@ -481,3 +401,4 @@
         });
     });
 </script>
+
