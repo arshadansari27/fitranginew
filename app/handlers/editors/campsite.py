@@ -103,6 +103,7 @@ def _edit(data, node=None):
     node.tariff = data['tariff']
     node.activities_details = data['activities_details']
     node.how_to_reach = data['how_to_reach']
+    node.highlights = data['highlights']
     if data.get('location_name'):
         node.location = data['location_name']
         if data.get('location_lat') and data.get('location_lng'):

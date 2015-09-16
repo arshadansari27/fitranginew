@@ -335,11 +335,13 @@ class SelectedTripBookingAdminView(TripBookingAdminView):
 class CampsiteAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'site_type', 'best_season',  'description', 'optional_location_name', 'about', 'tariff', 'accommodations', 'how_to_reach', 'activities_details', 'price', 'price_on_request', 'host',  'activities', 'announcements', 'cover_image', 'path_cover_image', 'slug']
+    form_columns = ['name', 'site_type', 'best_season',  'description', 'optional_location_name', 'about', 'highlights', 'tariff', 'accommodations', 'how_to_reach', 'activities_details', 'price', 'price_on_request', 'host',  'activities', 'announcements', 'cover_image', 'path_cover_image', 'slug']
     column_list = ('name', 'host_name', 'cover_image', 'location', 'bookings', 'gallery')
     column_filters = [create_named_filter(), FilterActivities('activities.id', 'Activity')]
     column_searchable_list = ('name',)
-    form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField, announcements=SummernoteTextAreaField, tariff=SummernoteTextAreaField, accommodations=SummernoteTextAreaField, how_to_reach=SummernoteTextAreaField, activities_details=SummernoteTextAreaField)
+    form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField,
+                          tariff=SummernoteTextAreaField, accommodations=SummernoteTextAreaField,
+                          how_to_reach=SummernoteTextAreaField, activities_details=SummernoteTextAreaField)
 
     column_default_sort = '-created_timestamp'
 

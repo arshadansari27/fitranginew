@@ -120,7 +120,11 @@
                     <textarea class="form-control summernote" rows="4" data-name="overview"
                               placeholder="Write Brief About The Campsite...">{% if model and model.about %}{{model.about}}{% endif %}</textarea>
                 </div>
-
+                <div class="form-group">
+                    <label for="heading">Highlights <small>(Bullet Points)</small><span class="red">*</span></label>
+                    <textarea class="form-control" rows="7" data-name="overview"
+                              placeholder="Write Pointwise features of the campsite...">{% if model and model.highlights %}{{model.highlights }}{% endif %}</textarea>
+                </div>
                 <div class="form-group">
                     <label for="heading">Accommodations<span class="red">*</span></label>
                     <textarea class="form-control summernote" rows="4" data-name="accommodations"
@@ -230,6 +234,7 @@
             var host = $('[data-name="user"]').val();
             var title = $('[data-name="title"]').val();
             var site_type = $('[data-name="site-type"]').val();
+            var highlights = $('[data-name="highlights"]').val();
 
             if (host == undefined || host.length == 0) {
                 BootstrapDialog.alert('Something is wrong when the organizer information is not there!!!');
@@ -300,7 +305,8 @@
                 host: host,
                 site_type: site_type,
                 price_on_request: price_on_request,
-                other_activities: other_activities
+                other_activities: other_activities,
+                highlights: highlights
             };
 
             if (id != undefined && id.length > 0){

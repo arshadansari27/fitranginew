@@ -17,11 +17,17 @@
                     <h2>{{model.name}}</h2>
 
                     <article>
-                        <h4>{% set reviews_count = model.reviews_count %}{% if reviews_count > 0 %}{{reviews_count}}
-                            Review{% if reviews_count > 1 %}s{% endif %} {% else %} Not Reviewed yet {%
-                            endif %}</h4>
+                        <h4>
+                            {% set reviews_count = model.reviews_count %}
+                            {% if reviews_count > 0 %}
+                                {{reviews_count}} Review{% if reviews_count > 1 %}s{% endif %}
+                            {% endif %}
+                        </h4>
                     </article>
 
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-left">
+                    <h4>{% if model.location %}<i class="fa fa-map-marker"></i>&nbsp;{{ model.location }}{% endif %}</h4>
                 </div>
 
 
@@ -60,37 +66,14 @@
 
     </div>
 </section>
-<section class="container border-grey-b text-right p-10 mb-20">
-    {% if user and (model.host.id == user.id) %}
+{% if user and (model.host.id == user.id) %}
     {% set user_is_owner = True %}
-    {% else %}
+{% else %}
     {% set user_is_owner = False %}
-    {% endif %}
-    <div class="{% if user_is_owner %}col-lg-7 col-md-7{% else %}col-lg-8 col-md-8{% endif %} col-xs-12 going-list well well-sm">
+{% endif %}
+<section class="container border-grey-b text-right p-10 mb-20">
 
-        {% for u in model.interested %}
-        <a href="{{u.slug}}"><img src="{{u.cover_image_path}}" class="" width="48"></a>
-        {% else %}
-        <div class="">
-            <h4>Be the first to show interest in this event, from here -></h4>
-        </div>
-        {% endfor %}
 
-    </div>
-    {% if not model in user.interested_campsite %}
-    <a class="btn btn-primary" href="#" data-action="add-campsite-interested" data-model-id="{{model.id}}"
-       data-user-id="{{user.id}}"><span class="fa fa-link"></span>&nbsp;Interested</a>
-    {% else %}
-    <a class="btn btn-primary" href="#" data-action="remove-campsite-interested" data-model-id="{{model.id}}"
-       data-user-id="{{user.id}}"><span class="fa fa-check orange"></span>&nbsp;Remove from Interest</a>
-    {% endif %}
-    <a class="btn btn-primary" href="#book-now"><span class="fa fa-bookmark"></span>&nbsp;Booking Enquiry</a>
-    {% if user_is_owner %}
-    <button data-user-id="{{user.id}}" data-model-id="{{model.id}}" class="btn btn-default btn-edi blue" type="button"
-            onclick="javascript: window.location.href='/add-edit-campsite?pk={{model.id}}'"><i class="fa fa-edit"></i>
-        Edit
-    </button>
-    {% endif %}
 </section>
 
 <section class="container adventure-trips-content">
@@ -123,46 +106,52 @@
         <div class="row box-bg">
 
             <div class="heading">
-                <h4>QUICK INFO</h4>
+                <h4>Your Host</h4>
             </div>
 
-            <article>
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <div>
-                            <i class="fa fa-map-marker"></i>
-                        </div>
-                        <div>
-                            <strong class="dark-grey">Location</strong>
-
-                            <p class="dark-grey">{% if model.optional_location_name %}{{ model.optional_location_name
-                                }}{% else %}{{model.location }}{% endif %}</p>
-                        </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-10">
+                <div class="media">
+                    <div class="media-left">
+                        <a href="{{model.host.slug}}"><img class="media-object" data-src="holder.js/74x74"
+                                                               alt="74x74" src="{{model.host.cover_image_path}}"
+                                                               data-holder-rendered="true"
+                                                               style="width: 74px; height: 74px;">
+                        </a>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <div>
-                            <i class="fa fa-inr"></i>
-                        </div>
-                        <div>
-                            <strong class="dark-grey">Amount</strong>
-
-                            <p class="dark-grey">{% if model.price_on_request %}Price on request{% else
-                                %}{{model.price|int}} /- per person {% endif %}</p>
-                        </div>
+                    <div class="media-body">
+                        <h4 class="media-heading"><a href="{{model.host.slug}}">{{model.host.name}}</a></h4>
+                        <h5>
+                        {% if user and model.host.id == user.id and not model.host.location %}
+                            <i class="fa fa-map-marker fs-22"></i> &nbsp;&nbsp; <a href="/edit-profile">Edit Location</a>
+                        {% else %}
+                            {% if model.host.location %}<i class="fa fa-map-marker fs-22"></i> {{model.host.location }}{% else %}{% endif %}&nbsp;&nbsp;
+                        {% endif %}
+                        &nbsp;&nbsp;
+                        {% if user and model.host.id == user.id and not model.host.phone %}
+                            <i class="fa fa-phone fs-22"></i> &nbsp;&nbsp; <a href="/edit-profile">Edit Phone</a>
+                        {% else %}
+                            {% if model.host.phone %}<i class="fa fa-phone fs-22"></i> {{model.host.phone }}{% endif %}
+                        {% endif %}
+                        </h5>
                     </div>
                 </div>
-            </article>
-
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-10 text-center">
+                {% if user_is_owner %}
+                    <button data-user-id="{{user.id}}" data-model-id="{{model.id}}" class="btn btn-default btn-edi blue" type="button" onclick="javascript: window.location.href='/add-edit-campsite?pk={{model.id}}'"><i class="fa fa-edit"></i>Edit</button>
+                {% else %}
+                    <a class="btn btn-primary" href="#book-now"><span class="fa fa-bookmark"></span>&nbsp;Send Enquiry</a>
+                {% endif %}
+            </div>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-10">
                 <div class="sub-heading">
                     <h5>ACTIVITY</h5>
                 </div>
                 <center>
                     {% for activity in model.activities %}
-                    {% if activity and activity.icon_image_path and activity.icon_image_path |length > 0 %}
-                    <a href="{{activity.slug}}"><img src="{{activity.icon_image_path}}" class="img-thumbnail" width="64"
-                                                     alt="{{activity.name}}"></a>
-                    {% endif %}
+                        {% if activity and activity.icon_image_path and activity.icon_image_path |length > 0 %}
+                            <a href="{{activity.slug}}"><img src="{{activity.icon_image_path}}" class="img-thumbnail" width="64" alt="{{activity.name}}"></a>
+                        {% endif %}
                     {% endfor %}
                 </center>
             </div>
@@ -170,24 +159,12 @@
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-10">
                 <div class="sub-heading">
-                    <h5>HOSTED BY</h5>
+                    <h5>Highlights</h5>
+                </div>
+                <div class="container-fluid">
+                    {% if model.highlights %}{{ model.highlights|safe }}{% endif %}
                 </div>
 
-                <div class="media">
-                    <div class="media-left">
-                        <a href="#">
-                            <a href="{{model.host.slug}}"><img class="media-object" data-src="holder.js/74x74"
-                                                               alt="74x74" src="{{model.host.cover_image_path}}"
-                                                               data-holder-rendered="true"
-                                                               style="width: 74px; height: 74px;"></a>
-                        </a>
-                    </div>
-                    <div class="media-body">
-                        <h3 class="media-heading"><a href="{{model.host.slug}}">{{model.host.name}}</a></h3>
-                        {% if model.host.location %}<h5><i class="fa fa-map-marker fs-22"></i> {{model.host.location }}
-                    </h5>{% endif %}
-                    </div>
-                </div>
 
             </div>
         </div>
@@ -201,17 +178,20 @@
 
                 <li class="active"><a href="#about-reviews" role="tab" data-toggle="tab" aria-controls="about-reviews"
                                       aria-expanded="false">
-                    <span class="fa fa-star"></span> <strong>About & Reviews</strong></a></li>
+                    <strong>About</strong></a></li>
 
-                <li class=""><a href="#tariff" role="tab" data-toggle="tab" aria-controls="tariff"
+                <li class=""><a href="#activities" role="tab" data-toggle="tab" aria-controls="tariff"
                                 aria-expanded="false">
-                    <span class="fa fa-dollar"></span> <strong>Tariff (Cost)</strong> </a></li>
+                    <strong>Activities</strong> </a></li>
                 <li class=""><a href="#accommodation" role="tab" data-toggle="tab" aria-controls="accommodation"
                                 aria-expanded="false">
-                    <span class="fa fa-home"></span> <strong>Accommodations</strong> </a></li>
+                    <strong>Accommodations</strong> </a></li>
+                <li class=""><a href="#tariff" role="tab" data-toggle="tab" aria-controls="tariff"
+                                aria-expanded="false">
+                    <strong>Tariff (Cost)</strong> </a></li>
                 <li class=""><a href="#how-to-reach" role="tab" data-toggle="tab" aria-controls="how-to-reach"
                                 aria-expanded="false">
-                    <span class="fa fa-road"></span> <strong>How to Reach</strong> </a></li>
+                    <strong>How to Reach</strong> </a></li>
 
             </ul>
 
@@ -227,19 +207,15 @@
                     </div>
                     <hr class="clearfix"/>
 
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div>
-                            {% import 'site/includes/post_box.html' as post %}
-                            {{ post.show_post_form(model, 'review') }}
-                            <input type="hidden" id="review-filter" data-category="all"
-                                   data-filter="parent__campsite__pk" data-model="post" value="{{model.id}}"
-                                   data-filter-status="fixed"/>
-                            {{ reviews|safe }}
-                        </div>
-                    </div>
+
 
                 </div>
-
+                <div class="tab-pane" id="activities">
+                    <h3>Activities</h3>
+                    <div>
+                        {% if model.activities_details %}{{ model.activities_details|safe }}{% endif %}
+                    </div>
+                </div>
                 <div class="tab-pane" id="tariff">
                     <h3>Tariff (COSTS)</h3>
                     <div>
@@ -271,9 +247,24 @@
                         </div>
                         <hr class="divider clearfix">
                     {% endif %}
-                    <div>{{ model.how_to_reach }}</div>
+                    {% if model.how_to_reach %}<div>{{ model.how_to_reach }}</div>{% endif %}
                 </div>
             </div>
+        </div>
+        <br/>
+        <hr class="clearfix"/>
+        <br/>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="heading">
+                <h3>Reviews</h3>
+            </div>
+            <hr/>
+            {% import 'site/includes/post_box.html' as post %}
+            {{ post.show_post_form(model, 'review') }}
+            <input type="hidden" id="review-filter" data-category="all"
+                                   data-filter="parent__campsite__pk" data-model="post" value="{{model.id}}"
+                                   data-filter-status="fixed"/>
+            {{ reviews|safe }}
         </div>
     </div>
     <!--col7-close-->
@@ -283,7 +274,7 @@
 
         <div class="row box-bg">
             <div id="book-now" class="heading">
-                <h4>Booking Enquiry</h4>
+                <h4>Send Enquiry</h4>
             </div>
             <h4 style="text-align: center;"><strong>"{{model.name}}"</strong></h4> <br>
 

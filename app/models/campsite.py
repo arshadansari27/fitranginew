@@ -26,6 +26,7 @@ class Campsite(Entity, ExternalNetwork, Charge, db.Document, Location):
     published_timestamp = db.DateTimeField()
     price_on_request = db.BooleanField(default=False)
     best_season = db.ListField(db.StringField(choices=['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']))
+    highlights = db.StringField()
     nearby_stay = db.ListField(db.StringField()) # Deprecated
     nearby_eat = db.ListField(db.StringField()) # Deprecated
     nearby_station = db.ListField(db.StringField()) # Deprecated
