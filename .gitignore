@@ -1,6 +1,7 @@
 .DS_Store
 *.pyc
 .idea/
+.ropeproject/
 *iml
 db_address.txt
 .DS_Store

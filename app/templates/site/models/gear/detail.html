@@ -36,7 +36,7 @@
         <div class="row box-bg">
 
             <div class="heading">
-                <h4>{% if model.currency == 'INR' %}Rs.{% else %}${% endif %}{{ model.price}}/-</h4>
+                <h4>{% if model.currency == 'INR' %}Rs.{% else %}${% endif %}{{ model.price|int}}/-</h4>
             </div>
 
             <article>
@@ -65,7 +65,11 @@
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div>
 
-                            <p class="dark-grey"><strong class="dark-grey">Available For: </strong>{{ model.available_for}}</p>
+                            <p class="dark-grey"><strong class="dark-grey">Available For: </strong>
+                                {% for a in model.available_for %}
+                                <span class="label label-warning">{{ a }}</span>
+                                {% endfor %}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -84,13 +88,24 @@
                     </div>
                     <div class="media-body">
                         <h3 class="media-heading"><a href="{{model.owner.slug}}">{{model.owner.name}}</a></h3>
-                        <h5>{% if model.owner.location %}<i class="fa fa-map-marker fs-22"></i> {{model.owner.location }}{% endif %}&nbsp;&nbsp;
-                        {% if model.owner.phone %}<i class="fa fa-phone"></i> {{model.owner.phone }}{% endif %}</h5>
+                        <h5>
+                        {% if user and model.owner.id == user.id and not model.owner.location %}
+                            <i class="fa fa-map-marker fs-22"></i> &nbsp;&nbsp; <a href="/edit-profile">Edit Location</a>
+                        {% else %}
+                            {% if model.owner.location %}<i class="fa fa-map-marker fs-22"></i> {{model.owner.location }}{% endif %}&nbsp;&nbsp;
+                        {% endif %}
+                        &nbsp;&nbsp;
+                        {% if user and model.owner.id == user.id and not model.owner.phone %}
+                            <i class="fa fa-phone fs-22"></i> &nbsp;&nbsp; <a href="/edit-profile">Edit Phone</a>
+                        {% else %}
+                            {% if model.owner.phone %}<i class="fa fa-phone fs-22"></i> {{model.owner.phone }}{% endif %}
+                        {% endif %}
+                        </h5>
                     </div>
                 </div>
                 <hr class="clearfix"/>
                 <div class="text-center">
-                    <a href="#" class="btn btn-primary"><i class="fa fa-bookmark"></i> Send Enquiry</a>
+                    <a href="#book-now" class="btn btn-primary"><i class="fa fa-bookmark"></i> Send Enquiry</a>
                     {% if model.external_link %}<a href="{{model.external_link}}" class="btn btn-primary"><i class="fa fa-web"></i> Buy Now</a>{% endif %}
                 </div>
             </div>
@@ -146,14 +161,22 @@
 
 
         </div>
+        <div class="row box-bg">
+            <div class="text-center">
+                <a href="#" data-action="not-ok" data-model="profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><i class="fa fa-exclamation-triangle orange"></i>&nbsp;&nbsp;REPORT THIS</a>
+            </div>
+
+
+        </div>
+
 
 
         <div class="row box-bg">
             <div id="book-now" class="heading">
-                <h4>Booking Enquiry</h4>
+                <h4>Send Enquiry</h4>
             </div>
             <h4 style="text-align: center;"><strong>"{{model.name}}"</strong></h4> <br>
-            <p style="text-align: center; color: grey;">“**This trip is listed by the said organiser on the Fitrangi.com, It will be cordinated & executed by the organiser and Fitrangi.com is just a promoting partner for it. “</p>
+            <p style="text-align: center; color: grey;">“**This gear/product is listed by the said fellow fitrangi at Fitrangi.com. Purchase and delivery will be executed by the owner and Fitrangi.com is just a promoting partner for it. “</p>
 
 
             <div class="sub-heading">

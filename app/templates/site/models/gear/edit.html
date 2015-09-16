@@ -13,7 +13,7 @@
             </div>
             <div class="form-group">
                 <label for="heading">Category<span class="red">*</span> </label>
-                <select data-name="category">
+                <select data-name="category" class="form-control">
                     <option value="" {% if model or not model.category %}selected{% endif %}>--</option>
                     {% for category in categories %}
                     <option value="{{ category }}" {% if model and model.category == category %}selected{% endif %}>{{ category }}</option>
@@ -22,14 +22,14 @@
             </div>
             <div class="form-group">
                 <label for="heading">Condition<span class="red">*</span> </label>
-                <select data-name="condition">
+                <select data-name="condition" class="form-control">
                     <option value="Brand New" {% if model and model.condition=="Brand New" %}selected{% endif %}>Brand New</option>
                     <option value="Used Product" {% if model and model.condition=="Used Product" %}selected{% endif %}>Used Product</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="heading">Available For<span class="red">*</span> </label>
-                <select data-name="available-for">
+                <label for="heading">Available For<span class="red">*</span><p style="font-size: 7pt;">(Choose both if they are available in both options)</p> </label>
+                <select class="form-control" data-name="available-for" multiple size="2">
                     <option value="BUYING" {% if model and model.available_for=="BUYING" %}selected{% endif %}>BUYING</option>
                     <option value="RENTING" {% if model and model.available_for=="RENTING" %}selected{% endif %}>RENTING</option>
                 </select>
@@ -45,6 +45,7 @@
                             <label for="heading">
                                 LOCATION
                                 <span class="red">*</span>
+                                <span style="font-size: 7pt;">(Select your product/gear location)</span>
                             </label>
                             <input type="text" class="form-control geo-complete" value="{%if model and model.location %}{{model.location}}{% endif %}"/>
                             <input type="hidden" name="formatted_address" data-name="geo_location_name" value="{% if model.location  and model.location|length > 0 %}{{ model.location }}{% endif %}"/>
@@ -56,7 +57,11 @@
                             <input type="hidden" name="country_short" data-name="geo_country" value="{% if model.location and model.country %}{{ model.country }}{% endif %}"/>
             </div>
             <div class="form-group">
-                <label for="heading">Description <small>(details about the product/gear)</small><span class="red">*</span></label>
+                <label for="heading">
+                    Description
+                    <span class="red">*</span>
+                    <span style="font-size: 7pt;">(Details about your product/gear)</span>
+                    </label>
                     <textarea class="form-control summernote" name="description" rows="4" data-name="description"
                               placeholder="Write Brief About The Gear/Product...">{% if model and model.description %}{{model.description}}{% endif %}</textarea>
             </div>
@@ -64,7 +69,7 @@
             <div class="form-group">
                     <div class="row" style="vertical-align: middle;">
                         <label for="heading" style="vertical-align: middle; height: 30px;">
-                            Upload Gallery Images
+                            Upload Product/Gear Photos
                         </label>
                     </div>
                     <div id="media-gallery-uploads" class="container">
@@ -81,12 +86,14 @@
                     </div>
             </div>
             <div class="form-group">
-                <label for="heading">External Link</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Enter External Link to the site hosting this product for sale" data-name="external-link" value="{%if model and model.external_link %}{{model.external_link }}{% endif %}">
-                </div>
+                <label for="heading">
+                    External Link
+                    <span style="font-size: 7pt;">(Where online purchase is possible)</span>
+                </label>
+                <input type="text" class="form-control" placeholder="Enter External Link to the site hosting this product for sale" data-name="external-link" value="{%if model and model.external_link %}{{model.external_link }}{% endif %}">
             </div>
-
+            <br/>
+            <br/>
             <div class="form-group {% if model %}hide{% endif %}">
                 <div class="checkbox">
                     <label>
@@ -113,7 +120,7 @@
 <script>
     $(document).ready(function(){
         var handle_success = function() {
-            window.location.href='/trips#my-trips';
+            window.location.href='/gears#my-gears';
         };
         var handle_failure = function(message) {
             console.log('Handling failure:'  + message);
@@ -155,6 +162,10 @@
                 return;
             }
             if (price == undefined || price.length == 0) {
+                BootstrapDialog.alert('Please enter price, it is mandatory field');
+                return;
+            }
+            if (available_for == undefined || available_for.length == 0) {
                 BootstrapDialog.alert('Please enter price, it is mandatory field');
                 return;
             }

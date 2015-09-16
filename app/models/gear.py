@@ -13,7 +13,7 @@ class Gear(Entity, ExternalNetwork, Charge, db.Document, Location):
     published = db.BooleanField(default=False)
     published_timestamp = db.DateTimeField()
     category = db.StringField(choices=CATEGORIES)
-    available_for = db.StringField(choices=['BUYING', 'RENTING'])
+    available_for = db.ListField(db.StringField(choices=['BUYING', 'RENTING']))
     condition = db.StringField(choices=['Brand New', 'Used Product'])
 
     meta = {
