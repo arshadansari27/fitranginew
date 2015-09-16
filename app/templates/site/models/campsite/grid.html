@@ -4,7 +4,7 @@
 
         <div class="caption">
             <h4><a href="{{model.slug}}">{{ model.name }}</a></h4>
-            {% if not model.price_on_request %}{% if model.price %}<span class="rs">{{ model.price|int }}</span>{% endif %}{% else %}<span class="days2">Price On Request</span>{% endif %}
+            {% if model.location %}<h5><i class="fa fa-map-marker"></i> &nbsp;&nbsp; {{ model.location }}</h5>{% endif %}
         </div>
 
     </div>

@@ -4,7 +4,7 @@
         <section class="container">
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: window.location.href='/add-edit-campsite'">Add a Campsite</a>
+                <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: window.location.href='/add-edit-campsite'">Add a Campsite/Resort</a>
                 <input id="name-filter" data-filter="name__icontains" data-model="campsite" type="hidden">
             </div>
 
@@ -12,24 +12,17 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 filter-adventuretrips-heading">
                 <h2>Find, Connect and Experience</h2>
 
-                <h3>Search campsites you may wanna visit!</h3>
+                <h3>Search Campsites & Adventure Resorts you may wanna visit!</h3>
             </div>
 
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
-                <input id="activity-filter" data-model="campsite" data-filter="activities__activity__name" list="activity" placeholder="FILTER BY ACTIVITY">
-                <datalist id="activity">
+                <input id="site-type-filter" data-model="campsite" data-filter="site_type__iexact" list="type-list" placeholder="FILTER BY TYPE">
+                <datalist id="type-list">
                     <option value="">
+                    {% for f in ['Camp Site', 'Adventure Resort', 'Eco Lodge/Resort', 'Jungle Lodge/Resort'] %}
+                    <option value="{{f}}">
+                    {% endfor %}
                 </datalist>
-                <script>
-                    $(document).ready(function(){
-                        $.ajax({
-                            url: '/options?model_name=campsite&attr=activities&attr2=activity&attr3=name'
-                        }).done(function (data) {
-                            $('#activity').append(data);
-
-                        });
-                    });
-                </script>
             </div>
 
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
