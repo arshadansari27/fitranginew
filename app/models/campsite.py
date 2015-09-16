@@ -6,9 +6,8 @@ from app.models.booking import CampsiteBooking
 from app.models.media import CampsiteGalleryImage
 from app.models.profile import Profile
 
-CAMPSITE_TYPES = (CAMPSITE_TYPE, ADVENTURE_RESORT_TYPE,
-                  ECO_LODGE_RESORT, JUNGLE_LODGE_RESORT) = ('Camp Site', 'Adventure Resort',
-                                                            'Eco Lodge/Resort', 'Jungle Lodge/Resort')
+CAMPSITE_TYPES = ('Camp Site', 'Adventure Resort', 'Resort Or Lodge', 'Home Stay', 'Adventure Zone', 'Eco Lodge/Resort',
+                  'Jungle Lodge/Resort')
 
 @update_content.apply
 class Campsite(Entity, ExternalNetwork, Charge, db.Document, Location):

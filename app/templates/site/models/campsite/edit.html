@@ -11,14 +11,14 @@
                 <input type="hidden" data-name="id" value="{%if model and model.id %}{{model.id}}{% endif %}">
                 <input type="hidden" data-name="user" value="{% if model and model.host %}{{model.host.id}}{% elif user and user.id %}{% if user.is_campsite_owner %}{{user.id}}{% else %}{{ user.managed_campsite_owner_profile.id }}{% endif %}{% endif %}">
             </div>
-            <div class="well well-sm">
+            <div class="form-group">
                 <label for="heading">Select Type<span class="red">*</span> </label>
-                <div class="row">
-                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-6">Camp Site: <input type="radio" name="site-type" data-name="site-type" value="Camp Site"></div>
-                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-6">Adventure Resort: <input type="radio" name="site-type" data-name="site-type" value="Adventure Resort"></div>
-                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-6">Eco Lodge/Resort: <input type="radio" name="site-type" data-name="site-type" value="Eco Lodge/Resort"></div>
-                    <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-6">Jungle Lodge/Resort: <input type="radio" name="site-type" data-name="site-type" value="Jungle Lodge/Resort"></div>
-                </div>
+                <select data-name="category" class="form-control">
+                    <option value="" {% if model or not model.site_type %}selected{% endif %}>--</option>
+                    {% for site_type in ['Camp Site', 'Resort Or Lodge', 'Home Stay', 'Adventure Zone'] %}
+                    <option value="{{ site_type }}" {% if model and model.site_type == site_type %}selected{% endif %}>{{ site_type }}</option>
+                    {% endfor %}
+                </select>
             </div>
             <br/>
             <div class="form-group">
@@ -54,7 +54,7 @@
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                         <div class="form-group">
                             <label for="heading">Best Season</label>
-                            <select class="form-control" data-name="best-season" multiple size="6">
+                            <select class="form-control" data-name="best-season" multiple="multiple" sizes="12" style="height:100%;">
                                 {% for month in ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']  %}
                                 <option value="{{month}}" {% if model and month in model.best_season %}selected{% endif %}>{{month}}</option>
                                 {% endfor %}
@@ -63,8 +63,13 @@
                     </div>
 
                 </div>
+                <div class="form-group">
+                    <label for="heading">Highlights <small>(Bullet Points)</small><span class="red">*</span></label>
+                    <textarea class="form-control" rows="7" data-name="overview"
+                              placeholder="Write Pointwise features of the campsite...">{% if model and model.highlights %}{{model.highlights }}{% endif %}</textarea>
+                </div>
                 <div class="row">
-                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 hide">
                         <div class="form-group">
                             <label for="heading">Amount<span class="red">*</span></label>
                             <div class="input-group">
@@ -80,7 +85,7 @@
                 </div>
 
                 <div class="container">
-                    <label for="heading">Activity<span class="red">*</span></label>
+                    <label for="heading">Available Activities At/Near The Site<span class="red">*</span></label>
 
                     <div class="row-fluid">
                         {% for k in ['Land Activities', 'Water Activities', 'Air Activities'] %}
@@ -107,23 +112,17 @@
                 <br/>
                 <hr/>
                 <br/>
+
                 <div class="form-group">
-                    <label for="cover-image">Upload Cover Image <span class="red">*</span></label>
-                    <div class="thumbnail">
-                        <a href="#" data-action="cover-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/1366x500{% endif %}" width="70%"/></a>
-                        <div class="caption text-center">Click on the image to change(Optional)</div>
-                    </div>
-                    <input type="hidden" data-name="cover-image" value="{% if model.cover_image %}{{ model.cover_image_path }}{% endif %}"/>
-                </div>
-                <div class="form-group">
-                    <label for="heading">Overview <small>(About the Campsite)</small><span class="red">*</span></label>
+                    <label for="heading">Overview <span class="red">*</span>&nbsp;&nbsp;<small>(Overview of the site)</small></label>
                     <textarea class="form-control summernote" rows="4" data-name="overview"
                               placeholder="Write Brief About The Campsite...">{% if model and model.about %}{{model.about}}{% endif %}</textarea>
                 </div>
+
                 <div class="form-group">
-                    <label for="heading">Highlights <small>(Bullet Points)</small><span class="red">*</span></label>
-                    <textarea class="form-control" rows="7" data-name="overview"
-                              placeholder="Write Pointwise features of the campsite...">{% if model and model.highlights %}{{model.highlights }}{% endif %}</textarea>
+                    <label for="heading">Activities<span class="red">*</span>&nbsp;&nbsp;<small>(Write in detail)</small></label>
+                    <textarea class="form-control summernote" rows="4" data-name="activities-details"
+                              placeholder="Write Brief More Details About Activities...">{% if model and model.activities_details %}{{model.activities_details}}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="heading">Accommodations<span class="red">*</span></label>
@@ -131,19 +130,22 @@
                               placeholder="Write Brief About Accommodations...">{% if model and model.accommodations %}{{model.accommodations }}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
-                    <label for="heading">Tariff (Cost)<span class="red">*</span></label>
+                    <label for="heading">Tariff (Cost)<span class="red">*</span>&nbsp;&nbsp;<small>(Cost, Packages & Offers)</small></label>
                     <textarea class="form-control summernote" rows="4" data-name="tariff"
                               placeholder="Write Brief About Tariff and Costs...">{% if model and model.tariff %}{{model.tariff }}{% endif %}</textarea>
-                </div>
-                <div class="form-group">
-                    <label for="heading">Actitivies<span class="red">*</span></label>
-                    <textarea class="form-control summernote" rows="4" data-name="activities-details"
-                              placeholder="Write Brief More Details About Activities...">{% if model and model.activities_details %}{{model.activities_details}}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="heading">How to Reach<small>(Routes, Fares, etc)</small></label>
                     <textarea class="form-control summernote" rows="4" data-name="how-to-reach"
                               placeholder="Write Brief About How To Reach...">{% if model and model.how_to_reach %}{{model.how_to_reach}}{% endif %}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cover-image">Upload Cover Image <span class="red">*</span></label>
+                    <div class="thumbnail">
+                        <a href="#" data-action="cover-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/1366x500{% endif %}" width="70%"/></a>
+                        <div class="caption text-center">Click on the image to change(Optional)</div>
+                    </div>
+                    <input type="hidden" data-name="cover-image" value="{% if model.cover_image %}{{ model.cover_image_path }}{% endif %}"/>
                 </div>
                 <div class="form-group">
                     <div class="row" style="vertical-align: middle;">
