@@ -106,7 +106,7 @@
                 <hr class="clearfix"/>
                 <div class="text-center">
                     <a href="#book-now" class="btn btn-primary"><i class="fa fa-bookmark"></i> Send Enquiry</a>
-                    {% if model.external_link %}<a href="{{model.external_link}}" class="btn btn-primary"><i class="fa fa-web"></i> Buy Now</a>{% endif %}
+                    {% if model.external_link %}<a href="{{model.external_link}}" target="blank" class="btn btn-primary"><i class="fa fa-web"></i> Buy Now</a>{% endif %}
                 </div>
             </div>
         </div>
@@ -163,7 +163,7 @@
         </div>
         <div class="row box-bg">
             <div class="text-center">
-                <a href="#" data-action="not-ok" data-model="profile" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><i class="fa fa-exclamation-triangle orange"></i>&nbsp;&nbsp;REPORT THIS</a>
+                <a href="#" data-action="not-ok" data-model="gear" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><i class="fa fa-exclamation-triangle orange"></i>&nbsp;&nbsp;REPORT THIS</a>
             </div>
 
 

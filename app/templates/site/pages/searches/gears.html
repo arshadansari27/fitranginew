@@ -1,19 +1,53 @@
 <section class="container-fluid p1">
     <div class="trips-banner" style="{{background_cover}}">
 
+        <br/>
+        <br/>
         <section class="container">
-
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: window.location.href='/add-edit-gear'">Add a Gear/Product</a>
-                <input id="name-filter" data-filter="name__icontains" data-model="gear" type="hidden">
-            </div>
-
-
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 filter-adventuretrips-heading">
-                <h2>Find, Connect and Experience</h2>
-
-                <h3>Search gears and products you may wanna visit!</h3>
+                <h2>
+                    Buy, Sell & Rent Adventure Gears & Equipments
+                </h2>
+                <h3>
+                    <input id="name-filter" data-filter="name__icontains" data-model="gear" type="hidden">
+                    <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5" onclick="javascript: window.location.href='/add-edit-gear'">Add a Product / Gear</a>
+                </h3>
             </div>
+            <br/>
+            <br/>
+
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist">
+                <input class="geo-complete" placeholder="SORT BY LOCATION" data-sorter="location" data-model="gear">
+                <form>
+                    <input type="hidden" id="location-sorter-lat" name="lat" data-model="gear" data-sorter="location_lat"/>
+                    <input type="hidden" id="location-sorter-lng" name="lng" data-model="gear" data-sorter="location_lng"/>
+                    <input type="hidden" id="location-sorter-locality" name="locality_short" data-model="gear" data-sorter="location_locality"/>
+                    <input type="hidden" id="location-sorter-region2" name="administrative_area_level_2" data-model="gear" data-sorter="location_region2"/>
+                    <input type="hidden" id="location-sorter-region1" name="administrative_area_level_1" data-model="gear" data-sorter="location_region1"/>
+                    <input type="hidden" id="location-sorter-country" name="country_short" data-model="gear" data-sorter="location_country"/>
+                </form>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 fitrangi-datalist fitrangi-range">
+                <div class="form-group">
+                    <input id="category-filter" data-model="gear" data-filter="category" list="category-list" placeholder="FILTER BY CATEGORY">
+                    <datalist id="category-list">
+                        <option value="">
+                        {% for category in categories %}
+                        <option value="{{category}}">
+                        {% endfor %}
+                    </datalist>
+                </div>
+
+            </div>
+             <div class="col-lg-offset-4 col-md-offset-4">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <a data-model="gear" data-filter-submit="search" href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">GO</a>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <a data-model="gear" data-filter-submit="reset"  href="#" class="btn btn-info blue-bg no-radius w-100 mt-15">RESET</a>
+                </div>
+            </div>
+
         </section>
     </div>
 </section>
@@ -28,17 +62,33 @@
                 <ul id="myTab" class="nav nav-tabs" role="tablist">
                     <li class="active"><a href="#all" role="tab" data-toggle="tab" aria-controls="all" aria-expanded="false">
                         <span class="fa fa-home"></span> <strong>All Gears and Products</strong></a></li>
-                    {% if user %}<li class=""><a href="#my-campsites" role="tab" data-toggle="tab" aria-controls="my-gears"
+                    <li><a href="#new" role="tab" data-toggle="tab" aria-controls="new" aria-expanded="false">
+                        <span class="fa fa-paperclip"></span> <strong>Brand New Products</strong></a></li>
+                    <li><a href="#used" role="tab" data-toggle="tab" aria-controls="all" aria-expanded="false">
+                        <span class="fa fa-unlink"></span> <strong>Used Products</strong></a></li>
+                    {% if user %}<li class=""><a href="#my-gears" role="tab" data-toggle="tab" aria-controls="my-gears"
                             aria-expanded="false">
-                        <span class="fa fa-certificate"></span> <strong>My Gears/Produts</strong> </a></li>{% endif %}
+                        <span class="fa fa-certificate"></span> <strong>My Gears and Produts</strong> </a></li>{% endif %}
                 </ul>
             </div>
         </div>
         <div class="container">
             <div id="myTabContent" class="tab-content">
-                <div role="tabpanel" class="tab-pane fade active in" id="all" aria-labelledby="upcoming">
+                <div role="tabpanel" class="tab-pane fade active in" id="all" aria-labelledby="all">
                     <div class="container fitrangi-trips">
                         {{ gear_list|safe }}
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="new" aria-labelledby="new">
+                    <div class="container fitrangi-trips">
+                        <input id="new-gear-filter" data-category="new" data-model="gear" data-filter="condition" type="hidden" value="Brand New" data-filter-status="fixed">
+                        {{ new_gear_list|safe }}
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="used" aria-labelledby="used">
+                    <div class="container fitrangi-trips">
+                        <input id="used-gear-filter" data-category="used" data-model="gear" data-filter="condition" type="hidden" value="Used Product" data-filter-status="fixed">
+                        {{ used_gear_list|safe }}
                     </div>
                 </div>
                 {% if user %}
@@ -67,16 +117,18 @@
 
         window.App.filter('name-filter');
         window.App.filter('my-gear-filter');
+        window.App.filter('new-gear-filter');
+        window.App.filter('used-gear-filter');
+        window.App.filter('category-filter');
+        window.App.sorter('location-sorter-lat');
+        window.App.sorter('location-sorter-lng');
+        window.App.sorter('location-sorter-locality');
+        window.App.sorter('location-sorter-region2');
+        window.App.sorter('location-sorter-region1');
+        window.App.sorter('location-sorter-country');
 
     });
 </script>
-{% if filters.get('activities__activity__name') %}
-  <script>
-    $(document).ready(function(){
-        $('#activity-filter').val('{{filters.get("activities__activity__name")}}');
-    });
-</script>
-{% endif %}
 {% if filters.get('name__icontains') %}
   <script>
     $(document).ready(function(){

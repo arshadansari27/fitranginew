@@ -665,9 +665,13 @@ class SearchPage(Page):
             my_campsites = NodeCollectionFactory.resolve(CAMPSITE, GRID_VIEW, category='my-campsites').get_card(context)
             return dict(site_list=site_list, my_campsites=my_campsites)
         elif self.model_name == GEAR:
-            gear_list=NodeCollectionFactory.resolve(GEAR, ROW_VIEW).get_card(context)
+            from app.models.gear import CATEGORIES
+            gear_list = NodeCollectionFactory.resolve(GEAR, ROW_VIEW).get_card(context)
+            new_gear_list = NodeCollectionFactory.resolve(GEAR, ROW_VIEW, category='new').get_card(context)
+            used_gear_list = NodeCollectionFactory.resolve(GEAR, ROW_VIEW, category='used').get_card(context)
             my_gears = NodeCollectionFactory.resolve(GEAR, ROW_VIEW, category='my-gears').get_card(context)
-            return dict(gear_list=gear_list, my_gears=my_gears)
+            return dict(gear_list=gear_list, my_gears=my_gears, new_gear_list=new_gear_list,
+                        used_gear_list=used_gear_list, categories=CATEGORIES)
         else:
             raise Exception("not implemented")
 
@@ -734,9 +738,10 @@ class DetailPage(Page):
             other_sites = NodeCollectionFactory.resolve(CAMPSITE, GRID_ROW_VIEW, category="other", fixed_size=4).get_card(context)
             return dict(other_sites_list=other_sites_list, reviews=reviews, other_sites=other_sites)
         elif self.model_name == GEAR:
+            from app.models.gear import CATEGORIES
             reviews = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
-            other_gears= NodeCollectionFactory.resolve(GEAR, ROW_VIEW, fixed_size=3).get_card(context)
-            return dict(other_gears=other_gears, reviews=reviews)
+            other_gears = NodeCollectionFactory.resolve(GEAR, ROW_VIEW, fixed_size=3).get_card(context)
+            return dict(other_gears=other_gears, reviews=reviews, categories=CATEGORIES)
 
         else:
             return {}
