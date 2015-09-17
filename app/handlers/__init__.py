@@ -661,9 +661,10 @@ class SearchPage(Page):
         elif self.model_name == CONTEST:
             return dict(live=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='live').get_card(context), upcoming=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='upcoming').get_card(context), past=NodeCollectionFactory.resolve(CONTEST, ROW_VIEW, category='past').get_card(context), now=str(datetime.datetime.now()).split(' ')[0])
         elif self.model_name == CAMPSITE:
+            from app.models.campsite import CAMPSITE_TYPES
             site_list=NodeCollectionFactory.resolve(CAMPSITE, GRID_VIEW).get_card(context)
             my_campsites = NodeCollectionFactory.resolve(CAMPSITE, GRID_VIEW, category='my-campsites').get_card(context)
-            return dict(site_list=site_list, my_campsites=my_campsites)
+            return dict(site_list=site_list, my_campsites=my_campsites, campsite_types=CAMPSITE_TYPES)
         elif self.model_name == GEAR:
             from app.models.gear import CATEGORIES
             gear_list = NodeCollectionFactory.resolve(GEAR, ROW_VIEW).get_card(context)

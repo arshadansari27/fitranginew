@@ -22,7 +22,7 @@
                 <input id="site-type-filter" data-model="campsite" data-filter="site_type__iexact" list="type-list" placeholder="FILTER BY TYPE">
                 <datalist id="type-list">
                     <option value="">
-                    {% for f in ['Camp Site', 'Adventure Resort', 'Eco Lodge/Resort', 'Jungle Lodge/Resort'] %}
+                    {% for f in campsite_types %}
                     <option value="{{f}}">
                     {% endfor %}
                 </datalist>
