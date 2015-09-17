@@ -1,17 +1,17 @@
-<li>
+<!--li>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-2">
             <a href="{{model.slug}}"><img class="blog-img img-responsive img-thumbnail" src="{{model.media_gallery_single_path_small}}" alt=""></a>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-10">
             <h3 class="title">
                 <a href="{{model.slug}}">{{model.name }}</a>
                 {% if user and model.owner.id == user.id %}
                     <button data-user-id="{{user.id}}" data-model-id="{{model.id}}" class="btn btn-default btn-edi blue pull-right" type="button" onclick="javascript: window.location.href='/add-edit-gear?pk={{model.id}}'"><i class="fa fa-edit"></i> Edit </button>
                 {% endif %}
             </h3>
+            <h4 class="pull-right">{% if model.currency == 'INR' %}<i class="fa fa-inr"></i>&nbsp;{{ model.price|int }}/-{% else %}USD {{model.price|int}}/- {% endif %}</h4>
             <p class="sub-title">
-                <h4>{% if model.currency == 'INR' %}<i class="fa fa-inr"></i>&nbsp;{{ model.price|int }}/-{% else %}USD {{model.price|int}}/- {% endif %}</h4>
             </p>
             {% if not user or model.owner.id != user.id %}
             <div class="media">
@@ -23,5 +23,23 @@
             {% endif %}
         </div>
     </div>
-</li>
+</li-->
 
+<li class="nav col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <article class="fitrangi-profile">
+        <a href="#" class="pull-right">{% if model.currency == 'INR' %}<i class="fa fa-inr"></i>&nbsp;{{ model.price|int }}/-{% else %}USD {{model.price|int}}/- {% endif %}</a>
+        <a href="{{model.slug}}"><img src="{{model.media_gallery_single_path_small}}" class="pull-left" style="height:140px;width:140px;"></a>
+        <h4><a href="{{model.slug}}">&nbsp;&nbsp;{% if model and model.name and model.name|length > 35 %}{{model.name[0:35]}}...{% elif model %}{{model.name}}{% else %}No Product Title{% endif %}</a></h4>
+        <p class="sub-title">
+            {% if not user or model.owner.id == user.id %}
+            <a href="#" data-user-id="{{user.id}}" data-model-id="{{model.id}}" class="btn btn-default btn-xs mt-10 grey pull-right" type="button" onclick="javascript: window.location.href='/add-edit-gear?pk={{model.id}}'"><i class="fa fa-edit"></i> Edit </a>
+            {% endif %}
+            <h5>&nbsp;&nbsp;<i class="fa fa-map-marker"></i>&nbsp;{% if model.location %}{{model.location}}{% else %}Location for product not given{% endif %}</h5>
+            <h4><small>&nbsp;&nbsp;Added by:</small>&nbsp;{{model.owner.name}}</h4>
+            <h6>&nbsp;&nbsp;<span class="label label-success">{{model.since}}</span>&nbsp;&nbsp;<span class="label label-info">{{model.condition}}</span></h6>
+            <h6>&nbsp;&nbsp;{% for a in model.available_for %}<span class="label label-warning">{{ a }}</span>&nbsp;{% endfor %}</h6>
+        </p>
+
+    </article>
+    <hr/>
+</li>
