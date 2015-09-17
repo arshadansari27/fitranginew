@@ -162,7 +162,13 @@
                     <h5>Highlights</h5>
                 </div>
                 <div class="container-fluid">
-                    {% if model.highlights %}{{ model.highlights|safe }}{% endif %}
+                    {% if model.highlights %}
+                    <ul class="media-list">
+                        {% for h in model.point_highlights() %}
+                        <li><i class="fa fa-check-circle-o fa-22 green"></i>&nbsp;{{h}}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
                 </div>
 
 
@@ -178,7 +184,7 @@
 
                 <li class="active"><a href="#about-reviews" role="tab" data-toggle="tab" aria-controls="about-reviews"
                                       aria-expanded="false">
-                    <strong>About</strong></a></li>
+                    <strong>Overview</strong></a></li>
 
                 <li class=""><a href="#activities" role="tab" data-toggle="tab" aria-controls="tariff"
                                 aria-expanded="false">
@@ -188,7 +194,7 @@
                     <strong>Accommodations</strong> </a></li>
                 <li class=""><a href="#tariff" role="tab" data-toggle="tab" aria-controls="tariff"
                                 aria-expanded="false">
-                    <strong>Tariff (Cost)</strong> </a></li>
+                    <strong>Cost, Packages & Offers</strong> </a></li>
                 <li class=""><a href="#how-to-reach" role="tab" data-toggle="tab" aria-controls="how-to-reach"
                                 aria-expanded="false">
                     <strong>How to Reach</strong> </a></li>

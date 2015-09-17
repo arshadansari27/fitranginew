@@ -4,8 +4,11 @@
         <section class="container">
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                {% if user and (user.managed_campsite_owner_profile or user.is_campsite_owner) %}
                 <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: window.location.href='/add-edit-campsite'">Add a Campsite/Resort</a>
+                {% endif %}
                 <input id="name-filter" data-filter="name__icontains" data-model="campsite" type="hidden">
+
             </div>
 
 

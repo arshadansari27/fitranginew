@@ -48,6 +48,12 @@ class Campsite(Entity, ExternalNetwork, Charge, db.Document, Location):
     def __unicode__(self):
         return self.__repr__()
 
+    def point_highlights(self):
+        if not self.highlights:
+            return []
+        hl = self.highlights.replace('\n', '.').replace('<p>', '').replace('</p>', '.').replace('<br>', '.').replace('<br/>', '.')
+        return [u.strip() for u in hl.split('.') if u and len(u.strip()) > 0]
+
     @property
     def manager(self):
         return self.host
