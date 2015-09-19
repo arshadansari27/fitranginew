@@ -101,7 +101,7 @@
                 <h4>About Organizer</h4>
                 <hr/>
             </div>
-            <div class="text-center">{% if model.organizer.about and model.organizer.about|length > 0 %}{{ model.organizer.about|safe }}{% elif model.organizer.description and model.organizer.description|length > 0 %}{{ model.organizer.description|safe }}{% endif %}</div>
+            <div class="text-center">{% if model.about_organizer %}{{ model.about_organizer|safe }}{% endif %}</div>
         </div>
 
         <div class="row box-bg">

@@ -9,6 +9,7 @@ from app import utils
 class Event(Entity, ExternalNetwork, db.Document):
     scheduled_date = db.DateTimeField()
     location = db.StringField()
+    about_organizer = db.StringField()
     geo_location = db.PointField()
     organizer = db.ReferenceField('Profile')
     featured = db.BooleanField(default=False)

@@ -213,11 +213,12 @@ class AdventureAdminView(ModelView):
 class EventAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'featured', 'description', 'about', 'scheduled_date', 'organizer', 'cover_image', 'external_link', 'path_cover_image']
+    form_columns = ['name', 'featured', 'description', 'about', 'scheduled_date', 'organizer', 'about_organizer',
+                    'cover_image', 'external_link', 'path_cover_image']
     column_list = ('name', 'organizer', 'cover_image', 'location', 'featured')
     column_filters = [create_named_filter(), 'featured']
     column_searchable_list = ('name', )
-    form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField)
+    form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField, about_organizer=SummernoteTextAreaField)
     column_default_sort = '-created_timestamp'
 
     def is_accessible(self):
