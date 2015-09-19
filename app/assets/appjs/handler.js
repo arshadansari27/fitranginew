@@ -1551,10 +1551,18 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    var get_lines = function(content) {
+        return content.textContent || content.innerText;
+    };
+
     var clean_pasted_html = function(original) {
-        u = document.createElement('div');
-        u.innerHTML = original;
-        return u.innerText;
+        var text = '';
+        var u= $('<div></div>');
+        u.html(original);
+        u.children().each(function (i, elem) {
+            text += (elem.textContent || elem.innerText) + '<br/>';
+        });
+        return text;
     };
 
     var summernote_image_upload = function(file, editor, welEditable) {
@@ -1600,7 +1608,7 @@ jQuery(document).ready(function ($) {
                     var updatePastedText = function(someNote){
                         var original = someNote.code();
                         var cleaned = clean_pasted_html(original); //this is where to call whatever clean function you want. I have mine in a different file, called CleanPastedHTML.
-                        someNote.code().html(cleaned); //this sets the displayed content editor to the cleaned pasted code.
+                        someNote.html(cleaned); //this sets the displayed content editor to the cleaned pasted code.
                     };
                     setTimeout(function () {
                         //the function is called before the text is really pasted.
