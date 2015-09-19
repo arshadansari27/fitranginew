@@ -25,7 +25,6 @@ def send_email_from_template(template_name, subject, from_email='admin@fitrangi.
         template_path = template_name
         template = env.get_template(template_path)
         html = template.render(**context)
-        print html
         send_single_email(subject, from_email, to_list, data=html, force_send=force_send)
     except Exception, e:
         print '\n', '*' * 100,'\n','Failed to sent email', str(e), '\n','*' * 100
