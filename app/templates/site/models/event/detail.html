@@ -41,7 +41,9 @@
     {% else %}
         <a class="btn btn-primary"  href="#" data-action="remove-event-interested" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><span class="fa fa-check orange"></span>&nbsp;Remove from Interest</a>
     {% endif %}
-    <a class="btn btn-primary"  href="#book-now" ><span class="fa fa-bookmark"></span>&nbsp;Send Enquiry</a>
+    {% if model.external_link and model.external_link|length > 0 %}
+    <a class="btn btn-primary"  href="{{ model.external_link }}" ><span class="fa fa-bookmark"></span>&nbsp;Register Now</a>
+    {% endif %}
     {% if user_is_owner %}
     <button data-user-id="{{user.id}}" data-model-id="{{model.id}}" class="btn btn-default btn-edi blue" type="button" onclick="javascript: window.location.href='/add-edit/event?pk={{model.id}}'"><i class="fa fa-edit"></i> Edit </button>
     {% endif %}
@@ -108,77 +110,29 @@
             </div>
         </div>
 
+        <div class="row box-bg">
+            <div class="heading text-center">
+                <h3>Add An Adventure Event</h3>
+                <hr/>
+            </div>
+            <div class="text-center">
+                <ul class="col-sm-offset-1 media-list" style="text-align: left;">
+                    <li><a href="#"><i class="fa fa-check-circle-o green fa-22"></i>&nbsp;Are you organizing an adventure event?</a></li>
+                    <li></li>
+                    <li><a href="#"><i class="fa fa-check-circle-o green fa-22"></i>&nbsp;Wanna increase your even promotion reach?</a></li>
+                    <li></li>
+                    <li><a href="#"><i class="fa fa-check-circle-o green fa-22"></i>&nbsp;You can do that from here!</a></li>
+                </ul>
+                <hr/>
+                <a href="/add-edit/event" class="btn btn-primary">Add An Event</a>
+
+            </div>
+        </div>
+
         <div class="container-fluid">
             {{ advertisement_list | safe }}
         </div>
 
-        <div class="row box-bg">
-            <div id="book-now" class="heading">
-                <h4>Send Enquiry</h4>
-            </div>
-            <h4 style="text-align: center;"><strong>"{{model.name}}"</strong></h4> <br>
-            <div class="sub-heading">
-                <h5 style="font-size:17px;">Fill these to let us connect you with the organiser</h5>
-            </div>
-            <form class="form-horizontal question-form">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><i class="fa fa-user"></i></label>
-
-                    <div class="col-sm-10">
-                        {% if user and user.name and user.name|length > 0  %}
-                        <input data-action-value="name" type="text" class="form-control" placeholder="your name" value="{{user.name}}">
-                        {% else %}
-                        <input data-action-value="name" type="text" class="form-control" placeholder="your email">
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><i class="fa fa-envelope"></i></label>
-
-                    <div class="col-sm-10">
-                        {% if user and user.email and user.email|length > 0  %}
-                        <input data-action-value="email" type="email" class="form-control" placeholder="your email" value="{{user.email}}">
-                        {% else %}
-                        <input data-action-value="email" type="email" class="form-control" placeholder="your email">
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><i class="fa fa-phone"></i></label>
-
-                    <div class="col-sm-10">
-                        {% if user and user.phone and user.phone|length > 0 %}
-                        <input data-action-value="phone" type="text" class="form-control" placeholder="your phone number" value="{{user.phone}}">
-                        {% else %}
-                        <input data-action-value="phone" type="text" class="form-control" placeholder="your phone number">
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-sm-2 control-label"><i class="fa fa-comment"></i></label>
-
-                    <div class="col-sm-10">
-                        <textarea  data-action-value="enquiry" class="form-control" placeholder="how can we help you" rows="3"></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 "></label>
-
-                    <div class="col-sm-10">
-                        <strong>I Prefer:</strong> &nbsp;
-                      <input   data-action-value="contact-pref" class="checkbox-inline" type="checkbox"  value="phone"> <span style="color: grey;"> Phone </span> &nbsp;
-                      <input   data-action-value="contact-pref" class="checkbox-inline" type="checkbox"  value="email" checked> <span style="color: grey;"> Email </span>
-                    </div>
-                </div>
-
-                <button type="button" data-model="event" data-model-slug="{{model.slug}}" data-user-id="{{user.id}}"
-                        data-model-id="{{model.id}}" data-action="send-enquiry"
-                        class="btn btn-primary btn-block btn-sm">Send Enquiry</button>
-
-            </form>
-        </div>
     </div>
 </section>
 
