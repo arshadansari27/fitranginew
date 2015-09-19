@@ -122,14 +122,7 @@
             {% if model.description %}{{ model.description|safe }}{% endif %}
         </div>
         <hr class="clearfix"/>
-        <div class="fitrangi-trips">
-            <div class="heading">
-                <h4 style="text-align: left;">More Gears</h4>
-            </div>
-            <input id="gear-not-same-filter" type="hidden" data-category="other" data-model="gear" data-filter="id__ne" value="{{model.id}}"/>
-            {{other_gears|safe}}
-        </div>
-        <hr class="clearfix"/>
+
         <div class="fitrangi-trips">
             <div class="heading">
                 <h4 style="text-align: left;">Reviews</h4>
@@ -165,11 +158,14 @@
             <div class="text-center">
                 <a href="#" data-action="not-ok" data-model="gear" data-model-id="{{model.id}}" data-user-id="{{user.id}}"><i class="fa fa-exclamation-triangle orange"></i>&nbsp;&nbsp;REPORT THIS</a>
             </div>
-
-
         </div>
-
-
+        <div class="row box-bg">
+            <div class="heading">
+                <h4 style="text-align: left;">More Gears</h4>
+            </div>
+            <input id="gear-not-same-filter" type="hidden" data-category="other" data-model="gear" data-filter="id__ne" value="{{model.id}}"/>
+            {{other_gears|safe}}
+        </div>
 
         <div class="row box-bg">
             <div id="book-now" class="heading">

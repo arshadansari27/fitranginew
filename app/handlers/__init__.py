@@ -760,7 +760,7 @@ class DetailPage(Page):
         elif self.model_name == GEAR:
             from app.models.gear import CATEGORIES
             reviews = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
-            other_gears = NodeCollectionFactory.resolve(GEAR, ROW_VIEW, fixed_size=3).get_card(context)
+            other_gears = NodeCollectionFactory.resolve(GEAR, GRID_ROW_VIEW, fixed_size=3).get_card(context)
             return dict(other_gears=other_gears, reviews=reviews, categories=CATEGORIES)
 
         else:
