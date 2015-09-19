@@ -63,6 +63,10 @@
                     </div>
                     <input type="hidden" data-name="cover-image" value="{% if model.cover_image %}{{ model.cover_image_path }}{% endif %}"/>
                 </div>
+                <div class="form-group">
+                    <label for="heading">External Link</label>
+                    <input type="text" class="form-control" name="external-link" data-name="external-link" value="{%if model and model.external_link %}{{model.external_link}}{% endif %}" placeholder="Enter External Link of Website for the Event">
+                </div>
             </div>
 
             <br/>
@@ -124,6 +128,7 @@
             var title = $('[data-name="title"]').val();
             var description = $('[data-name="description"]').val();
             var scheduled_date = $('[data-name="scheduled-date"]').val();
+            var external_link = $('[data-name="external-link"]').val();
 
             if (scheduled_date == undefined || scheduled_date.length == 0) {
                 BootstrapDialog.alert('Please enter scheduled date, it is mandatory field');
@@ -172,7 +177,8 @@
                 cover_image: cover_image,
                 description: description,
                 organizer: organizer,
-                scheduled_date: scheduled_date
+                scheduled_date: scheduled_date,
+                external_link: external_link
             };
 
             if (id != undefined && id.length > 0){

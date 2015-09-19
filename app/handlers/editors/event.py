@@ -70,6 +70,7 @@ def _edit(data, node=None):
     node = get_or_create_event(node)
     node.name = data['title']
     scheduled_date = data['scheduled_date']
+    node.external_link = data['external_link']
     YYYY, MM, DD = scheduled_date.split('-')
     YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), '0', '0', '0']]
     node.scheduled_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
