@@ -116,6 +116,15 @@ class ActivityStream(db.Document):
         return activity
 
     @classmethod
+    def push_event_to_stream(cls, content):
+        activity = ActivityStream(profile=content.organizer, action='added event', object=content, view_html='', view_text='', view_json='')
+        activity.save()
+        if content.organizer:
+            author = Profile.objects(pk=content.organizer.id).first()
+            author.increment_public_activity_count()
+        return activity
+
+    @classmethod
     def push_gear_to_stream(cls, content):
         activity = ActivityStream(profile=content.owner, action='added gear/product ', object=content, view_html='', view_text='', view_json='')
         activity.save()

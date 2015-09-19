@@ -66,7 +66,7 @@ CAPITALIZED_NAMES = {
     'login': 'Login',
     'register': 'Register'
 }
-WALL_IMAGE_STYLE = "background:  linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url(%s) no-repeat center center;background-size: cover;"
+WALL_IMAGE_STYLE = "background:  linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url(%s) no-repeat center center;background-size: cover;"
 
 if USE_CDN:
     prepend = CDN_URL
@@ -508,6 +508,8 @@ class Page(object):
                 return campsite_edit_page
             elif model_name == GEAR:
                 return gear_edit_page
+            elif model_name == EVENT:
+                return event_edit_page
             else:
                 raise Exception('Not implemented')
         elif type == 'detail':
@@ -529,6 +531,8 @@ class Page(object):
                 return campsite_detail_page
             elif model_name == GEAR:
                 return gear_detail_page
+            elif model_name == EVENT:
+                return event_detail_page
             else:
                 raise Exception("Not implemented")
         elif type == 'search':
@@ -651,7 +655,17 @@ class SearchPage(Page):
             advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, fixed_size=3).get_card(context)
             return dict(featured=featured, latest=latest, advertisement_list=advertisement_list, my=my)
         elif self.model_name == EVENT:
-            return dict(events_list=NodeCollectionFactory.resolve(EVENT, ROW_VIEW).get_card(context))
+            featured_upcoming_events_list = NodeCollectionFactory.resolve(EVENT, ROW_VIEW, category='featured-upcoming').get_card(context)
+            upcoming_events_list = NodeCollectionFactory.resolve(EVENT, ROW_VIEW, category='upcoming').get_card(context)
+            past_events_list = NodeCollectionFactory.resolve(EVENT, ROW_VIEW, category='past').get_card(context)
+            my_events_list = NodeCollectionFactory.resolve(EVENT, GRID_VIEW, category='my-events').get_card(context)
+            return dict(
+                featured_upcoming_events_list=featured_upcoming_events_list,
+                upcoming_events_list=upcoming_events_list,
+                past_events_list=past_events_list,
+                now=str(datetime.datetime.now()).split(' ')[0],
+                my_events_list=my_events_list
+            )
         elif self.model_name == TRIP:
             interesting = NodeCollectionFactory.resolve(TRIP, GRID_VIEW, category='interesting').get_card(context)
             on_request = NodeCollectionFactory.resolve(TRIP, GRID_VIEW, category='on-request').get_card(context)
@@ -733,6 +747,11 @@ class DetailPage(Page):
             else:
                 ad_view = ''
             return dict(ad_views=ad_views)
+        elif self.model_name == EVENT:
+            posts = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
+            other_events = NodeCollectionFactory.resolve(EVENT, GRID_VIEW, category="other", fixed_size=4).get_card(context)
+            advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, fixed_size=3).get_card(context)
+            return dict(other_events=other_events, posts=posts, advertisement_list=advertisement_list)
         elif self.model_name == CAMPSITE:
             other_sites_list = NodeCollectionFactory.resolve(CAMPSITE, GRID_ROW_VIEW, fixed_size=3).get_card(context)
             reviews = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
@@ -812,8 +831,10 @@ trip_detail_page        = DetailPage(TRIP)
 contest_detail_page     = DetailPage(CONTEST)
 campsite_detail_page    = DetailPage(CAMPSITE)
 gear_detail_page        = DetailPage(GEAR)
+event_detail_page       = DetailPage(EVENT)
 
 profile_edit_page       = EditPage(PROFILE)
 trip_edit_page          = EditPage(TRIP)
 campsite_edit_page      = EditPage(CAMPSITE)
 gear_edit_page          = EditPage(GEAR)
+event_edit_page         = EditPage(EVENT)

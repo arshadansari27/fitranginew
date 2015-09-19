@@ -3096,6 +3096,36 @@ fitrangi-trips .caption h3:after{
     outline-color: rgb(66, 139, 202);
 }
 
+.event-inner-banner{
+	min-height:488px;
+	height:auto;
+	width:100%;
+}
+
+.event-inner-banner h3 {
+  font-family: 'oswald', Arial, Helvetica, sans-serif;
+  color: #FFF;
+  text-align: center;
+  position: relative;
+  font-size: 3.5em;
+  top: 40px;
+}
+
+.event-inner-banner p {
+  font-family: 'oswald', Arial, Helvetica, sans-serif;
+  color: #FFF;
+  text-align: center;
+  position: relative;
+  top: 65px;
+}
+
+.event-inner-banner h4 {
+  font-family: 'oswald', Arial, Helvetica, sans-serif;
+  color: #FFF;
+  text-align: center;
+  position: relative;
+  top: 65px;
+}
 
 
 .adventures-trips-banner{
@@ -3669,9 +3699,8 @@ fitrangi-trips .caption h3:after{
 
 
 .events-banner {
-  height: 488px;
+  height: 200px;
   width: 100%;
-  padding: 50px 0;
 }
 @media (max-width:767px){
 .events-banner {
@@ -3679,12 +3708,11 @@ fitrangi-trips .caption h3:after{
 }
 }
 .events-banner .heading{
-	margin-top:80px;
+	margin-top:40px;
 }
 .events-banner .heading h2, .events-banner .heading h3{
 	font-family: 'oswald', Arial, Helvetica, sans-serif;
   	color: #fff;
-	text-align: center;
 	text-shadow: 0px 1px 0px #444;
 }
 .events-box-bg{

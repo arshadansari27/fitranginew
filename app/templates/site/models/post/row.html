@@ -6,7 +6,7 @@
         <div class="media-body">
             <h3><a href="{{model.author.slug}}" style="color:#00C4A6;">{% if model.author and model.author.name %}{{model.author.name}}{% else %}Anonymous{% endif %}</a></h3>
             <h5>
-                <i class="fa fa-map-marker"></i> {% if model.author.location.name %}{{model.author.location.name}}{% else %}Unknown{% endif %}
+                <i class="fa fa-map-marker"></i> {% if model.author.location %}{{model.author.location }}{% else %}Unknown{% endif %}
                 <small class="pull-right">Posted {{model.since}}</small>
             </h5>
         </div>

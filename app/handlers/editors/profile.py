@@ -51,6 +51,8 @@ class ProfileEditor(NodeEditor):
             return join_event(self.action, self.node, self.message['event'])
         elif self.command == 'interest-trip':
             return interest_trip(self.action, self.node, self.message['trip'])
+        elif self.command == 'interest-event':
+            return interest_event(self.action, self.node, self.message['event'])
         elif self.command == 'interest-campsite':
             return interest_campsite(self.action, self.node, self.message['campsite'])
         elif self.command == 'join-trip':
@@ -276,9 +278,9 @@ def interest_event(action, profile, event):
     event = Event.objects(pk=event).first()
     if not node or not event:
         raise Exception('Invalid profile or event')
-    if action == 'interested':
+    if action == 'add':
         RelationShips.interested(node, event)
-    elif action == 'uninterested':
+    elif action == 'remove':
         RelationShips.uninterested(node, event)
     else:
         raise Exception("Invalid action")
@@ -303,7 +305,7 @@ def interest_trip(action, profile, trip):
     node = Profile.objects(pk=profile).first()
     trip = Trip.objects(pk=trip).first()
     if not node or not trip:
-        raise Exception('Invalid profile or event')
+        raise Exception('Invalid profile or trip')
     if action == 'add':
         RelationShips.interested(node, trip)
     elif action == 'remove':

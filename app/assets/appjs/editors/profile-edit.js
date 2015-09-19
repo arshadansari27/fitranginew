@@ -274,6 +274,29 @@ $(document).ready(function() {
         App.editor(options, callback);
     };
 
+    App.profile.add_event_to_interest= function(node, event, callback) {
+        var options = {
+            node: node,
+            event: event,
+            type: 'profile',
+            command: 'interest-event',
+            action: 'add'
+        };
+        App.editor(options, callback);
+    };
+
+    App.profile.remove_event_from_interest= function(node, trip, callback) {
+        var options = {
+            node: node,
+            event: event,
+            type: 'profile',
+            command: 'interest-event',
+            action: 'remove'
+        };
+        App.editor(options, callback);
+    };
+
+
     App.profile.add_trip_to_join= function(node, trip, callback) {
         var options = {
             node: node,

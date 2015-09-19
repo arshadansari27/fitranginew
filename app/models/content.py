@@ -40,6 +40,10 @@ class ContentCommon(Node):
     content = db.StringField()
     author = db.ReferenceField('Profile')
 
+    @property
+    def manager(self):
+        return self.author
+
     def get_videos_list(self):
         if not self.video_embed or len(self.video_embed) is 0:
             return []

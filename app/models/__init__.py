@@ -284,6 +284,19 @@ class Entity(Node):
 
     def __repr__(self): return self.name
 
+    @property
+    def interested(self):
+        from app.models.profile import Profile
+        from app.models.relationships import RelationShips
+        return [u for u in RelationShips.get_interested_in(self) if isinstance(u, Profile)]
+
+    @property
+    def joined(self):
+        from app.models.profile import Profile
+        from app.models.relationships import RelationShips
+        return [u for u in RelationShips.get_joined_in(self) if isinstance(u, Profile)]
+
+
 class Location(object):
     location = db.StringField()
     geo_location = db.PointField()

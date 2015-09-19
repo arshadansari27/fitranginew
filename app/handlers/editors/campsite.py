@@ -136,7 +136,7 @@ def _edit(data, node=None):
         if image and len(image) > 0:
             image       = image.split('/')[-1]
             path        = os.getcwd() + '/tmp/' + image
-            node.cover_image.put(open(path, 'rb'))
+            node.cover_image.replace(open(path, 'rb'))
     if data.get('media_gallery_images') and len(data['media_gallery_images']) > 0:
         images = data['media_gallery_images']
         for image in images:

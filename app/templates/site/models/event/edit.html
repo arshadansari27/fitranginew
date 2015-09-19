@@ -1,0 +1,211 @@
+<section class="container edit-business">
+
+    <!-- col-lg-9 col-md-9 col-sm-12 col-xs-12 -->
+    <div class="">
+        <h2 class="title">Enter Event Information</h2>
+
+        <form class="fitrangi-form">
+
+            <div class="form-group">
+                <label for="heading">Title<span class="red">*</span> </label>
+                <input type="text" class="form-control" name="title" placeholder="Write Event Title" data-name="title" value="{%if model and model.name %}{{model.name }}{% endif %}">
+                <input type="hidden" data-name="id" value="{%if model and model.id %}{{model.id}}{% endif %}">
+                <input type="hidden" data-name="user" value="{% if model and model.organizer %}{{model.organizer.id}}{% elif user and user.id %}{{user.id}}{% endif %}">
+            </div>
+            <div class="form-group">
+                <label for="heading">Scheduled Date<span class="red">*</span></label>
+                <input type="date" class="form-control" name="scheduled-date" data-name="scheduled-date" value="{%if model and model.scheduled_date %}{{model.scheduled_date_only }}{% endif %}" placeholder="YYYY-MM-DD">
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label for="heading">
+                                LOCATION
+                                <span class="red">*</span>
+                                <p class="text-muted" style="font-size: 9pt;">
+                                    (If you don't find your trip location in the list Or have more than one location? <a href="#" id="toggle-destination-link">Click Here</a>)
+                                </p>
+                            </label>
+                            <input type="text" class="form-control geo-complete" value="{%if model and model.location %}{{model.location}}{% endif %}"/>
+                            <input type="hidden" name="formatted_address" data-name="geo_location_name" value="{% if model.location  and model.location|length > 0 %}{{ model.location }}{% endif %}"/>
+                            <input type="hidden" name="lat" data-name="geo_location_lat" value="{% if model.location and model.geo_location %}{{ model.geo_location['coordinates'][0] }}{% endif %}"/>
+                            <input type="hidden" name="lng" data-name="geo_location_long" value="{% if model.location and model.geo_location %}{{ model.geo_location['coordinates'][1] }}{% endif %}"/>
+                            <input type="hidden" name="locality_short" data-name="geo_city" value="{% if model.location and model.city %}{{ model.city }}{% endif %}"/>
+                            <input type="hidden" name="administrative_area_level_2" data-name="geo_region" value="{% if model.location and model.region %}{{ model.region }}{% endif %}"/>
+                            <input type="hidden" name="administrative_area_level_1" data-name="geo_state" value="{% if model.location and model.state %}{{ model.state }}{% endif %}"/>
+                            <input type="hidden" name="country_short" data-name="geo_country" value="{% if model.location and model.country %}{{ model.country }}{% endif %}"/>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+                <br/>
+
+                <div class="form-group">
+                    <label for="heading">Description <span class="red">*</span>&nbsp;&nbsp;<small>(Few lines about the event)</small></label>
+                    <textarea class="form-control" rows="4" data-name="description"
+                              placeholder="Write Brief About The Event...">{% if model and model.description %}{{model.description}}{% endif %}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="heading">ABOUT <span class="red">*</span>&nbsp;&nbsp;<small>(Overview of the site)</small></label>
+                    <textarea class="form-control summernote" rows="4" data-name="overview"
+                              placeholder="Write Details About The Event...">{% if model and model.about %}{{model.about}}{% endif %}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="cover-image">Upload Cover Image <span class="red">*</span></label>
+                    <div class="thumbnail">
+                        <a href="#" data-action="cover-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/1366x500{% endif %}" width="70%"/></a>
+                        <div class="caption text-center">Click on the image to change(Optional)</div>
+                    </div>
+                    <input type="hidden" data-name="cover-image" value="{% if model.cover_image %}{{ model.cover_image_path }}{% endif %}"/>
+                </div>
+            </div>
+
+            <br/>
+            <hr/>
+            <br/>
+
+            <div class="form-group {% if model %}hide{% endif %}">
+                <div class="checkbox">
+                    <label>
+                        <input data-name="toc" type="checkbox" {% if model %}checked{% endif %}> I accept the terms and conditions as per the agreement.<span class="red">*</span>
+                    </label>
+                </div>
+            </div>
+
+            <form class="form-group">
+                <button data-action="save-model" class="btn btn-primary">Submit</button>
+            </form>
+
+        </form>
+    </div>
+    <!--Col9 End-->
+
+
+    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+        <div class="row">
+
+
+        </div>
+    </div>
+    <!--Col3 End-->
+
+</section>
+
+<script>
+    $(document).ready(function(){
+        var handle_success = function() {
+            window.location.href='/events#my-events';
+        };
+        var handle_failure = function(message) {
+            console.log('Handling failure:'  + message);
+            BootstrapDialog.alert({
+                title: 'Error message',
+                message: message,
+            });
+        };
+
+        $('body').on('click', '[data-action="save-model"]', function(e){
+
+
+            var toc = $('[data-name="toc"]:checked');
+            if (toc == undefined || toc.length == 0)  {
+                BootstrapDialog.alert('Please accept the terms and then try again.');
+                return;
+            }
+
+
+            var id = $('[data-name="id"]').val();
+            var organizer = $('[data-name="user"]').val();
+            var title = $('[data-name="title"]').val();
+            var description = $('[data-name="description"]').val();
+            var scheduled_date = $('[data-name="scheduled-date"]').val();
+
+            if (scheduled_date == undefined || scheduled_date.length == 0) {
+                BootstrapDialog.alert('Please enter scheduled date, it is mandatory field');
+                return;
+            }
+
+            if (organizer == undefined || organizer.length == 0) {
+                BootstrapDialog.alert('Something is wrong when the organizer information is not there!!!');
+                return;
+            }
+
+            if (description == undefined || description.length == 0) {
+                BootstrapDialog.alert('Please enter description, it is mandatory field');
+                return;
+            }
+
+
+
+            var location_name = $('[data-name="geo_location_name"]').val();
+            var location_lat = $('[data-name="geo_location_lat"]').val();
+            var location_lng = $('[data-name="geo_location_long"]').val();
+            var location_city = $('[data-name="geo_city"]').val();
+            var location_region = $('[data-name="geo_region"]').val();
+            var location_state = $('[data-name="geo_state"]').val();
+            var location_country = $('[data-name="geo_country"]').val();
+
+
+            var cover_image = $('[data-name="cover-image"]').val();
+            if (cover_image.length == 0) {
+                BootstrapDialog.alert('Please select a cover image for the trip. This is mandatory.');
+                return;
+            }
+
+            var overview = $('[data-name="overview"]').val();
+
+            var data = {
+                title: title,
+                about: overview,
+                location_name: location_name,
+                location_lat: location_lat,
+                location_lng: location_lng,
+                location_city: location_city,
+                location_region: location_region,
+                location_state: location_state,
+                location_country:location_country,
+                cover_image: cover_image,
+                description: description,
+                organizer: organizer,
+                scheduled_date: scheduled_date
+            };
+
+            if (id != undefined && id.length > 0){
+                App.event.edit(id, data, function(data){
+                    if (data.status == 'success') {
+                        handle_success();
+                    } else {
+                        handle_failure(data.message);
+                    }
+                })
+            } else {
+                App.event.add(data, function(data){
+                    if (data.status == 'success') {
+                        handle_success();
+                    } else {
+                        handle_failure(data.message);
+                    }
+                })
+            }
+
+        });
+
+
+        $('body').on('click', '[data-action="cover-image-upload"]', function(e){
+            e.stopPropagation();e.preventDefault();
+            var callback = function(url){
+                $('[data-name="cover-image-display"]').attr('src', url);
+                $('[data-name="cover-image"]').val(url);
+
+            };
+            App.image_upload_dialog(callback);
+        });
+
+    });
+</script>
+

@@ -213,9 +213,9 @@ class AdventureAdminView(ModelView):
 class EventAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'description', 'about', 'scheduled_date', 'organizer','cover_image', 'external_link', 'path_cover_image']
-    column_list = ('name', 'description', 'organizer', 'cover_image', 'location')
-    column_filters = [create_named_filter()]
+    form_columns = ['name', 'featured', 'description', 'about', 'scheduled_date', 'organizer', 'cover_image', 'external_link', 'path_cover_image']
+    column_list = ('name', 'organizer', 'cover_image', 'location', 'featured')
+    column_filters = [create_named_filter(), 'featured']
     column_searchable_list = ('name', )
     form_overrides = dict(description=SummernoteTextAreaField, about=SummernoteTextAreaField)
     column_default_sort = '-created_timestamp'
@@ -698,6 +698,39 @@ class ApprovalContentAdminView(ModelView):
             return self.model.objects(__raw__=q)
         return None
 
+class ApprovalEventAdminView(ModelView):
+    can_create = False
+    can_edit = True
+    create_template = 'admin/my_custom/create.html'
+    edit_template = 'admin/my_custom/edit.html'
+    form_columns = ['name', 'description', 'admin_published', 'featured']
+    column_list = ('name', 'description', 'admin_published', 'cover_image', 'scheduled_date', 'full_event')
+
+    def is_accessible(self):
+        if hasattr(g, 'user') and g.user is not None and 'Admin' in g.user.roles:
+            return True
+        return False
+
+    def get_query(self):
+        if 'Admin' in g.user.roles:
+            q ={
+                '$or': [
+                    {
+                        'admin_published': None
+                    }, {
+                        'admin_published': False
+                    }
+                ]
+            }
+            return self.model.objects(__raw__=q)
+        return None
+
+    def full_event(view, context, model, name):
+        return Markup('<a href="%s" target="_new">View</a>' % model.slug)
+
+    column_formatters = {'full_event': full_event}
+
+
 class ApprovalProfileAdminView(ModelView):
     can_create = False
     can_edit = True
@@ -981,6 +1014,7 @@ class GearGalleryAdminView(RestrictedAdminView):
 admin.add_view(ApprovalContentAdminView(Article, name='Article', endpoint='approval.article', category="Approvals"))
 #admin.add_view(ApprovalContentAdminView(Blog, name='Blog', endpoint='approval.blog', category="Approvals"))
 admin.add_view(ApprovalContentAdminView(Discussion, name='Discussion', endpoint='approval.discussion', category="Approvals"))
+admin.add_view(ApprovalEventAdminView(Event, name='Event', endpoint='approval.event', category="Approvals"))
 admin.add_view(ApprovalProfileAdminView(Profile, name='Business Profile', endpoint='approval.business_profile', category="Approvals"))
 admin.add_view(ClaimAdminView(ClaimProfile, name='Claimed Profiles', endpoint='approval.claimed_profiles', category="Approvals"))
 admin.add_view(ProfileAdminView(Profile, category="Administration"))

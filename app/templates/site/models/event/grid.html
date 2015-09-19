@@ -1,4 +1,4 @@
-<div>
+<div class="{% block grid_size %}{% endblock %}">
     {% if model.external_link and model.external_link|length > 0 %}
         {% if model.external_link.startswith('http://') or model.external_link.startswith('https://') %}
             {% set link = model.external_link %}
@@ -12,7 +12,20 @@
         {% set target_attr = "_self" %}
         {% set link_attr = "/community/event" %}
     {% endif %}
-    <a href="{{link_attr}}" target="{{target_attr}}" class="{% block grid_size %}{% endblock %}">
-        <img src="{{model.cover_image_path}}" class="img-responsive">
+
+        <div class="thumbnail">
+            <a href="{{link_attr}}" target="{{target_attr}}" ><img src="{{model.cover_image_path}}" class="img-responsive"></a>
+            <div class="caption">
+                <h3><a href="{{link_attr}}" target="{{target_attr}}" >{{ model.name_short }}</a></h3>
+                <div class="media">
+                    <div class="media-left">
+                        <img src="{{model.organizer.cover_image_path_small}}" class="img-responsive" height="25px" width="25px"/>
+                    </div>
+                    <div class="media-right">
+                        <a href="{{model.organizer.slug}}"><h4>{{ model.organizer.name }}</h4></a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </a>
 </div>

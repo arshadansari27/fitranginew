@@ -177,14 +177,6 @@ class Trip(Entity, ExternalNetwork, Charge, db.Document, Location):
     def loose_interest(self, profile):
         RelationShips.uninterested(profile, self)
 
-    @property
-    def interested(self):
-        return [u for u in RelationShips.get_interested_in(self) if isinstance(u, Profile)]
-
-    @property
-    def joined(self):
-        return [u for u in RelationShips.get_joined_in(self) if isinstance(u, Profile)]
-
     def add_enquiry(self, user, name, email, phone, message, contact_pref):
         enquiry = TripBooking(trip=self, booking_by=user, preferred_name=name, preferred_email=email, preferred_phone=phone, enquiry=message, contact_preference=contact_pref, total_charge=self.price, discount_percent=self.discount_percentage if self.discount_percentage is not None else 0.0 * 1.0)
         enquiry.save()

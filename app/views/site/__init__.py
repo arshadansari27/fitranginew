@@ -650,37 +650,16 @@ def manage_profile():
     context = PageManager.get_edit_title_and_page('profile', query=query, business=True)
     return render_template('site/pages/commons/view.html', **context)
 
-@app.route('/add-edit-trip')
-def add_edit_trip():
-    if not hasattr(g, 'user') and not g.user: return 'Forbidden', 403
+@app.route('/add-edit/<model_name>')
+def add_edit(model_name):
+    if not hasattr(g, 'user') and not g.user:
+        return 'Forbidden', 403
     pk = request.args.get('pk', None)
     if pk:
         query = 'pk:%s;' % pk
     else:
         query = None
-    context = PageManager.get_edit_title_and_page('trip', query=query)
-    return render_template('site/pages/commons/view.html', **context)
-
-@app.route('/add-edit-campsite')
-def add_edit_campsite():
-    if not hasattr(g, 'user') and not g.user: return 'Forbidden', 403
-    pk = request.args.get('pk', None)
-    if pk:
-        query = 'pk:%s;' % pk
-    else:
-        query = None
-    context = PageManager.get_edit_title_and_page('campsite', query=query)
-    return render_template('site/pages/commons/view.html', **context)
-
-@app.route('/add-edit-gear')
-def add_edit_gear():
-    if not hasattr(g, 'user') and not g.user: return 'Forbidden', 403
-    pk = request.args.get('pk', None)
-    if pk:
-        query = 'pk:%s;' % pk
-    else:
-        query = None
-    context = PageManager.get_edit_title_and_page('gear', query=query)
+    context = PageManager.get_edit_title_and_page(model_name, query=query)
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/editors/invoke', methods=['POST'])

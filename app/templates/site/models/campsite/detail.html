@@ -138,7 +138,7 @@
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-10 text-center">
                 {% if user_is_owner %}
-                    <button data-user-id="{{user.id}}" data-model-id="{{model.id}}" class="btn btn-default btn-edi blue" type="button" onclick="javascript: window.location.href='/add-edit-campsite?pk={{model.id}}'"><i class="fa fa-edit"></i>Edit</button>
+                    <button data-user-id="{{user.id}}" data-model-id="{{model.id}}" class="btn btn-default btn-edi blue" type="button" onclick="javascript: window.location.href='/add-edit/campsite?pk={{model.id}}'"><i class="fa fa-edit"></i>Edit</button>
                 {% else %}
                     <a class="btn btn-primary" href="#book-now"><span class="fa fa-bookmark"></span>&nbsp;Send Enquiry</a>
                 {% endif %}

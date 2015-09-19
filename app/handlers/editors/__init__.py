@@ -3,7 +3,7 @@ __author__ = 'arshad'
 
 from flask import request, redirect, flash, g, render_template, jsonify, send_file, url_for
 
-from app.models import PROFILE, CONTEST, CAMPSITE, ARTICLE, POST, TRIP, DISCUSSION, GEAR
+from app.models import PROFILE, CONTEST, CAMPSITE, ARTICLE, POST, TRIP, DISCUSSION, GEAR, EVENT
 from app.models import BusinessException
 from app.settings import EXCEPTION_API
 import os
@@ -75,6 +75,7 @@ class NodeEditor(object):
         from app.handlers.editors.trip import TripEditor
         from app.handlers.editors.campsite import CampsiteEditor
         from app.handlers.editors.gear import GearEditor
+        from app.handlers.editors.event import EventEditor
 
         type = message['type']
         if type is None:
@@ -97,6 +98,8 @@ class NodeEditor(object):
             return CampsiteEditor(message, CAMPSITE)
         elif type == GEAR:
             return GearEditor(message, GEAR)
+        elif type == EVENT:
+            return EventEditor(message, EVENT)
         else:
             raise Exception("Invalid Type")
 

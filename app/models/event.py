@@ -11,7 +11,8 @@ class Event(Entity, ExternalNetwork, db.Document):
     location = db.StringField()
     geo_location = db.PointField()
     organizer = db.ReferenceField('Profile')
-    comments = db.ListField(db.ReferenceField('Post'))
+    featured = db.BooleanField(default=False)
+    admin_published = db.BooleanField(default=False)
 
     meta = {
         'indexes': [
@@ -25,9 +26,9 @@ class Event(Entity, ExternalNetwork, db.Document):
         sup = self._get_sup(self.scheduled_date)
         month = utils.get_month(self.scheduled_date.month)
         year = str(self.scheduled_date.year)
-        hour = str(self.scheduled_date.hour)
-        minute = str(self.scheduled_date.minute)
-        _total_date = "%s:%s at %d<sup>%s</sup> %s %s " % (hour, minute, day, sup, month, year)
+        # hour = str(self.scheduled_date.hour)
+        # minute = str(self.scheduled_date.minute)
+        _total_date = "%d<sup>%s</sup> %s %s " % (day, sup, month, year)
         return _total_date
 
     def _get_sup(self, date):
@@ -40,6 +41,13 @@ class Event(Entity, ExternalNetwork, db.Document):
         else:
             return 'th'
 
+    @property
+    def scheduled_date_only(self):
+        return str(self.scheduled_date).split(' ')[0] if self.scheduled_date and len(str(self.scheduled_date)) > 0 else ''
+
+    @property
+    def manager(self):
+        return self.organizer
 
     def join_event(self, profile):
         RelationShips.join(profile, self)
