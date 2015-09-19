@@ -58,7 +58,6 @@ def edit(node, data):
     return _edit(data, node)
 
 def _edit(data, node=None):
-    print 'Trip Data:', data
     if not node:
         if not data.get('title'):
             raise Exception('Invalid title for the event')
