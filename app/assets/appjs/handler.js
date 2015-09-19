@@ -1560,7 +1560,7 @@ jQuery(document).ready(function ($) {
         var u= $('<div></div>');
         u.html(original);
         u.children().each(function (i, elem) {
-            text += (elem.textContent || elem.innerText) + '<br/>';
+            text += '<p>' +  (elem.textContent || elem.innerText) + '</p>';
         });
         return text;
     };
@@ -1601,14 +1601,14 @@ jQuery(document).ready(function ($) {
                 onkeyup: function (e) {
                     var code = $(this).code();
                     $textArea.val(code);
-                    $textArea.change(); //To update any action binded on the control
+                    $textArea.change();
                 },
                 onpaste: function(e) {
                     var thisNote = $(this);
                     var updatePastedText = function(someNote){
                         var original = someNote.code();
-                        var cleaned = clean_pasted_html(original); //this is where to call whatever clean function you want. I have mine in a different file, called CleanPastedHTML.
-                        someNote.html(cleaned); //this sets the displayed content editor to the cleaned pasted code.
+                        var cleaned = clean_pasted_html(original);
+                        someNote.html(cleaned);
                     };
                     setTimeout(function () {
                         //the function is called before the text is really pasted.
