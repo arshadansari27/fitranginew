@@ -4,7 +4,7 @@
         <div class="caption">
             <a href="{{ model.owner.slug}}"><img src="{{model.owner.cover_image_path_small}}" class="img-rounded pull-right" width="52"></a>
             <h4><a href="{{model.slug}}">{{ model.name }}</a></h4>
-            <span class="rs">{{ model.price|int }}</span>
+            <h5><a href="{{ model.slug}}">Rs. {{ model.price|int }}/-</a></h5>
         </div>
 
     </div>
