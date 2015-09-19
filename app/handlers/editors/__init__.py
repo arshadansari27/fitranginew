@@ -51,7 +51,8 @@ class NodeEditor(object):
 
     def invoke(self):
         try:
-            print '[Editor] Request:', self.message
+            log_msg = self.message
+            print '[Editor] Request:', log_msg if len(log_msg) < 80 else log_msg[:80]
 
             if self.command == 'save-cover':
                 response = save_cover(self.type, self.data['model'], self.data['url'])
