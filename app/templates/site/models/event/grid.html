@@ -16,7 +16,7 @@
         <div class="thumbnail">
             <a href="{{link_attr}}" target="{{target_attr}}" ><img src="{{model.cover_image_path}}" class="img-responsive"></a>
             <div class="caption">
-                <h3><a href="{{link_attr}}" target="{{target_attr}}" >{{ model.name_short }}</a></h3>
+                <h3><a href="{{link_attr}}" target="{{target_attr}}" >{{ model.name_short }}</a>&nbsp;&nbsp;{% if user and user.id == model.organizer.id %}<small><a href="/add-edit/event?pk={{model.id}}" class="btn btn-default btn-sm pull-right">Edit</a></small>{% endif %}</h3>
                 <div class="media">
                     <div class="media-left">
                         <img src="{{model.organizer.cover_image_path_small}}" class="img-responsive" height="25px" width="25px"/>
