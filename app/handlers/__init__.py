@@ -775,7 +775,7 @@ class EditPage(Page):
         if self.model_name == TRIP:
             categories_activities = defaultdict(list)
             if context.get('model'):
-                assert str(context.get('model').organizer.id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
+                assert str(context.get('model').manager.id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
             activities = Activity.objects.all()
             for activity in activities:
                 categories_activities[activity.category].append(activity)
@@ -791,7 +791,7 @@ class EditPage(Page):
         elif self.model_name == CAMPSITE:
             categories_activities = defaultdict(list)
             if context.get('model'):
-                assert str(context.get('model').organizer.id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
+                assert str(context.get('model').manager.id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
             activities = Activity.objects.all()
             for activity in activities:
                 categories_activities[activity.category].append(activity)
