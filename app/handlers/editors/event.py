@@ -75,9 +75,12 @@ def _edit(data, node=None):
     YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), '0', '0', '0']]
     node.scheduled_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
     end_date = data['end_date']
-    YYYY, MM, DD = end_date.split('-')
-    YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), '0', '0', '0']]
-    node.end_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
+    if end_date:
+        YYYY, MM, DD = end_date.split('-')
+        YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), '0', '0', '0']]
+        node.end_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
+    else:
+        node.end_date = None
     node.about_organizer = data['about_organizer']
     node.description = data['description']
 
