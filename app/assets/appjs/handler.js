@@ -1063,7 +1063,7 @@ jQuery(document).ready(function ($) {
         dialog.getModalHeader().hide();
         dialog.getModalFooter().hide();
         dialog.getModalDialog().css('width', '70%');
-        dialog.getModalBody().addClass('container');
+        //dialog.getModalBody().addClass('container');
         dialog.open();
     });
 

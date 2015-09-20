@@ -34,6 +34,7 @@ COLLECTION_PATHS = {
     CAMPSITE: 'site/pages/searches/campsites',
     GEAR: 'site/pages/searches/gears',
     "explore": 'site/pages/landings/home',
+    "search-all": 'site/pages/landings/search-all',
     "community": 'site/pages/landings/community',
     'aboutus': 'site/pages/landings/extra',
     'terms': 'site/pages/landings/extra',
@@ -57,6 +58,7 @@ CAPITALIZED_NAMES = {
     CAMPSITE: "Campsites",
     "explore": 'Home',
     "community": 'Community',
+    "search-all": 'Search Results',
     'aboutus': 'About Fitrangi',
     'terms': 'Terms and conditions',
     'faq': 'Frequently Asked Questions',
@@ -87,6 +89,7 @@ WALL_IMAGE_NAMES = {
     CAMPSITE: dict(detail=lambda u: u.cover_image_path if u.cover_image_path is not None else '%s/images/userprofile-banner.jpg' % prepend, search='%s/images/finder-banner.jpg' % prepend, landing=''),
     GEAR: dict(detail=lambda u: '', search='%s/images/finder-banner.jpg' % prepend, landing=''),
     "explore": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner2.jpg' % prepend),
+    "search-all": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner2.jpg' % prepend),
     "community": dict(detail=lambda u: None, search=None, landing='%s/images/community-banner.jpg' % prepend),
     "aboutus": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
     "terms": dict(detail=lambda u: None, search=None, landing='%s/images/home-banner.jpg' % prepend),
@@ -573,6 +576,8 @@ class Page(object):
                 return advertise_landing_page
             elif model_name == 'contribute':
                 return contribute_landing_page
+            elif model_name == 'search-all':
+                return search_landing_page
             else:
                 raise Exception("Not implemented")
         else:
@@ -604,6 +609,31 @@ class LandingPage(Page):
             testimonials.append(dict(name=u"Shantanu Pandit", image="/images/testimonials/Shantanu Pandit.jpg", title=u"Adventure Consultant. Founder , EKO (Experience - Knowledge - Outdoors)", context=u"About Adventure Tourism Conclave 2015", content=u"I think this was a great initiative. It brought a lot of people together perhaps after a long time and at a scale which was speaking at Maharashtra level. This is desperately required for the field of Adventure.  I really liked the fact that safety was emphasized and the speakers brought concrete inputs.  Hey Fitrangi - Great Stuff."))
             testimonials.append(dict(name=u"Shalik Jogwe", image="/images/testimonials/Shalik Jogwe.jpg", title=u"Wildlife Photographer, Naturalist and Owner at Vidarbha Wildlife", context=u"About Adventure Tourism Conclave 2015", content=u"I am thankful to ATOM and Fitrangi for providing this opportunity to present wildlife and accepting wild life as an adventure activity at Adventure Tourism Conclave 2015."))
             return dict(counters=counters, adventure=adventure, journal=journal, profile=profile, event=event, discussion=discussion, testimonials=testimonials)
+        elif self.model_name == 'search-all':
+            q = context.get('query', '')
+            if q:
+                val = q.replace('name__icontains:', '').replace(';', '')
+            else:
+                val = ''
+
+            TO_COUNT = [ARTICLE, ADVENTURE, EVENT, PROFILE, DISCUSSION, TRIP, CAMPSITE, GEAR]
+            counts = {}
+            for x in TO_COUNT:
+                if x in [ARTICLE, DISCUSSION]:
+                    ql = 'title__icontains:%s;' % val
+                else:
+                    ql = 'name__icontains:%s;' % val
+                counts[x] = NodeExtractor.factory(x).get_count(query=ql)
+            journals = NodeCollectionFactory.resolve(ARTICLE, GRID_VIEW, fixed_size=6).get_card(context)
+            adventures = NodeCollectionFactory.resolve(ADVENTURE, GRID_VIEW, fixed_size=6).get_card(context)
+            events = NodeCollectionFactory.resolve(EVENT, ROW_VIEW, fixed_size=6).get_card(context)
+            profiles = NodeCollectionFactory.resolve(PROFILE, ROW_VIEW, fixed_size=4).get_card(context)
+            discussions = NodeCollectionFactory.resolve(DISCUSSION, ROW_VIEW, fixed_size=4).get_card(context)
+            trips = NodeCollectionFactory.resolve(TRIP, GRID_VIEW, fixed_size=6).get_card(context)
+            campsites = NodeCollectionFactory.resolve(CAMPSITE, GRID_VIEW, fixed_size=6).get_card(context)
+            gears = NodeCollectionFactory.resolve(GEAR, ROW_VIEW, fixed_size=4).get_card(context)
+            return dict(adventures=adventures, journals=journals, profiles=profiles, events=events,
+                        discussions=discussions, trips=trips, campsites=campsites, gears=gears, search_val=val, counts=counts)
 
         elif self.model_name == 'community':
             profile = NodeCollectionFactory.resolve(PROFILE, ICON_VIEW, fixed_size=24).get_card(context)
@@ -804,6 +834,7 @@ class EditPage(Page):
 
 
 explore_landing_page    = LandingPage('explore')
+search_landing_page    = LandingPage('search-all')
 community_landing_page  = LandingPage('community')
 aboutus_landing_page    = LandingPage('aboutus')
 terms_landing_page      = LandingPage('terms')

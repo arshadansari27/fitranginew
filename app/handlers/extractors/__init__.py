@@ -48,6 +48,9 @@ class NodeExtractor(object):
                     u.on_get()
         return models
 
+    def get_count(self, query):
+        return self.get_query(query, is_count=True).count()
+
     def get_single(self, query):
         return self.get_query(query).first()
 
@@ -60,7 +63,7 @@ class NodeExtractor(object):
     def default_sorter(self):
         return self.sorter_default if hasattr(self, 'sorter_default') and self.sorter_default else None
 
-    def get_query(self, query, sort=None):
+    def get_query(self, query, sort=None, is_count=False):
         use_filters = convert_query_to_filter(query)
         default_sorters = self.default_sorter()
         if sort or (default_sorters and len(default_sorters) > 0):
@@ -177,8 +180,9 @@ class NodeExtractor(object):
             else:
                 criteria &= Q(**d)
         # print '[*] Filters and Sort: ', filters, order_by
+        if is_count:
+            return self.model_class.objects(criteria)
         return self.model_class.objects(criteria).order_by(*order_by.split(',') if ',' in order_by else order_by)
-
 
     @classmethod
     def factory(cls, model_name):

@@ -382,9 +382,15 @@ def act_home():
 
 @app.route("/")
 def home():
-    from app.views import force_setup_context
     context = PageManager.get_landing_title_and_page('explore', user=g.user if hasattr(g, 'user') else None)
     return render_template('site/pages/commons/view.html', **context)
+
+@app.route("/search-all")
+def search_all():
+    query = request.args.get('query', '')
+    context = PageManager.get_landing_title_and_page('search-all', user=g.user if hasattr(g, 'user') else None, query=query)
+    return render_template('site/pages/commons/view.html', **context)
+
 
 @app.route('/pages/<name>')
 def extra_pages(name):
