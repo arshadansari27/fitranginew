@@ -59,16 +59,6 @@
                 </div>
                 {% if model.about %}{{ model.about|safe }}{% endif %}
             </div>
-            <div class="fitrangi-trips">
-            <div class="heading">
-                    <h4>OTHER EVENTS</h4>
-                    <hr/>
-            </div>
-            <div class="container-fluid">
-                <input id="event-not-same-filter" type="hidden" data-category="other" data-model="event" data-filter="id__ne" value="{{model.id}}" data-filter-status="fixed"/>
-                {{other_events|safe}}
-            </div>
-        </div>
             <hr class="clearfix"/>
             <div class="fitrangi-trips">
                 <div class="heading">
@@ -110,6 +100,17 @@
             </div>
         </div>
 
+        <div class="fitrangi-trips">
+            <div class="heading">
+                <h4>OTHER EVENTS</h4>
+                <hr/>
+            </div>
+            <div class="container-fluid">
+                <input id="event-not-same-filter" type="hidden" data-category="other" data-model="event" data-filter="id__ne" value="{{model.id}}" data-filter-status="fixed"/>
+                <input id="admin-published-event-filter" data-category="other" data-model="event" data-filter="admin_published" type="hidden" value="bool|True" data-filter-status="fixed">
+                {{other_events|safe}}
+            </div>
+        </div>
         <div class="row box-bg">
             <div class="heading text-center">
                 <h3>Add An Adventure Event</h3>

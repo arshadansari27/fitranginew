@@ -120,7 +120,6 @@
         <script src="{{url_for('static', filename='js/jquery.geocomplete.min.js')}}"></script>
         <script src="{{url_for('static', filename='js/autobahn.min.jgz')}}"></script>
         <script src="{{url_for('static', filename='js/owl.carousel.js')}}"></script>
-        <script src="{{url_for('static', filename='appjs/handler.js')}}"></script>
 
         {% assets filters="jsmin", output="app/my-handler.js", "appjs/handler.js", "appjs/async.js" %}
             <script type="text/javascript" src="{{ ASSET_URL }}"></script>

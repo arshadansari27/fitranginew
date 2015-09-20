@@ -749,7 +749,7 @@ class DetailPage(Page):
             return dict(ad_views=ad_views)
         elif self.model_name == EVENT:
             posts = NodeCollectionFactory.resolve(POST, ROW_VIEW).get_card(context)
-            other_events = NodeCollectionFactory.resolve(EVENT, GRID_VIEW, category="other", fixed_size=4).get_card(context)
+            other_events = NodeCollectionFactory.resolve(EVENT, GRID_ROW_VIEW, category="other", fixed_size=4).get_card(context)
             advertisement_list = NodeCollectionFactory.resolve(ADVERTISEMENT, GRID_ROW_VIEW, fixed_size=3).get_card(context)
             return dict(other_events=other_events, posts=posts, advertisement_list=advertisement_list)
         elif self.model_name == CAMPSITE:
