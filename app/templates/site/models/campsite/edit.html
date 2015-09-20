@@ -261,10 +261,7 @@
             var optional_location_name = $('[data-name="optional_location_name"]').val();
             var price = $('[data-name="price"]').val();
             var price_on_request = ($('[data-name="price-on-request"]:checked').val() == undefined)? false: true;
-            if (!price_on_request && (price == undefined || price.length == 0)) {
-                BootstrapDialog.alert('Price is mandatory if "Price on request" is not checked');
-                return;
-            } else if (price_on_request == true) {
+            if (price_on_request == true) {
                 price = '';
             }
             var $activities = $('[data-name="activities"]:checked');
