@@ -30,8 +30,8 @@
             <div class="form-group">
                 <label for="heading">Available For<span class="red">*</span><p style="font-size: 7pt;">(Choose both if they are available in both options)</p> </label>
                 <select class="form-control" data-name="available-for" multiple size="2">
-                    <option value="BUYING" {% if model and model.available_for=="BUYING" %}selected{% endif %}>BUYING</option>
-                    <option value="RENTING" {% if model and model.available_for=="RENTING" %}selected{% endif %}>RENTING</option>
+                    <option value="BUYING" {% if model and "BUYING" in model.available_for %}selected{% endif %}>BUYING</option>
+                    <option value="RENTING" {% if model and "RENTING" in model.available_for %}selected{% endif %}>RENTING</option>
                 </select>
             </div>
             <div class="form-group">
@@ -119,6 +119,8 @@
 
 <script>
     $(document).ready(function(){
+
+        var check_media_gallery = parseInt("{{ model.media_gallery|length }}");
         var handle_success = function() {
             window.location.href='/gears#my-gears';
         };
@@ -184,7 +186,8 @@
             for (var i = 0; i < $media_gallery_images.length; i++){
                 media_gallery_images.push($($media_gallery_images[i]).val());
             }
-            if (media_gallery_images.length == 0) {
+
+            if (check_media_gallery == 0 && media_gallery_images.length == 0) {
                 BootstrapDialog.alert('Please enter media gallery images, they are mandatory field');
                 return;
 
