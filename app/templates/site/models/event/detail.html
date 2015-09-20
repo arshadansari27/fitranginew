@@ -100,17 +100,7 @@
             </div>
         </div>
 
-        <div class="row box-bg">
-            <div class="heading">
-                <h4>OTHER EVENTS</h4>
-                <hr/>
-            </div>
-            <div class="container-fluid">
-                <input id="event-not-same-filter" type="hidden" data-category="other" data-model="event" data-filter="id__ne" value="{{model.id}}" data-filter-status="fixed"/>
-                <input id="admin-published-event-filter" data-category="other" data-model="event" data-filter="admin_published" type="hidden" value="bool|True" data-filter-status="fixed">
-                {{other_events|safe}}
-            </div>
-        </div>
+
         <div class="row box-bg">
             <div class="heading text-center">
                 <h3>Add An Adventure Event</h3>
@@ -133,7 +123,17 @@
         <div class="container-fluid">
             {{ advertisement_list | safe }}
         </div>
-
+        <div class="row box-bg">
+            <div class="heading">
+                <h4>OTHER EVENTS</h4>
+                <hr/>
+            </div>
+            <div class="container-fluid">
+                <input id="event-not-same-filter" type="hidden" data-category="other" data-model="event" data-filter="id__ne" value="{{model.id}}" data-filter-status="fixed"/>
+                <input id="admin-published-event-filter" data-category="other" data-model="event" data-filter="admin_published" type="hidden" value="bool|True" data-filter-status="fixed">
+                {{other_events|safe}}
+            </div>
+        </div>
     </div>
 </section>
 
