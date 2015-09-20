@@ -8,6 +8,7 @@ from app import utils
 @update_content.apply
 class Event(Entity, ExternalNetwork, db.Document):
     scheduled_date = db.DateTimeField()
+    end_date = db.DateTimeField()
     location = db.StringField()
     about_organizer = db.StringField()
     geo_location = db.PointField()
@@ -20,6 +21,15 @@ class Event(Entity, ExternalNetwork, db.Document):
             {'fields': ['-modified_timestamp', 'slug', 'name'], 'unique': False, 'sparse': False, 'types': False },
         ],
     }
+
+    @property
+    def formatted_end_date(self):
+        day = self.end_date.day
+        sup = self._get_sup(self.end_date)
+        month = utils.get_month(self.end_date.month)
+        year = str(self.end_date.year)
+        _total_date = "%d<sup>%s</sup> %s %s " % (day, sup, month, year)
+        return _total_date
 
     @property
     def formatted_scheduled_date(self):
@@ -45,6 +55,10 @@ class Event(Entity, ExternalNetwork, db.Document):
     @property
     def scheduled_date_only(self):
         return str(self.scheduled_date).split(' ')[0] if self.scheduled_date and len(str(self.scheduled_date)) > 0 else ''
+
+    @property
+    def end_date_only(self):
+        return str(self.end_date).split(' ')[0] if self.end_date and len(str(self.end_date)) > 0 else ''
 
     @property
     def manager(self):

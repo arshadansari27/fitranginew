@@ -71,10 +71,14 @@ def _edit(data, node=None):
     node.name = data['title']
     scheduled_date = data['scheduled_date']
     node.external_link = data['external_link']
-    node.about_organizer = data['about_organizer']
     YYYY, MM, DD = scheduled_date.split('-')
     YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), '0', '0', '0']]
     node.scheduled_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
+    end_date = data['end_date']
+    YYYY, MM, DD = end_date.split('-')
+    YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), '0', '0', '0']]
+    node.end_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
+    node.about_organizer = data['about_organizer']
     node.description = data['description']
 
     if data.get('organizer') is None or len(data['organizer']) is 0:
@@ -88,8 +92,7 @@ def _edit(data, node=None):
         if data.get('location_lat') and data.get('location_lng'):
             lat, lng = float(data['location_lat']), float(data['location_lng'])
             point = {"type": "Point", "coordinates": [lat, lng]}
-            print 'Lat/Long', point
-            node.geo_location = point  # [float(data['location_lat']), float(data['location_lng'])]
+            node.geo_location = point
         if data.get('location_city'):
             node.city = data['location_city']
         if data.get('location_region'):

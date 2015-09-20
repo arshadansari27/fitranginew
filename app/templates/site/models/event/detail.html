@@ -9,9 +9,15 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <p>{{model.description}}</p>
                 <br/>
-                <h4><i class="fa fa-calendar fa-2x"></i><br/>{{model.formatted_scheduled_date}}</h4>
+                <h4>
+                    <i class="fa fa-calendar fa-2x"></i>
+                    <br/>
+                    <br/>
+                    {{model.formatted_scheduled_date}}
+                    {% if model.end_date %} - {{ model.formatted_end_date }} {% endif %}
+                </h4>
                 <br/>
-                <h4><i class="fa fa-map-marker fa-2x"></i><br/>{% if model.location %}{{model.location}}{% endif %}</h4>
+                <h4><i class="fa fa-map-marker fa-2x"></i><br/><br/>{% if model.location %}{{model.location}}{% endif %}</h4>
             </div>
 
         </div>
