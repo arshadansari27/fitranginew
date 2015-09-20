@@ -7,7 +7,7 @@
             <h3 class="title"><a href="{{model.slug}}">
                 {{model.name }}</a>
                 {% if model.organizer.id == user.id %}
-                    <button data-user-id="{{user.id}}" data-model-id="{{model.id}}" class="btn btn-default btn-edi blue pull-right" type="button" onclick="javascript: window.location.href='/add-edit-trip?pk={{model.id}}'"><i class="fa fa-edit"></i> Edit </button>
+                    <button data-user-id="{{user.id}}" data-model-id="{{model.id}}" class="btn btn-default btn-edi blue pull-right" type="button" onclick="javascript: window.location.href='/add-edit/trip?pk={{model.id}}'"><i class="fa fa-edit"></i> Edit </button>
                 {% endif %}
             </h3>
             <p class="sub-title"><em>{% if model.description %}{% if model.description|length > 100 %}{{model.description[:100]|safe}}...{% else %}{{model.description|safe}}{% endif %}{% endif %}</em></p>
