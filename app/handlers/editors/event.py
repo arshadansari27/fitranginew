@@ -49,7 +49,7 @@ def get_or_create_event(id=None):
         node.save()
         return node
 
-@response_handler('Successfully added the event', 'Failed to add event', flash_message=True, no_flash_on_error=True)
+@response_handler('Thank you for posting the content. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to add event', flash_message=True, no_flash_on_error=True)
 def add(data):
     return _edit(data)
 
@@ -118,7 +118,9 @@ def _edit(data, node=None):
         for p in profiles:
             if not p or not p.email or p.email != 'fitrangi@gmail.com':
                 continue
-            send_email_from_template('notifications/content_posted_admin.html', "[Fitrangi] Event awaiting approval", to_list=[p.email], force_send=True,user=p, content=node)
+            send_email_from_template('notifications/content_posted_admin_approval.html',
+                                     "[Fitrangi] Event awaiting approval", to_list=[p.email], force_send=True,
+                                     user=p, content=node)
             print '[*] Publish Mail: Sending mail to %s' % p.name
         ActivityStream.push_event_to_stream(node)
     return node.save()

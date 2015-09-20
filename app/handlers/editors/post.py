@@ -73,9 +73,17 @@ def add(data):
         ActivityStream.push_review_to_stream(post)
     else:
         ActivityStream.push_stream_post_to_stream(post)
+    print 'Making posts', parent
     if parent:
         parent.modified_timestamp = datetime.datetime.now()
         parent.save()
+        if hasattr(parent, 'manager') and parent.manager:
+            a = parent.manager
+            from app.handlers.messaging import send_email_from_template
+            send_email_from_template('notifications/comment_posted.html',
+                                "[Fitrangi] A Response was posted to content you had added", to_list=[a.email], force_send=True,
+                                user=a, model=parent)
+            print '[*] Publish Mail: Sending mail to %s' % a.name
     return post
 
 @response_handler('Successfully voted on post', 'Failed to vote')
@@ -106,6 +114,21 @@ def comment(node, data):
     post.comments.append(comment)
     post.save()
     ActivityStream.push_comment_to_stream(post)
+    print 'Making a reply', post.parent
+    if post.parent and hasattr(post.parent, 'manager') and post.parent.manager:
+            a = post.parent.manager
+            from app.handlers.messaging import send_email_from_template
+            send_email_from_template('notifications/reply_to_comment_posted.html',
+                                    "[Fitrangi] A Response was posted to a comment on the content you posted",
+                                     to_list=[a.email], force_send=True, user=a, model=post.parent)
+            print '[*] Publish Mail: Sending mail to %s' % a.name
+    if post.author:
+            b = post.author
+            from app.handlers.messaging import send_email_from_template
+            send_email_from_template('notifications/reply_to_comment_posted.html',
+                                    "[Fitrangi] A Response was posted to a comment you posted",
+                                     to_list=[b.email], force_send=True, user=b, model=post.parent)
+            print '[*] Publish Mail: Sending mail to %s' % b.name
     return post
 
 

@@ -175,20 +175,19 @@ def _edit(data, node=None):
                 media = media.save()
                 print 'Gallery image uploaded:', media.image_path
 
-
     node.published = True
-    if adding:
-        node.admin_published = False
+    node.admin_published = True
 
-    if not hasattr(node, 'admin_published') or not node.admin_published:
+    if adding:
         profiles = [u for u in Profile.objects(roles__in=['Admin']).all()]
-        from app.handlers.messaging import send_single_email, send_email_from_template
+        from app.handlers.messaging import send_email_from_template
         if not profiles or len(profiles) is 0:
             print '[*] Publish Mail: Unable to send email to admin'
         for p in profiles:
             if not p or not p.email or p.email != 'fitrangi@gmail.com':
                 continue
-            send_email_from_template('notifications/content_posted_admin.html', "[Fitrangi] Trip awaiting approval", to_list=[p.email], force_send=True,user=p, content=node)
+            send_email_from_template('notifications/content_posted_admin.html', "[Fitrangi] Trip was added to the site",
+                                     to_list=[p.email], force_send=True, user=p, content=node)
             print '[*] Publish Mail: Sending mail to %s' % p.name
         ActivityStream.push_trip_to_stream(node)
     return node.save()

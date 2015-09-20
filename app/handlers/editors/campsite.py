@@ -156,7 +156,8 @@ def _edit(data, node=None):
         for p in profiles:
             if not p or not p.email or p.email != 'fitrangi@gmail.com':
                 continue
-            send_email_from_template('notifications/content_posted_admin.html', "[Fitrangi] Campsite Added", to_list=[p.email], force_send=True,user=p, content=node)
+            send_email_from_template('notifications/content_posted_admin.html', "[Fitrangi] Campsite Added",
+                                     to_list=[p.email], force_send=True, user=p, content=node)
             print '[*] Publish Mail: Sending mail to %s' % p.name
         ActivityStream.push_campsite_to_stream(node)
     return node.save()

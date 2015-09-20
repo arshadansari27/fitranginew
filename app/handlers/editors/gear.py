@@ -57,11 +57,11 @@ def get_or_create_gear(id=None):
         node.save()
         return node
 
-@response_handler('Successfully added the campsite', 'Failed to add campsite', flash_message=True, no_flash_on_error=True)
+@response_handler('Successfully added the gear', 'Failed to add gear', flash_message=True, no_flash_on_error=True)
 def add(data):
     return _edit(data)
 
-@response_handler('Successfully updated the campsite', 'Failed to update the campsite', flash_message=True, no_flash_on_error=True)
+@response_handler('Successfully updated the gear', 'Failed to update the gear', flash_message=True, no_flash_on_error=True)
 def edit(node, data):
     return _edit(data, node)
 
@@ -124,7 +124,9 @@ def _edit(data, node=None):
         for p in profiles:
             if not p or not p.email or p.email != 'fitrangi@gmail.com':
                 continue
-            send_email_from_template('notifications/content_posted_admin.html', "[Fitrangi] Gear Added", to_list=[p.email], force_send=True,user=p, content=node)
+            send_email_from_template('notifications/content_posted_admin.html',
+                                     "[Fitrangi] Gear added ", to_list=[p.email], force_send=True,
+                                     user=p, content=node)
             print '[*] Publish Mail: Sending mail to %s' % p.name
         ActivityStream.push_gear_to_stream(node)
     return node.save()
