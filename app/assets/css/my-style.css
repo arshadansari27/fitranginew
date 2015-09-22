@@ -3798,11 +3798,11 @@ fitrangi-trips .caption h3:after{
 	 padding:5px;
 	 border-bottom:1px solid #eaeaea;
 }
-
 .blog-form {
 	margin:50px 0;
 }
 
+/*
 .blog-form .form-group label{
 	text-transform:uppercase;
 	font-family: 'lato', Arial, Helvetica, sans-serif;
@@ -3833,7 +3833,7 @@ fitrangi-trips .caption h3:after{
 	border-bottom:3px solid #dadada;
 }
 
-
+*/
 
 
 .change-password .heading h2{
@@ -3843,11 +3843,11 @@ fitrangi-trips .caption h3:after{
 	 border-bottom:1px solid #eaeaea;
 }
 
+.fitrangi-form {
+  margin:50px 0;
+}
 
 /*
-.fitrangi-form {
-	margin:50px 0;
-}
 
 .fitrangi-form .form-group label{
 	text-transform:uppercase;
