@@ -13,7 +13,7 @@
             </div>
             <div class="form-group">
                 <label for="heading">Departure Type<span class="red">*</span> </label>
-                <select data-name="departure-type">
+                <select class="form-control" data-name="departure-type">
                     <option value="" {% if not model.departure_type %}selected{% endif %}>--</option>
                     <option value="On Request" {% if model.departure_type and model.departure_type == 'On Request' %}selected{% endif %}>On Request</option>
                     <option value="Fixed" {% if model.departure_type and  model.departure_type == 'Fixed' %}selected{% endif %}>Fixed</option>
