@@ -1,19 +1,27 @@
-<section class="container-fluid p-0">
-    <div class="blogs-banner"
+<section class="container-fluid p1">
+    <div class="events-banner"
          style="{{background_cover}}">
         <div class="container">
 
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <a data-user-id="{{user.id}}" data-action="add-article" href="#" class="btn btn-primary btn-lg  m-5">Write a blog</a>
-                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 pull-right">
-                    <div class="input-group">
-                        <input id="name-filter" data-filter="title__icontains" data-model="article" type="text" class="input-lg no-radius" placeholder="Search by Name">
-                        <button data-model="article" data-filter-submit="search" class="btn btn-default btn-sm" type="button"><i class="fa fa-search"></i></button>
-                    </div>
-                </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 heading">
+                <a data-user-id="{{user.id}}" data-action="add-article" href="#" class="btn btn-primary btn-lg  m-5 pull-right">Write a blog</a>
+                <h2>Blogs, Articles and Journals</h2>
+                <a class="btn btn-default pull-right" role="button" data-toggle="collapse" href="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"><i class="fa fa-search"></i>&nbsp;Show Tags</a>
+                <input id="name-filter" data-filter="title__icontains" data-model="article" type="hidden">
             </div>
+            <br/>
 
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 fitrangi-tags-list">
+        </div>
+    </div>
+</section>
+
+<section class="collapse" id="collapseFilter">
+    <div class="thumbnail container">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+            <h4>Search by specific channel or tag</h4>
+        </div>
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 fitrangi-tags-list">
                 <h2>Featured Tag's</h2>
                 <article class="text-center" id="channel-list">
                     <a href="/blog">All</a>
@@ -55,9 +63,11 @@
                     });
                 </script>
             </div>
-        </div>
     </div>
 </section>
+
+
+
 <section  id="model-container-section" class="container-fluid p-0">
 <div role="tabpanel" data-example-id="togglable-tabs">
 

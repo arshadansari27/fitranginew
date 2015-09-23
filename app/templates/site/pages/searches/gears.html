@@ -1,24 +1,27 @@
 <section class="container-fluid p1">
-    <div class="trips-banner" style="{{background_cover}}">
+    <div class="events-banner"
+         style="{{background_cover}}">
+        <div class="container">
 
-        <section class="container">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 filter-adventuretrips-heading">
-                <h2>
-                    Buy, Sell & Rent Adventure Gears & Equipments
-                </h2>
-                <h3>
-                    <input id="name-filter" data-filter="name__icontains" data-model="gear" type="hidden">
-                    <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5" onclick="javascript: window.location.href='/add-edit/gear'">Add a Product / Gear</a>
-                </h3>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 heading">
+                <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: window.location.href='/add-edit/gear'">Add a Product / Gear</a>
+                <h2>Buy, Sell & Rent Adventure Gears & Equipments</h2>
+                <a class="btn btn-default pull-right" role="button" data-toggle="collapse" href="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"><i class="fa fa-search"></i>&nbsp;Show Filters</a>
+                <input id="name-filter" data-filter="name__icontains" data-model="gear" type="hidden">
             </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 filter-adventuretrips-heading">
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 fitrangi-datalist">
+            <br/>
+
+        </div>
+    </div>
+</section>
+
+<section class="collapse" id="collapseFilter">
+    <br/>
+    <div class="thumbnail container">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+            <h4>Search by applying specific filters</h4>
+        </div>
+<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 fitrangi-datalist">
                 <input class="geo-complete" placeholder="SORT BY LOCATION" data-sorter="location" data-model="gear">
                 <form>
                     <input type="hidden" id="location-sorter-lat" name="lat" data-model="gear" data-sorter="location_lat"/>
@@ -59,11 +62,9 @@
                 </div>
             </div>
 
-        </section>
+
     </div>
 </section>
-
-<hr class="clearfix"/>
 
 <section  id="model-container-section" class="container-fluid p-0">
     <div role="tabpanel" data-example-id="togglable-tabs">

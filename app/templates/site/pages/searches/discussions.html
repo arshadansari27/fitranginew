@@ -1,27 +1,29 @@
-<section class="container-fluid p-0">
-    <div class="discussion-banner"
+<section class="container-fluid p1">
+    <div class="events-banner"
          style="{{background_cover}}">
-
-        <section class="container discussion-heading">
-
+        <div class="container">
             <input id="admin-published-filter1" type="hidden" data-category="latest" data-model="discussion" data-filter="admin_published" value="bool|True" data-filter-status="fixed"/>
             <input id="admin-published-filter2" type="hidden" data-category="featured" data-model="discussion" data-filter="admin_published" value="bool|True" data-filter-status="fixed"/>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <a data-user-id="{{user.id}}" data-action="add-discussion" href="#" class="btn btn-primary btn-lg  m-5">Add a discussion</a>
-                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 pull-right">
-                    <div class="input-group">
-                        <input id="name-filter" data-filter="title__icontains" data-model="discussion" type="text" class="form-control input-lg no-radius" placeholder="Search by Name">
-                        <span class="input-group-btn no-radius"><button data-model="discussion" data-filter-submit="search" class="btn btn-default btn-sm" type="button"><i class="fa fa-search"></i></button></span>
-                    </div>
-                </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 heading">
+                <a data-user-id="{{user.id}}" data-action="add-discussion" href="#" class="btn btn-primary btn-lg  m-5 pull-right">Add a discussion</a>
+                <h2>Forum and discussions</h2>
+                <h4 class="white">"Knowledge multiplies when shared"</h4>
+                <a class="btn btn-default pull-right" role="button" data-toggle="collapse" href="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"><i class="fa fa-search"></i>&nbsp;Show Tags</a>
+                <input id="name-filter" data-filter="title__icontains" data-model="article" type="hidden">
             </div>
+            <br/>
 
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-3">
-                <!--button data-user-id="{{user.id}}" data-action="add-discussion" class="btn btn-primary btn-block btn-lg">Add Discussion</button-->
-                <h4>"Knowledge multiplies when shared"</h4>
-            </div>
+        </div>
+    </div>
+</section>
 
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 fitrangi-tags-list">
+<section class="collapse" id="collapseFilter">
+    <div class="thumbnail container">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+            <h4>Search by specific channel or tag</h4>
+        </div>
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 fitrangi-tags-list">
                 <h2>Featured Tag's</h2>
                 <article class="text-center" id="channel-list">
                     <a href="/discussions">All</a>
@@ -64,10 +66,6 @@
                 </script>
 
             </div>
-
-
-        </section>
-
 
     </div>
 </section>
