@@ -462,8 +462,27 @@ min-height: 50px;}
 
 }
 .btn-head:hover, .btn-head:focus{
-	background:#0F75BC !important;
-	color:#FFF !important;
+}
+
+.btn-head-primary{
+  font-size: 13px;
+  background:#0F75BC !important;
+  color:#FFF !important;
+  border: 1px solid #0F75BC;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 6px;
+  margin-right: 5px;
+  display: inline-block;
+  padding: 8px !important;
+  border-radius:3px;
+
+  -webkit-transition: all 0.2s linear 0s;
+  -moz-transition: all 0.2s linear 0s;
+  -o-transition: all 0.2s linear 0s;
+  -ms-transition: all 0.2s linear 0s;
+  transition: all 0.2s linear 0s;
+
 }
 
 .business-pro-btn{

@@ -58,10 +58,13 @@ def get_menu_selection(request_path):
         ('/activities', ('explore', 'activity')),
         ('/adventures', ('explore', 'adventure')),
         ('/journals', ('explore', 'journal')),
+        ('/blog', ('explore', 'blog')),
         ('/profiles', ('community', 'profile')),
         ('/discussions', ('community', 'discussion')),
         ('/events', ('community', 'event')),
         ('/trips', ('explore', 'trip')),
+        ('/campsites', ('explore', 'campsite')),
+        ('/gears', ('explore', 'gear')),
         ('/', ('explore', None))
     ]
 

@@ -1013,7 +1013,7 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    $('body').on('click', '[data-action="search-content"]', function(e){
+    /*$('body').on('click', '[data-action="search-content"]', function(e){
         e.stopPropagation();
         e.preventDefault();
         var type = $('[data-name="search-type"]').val();
@@ -1047,7 +1047,7 @@ jQuery(document).ready(function ($) {
                 return;
         }
         window.location.href = path+ '?query=' + query + ':'+ topic + ';';
-    });
+    });*/
 
     $('[data-action="search"]').on('click', function(e){
         e.stopPropagation();

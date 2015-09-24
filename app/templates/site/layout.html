@@ -112,7 +112,6 @@
 
                 <div class="container-fluid">
                     <ul class="nav navbar-nav">
-                        <li ><a href="/"></a></li>
                     </ul>
                     {% if user and user.id %}
                     <ul class="top-icons nav navbar-nav navbar-right pull-right" ng-controller="NotificationCtrl">
@@ -130,20 +129,18 @@
                     {% endif %}
                     <ul class="nav navbar-nav pull-right">
 
-                            <li>
-                                <a class="btn-head" href="#" title="Search" data-action="search">&nbsp;&nbsp;<i class="fa fa-search"></i>&nbsp;&nbsp;</a>&nbsp;
-                           </li>
                             {% if not user or user.is_admin or (not user.is_business_profile and user.managed_profiles|length == 0) %}
 	                        <li>
-                                <a class="business-pro-btn" href="#" {% if user %}data-user="{{user.id}}"{% endif %} title="Business" data-action="create-business-profile">ADD AN ORGANISATION</a>&nbsp;
+                                <a class="btn btn-link" href="#" {% if user %}data-user="{{user.id}}"{% endif %} title="Business" data-action="create-business-profile">Add an organization</a>
                             </li>
                             {% endif %}
 
-                            <li><a class="btn-head" href="/contests" title="Live Contests">Contests</a></li>
-	                        <li><a class="btn-head" href="/profiles?query=type__profile_type__name:Enthusiast;#finder-container" title="Members">Members</a></li>
+                            <li><a class="btn btn-link" href="/contests" title="Live Contests">Contests</a></li>
+	                        <li><a class="btn btn-link" href="/profiles?query=type__profile_type__name:Enthusiast;#finder-container" title="Members">Members</a></li>
+                            <li><a class="btn-head" href="#" title="Search" data-action="search">&nbsp;&nbsp;<i class="fa fa-search"></i>&nbsp;&nbsp;</a>&nbsp;</li>
                             {% if not (user and user.id) %}
-                            <li><a class="btn-head" href="/login" title="Login">Login</a></li>
                             <li><a class="btn-head" href="/register" title="Register">Register</a></li>
+                            <li><a class="btn-head-primary" href="/login" title="Login">Login</a></li>
                             {% elif user and user.id %}
 
                             <li class="dropdown">
@@ -207,11 +204,11 @@
                 {% if menu.app_name in ['explore', 'community'] %}
                 <div class="container-fluid border-grey-t">
                     <ul class="nav navbar-nav nav-down">
-                        <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="#"
+                        <!--li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="#"
                                                                                         data-action="check-login"
                                                                                         data-user-id="{{user.id}}">My
                             Page</a>
-                        </li>
+                        </li-->
                         <li class="inner-level-dropdown dropdown {% if menu.main_menu in ['activity', 'activities'] %}active{% endif %}">
                             <a id="subdropdown1" href="#" class="dropdown-toggle">Activities<b class="caret"></b></a>
                             <ul class="dropdown-menu multi-column columns-3" aria-labelledby="subdropdown1" role="menu" style="margin-top: 12px;">
@@ -266,7 +263,7 @@
                         </li>
                         <!--li class="{% if menu.main_menu == 'profile' %}active{% endif %}"><a href="/profiles">Finder</a-->
                         </li>
-                        <li class="dropdown {% if menu.main_menu == 'profile' %}active{% endif %}">
+                        <!--li class="dropdown {% if menu.main_menu == 'profile' %}active{% endif %}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 Finder
                             </a>
@@ -277,14 +274,20 @@
                                 <li><a href="/profiles?query=type__profile_type__name:NGO or Club;#finder-container">Club & NGO's</a></li>
                                 <li><a href="/profiles#finder-container">All Profiles</a></li>
                             </ul>
-                        </li>
-                        <li class="{% if menu.main_menu in ['journal', 'article', 'blog'] %}active{% endif %} {{menu.main_menu}}">
+                        </li-->
+                        <li class="{% if menu.main_menu in ['journal', 'article', 'blog', 'blogs'] %}active{% endif %} {{menu.main_menu}}">
                             <a
-                                    href="/blog">Blog</a></li>
+                                    href="/blog">Blogs & Articles</a></li>
                         <li class="{% if menu.main_menu == 'discussion' %}active{% endif %}"><a
-                                href="/discussions">Discussions</a></li>
+                                href="/discussions">Forum</a></li>
+                        <li class="{% if menu.main_menu == 'event' %}active{% endif %}"><a
+                                href="/events">Events</a></li>
                         <li class="{% if menu.main_menu == 'trip' %}active{% endif %}"><a
                                 href="/trips">Adventure Trips</a></li>
+                        <li class="{% if menu.main_menu == 'campsite' %}active{% endif %}"><a
+                                href="/campsites">Campsites & Resorts</a></li>
+                        <li class="{% if menu.main_menu == 'gear' %}active{% endif %}"><a
+                                href="/gears">Gears & Equipments</a></li>
                         <!--li class="{% if menu.main_menu == 'event' %}active{% endif %}"><a
                                 href="/events">Initiatives</a></li-->
                     </ul>
