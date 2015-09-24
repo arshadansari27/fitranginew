@@ -1555,14 +1555,10 @@ jQuery(document).ready(function ($) {
         return content.textContent || content.innerText;
     };
 
-    var clean_pasted_html = function(original) {
-        var text = '';
-        var u= $('<div></div>');
-        u.html(original);
-        u.children().each(function (i, elem) {
-            text += '<p>' +  (elem.textContent || elem.innerText) + '</p>';
-        });
-        return text;
+    var clean_pasted_html = function(e) {
+
+
+
     };
 
     var summernote_image_upload = function(file, editor, welEditable) {
@@ -1605,15 +1601,14 @@ jQuery(document).ready(function ($) {
                 },
                 onpaste: function(e) {
                     var thisNote = $(this);
-                    var updatePastedText = function(someNote){
-                        var original = someNote.code();
-                        var cleaned = clean_pasted_html(original);
-                        someNote.html(cleaned);
-                    };
-                    setTimeout(function () {
-                        //the function is called before the text is really pasted.
-                        updatePastedText(thisNote);
-                    }, 10);
+                    var clpData = ((e.originalEvent || e).clipboardData || window.clipboardData);
+                    if (clpData) {
+                        var bufferText = clpData.getData('text/plain');
+                        console.log(bufferText);
+                        window.setTimeout(function() {
+                            document.execCommand('insertText', false, bufferText);
+                        }, 0);
+                    }
                 }
             });
         });

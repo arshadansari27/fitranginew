@@ -37,6 +37,10 @@ def login_user_session(user):
 def youtube_channel_test():
     return requests.get('https://www.googleapis.com/youtube/v3/search?key=AIzaSyC2G0kvBLJBEnBCUPf053z6mL5tgbWON5o&channelId=UC9MLurIp4Afr3gF_r57ID4w&part=snippet,id&order=date&maxResults=20').content
 
+@app.route('/example')
+def example():
+    return render_template('/site/pages/commons/exmple.html')
+
 
 @app.route('/user-csv-download')
 @app.route('/user-csv-download/<contest_id>')
