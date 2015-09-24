@@ -131,12 +131,12 @@
 
                             {% if not user or user.is_admin or (not user.is_business_profile and user.managed_profiles|length == 0) %}
 	                        <li>
-                                <a class="btn btn-link" href="#" {% if user %}data-user="{{user.id}}"{% endif %} title="Business" data-action="create-business-profile">Add an organization</a>
+                                <a class="btn btn-link underline" href="#" {% if user %}data-user="{{user.id}}"{% endif %} title="Business" data-action="create-business-profile">Add an organization</a>
                             </li>
                             {% endif %}
 
-                            <li><a class="btn btn-link" href="/contests" title="Live Contests">Contests</a></li>
-	                        <li><a class="btn btn-link" href="/profiles?query=type__profile_type__name:Enthusiast;#finder-container" title="Members">Members</a></li>
+                            <li><a class="btn btn-link underline" href="/contests" title="Live Contests">Contests</a></li>
+	                        <li><a class="btn btn-link underline" href="/profiles?query=type__profile_type__name:Enthusiast;#finder-container" title="Members">Members</a></li>
                             <li><a class="btn-head" href="#" title="Search" data-action="search">&nbsp;&nbsp;<i class="fa fa-search"></i>&nbsp;&nbsp;</a>&nbsp;</li>
                             {% if not (user and user.id) %}
                             <li><a class="btn-head" href="/register" title="Register">Register</a></li>

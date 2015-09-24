@@ -7,37 +7,35 @@
 <p>Know everything about Adventure Tourism in India, explore breathtaking activities, connect with the like minded and share unique experiences.</p>
 </div>
 
-<div class="hidden-xs col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-50 text-center white fitrangi">
-<h3 class="light">Be Adventurous Be Fitrangi</h3>
-            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
-                <h4>{{counters['profile']}}</h4>
+<div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-1 col-xs-offset-1 ccol-lg-8 col-md-8 col-sm-10 col-xs-10 mt-50 col-xs-offset-1 text-center white fitrangi">
+<div class="form-inline">
+    <input data-name="search-topic" type="text" class="form-control input-lg" placeholder="Search" style="min-width: 100%;"/><br/><br/>
+    <button data-action="search-content" class="form-control btn btn-primary btn-lg" type="button"><i class="fa fa-search"></i> Search</button>
+</div>
+<script>
+    $(document).ready(function(){
 
-                <p>Members</p>
-            </div>
+        var search = function(){
+            var name = $('[data-name="search-topic"]').val();
+            if (name == undefined || name.length == 0){
+                return;
+            }
+            window.location.href="/search-all?query=name__icontains:" + name + ';';
+        };
 
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <h4>{{counters['adventure']}}</h4>
+        $('[data-name="search-topic"]').on('keydown', function(event){
+            if(event.keyCode==13){
+                search();
+            }
+        });
 
-                <p>Destinations</p>
-            </div>
-
-            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
-                <h4>{{counters['discussion']}}</h4>
-
-                <p>Discussions</p>
-            </div>
-
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <h4>{{counters['article']}}</h4>
-
-                <p>Blog Post</p>
-            </div>
-
-            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
-                <h4>{{counters['posts']}}</h4>
-
-                <p>Comments</p>
-            </div>
+        $('a[data-action="chat-send"]').on('click', function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            search();
+        });
+    });
+</script>
 </div>
 
 </div>
