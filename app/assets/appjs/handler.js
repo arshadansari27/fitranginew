@@ -1600,6 +1600,7 @@ jQuery(document).ready(function ($) {
                     $textArea.change();
                 },
                 onpaste: function(e) {
+                    e.preventDefault();
                     var thisNote = $(this);
                     var clpData = ((e.originalEvent || e).clipboardData || window.clipboardData);
                     if (clpData) {
