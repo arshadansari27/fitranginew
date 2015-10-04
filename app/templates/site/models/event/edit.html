@@ -152,6 +152,10 @@
                 BootstrapDialog.alert('Please enter description, it is mandatory field');
                 return;
             }
+            if (about_organizer == undefined || about_organizer.length == 0) {
+                BootstrapDialog.alert('Please enter details about organizer, it is mandatory field');
+                return;
+            }
 
 
             var location_name = $('[data-name="geo_location_name"]').val();
