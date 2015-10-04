@@ -12,11 +12,13 @@ def send_single_email(subject, from_email='admin@fitrangi.com', to_list=[], data
     to_email = []
     for t in to_list:
         p = Profile.objects(email__iexact=t).first()
-        if force_send or 'Admin' in p.roles or p.email_enabled is not False or not hasattr(p, 'email_enabled'):
+        if force_send or 'Admin' in p.roles or p.email_enabled is not False or p.email_enabled is None:
             to_email.append({'email': t})
 
     if SEND_EMAILS:
         mandrill.send_email(from_email=from_email, from_name="Fitrangi Team", subject=subject, to=to_email, html=data, text=data)
+    else:
+        print 'sending email', from_email, '->', to_email, ' [', subject, ' ]'
 
 def send_email_from_template(template_name, subject, from_email='admin@fitrangi.com', to_list=[], force_send=False, **context):
     global bootstrap_css, my_style_css
@@ -28,3 +30,4 @@ def send_email_from_template(template_name, subject, from_email='admin@fitrangi.
         send_single_email(subject, from_email, to_list, data=html, force_send=force_send)
     except Exception, e:
         print '\n', '*' * 100,'\n','Failed to sent email', str(e), '\n','*' * 100
+        raise

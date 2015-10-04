@@ -26,7 +26,8 @@ class Booking(db.Document):
 
     @property
     def actual_charge(self):
-        return self.total_charge - (self.total_charge * (self.discount_percent/100.0 if self.discount_percent and self.discount_percent >= 0.0 else 0.0))
+        total_charge = 0.0 if not self.total_charge else self.total_charge
+        return total_charge - (total_charge * (self.discount_percent/100.0 if self.discount_percent and self.discount_percent >= 0.0 else 0.0))
 
 
 class TripBooking(Booking):

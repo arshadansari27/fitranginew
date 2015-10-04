@@ -194,7 +194,8 @@
                                                                     <small>
                                                                     <p>&copy;2014-2015 Fitrangi<sup><small>TM</small></sup>. All right Reserved<br/></p>
                                                                     <p style="color: #000; font-weight: bold;">Fitrangi.com - India's Complete Adventure Portal</p><br/>
-                                                                    <a href="http://www.fitrangi.com/fitrangi" style="color: #777";>Login</a> | <a href="mailto:go@fitrangi.com" style="color: #777";>Contact Us</a>
+                                                                    <a href="http://www.fitrangi.com/fitrangi" style="color: #777";>Login</a> | <a href="mailto:go@fitrangi.com" style="color: #777";>Contact Us</a><br/>
+                                                                    {% if user and user.name and user.name|length > 0 %}<p>To <a href="http://www.fitrangi.com" style="color: #777";>Unsubscribe</a> from emails, uncheck email enabled from your profile preferences</p>{% endif %}
                                                                     </small>
                                                                 </div>
 
