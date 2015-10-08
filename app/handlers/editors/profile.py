@@ -436,7 +436,9 @@ def register_business_profile(data):
     if lng:
         lng = lng.strip()
     if lat and len(lat)>0 and lng and len(lng) >0:
-        geo_location = [float(lat), float(lng)]
+
+        point = {"type": "Point", "coordinates": [lng, lat]}
+        geo_location = point # [float(lng), float(lat)]
     else:
         geo_location = None
     if not profile:

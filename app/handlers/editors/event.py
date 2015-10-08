@@ -94,7 +94,7 @@ def _edit(data, node=None):
         node.location = data['location_name']
         if data.get('location_lat') and data.get('location_lng'):
             lat, lng = float(data['location_lat']), float(data['location_lng'])
-            point = {"type": "Point", "coordinates": [lat, lng]}
+            point = {"type": "Point", "coordinates": [lng, lat]}
             node.geo_location = point
         if data.get('location_city'):
             node.city = data['location_city']

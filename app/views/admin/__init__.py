@@ -213,7 +213,7 @@ class AdventureAdminView(ModelView):
 class EventAdminView(ModelView):
     create_template = 'admin/my_custom/create.html'
     edit_template = 'admin/my_custom/edit.html'
-    form_columns = ['name', 'featured', 'description', 'about', 'scheduled_date', 'organizer', 'about_organizer',
+    form_columns = ['name', 'featured', 'description', 'about', 'scheduled_date', 'end_date', 'organizer', 'about_organizer',
                     'cover_image', 'external_link', 'path_cover_image']
     column_list = ('name', 'organizer', 'cover_image', 'location', 'featured')
     column_filters = [create_named_filter(), 'featured']
