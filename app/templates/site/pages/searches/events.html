@@ -50,7 +50,7 @@
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="past" aria-labelledby="new">
                     <div class="container fitrangi-trips">
-                        <input id="past-event-filter" data-category="past" data-model="event" data-filter="scheduled_date__lte" type="hidden" value="{{now}}" data-filter-status="fixed">
+                        <input id="past-event-filter" data-category="past" data-model="event" data-filter="end_date__lte" type="hidden" value="{{now}}" data-filter-status="fixed">
                         {{past_events_list|safe}}
                     </div>
                 </div>
