@@ -181,23 +181,32 @@
     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 ">
         <div class="row-fluid adventure-trips-tabs">
             <ul class="nav nav-pills " role="tablist">
-
+                {% if model.about and model.about|length > 0 %}
                 <li class="active"><a href="#about-reviews" role="tab" data-toggle="tab" aria-controls="about-reviews"
                                       aria-expanded="false">
                     <strong>Overview</strong></a></li>
+                {% endif %}
 
+                {% if model.activities_details and model.activities_details|length > 0 %}
                 <li class=""><a href="#activities" role="tab" data-toggle="tab" aria-controls="tariff"
                                 aria-expanded="false">
                     <strong>Activities</strong> </a></li>
+                {% endif %}
+                {% if model.accommodations and model.accommodations|length > 0 %}
                 <li class=""><a href="#accommodation" role="tab" data-toggle="tab" aria-controls="accommodation"
                                 aria-expanded="false">
                     <strong>Accommodations</strong> </a></li>
+                {% endif %}
+                {% if model.tariff and model.tariff|length > 0 %}
                 <li class=""><a href="#tariff" role="tab" data-toggle="tab" aria-controls="tariff"
                                 aria-expanded="false">
                     <strong>Cost, Packages & Offers</strong> </a></li>
+                {% endif %}
+                {% if model.how_to_reach and model.how_to_reach|length > 0 %}
                 <li class=""><a href="#how-to-reach" role="tab" data-toggle="tab" aria-controls="how-to-reach"
                                 aria-expanded="false">
                     <strong>How to Reach</strong> </a></li>
+                {% endif %}
 
             </ul>
 
