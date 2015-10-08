@@ -30,8 +30,8 @@
             <div id="myTabContent" class="tab-content">
                 <div role="tabpanel" class="tab-pane fade active in" id="live" aria-labelledby="live">
                     <section class="container-fluid">
-                        <input id="start-live-filter" type="hidden" data-model="contest" data-category="live" data-filter="start_date__lt" value="{{now}}" data-filter-status="fixed" />
-                        <input id="end-live-filter" type="hidden" data-model="contest" data-category="live" data-filter="end_date__gt" value="{{now}}" data-filter-status="fixed" />
+                        <input id="start-live-filter" type="hidden" data-model="contest" data-category="live" data-filter="start_date__lte" value="{{now}}" data-filter-status="fixed" />
+                        <input id="end-live-filter" type="hidden" data-model="contest" data-category="live" data-filter="end_date__gte" value="{{now}}" data-filter-status="fixed" />
                         <div class="jumbotron help-info" data-category="live" data-model="contest">
                             <h5>There are no contests going on at the moment!</h5>
                         </div>
