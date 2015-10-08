@@ -42,7 +42,7 @@
                     </div>
                     <h3>All Events</h3>
                     <div class="container fitrangi-trips">
-                        <input id="upcoming-event-filter" data-category="upcoming" data-model="event" data-filter="scheduled_date__gt" type="hidden" value="{{now}}" data-filter-status="fixed">
+                        <input id="upcoming-event-filter" data-category="upcoming" data-model="event" data-filter="end_date__gt" type="hidden" value="{{now}}" data-filter-status="fixed">
                         <input id="non-featured-event-filter" data-category="upcoming" data-model="event" data-filter="featured__ne" type="hidden" value="bool|True" data-filter-status="fixed">
                         <input id="admin-published-event-filter" data-category="upcoming" data-model="event" data-filter="admin_published" type="hidden" value="bool|True" data-filter-status="fixed">
                         {{upcoming_events_list|safe}}
