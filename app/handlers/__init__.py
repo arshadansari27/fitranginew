@@ -406,13 +406,9 @@ class PageManager(object):
             model = None
 
         if model and isinstance(model, Profile):
-            context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), is_business=any([model.is_business_profile, len(model.managed_by) > 0]))
+            context = dict(parent=model, user=user, query=query, filters=convert_query_to_filter(query), is_business=is_business)
         else:
-            if model and hasattr(model, 'managed_by') and hasattr(model, 'is_business_profile'):
-                is_business_p = any([model.is_business_profile, len(model.managed_by) > 0])
-            else:
-                is_business_p = is_business
-            context = dict(model=model, parent=model, user=user, query=query, filters=convert_query_to_filter(query), is_business=is_business_p)
+            context = dict(model=model, parent=model, user=user, query=query, filters=convert_query_to_filter(query), is_business=is_business)
         print model
 
         page = Page.factory(model_name, 'edit')

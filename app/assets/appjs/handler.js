@@ -1329,7 +1329,8 @@ jQuery(document).ready(function ($) {
     $('body').on('click', '[data-action="create-business-profile"]', function(e){
         e.stopPropagation();
 
-        if ($(this).data('user') == undefined) {
+        if ($(this).data('user') != undefined) {
+            /*
             BootstrapDialog.show({
                 title: 'Information',
                 message: 'You must be logged in to create a business page for your organization.',
@@ -1354,6 +1355,12 @@ jQuery(document).ready(function ($) {
                         }
                     }
                 ]
+            });
+            */
+            BootstrapDialog.confirm('You will be logged out to create a organization profile. Do you wish to continue?', function(value){
+                if (value == true) {
+                    window.location.href= '/manage-profile?business=true'
+                }
             });
         } else {
             window.location.href= '/manage-profile?business=true'

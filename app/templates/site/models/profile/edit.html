@@ -10,10 +10,27 @@
                 <input type="hidden" data-name="profile-id" value="{{ model.id }}"/>
                 <input type="hidden" data-name="is-business" value="{% if is_business %}true{% else %}false{% endif %}"/>
 
+
+
                 <div class="form-group">
                     <label for="heading">Organisation Name<span class="red">*</span></label>
                     <input data-name="name-edit" type="text" class="form-control" placeholder="Enter Organization Name"  value="{% if model.name and model.name|length > 0 %}{{ model.name }}{% endif %}">
                 </div>
+
+                <div class="form-group">
+                    <label for="heading">Email</label>
+                    <input data-name="email-edit" type="email" class="form-control" placeholder="Enter Email (required for registration and logging in)" value="{{ model.email }}">
+                </div>
+                {% if not user %}
+                <div class="form-group">
+                    <label for="heading">Password</label>
+                    <input data-name="password-edit" type="password" class="form-control" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <label for="heading">Confirm Password</label>
+                    <input data-name="confirm-edit" type="password" class="form-control" placeholder="Confirm">
+                </div>
+                {% endif %}
 
                 <div class="form-group">
                     <label for="heading">Office Address (Head Office)</label>
@@ -75,11 +92,7 @@
                     <div class="col-md-6">
 
                         <div class="form-group">
-                            <label for="heading">Email<span class="red">*</span></label>
-
-                            <div class="">
-                                <input data-name="email-edit" type="email" class="form-control" placeholder="Enter Email (required)" value="{{ model.email }}">
-                            </div>
+                            <label for="heading">Alternative Email<span class="red">*</span></label>
                             <div class="">
                                 <input data-name="email-alternate-edit" type="email" class="form-control" placeholder="Enter Alternative Email (optional)" value="{% if model.alternative_email and model.alternative_email|length > 0 %}{{ model.alternative_email }}{% endif %}">
                             </div>
@@ -385,8 +398,13 @@
                             src="{% if not model.cover_image_path or model.cover_image_path|length == 0 %}/img/Profile-Picture3.jpg{% else %}{{ model.cover_image_path }}{% endif %}"
                             alt="" class="center-block text-center img-thumbnail img-responsive"></a>
                 {% else %}
-                    <img src="{% if not model.cover_image_path or model.cover_image_path|length == 0 %}/img/Profile-Picture3.jpg{% else %}{{ model.cover_image_path }}{% endif %}"
-                         alt="" class="center-block text-center img-thumbnail img-responsive">
+                    <div class="thumbnail">
+                        <a href="#" data-action="cover-image-upload" title="Click to change">
+                            <img data-name="cover-image-display" src="{% if not model.cover_image_path or model.cover_image_path|length == 0 %}/img/Profile-Picture3.jpg{% else %}{{ model.cover_image_path }}{% endif %}"  alt="" class="center-block text-center img-thumbnail img-responsive">
+                        </a>
+                        <div class="caption text-center">Click on the image to change(Optional)</div>
+                    </div>
+                    <input type="hidden" data-name="cover-image" value=""/>
                 {% endif %}
 
 
@@ -548,11 +566,28 @@
             var gplus = $('[data-name="google-plus-edit"]').val();
             var linked_in = $('[data-name="linked-in-edit"]').val();
             var blog = $('[data-name="blog-channel-edit"]').val();
+            var password;
+
+            if (logged_in_user == undefined || logged_in_user.length == 0){
+                password =   $('[data-name="password-edit"]').val();
+                var confirm =   $('[data-name="confirm-edit"]').val();
+                if (confirm != password ) {
+                    BootstrapDialog.alert('Password do not match.');
+                    return;
+                } else if(password.length < 6) {
+                    BootstrapDialog.alert('Invalid Password, length must atleast be 6 characters .');
+                    return;
+                }
+            }
             var activities = [];
             $('[data-name="activities"]:checked').each(function(i, elem) {
                 console.log(i + " " + elem);
                 activities.push($(elem).val());
             });
+
+
+            var cover_image = $('[data-name="cover-image"]').val();
+
             var profile_editor = window.App.profile;
             var data = {
                 logged_in_user: logged_in_user,
@@ -579,7 +614,9 @@
                 google_plus: gplus,
                 linked_in: linked_in,
                 blog: blog,
-                activities: activities
+                activities: activities,
+                password: password,
+                cover_image: cover_image
             };
             if ($('[data-name="terms"]:checked') != undefined && $('[data-name="terms"]').length > 0 && $('[data-name="terms"]:checked').length == 0) {
                 BootstrapDialog.alert('Please accept terms and conditions');
@@ -636,6 +673,16 @@
                     }
                 })
             }
+        });
+        $('body').on('click', '[data-action="cover-image-upload"]', function(e){
+            e.stopPropagation();e.preventDefault();
+            var callback = function(url){
+                console.log(url);
+                $('[data-name="cover-image-display"]').attr('src', url);
+                $('[data-name="cover-image"]').val(url);
+
+            };
+            App.image_upload_dialog(callback);
         });
     });
 </script>

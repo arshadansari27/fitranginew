@@ -4,7 +4,7 @@
         <div class="container">
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 heading">
-                {% if user and (user.is_organizer or user.managed_organizer_profile) %}
+                {% if user and user.is_organizer  %}
                 <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: window.location.href='/add-edit/trip'">Add a trip</a>
                 <input id="name-filter" data-filter="name__icontains" data-model="trip" type="hidden">
                 {% endif %}

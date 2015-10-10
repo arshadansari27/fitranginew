@@ -1,5 +1,5 @@
 from app.handlers.messaging import send_single_email, send_email_from_template
-from app.models.profile import Profile, ProfileType
+from app.models.profile import Profile, ProfileType, PROFILE_TYPE_ENTHUSIAST, PROFILE_TYPE_SUBSCRIPTION_ONLY
 from app.models.relationships import RelationShips
 from app.models.event import Event
 from app.models.trip import Trip
@@ -407,26 +407,56 @@ def register_profile(data):
             print 'Unable to send email to user ', profile.email
     return profile
 
-@response_handler('Thank you for listing your business. Pending Admin Approval. you will be notified once it is approved by admin.', 'Failed to register', login_required=True, flash_message=True, no_flash_on_error=True)
+def get_registration_data(data):
+    by_user = data.get('logged_in_user', None)
+    type, phone, alternative_phone = data['type'], data['phone'], data.get('alternative_phone', '')
+    name, email, alternative_email = data['name'], data['email'], data.get('alternative_email', '')
+    about, website, google_plus, linked_in, facebook, twitter = data.get('about', ''), data.get('website', ''), data.get('google_plus', ""), data.get('linked_in', ''), data.get('facebook', ''), data.get('twitter', '')
+    youtube, blog, activities = data.get('youtube', ''), data.get('blog', ''), data['activities']
+    address, location, lat, lng, city, region, state, country, zipcode = data.get('address', ''), data.get('location', ''), data['lat'], data['lng'], data.get('city', ''), data.get('region', ''), data.get('state', ''), data.get('country', ''), data.get('zipcode', '')
+    password = data.get('password', 'default@8990')
+    cover_image = data.get('cover_image', None)
+    return (by_user, type, phone, alternative_phone, name, email, alternative_email, about, website, google_plus, linked_in, facebook, twitter,
+                youtube, blog, activities, address, location, lat, lng, city, region, state, country, zipcode, password, cover_image)
+
+def edit_cover_image_by_url(node, url):
+    import os
+    image = url
+    if image and len(image) > 0:
+        image       = image.split('/')[-1]
+        path        = os.getcwd() + '/tmp/' + image
+    else:
+        raise Exception('Invalid image')
+    if path:
+        node.cover_image.replace(open(path, 'rb'))
+    node.uploaded_image_cover = True
+    node = node.save()
+    path = os.getcwd() + '/app/assets/' + node.path_cover_image if hasattr(node, 'path_cover_image') and node.path_cover_image and len(node.path_cover_image) > 0 else 'some-non-existent-path'
+    if os.path.exists(path):
+        os.remove(path)
+        node.path_cover_image = ''
+        node = node.save()
+    return node
+
+@response_handler('Thank you for registering your organization. Please verify your account from the email we have sent you.', 'Failed to register', login_required=False, flash_message=True, no_flash_on_error=True)
 def register_business_profile(data):
-    by_user = data['logged_in_user']
-    assert by_user is not None
-    type, phone, alternative_phone = data['type'], data['phone'], data['alternative_phone']
-    name, email, alternative_email = data['name'], data['email'], data['alternative_email']
-    about, website, google_plus, linked_in, facebook, twitter = data['about'], data['website'], data['google_plus'], data['linked_in'], data['facebook'], data['twitter']
-    youtube, blog, activities = data['youtube'], data['blog'], data['activities']
-    address, location, lat, lng, city, region, state, country, zipcode = data['address'], data['location'], data['lat'], data['lng'], data['city'], data['region'], data['state'], data['country'], data['zipcode']
-
-    user = Profile.objects(pk=by_user).first()
-    if not user:
-        raise BusinessException("Not logged in")
-
+    values = get_registration_data(data)
+    print values
+    [by_user, type, phone, alternative_phone, name, email,
+     alternative_email, about, website, google_plus,
+     linked_in, facebook, twitter, youtube, blog, activities,
+     address, location, lat, lng, city, region, state, country, zipcode, password, cover_image] = values
+    if by_user:
+        user = Profile.objects(pk=by_user).first()
+        if not user:
+            raise BusinessException("Not logged in")
+    else:
+        user = None
 
     email = email.strip()
     type = type.strip()
-    subscription_type = ProfileType.objects(name__icontains='subscription').first()
     p = Profile.objects(email__iexact=email).first()
-    if p and ((len(p.type) is 1 and p.type[0] != subscription_type) or len(p.type) > 1):
+    if p and any(u not in p.type for u in [PROFILE_TYPE_ENTHUSIAST, PROFILE_TYPE_SUBSCRIPTION_ONLY]):
         raise BusinessException('Profile with given email already exists')
 
     type = ProfileType.objects(name__iexact=type).first()
@@ -437,7 +467,7 @@ def register_business_profile(data):
         lng = lng.strip()
     if lat and len(lat)>0 and lng and len(lng) >0:
 
-        point = {"type": "Point", "coordinates": [lng, lat]}
+        point = {"type": "Point", "coordinates": [float(lng), float(lat)]}
         geo_location = point # [float(lng), float(lat)]
     else:
         geo_location = None
@@ -456,11 +486,12 @@ def register_business_profile(data):
             RelationShips.favorite(profile, act)
         if activity and len(activity) > 0 and activity not in profile.interest_in_activities:
             profile.interest_in_activities.append(activity.strip())
-    profile.password = 'default-password@789'
+    profile.password = password
     profile.is_business_profile = True
-    profile.admin_approved = False
-    profile.managed_by.append(user)
-    profile.save()
+    profile.admin_approved = True
+    profile = profile.save()
+    if cover_image and len(cover_image) > 0:
+        profile = edit_cover_image_by_url(profile, cover_image)
 
     if profile and profile.id:
         try:
@@ -486,28 +517,26 @@ def register_business_profile(data):
 
 @response_handler('Successfully updated the profile', 'Failed to update', login_required=True, no_flash_on_error=True)
 def update_business_profile(node, data):
-    by_user, profile_id = data['logged_in_user'], node
-    assert profile_id is not None and by_user is not None
-    type, phone, alternative_phone = data['type'], data['phone'], data['alternative_phone']
-    name, email, alternative_email = data['name'], data['email'], data['alternative_email']
-    about, website, google_plus, linked_in, facebook, twitter = data['about'], data['website'], data['google_plus'], data['linked_in'], data['facebook'], data['twitter']
-    youtube, blog, activities = data['youtube'], data['blog'], data['activities']
-    address, location, lat, lng, city, region, state, country, zipcode = data['address'], data['location'], data['lat'], data['lng'], data['city'], data['region'], data['state'], data['country'], data['zipcode']
 
-    user = Profile.objects(pk=by_user).first()
-    if not user:
+    [by_user, type, phone, alternative_phone, name, email,
+     alternative_email, about, website, google_plus,
+     linked_in, facebook, twitter, youtube, blog, activities,
+     address, location, lat, lng, city, region, state, country, zipcode, password, cover_image] = get_registration_data(data)
+
+    if not node:
         raise BusinessException("Not logged in")
+    profile = Profile.objects(pk=node).first()
+    if not node:
+        raise BusinessException("Profile does not exists")
 
     type = ProfileType.objects(name__iexact=type.strip()).first()
-    profile = Profile.objects(email__iexact=email.strip()).first()
-    if not profile:
-        raise BusinessException("Profile does not exists")
     if lat:
         lat = lat.strip()
     if lng:
         lng = lng.strip()
     if lat and len(lat)>0 and lng and len(lng) >0:
-        geo_location = [float(lat), float(lng)]
+        point = {"type": "Point", "coordinates": [float(lng), float(lat)]}
+        geo_location = point # [float(lng), float(lat)]
     else:
         geo_location = None
     profile.name=name.strip()
@@ -543,10 +572,10 @@ def update_business_profile(node, data):
             continue
         profile.interest_in_activities.append(activity.strip())
     profile.is_business_profile = True
-    if user not in profile.managed_by:
-        profile.managed_by.append(user)
-    profile.save()
 
+    profile = profile.save()
+    if cover_image and len(cover_image) > 0:
+        profile = edit_cover_image_by_url(profile, cover_image)
     return profile
 
 @response_handler('Successfully updated business status', 'Failed to update business status', login_required=True)

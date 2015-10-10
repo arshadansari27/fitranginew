@@ -2,14 +2,14 @@
 
     <!-- col-lg-9 col-md-9 col-sm-12 col-xs-12 -->
     <div class="">
-        <h2 class="title">Enter Site Information <small>{% if not model and not user.is_campsite_owner and user.managed_campsite_owner_profile %}&nbsp;&nbsp;&nbsp;<span style="font-size: 10pt;">Adding as</span> <span class="text-primary">{{user.managed_campsite_owner_profile.name}}</span>{% endif %}</small></h2>
+        <h2 class="title">Enter Site Information </h2>
 
         <form class="fitrangi-form">
             <div class="form-group">
                 <label for="heading">Title<span class="red">*</span> </label>
                 <input type="text" class="form-control" name="title" placeholder="Write Camspite Title" data-name="title" value="{%if model and model.name %}{{model.name }}{% endif %}">
                 <input type="hidden" data-name="id" value="{%if model and model.id %}{{model.id}}{% endif %}">
-                <input type="hidden" data-name="user" value="{% if model and model.host %}{{model.host.id}}{% elif user and user.id %}{% if user.is_campsite_owner %}{{user.id}}{% else %}{{ user.managed_campsite_owner_profile.id }}{% endif %}{% endif %}">
+                <input type="hidden" data-name="user" value="{% if model and model.host %}{{model.host.id}}{% elif user and user.id %}{{user.id}}{% endif %}">
             </div>
             <div class="form-group">
                 <label for="heading">Select Type<span class="red">*</span> </label>

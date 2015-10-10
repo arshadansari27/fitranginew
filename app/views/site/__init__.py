@@ -74,7 +74,6 @@ def download_csv(contest_id=None):
     return response
 
 @app.route('/dialog/upload_image', methods=['POST'])
-@login_required
 def image_uploader_dialog():
     _id = str(random.randint(9999999999999, 999999999999999999))
     try:
@@ -650,15 +649,17 @@ def model_view(slug):
 def edit_profile():
     if not hasattr(g, 'user') and not g.user:
         return 'Forbidden', 403
-    context = PageManager.get_edit_title_and_page('profile', query="pk:%s;" % str(g.user.id))
+    from app.models.profile import PROFILE_TYPE_SUBSCRIPTION_ONLY, PROFILE_TYPE_ENTHUSIAST
+    business = any(u not in g.user.type for u in (PROFILE_TYPE_ENTHUSIAST, PROFILE_TYPE_SUBSCRIPTION_ONLY,))
+    context = PageManager.get_edit_title_and_page('profile', query="pk:%s;" % str(g.user.id), business=business)
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/manage-profile')
-@login_required
 def manage_profile():
-    if not hasattr(g, 'user') and not g.user:
-        return 'Forbidden', 403
     pk = request.args.get('pk', None)
+    if not pk and hasattr(g, 'user') and g.user:
+        g.user = None
+        session.clear()
     if pk:
         query = 'pk:%s;' % pk
     else:
