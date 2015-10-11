@@ -18,16 +18,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="heading">Email</label>
+                    <label for="heading">Email<span class="red">*</span></label>
                     <input data-name="email-edit" type="email" class="form-control" placeholder="Enter Email (required for registration and logging in)" value="{{ model.email }}">
                 </div>
                 {% if not user %}
                 <div class="form-group">
-                    <label for="heading">Password</label>
+                    <label for="heading">Password<span class="red">*</span></label>
                     <input data-name="password-edit" type="password" class="form-control" placeholder="Password">
                 </div>
                 <div class="form-group">
-                    <label for="heading">Confirm Password</label>
+                    <label for="heading">Confirm Password<span class="red">*</span></label>
                     <input data-name="confirm-edit" type="password" class="form-control" placeholder="Confirm">
                 </div>
                 {% endif %}
@@ -81,24 +81,14 @@
                             <div class="">
                                 <input data-name="phone-edit" type="text" class="form-control" placeholder="Enter Phone No. (required)"  value="{% if model.phone and model.phone|length > 0 %}{{ model.phone }}{% endif %}">
                             </div>
-                            <div class="">
-                                <input data-name="phone-alternate-edit" type="text" class="form-control" placeholder="Enter Alternative Phone No. (optional)"  value="{% if model.alternative_phone and model.alternative_phone|length > 0 %}{{ model.alternative_phone }}{% endif %}">
-                            </div>
+                            <input data-name="phone-alternate-edit" type="hidden" value="{% if model.alternative_phone and model.alternative_phone|length > 0 %}{{ model.alternative_phone }}{% endif %}">
                         </div>
 
 
                     </div>
 
                     <div class="col-md-6">
-
-                        <div class="form-group">
-                            <label for="heading">Alternative Email<span class="red">*</span></label>
-                            <div class="">
-                                <input data-name="email-alternate-edit" type="email" class="form-control" placeholder="Enter Alternative Email (optional)" value="{% if model.alternative_email and model.alternative_email|length > 0 %}{{ model.alternative_email }}{% endif %}">
-                            </div>
-                        </div>
-
-
+                        <input data-name="email-alternate-edit" type="hidden" value="{% if model.alternative_email and model.alternative_email|length > 0 %}{{ model.alternative_email }}{% endif %}">
                     </div>
                     <!--a class="btn btn-primary pull-right btn-sm">Add Branch Address <i
                             class="fa fa-plus-circle"></i></a-->
@@ -395,14 +385,14 @@
                     <a href="#" role="button" data-placement="right" data-toggle="popover" data-trigger="focus"
                        data-content="Click to change" class="hoverable" data-action="edit-cover-image" data-aspect-ratio-x="9" data-aspect-ratio-y="9"
                        data-model-id="{{ model.id }}" data-model="profile" data-trigger="hover"><img
-                            src="{% if not model.cover_image_path or model.cover_image_path|length == 0 %}/img/Profile-Picture3.jpg{% else %}{{ model.cover_image_path }}{% endif %}"
+                            src="{% if not model.cover_image_path or model.cover_image_path|length == 0 %}/img/Profile-Picture1.jpg{% else %}{{ model.cover_image_path }}{% endif %}"
                             alt="" class="center-block text-center img-thumbnail img-responsive"></a>
                 {% else %}
                     <div class="thumbnail">
                         <a href="#" data-action="cover-image-upload" title="Click to change">
-                            <img data-name="cover-image-display" src="{% if not model.cover_image_path or model.cover_image_path|length == 0 %}/img/Profile-Picture3.jpg{% else %}{{ model.cover_image_path }}{% endif %}"  alt="" class="center-block text-center img-thumbnail img-responsive">
+                            <img data-name="cover-image-display" src="{% if not model.cover_image_path or model.cover_image_path|length == 0 %}/img/Profile-Picture1.jpg{% else %}{{ model.cover_image_path }}{% endif %}"  alt="" class="center-block text-center img-thumbnail img-responsive">
                         </a>
-                        <div class="caption text-center">Click on the image to change(Optional)</div>
+                        <div class="caption text-center">Click on the image to change </div>
                     </div>
                     <input type="hidden" data-name="cover-image" value=""/>
                 {% endif %}
@@ -452,15 +442,6 @@
                         <input type="hidden" name="country_short" id="geo_country"
                                value="{% if model.location and model.country %}{{ model.country }}{% endif %}"/>
                     </div>
-                    {% if is_business %}
-                        <div class="form-group">
-                            <label for="heading">Business Type<span class="red">*</span></label>
-                            <select id="type-edit" class="form-control" placeholder="Select business type">
-                                <option value="Organizer">Organizer</option>
-                                <option value="Gear Dealer">Gear Dealer</option>
-                            </select>
-                        </div>
-                    {% endif %}
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                     {% if model and model.id %}
@@ -638,30 +619,36 @@
                 BootstrapDialog.alert('Location is required field');
                 return;
             }
+            /*
             if(zipcode == undefined || zipcode.length == 0) {
                 BootstrapDialog.alert('Zipcode/Pincode is required field');
                 return;
             }
+             */
             if(phone == undefined || phone.length == 0) {
                 BootstrapDialog.alert('There must be at least one phone number given');
                 return;
             }
             if(email == undefined || email.length == 0) {
-                BootstrapDialog.alert('There must be at least one email given');
+                BootstrapDialog.alert('Email is a mandatory field');
                 return;
             }
             if(activities == undefined || activities.length == 0) {
                 BootstrapDialog.alert('There must be at least one activity selected');
                 return;
             }
-
+            var verification_mail_msg = '<br/>If this is your email then you can <a href="/login" >click here</a> to login.'
             if (profile_id == undefined || profile_id.length == 0) {
                 profile_editor.business_profile_register(data, function (_data) {
                     if (_data.status == 'success') {
                         var url = window.location.href;
                         window.location.href = '/profiles';
                     } else {
-                        BootstrapDialog.alert(_data.message);
+                        if (_data.message == 'Profile with given email already exists') {
+                            BootstrapDialog.alert(_data.message + verification_mail_msg);
+                        } else {
+                            BootstrapDialog.alert(_data.message);
+                        }
                     }
                 });
             } else {
@@ -669,7 +656,11 @@
                     if (_data.status == 'success') {
                         window.location.reload();
                     } else {
-                        BootstrapDialog.alert(_data.message);
+                        if (_data.message == 'Profile with given email already exists') {
+                            BootstrapDialog.alert(_data.message + verification_mail_msg);
+                        } else {
+                            BootstrapDialog.alert(_data.message);
+                        }
                     }
                 })
             }

@@ -173,6 +173,7 @@ def report_not_ok(node, node_type, user_id, message=None, option='Other'):
         print '[ERROR] Unable to send email to admin'
     return node
 
+
 @response_handler('Info! Thank you for claiming this listing. Please click on the verification link, sent on the registered email mentioned therein. Admin will connect with you to approve it.', 'Failed to claim the listing, please try again later.', login_required=True, flash_message=True)
 def claim_profile(node, node_type, user_id):
     node = Profile.objects(pk=node).first()
@@ -512,7 +513,8 @@ def register_business_profile(data):
                     print '[ERROR] Unable to send email to admin', a.email
         except:
             print '[ERROR] Unable to send email to admin'
-
+    from app.views.site import login_user_session
+    login_user_session(profile)
     return profile
 
 @response_handler('Successfully updated the profile', 'Failed to update', login_required=True, no_flash_on_error=True)

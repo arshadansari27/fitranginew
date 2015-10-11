@@ -19,5 +19,11 @@ CDN_DOMAIN ='d3q5zq83v3a4xj.cloudfront.net'
 MANDRILL_API_KEY='AW8kuRPFtDyZpOrgSf-0BQ'
 MANDRILL_DEFAULT_FROM='noreply@fitrangi.com'
 
+ASSETS_DEBUG = os.environ.get('ASSETS_DEBUG', None)
+if ASSETS_DEBUG and ASSETS_DEBUG == 'TRUE':
+    DEBUG = True
+else:
+    DEBUG = False
 
-EXCEPTION_API = True #and False
+
+EXCEPTION_API = False
