@@ -33,7 +33,7 @@
                 {% endif %}
 
                 <div class="form-group">
-                    <label for="heading">Office Address (Head Office)</label>
+                    <label for="heading">Office Address (Head Office)<span class="red">*</span></label>
                     <textarea data-name="address-edit" class="form-control" placeholder="Enter Office address" rows="3">{% if model.address and model.address|length > 0 %}{{ model.address }}{% endif %}</textarea>
                 </div>
 
@@ -41,6 +41,7 @@
                 <div class="form-group">
                     <label for="heading">Business Type<span class="red">*</span></label>
                     <select data-name="type-edit" class="form-control" placeholder="Select business type">
+                        <option value="" {% if not model or model.type|length == 0  %}selected{% endif %}>-- Select --</option>
                         {% for _type in  profile_types %}
                             {% if not _type.name == 'Subscription Only' %}
                             <option value="{{ _type.name }}" {% if _type in model.type  %}selected{% endif %}>{{ _type.name }}</option>
@@ -158,7 +159,7 @@
                 </div>
 
 
-                <h4 class="blue oswald uppercase">Select your Speacialities</h4>
+                <h4 class="blue oswald uppercase">Select your Speacialities<span class="red">*</span></h4>
 
                 <div class="row">
 
@@ -385,12 +386,12 @@
                     <a href="#" role="button" data-placement="right" data-toggle="popover" data-trigger="focus"
                        data-content="Click to change" class="hoverable" data-action="edit-cover-image" data-aspect-ratio-x="9" data-aspect-ratio-y="9"
                        data-model-id="{{ model.id }}" data-model="profile" data-trigger="hover"><img
-                            src="{% if not model.cover_image_path or model.cover_image_path|length == 0 %}/img/Profile-Picture1.jpg{% else %}{{ model.cover_image_path }}{% endif %}"
+                            src="{% if not model.cover_image_path or model.cover_image_path|length == 0 %}/img/profilepic-upload.jpg{% else %}{{ model.cover_image_path }}{% endif %}"
                             alt="" class="center-block text-center img-thumbnail img-responsive"></a>
                 {% else %}
                     <div class="thumbnail">
                         <a href="#" data-action="cover-image-upload" title="Click to change">
-                            <img data-name="cover-image-display" src="{% if not model.cover_image_path or model.cover_image_path|length == 0 %}/img/Profile-Picture1.jpg{% else %}{{ model.cover_image_path }}{% endif %}"  alt="" class="center-block text-center img-thumbnail img-responsive">
+                            <img data-name="cover-image-display" src="{% if not model.cover_image_path or model.cover_image_path|length == 0 %}/img/profilepic-upload.jpg{% else %}{{ model.cover_image_path }}{% endif %}"  alt="" class="center-block text-center img-thumbnail img-responsive">
                         </a>
                         <div class="caption text-center">Click on the image to change </div>
                     </div>
