@@ -489,7 +489,7 @@ def register_business_profile(data):
             profile.interest_in_activities.append(activity.strip())
     profile.password = password
     profile.is_business_profile = True
-    profile.admin_approved = True
+    profile.admin_approved = False
     profile = profile.save()
     if cover_image and len(cover_image) > 0:
         profile = edit_cover_image_by_url(profile, cover_image)

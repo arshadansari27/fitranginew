@@ -638,7 +638,7 @@
                 BootstrapDialog.alert('There must be at least one activity selected');
                 return;
             }
-            var verification_mail_msg = '<br/>If this is your email then you can <a href="/login" >click here</a> to login.'
+            var verification_mail_msg = '<br/>If this is your email then you can <a href="/login" >click here</a> to login.<br/>OR<br/>Contact admin at yunus@fitrangi.com / 8879921115';
             if (profile_id == undefined || profile_id.length == 0) {
                 profile_editor.business_profile_register(data, function (_data) {
                     if (_data.status == 'success') {
