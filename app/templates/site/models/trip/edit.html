@@ -320,6 +320,12 @@
                 activities.push($($activities[i]).attr('data-value'));
             }
             var cover_image = $('[data-name="cover-image"]').val();
+
+            if (activities.length == 0) {
+                BootstrapDialog.alert('Please select atleast on activity in the trip. This is mandatory.');
+                return;
+            }
+
             if (cover_image.length == 0) {
                 BootstrapDialog.alert('Please select a cover image for the trip. This is mandatory.');
                 return;
