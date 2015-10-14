@@ -54,23 +54,23 @@
 
                         <div class="form-group">
                             <label class="sr-only">Full Name <span class="red">*</span></label>
-                            <input id="signup-name" type="text" class="form-control" name="name" required data-validation-required-message="Please enter your name." placeholder="Name">
+                            <input id="signup-name" type="text" class="form-control registration-field" name="name" required data-validation-required-message="Please enter your name." placeholder="Name">
                             <input type="hidden" data-history value="{% if target %}{{target}}{% endif %}"/>
                         </div>
 
                         <div class="form-group">
                             <label class="sr-only">Email <span class="red">*</span></label>
-                            <input id="signup-email" type="text" class="form-control" name="email" data-bv-emailaddress-message="The value is not a valid email address" required data-validation-required-message="Please enter your email."placeholder="Email Address">
+                            <input id="signup-email" type="text" class="form-control registration-field" name="email" data-bv-emailaddress-message="The value is not a valid email address" required data-validation-required-message="Please enter your email."placeholder="Email Address">
                         </div>
 
                         <div class="form-group">
                             <label class="sr-only">Password <span class="red">*</span></label>
-                            <input id="signup-password" type="password" class="form-control" name="password" required data-validation-required-message="Please enter your password." placeholder="Password">
+                            <input id="signup-password" type="password" class="form-control registration-field" name="password" required data-validation-required-message="Please enter your password." placeholder="Password">
                         </div>
 
                         <div class="form-group">
                             <label class="sr-only">Confirm Password <span class="red">*</span></label>
-                            <input id="signup-confirm" type="password" class="form-control" name="confirm" required data-validation-required-message="Please reenter Password." placeholder="Confirm">
+                            <input id="signup-confirm" type="password" class="form-control registration-field" name="confirm" required data-validation-required-message="Please reenter Password." placeholder="Confirm">
                         </div>
 
                         <!--div class="form-group">
@@ -90,9 +90,8 @@
 </section>
 <script>
     $(".alert").hide();
-    $('body').on('click', "#btn-register1",function(e){
-        e.stopPropagation();
-        console.log('Calling registration');
+
+    var call_registration = function(e){
         var name = $('#signup-name').val();
         var email = $('#signup-email').val();
         var password = $("#signup-password").val();
@@ -138,5 +137,18 @@
                 $(".alert").show();
             }
         });
+    }
+    $('body').on('click', "#btn-register1",function(e){
+        e.stopPropagation();
+        console.log('Calling registration');
+        call_registration(e);
     });
+
+    $('body').on('keydown','.registration-field', function(event){
+        if(event.keyCode==13){
+            call_registration(event);
+        }
+    });
+
+
 </script>
