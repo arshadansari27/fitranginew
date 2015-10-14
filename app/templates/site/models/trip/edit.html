@@ -57,8 +57,7 @@
                 <div class="row">
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                         <div class="form-group">
-                            <label for="heading">
-                                LOCATION
+                            <label for="heading">Location
                                 <span class="red">*</span>
                                 <p class="text-muted" style="font-size: 9pt;">
                                     (If you don't find your trip location in the list Or have more than one location? <a href="#" id="toggle-destination-link">Click Here</a>)
@@ -139,14 +138,6 @@
                 <hr/>
                 <br/>
                 <div class="form-group">
-                    <label for="cover-image">Upload Cover Image <span class="red">*</span></label>
-                    <div class="thumbnail">
-                        <a href="#" data-action="cover-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/1366x500{% endif %}" width="70%"/></a>
-                        <div class="caption text-center">Click on the image to change(Optional)</div>
-                    </div>
-                    <input type="hidden" data-name="cover-image" value="{% if model.cover_image %}{{ model.cover_image_path }}{% endif %}"/>
-                </div>
-                <div class="form-group">
                     <label for="heading">Overview <small>(About the destination)</small><span class="red">*</span></label>
                     <textarea class="form-control summernote" name="itinerary" rows="4" data-name="overview"
                               placeholder="Write Brief About The Trip...">{% if model and model.about %}{{model.about}}{% endif %}</textarea>
@@ -166,6 +157,14 @@
                     <label for="heading">Other details <small>(Notes, Highlights, Cancellation, etc)</small></label>
                     <textarea class="form-control summernote" name="other_details" rows="4" data-name="other_details"
                               placeholder="Write Brief About Other Details...">{% if model and model.other_details %}{{model.other_details }}{% endif %}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cover-image">Upload Cover Image <span class="red">*</span></label>
+                    <div class="thumbnail">
+                        <a href="#" data-action="cover-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/1366x500{% endif %}" width="70%"/></a>
+                        <div class="caption text-center">Click on the image to change(Optional)</div>
+                    </div>
+                    <input type="hidden" data-name="cover-image" value="{% if model.cover_image %}{{ model.cover_image_path }}{% endif %}"/>
                 </div>
                 <div class="form-group">
                     <div class="row" style="vertical-align: middle;">
@@ -334,6 +333,22 @@
             var itinerary = $('[data-name="itinerary"]').val();
             var incl_excl = $('[data-name="inclusive_exclusive"]').val();
             var other_details = $('[data-name="other_details"]').val();
+
+            if (title == undefined || title.length == 0) {
+                BootstrapDialog.alert('Please enter title for the trip. This is mandatory.');
+                return;
+            }
+            if (location_name== undefined || location_name.length == 0) {
+                BootstrapDialog.alert('Please enter location of the trip. This is mandatory.');
+                return;
+            }
+            if (price == undefined || price.length == 0) {
+                BootstrapDialog.alert('Please enter amount for the trip or select on request. This is mandatory.');
+                return;
+            }
+
+
+
             var data = {
                 title: title,
                 from: from,
