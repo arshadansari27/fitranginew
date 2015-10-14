@@ -16,7 +16,7 @@
                 <input data-name="title" type="text" data-name="title" class="form-control" placeholdeif not USE_CDN else "%s%s" % (CDN_URL, ir="Enter blog heading" value="{{model.title}}">
             </div>
 
-            {% if model_name == 'article' %}
+            {% if False and model_name == 'article' %}
             <div class="form-group">
                 <label for="description">Description</label>
                 <textarea class="form-control" data-name="description" placeholder="Enter blog description" rows="2">{{model.description}}</textarea>
@@ -27,6 +27,12 @@
                 <input class="form-control" data-name="video-link" placeholder="Paste the link here" value="{% if model.video_embed|length > 0 %}{{model.video_embed[0]}}{% endif %}"/>
             </div>
             {% endif %}
+
+            <div class="form-group">
+                <label for="content">Content<span class="red">*</span></label>
+                <textarea class="form-control summernote" data-name="content" placeholder="Enter content" >{{model.content}}</textarea>
+            </div>
+
             {% if model_name == 'article' %}
             <div class="form-group">
                 <div class="thumbnail">
@@ -39,10 +45,6 @@
             </div>
             {% endif %}
 
-            <div class="form-group">
-                <label for="content">Content<span class="red">*</span></label>
-                <textarea class="form-control summernote" data-name="content" placeholder="Enter blog description" rows="10" >{{model.content}}</textarea>
-            </div>
 
             {% if model_name == 'discussion' %}
             <div class="form-group">
@@ -159,6 +161,13 @@
             }
             var id = $('[data-name="id"]').val();
             var title = $('[data-name="title"]').val();
+
+
+            if(title == undefined || title.length == 0) {
+                BootstrapDialog.alert('Please enter the title, it is mandatory field');
+                return;
+            }
+
             var description = $('[data-name="description"]').val();
             var content = $('.summernote').code();
             var cover_image = $('[data-name="cover-image"]').val();

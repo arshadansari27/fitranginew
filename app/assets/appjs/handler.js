@@ -1597,7 +1597,7 @@ jQuery(document).ready(function ($) {
         $('.summernote').each(function(){
             var $textArea = $(this);
             $textArea.summernote({
-                height: 400,
+                height: 600,
                 onImageUpload: function(files, editor, welEditable) {
                     summernote_image_upload(files[0], editor, welEditable);
                 },
