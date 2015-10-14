@@ -43,7 +43,7 @@
            </div>
             <div class="form-group">
                             <label for="heading">
-                                LOCATION
+                                Location
                                 <span class="red">*</span>
                                 <span style="font-size: 7pt;">(Select your product/gear location)</span>
                             </label>
@@ -69,7 +69,7 @@
             <div class="form-group">
                     <div class="row" style="vertical-align: middle;">
                         <label for="heading" style="vertical-align: middle; height: 30px;">
-                            Upload Product/Gear Photos
+                            Upload Product/Gear Photos<span class="red">*</span>
                         </label>
                     </div>
                     <div id="media-gallery-uploads" class="container">
@@ -180,6 +180,10 @@
             var location_state = $('[data-name="geo_state"]').val();
             var location_country = $('[data-name="geo_country"]').val();
 
+            if (location_name== undefined || location_name.length == 0) {
+                BootstrapDialog.alert('Please enter available from location, it is mandatory field');
+                return;
+            }
 
             var $media_gallery_images = $('[data-name="media-gallery-image"]');
             var media_gallery_images = [];
@@ -193,6 +197,11 @@
 
             }
             var description = $('[data-name="description"]').val();
+            if (description==undefined || description.length==0){
+                BootstrapDialog.alert('Please enter product/gear description, they are mandatory field');
+                return;
+
+            }
 
             var data = {
                 title: title,

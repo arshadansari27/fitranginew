@@ -5,7 +5,7 @@ from app.models.relationships import RelationShips
 from app.models.booking import GearBooking
 from app.models.media import GearGalleryImage
 
-CATEGORIES = ['Accessories', 'Shoes', 'Clothing', 'Adventure Gear', 'Bags', 'Head Gears and Caps']
+CATEGORIES = ['Accessories', 'Shoes', 'Clothing', 'Adventure Gear', 'Bags', 'Head Gears and Caps', 'Others']
 
 @update_content.apply
 class Gear(Entity, ExternalNetwork, Charge, db.Document, Location):
