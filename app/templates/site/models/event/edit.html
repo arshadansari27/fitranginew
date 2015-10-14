@@ -17,7 +17,7 @@
                 <input type="date" class="form-control" name="scheduled-date" data-name="scheduled-date" value="{%if model and model.scheduled_date %}{{model.scheduled_date_only }}{% endif %}" placeholder="YYYY-MM-DD">
             </div>
             <div class="form-group">
-                <label for="heading">Event End Date<span class="red">*</span>&nbsp;&nbsp;(For Events Extending More Than A Single Day)</label>
+                <label for="heading">Event End Date&nbsp;&nbsp;(Select only if Event is Extending More Than A Single Day)</label>
                 <input type="date" class="form-control" name="end-date" data-name="end-date" value="{%if model and model.end_date %}{{model.end_date_only }}{% endif %}" placeholder="YYYY-MM-DD">
             </div>
 
@@ -26,7 +26,7 @@
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                         <div class="form-group">
                             <label for="heading">
-                                LOCATION
+                                Location
                             </label>
                             <input type="text" class="form-control geo-complete" value="{%if model and model.location %}{{model.location}}{% endif %}"/>
                             <input type="hidden" name="formatted_address" data-name="geo_location_name" value="{% if model.location  and model.location|length > 0 %}{{ model.location }}{% endif %}"/>
@@ -44,7 +44,7 @@
                 <br/>
 
                 <div class="form-group">
-                    <label for="heading">Event Description <span class="red">*</span>&nbsp;&nbsp;<small>(Few lines about the event)</small></label>
+                    <label for="heading">Event Description &nbsp;&nbsp;<small>(Few lines about the event)</small></label>
                     <textarea class="form-control" rows="4" data-name="description"
                               placeholder="Write About Event In 2/3 Lines...">{% if model and model.description %}{{model.description}}{% endif %}</textarea>
                 </div>
@@ -135,9 +135,14 @@
             var description = $('[data-name="description"]').val();
             var scheduled_date = $('[data-name="scheduled-date"]').val();
             var end_date = $('[data-name="end-date"]').val();
+            var overview = $('[data-name="overview"]').val();
             var about_organizer = $('[data-name="about-organizer"]').val();
             var external_link = $('[data-name="external-link"]').val();
 
+            if (title== undefined || title.length == 0) {
+                BootstrapDialog.alert('Please enter title, it is mandatory field');
+                return;
+            }
             if (scheduled_date == undefined || scheduled_date.length == 0) {
                 BootstrapDialog.alert('Please enter scheduled date, it is mandatory field');
                 return;
@@ -148,8 +153,8 @@
                 return;
             }
 
-            if (description == undefined || description.length == 0) {
-                BootstrapDialog.alert('Please enter description, it is mandatory field');
+            if (overview == undefined || overview.length == 0) {
+                BootstrapDialog.alert('Please enter details about the event, it is mandatory field');
                 return;
             }
             if (about_organizer == undefined || about_organizer.length == 0) {
@@ -166,14 +171,17 @@
             var location_state = $('[data-name="geo_state"]').val();
             var location_country = $('[data-name="geo_country"]').val();
 
-
-            var cover_image = $('[data-name="cover-image"]').val();
-            if (cover_image.length == 0) {
-                BootstrapDialog.alert('Please select a cover image for the trip. This is mandatory.');
+            if (location_name== undefined || location_name.length == 0) {
+                BootstrapDialog.alert('Please enter location, it is mandatory field');
                 return;
             }
 
-            var overview = $('[data-name="overview"]').val();
+            var cover_image = $('[data-name="cover-image"]').val();
+            if (cover_image.length == 0) {
+                BootstrapDialog.alert('Please select a cover image for the event. This is mandatory.');
+                return;
+            }
+
 
             var data = {
                 title: title,

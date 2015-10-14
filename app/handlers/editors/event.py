@@ -80,7 +80,7 @@ def _edit(data, node=None):
         YYYY, MM, DD, hh, mm, ss = [int(u) for u in [YYYY.strip(), MM.strip(), DD.strip(), '0', '0', '0']]
         node.end_date = datetime.datetime(YYYY, MM, DD, hh, mm, ss)
     else:
-        node.end_date = None
+        node.end_date = node.scheduled_date
     node.about_organizer = data['about_organizer']
     node.description = data['description']
 
