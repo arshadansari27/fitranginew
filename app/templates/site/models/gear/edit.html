@@ -21,17 +21,18 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="heading">Condition<span class="red">*</span> </label>
+                <label for="heading">Condition </label>
                 <select data-name="condition" class="form-control">
+                    <option value="" {% if model or not model.condition %}selected{% endif %}>--</option>
                     <option value="Brand New" {% if model and model.condition=="Brand New" %}selected{% endif %}>Brand New</option>
                     <option value="Used Product" {% if model and model.condition=="Used Product" %}selected{% endif %}>Used Product</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="heading">Available For<span class="red">*</span><p style="font-size: 7pt;">(Choose both if they are available in both options)</p> </label>
-                <select class="form-control" data-name="available-for" multiple size="2">
-                    <option value="BUYING" {% if model and "BUYING" in model.available_for %}selected{% endif %}>BUYING</option>
-                    <option value="RENTING" {% if model and "RENTING" in model.available_for %}selected{% endif %}>RENTING</option>
+                <select class="form-control" data-name="available-for">
+                    <option value="BUYING" {% if model and ("BUYING" in model.available_for or model.available_for == "BUYING") %}selected{% endif %}>BUYING</option>
+                    <option value="RENTING" {% if model and ("RENTING" in model.available_for or model.available_for == "RENTING") %}selected{% endif %}>RENTING</option>
                 </select>
             </div>
             <div class="form-group">
@@ -159,10 +160,7 @@
                 BootstrapDialog.alert('Please enter category, it is mandatory field');
                 return;
             }
-            if (condition== undefined || condition.length == 0) {
-                BootstrapDialog.alert('Please enter condition, it is mandatory field');
-                return;
-            }
+
             if (price == undefined || price.length == 0) {
                 BootstrapDialog.alert('Please enter price, it is mandatory field');
                 return;
@@ -213,7 +211,7 @@
                 location_region: location_region,
                 location_state: location_state,
                 location_country:location_country,
-                available_for: available_for,
+                available_for: [available_for],
                 category: category,
                 price: price,
                 external_link: external_link,

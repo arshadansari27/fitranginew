@@ -72,37 +72,31 @@
         <div class="border-grey-t border-grey-b h-56">
             <div class="container text-center">
                 <ul id="myTab" class="nav nav-tabs" role="tablist">
-                    <li class="active"><a href="#all" role="tab" data-toggle="tab" aria-controls="all" aria-expanded="false">
-                        <span class="fa fa-home"></span> <strong>All Gears and Products</strong></a></li>
+                    <li class="active"><a href="#used" role="tab" data-toggle="tab" aria-controls="all" aria-expanded="false">
+                        <span class="fa fa-home"></span> <strong>For Renting</strong></a></li>
                     <li><a href="#new" role="tab" data-toggle="tab" aria-controls="new" aria-expanded="false">
-                        <span class="fa fa-paperclip"></span> <strong>Brand New Products</strong></a></li>
-                    <li><a href="#used" role="tab" data-toggle="tab" aria-controls="all" aria-expanded="false">
-                        <span class="fa fa-unlink"></span> <strong>Used Products</strong></a></li>
+                        <span class="fa fa-paperclip"></span> <strong>For Buying</strong></a></li>
                     {% if user %}<li class=""><a href="#my-gears" role="tab" data-toggle="tab" aria-controls="my-gears"
                             aria-expanded="false">
-                        <span class="fa fa-certificate"></span> <strong>My Gears and Produts</strong> </a></li>{% endif %}
+                        <span class="fa fa-certificate"></span> <strong>My Gears and Products</strong> </a></li>{% endif %}
                 </ul>
             </div>
         </div>
         <div class="container">
             <div id="myTabContent" class="tab-content">
-                <div role="tabpanel" class="tab-pane fade active in" id="all" aria-labelledby="all">
+                <div role="tabpanel" class="tab-pane fade" id="used" aria-labelledby="used">
                     <div class="container fitrangi-trips">
-                        {{ gear_list|safe }}
+                        <input id="used-gear-filter" data-category="used" data-model="gear" data-filter="available_for" type="hidden" value="RENTING" data-filter-status="fixed">
+                        {{ used_gear_list|safe }}
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="new" aria-labelledby="new">
                     <div class="container fitrangi-trips">
-                        <input id="new-gear-filter" data-category="new" data-model="gear" data-filter="condition" type="hidden" value="Brand New" data-filter-status="fixed">
+                        <input id="new-gear-filter" data-category="new" data-model="gear" data-filter="available_for" type="hidden" value="BUYING" data-filter-status="fixed">
                         {{ new_gear_list|safe }}
                     </div>
                 </div>
-                <div role="tabpanel" class="tab-pane fade" id="used" aria-labelledby="used">
-                    <div class="container fitrangi-trips">
-                        <input id="used-gear-filter" data-category="used" data-model="gear" data-filter="condition" type="hidden" value="Used Product" data-filter-status="fixed">
-                        {{ used_gear_list|safe }}
-                    </div>
-                </div>
+
                 {% if user %}
                 <div role="tabpanel" class="tab-pane fade" id="my-gears" aria-labelledby="my-trips">
                     <div class="container fitrangi-trips">
