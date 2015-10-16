@@ -186,11 +186,11 @@
                 {% if menu.app_name in ['explore', 'community'] %}
                 <div class="container-fluid border-grey-t">
                     <ul class="nav navbar-nav nav-down">
-                        <!--li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="#"
+                        <li class="{% if menu.main_menu == 'my' %}active{% endif %}"><a href="#"
                                                                                         data-action="check-login"
                                                                                         data-user-id="{{user.id}}">My
                             Page</a>
-                        </li-->
+                        </li>
                         <li class="inner-level-dropdown dropdown {% if menu.main_menu in ['activity', 'activities'] %}active{% endif %}">
                             <a id="subdropdown1" href="#" class="dropdown-toggle">Activities<b class="caret"></b></a>
                             <ul class="dropdown-menu multi-column columns-3" aria-labelledby="subdropdown1" role="menu" style="margin-top: 12px;">
