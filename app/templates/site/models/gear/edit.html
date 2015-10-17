@@ -29,7 +29,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="heading">Available For<span class="red">*</span><p style="font-size: 7pt;">(Choose both if they are available in both options)</p> </label>
+                <label for="heading">Available For<span class="red">*</span></label>
                 <select class="form-control" data-name="available-for">
                     <option value="BUYING" {% if model and ("BUYING" in model.available_for or model.available_for == "BUYING") %}selected{% endif %}>BUYING</option>
                     <option value="RENTING" {% if model and ("RENTING" in model.available_for or model.available_for == "RENTING") %}selected{% endif %}>RENTING</option>

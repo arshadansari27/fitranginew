@@ -5,16 +5,19 @@ from app.models.relationships import RelationShips
 from app.models.booking import GearBooking
 from app.models.media import GearGalleryImage
 
-CATEGORIES = ['Accessories', 'Shoes', 'Clothing', 'Adventure Gear', 'Bags', 'Head Gears and Caps', 'Others']
+CATEGORIES = ['Accessories', 'Shoes & Footwear', 'Clothing', 'Equipments', 'Bags & Rucksack', 'Tent and Camping Gears', 'Others']
+
+ALLOWED_CATEGORIES = ['Shoes', 'Adventure Gear', 'Bags', 'Head Gears and Caps']
+ALLOWED_CATEGORIES.extend(CATEGORIES)
 
 @update_content.apply
 class Gear(Entity, ExternalNetwork, Charge, db.Document, Location):
     owner = db.ReferenceField('Profile')
     published = db.BooleanField(default=False)
     published_timestamp = db.DateTimeField()
-    category = db.StringField(choices=CATEGORIES)
+    category = db.StringField(choices=ALLOWED_CATEGORIES)
     available_for = db.ListField(db.StringField(choices=['BUYING', 'RENTING']))
-    condition = db.StringField(choices=['Brand New', 'Used Product'])
+    condition = db.StringField(choices=['Brand New', 'Used Product', ''])
 
     meta = {
         'indexes': [
