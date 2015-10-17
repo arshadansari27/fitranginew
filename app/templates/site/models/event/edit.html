@@ -2,7 +2,7 @@
 
     <!-- col-lg-9 col-md-9 col-sm-12 col-xs-12 -->
     <div class="">
-        <h2 class="title">Enter Event Information</h2>
+        <h2 class="title">Enter Event Information<small> (Fields marked with <span class="red">*</span> are compulsory)</small></h2>
 
         <form class="fitrangi-form">
 
@@ -26,7 +26,7 @@
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                         <div class="form-group">
                             <label for="heading">
-                                Location
+                                Location <span class="red">*</span>
                             </label>
                             <input type="text" class="form-control geo-complete" value="{%if model and model.location %}{{model.location}}{% endif %}"/>
                             <input type="hidden" name="formatted_address" data-name="geo_location_name" value="{% if model.location  and model.location|length > 0 %}{{ model.location }}{% endif %}"/>
@@ -46,19 +46,19 @@
                 <div class="form-group">
                     <label for="heading">Event Description &nbsp;&nbsp;<small>(Few lines about the event)</small></label>
                     <textarea class="form-control" rows="4" data-name="description"
-                              placeholder="Write About Event In 2/3 Lines...">{% if model and model.description %}{{model.description}}{% endif %}</textarea>
+                              placeholder="Write about the event in 2/3 lines">{% if model and model.description %}{{model.description}}{% endif %}</textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="heading">Event Details<span class="red">*</span>&nbsp;&nbsp;<small>(All the details about the event)</small></label>
                     <textarea class="form-control summernote" rows="4" data-name="overview"
-                              placeholder="Write Details About The Event...">{% if model and model.about %}{{model.about}}{% endif %}</textarea>
+                              placeholder="Enter details about the event">{% if model and model.about %}{{model.about}}{% endif %}</textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="heading">About Organizer<span class="red">*</span>&nbsp;&nbsp;<small></small></label>
                     <textarea class="form-control summernote" rows="4" data-name="about-organizer"
-                              placeholder="Write Details About The Organizer Of The Event...">{% if model and model.about_organizer %}{{model.about_organizer}}{% endif %}</textarea>
+                              placeholder="Enter details about the organizer of the event">{% if model and model.about_organizer %}{{model.about_organizer}}{% endif %}</textarea>
                 </div>
 
                 <div class="form-group">
@@ -176,7 +176,7 @@
                 return;
             }
 
-            var cover_image = $('[data-name="cover-image"]').val();
+            var cover_image = $('[data-name="cover-image"]').<small> (Fields marked with <span class="red">*</span> are compulsory)</small>val();
             if (cover_image.length == 0) {
                 BootstrapDialog.alert('Please select a cover image for the event. This is mandatory.');
                 return;
