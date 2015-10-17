@@ -482,11 +482,11 @@ def register_business_profile(data):
         raise BusinessException('Profile already added by someone')
 
     for activity in activities:
-        act = Activity.objects(name__iexact=activity.strip()).first()
+        act = Activity.objects(pk=activity).first()
         if act and not act in profile.favorite_activities:
             RelationShips.favorite(profile, act)
-        if activity and len(activity) > 0 and activity not in profile.interest_in_activities:
-            profile.interest_in_activities.append(activity.strip())
+            if act.name not in profile.interest_in_activities:
+                profile.interest_in_activities.append(act.name)
     profile.password = password
     profile.is_business_profile = True
     profile.admin_approved = False
@@ -564,15 +564,16 @@ def update_business_profile(node, data):
     profile.google_plus=google_plus.strip()
     profile.address = address.strip()
 
+    print '[*] Updating activities', activities
     for activity in activities:
-        act = Activity.objects(name__iexact=activity.strip()).first()
+        act = Activity.objects(pk=activity).first()
         if act:
             if act in profile.favorite_activities:
                 continue
             RelationShips.favorite(profile, act)
-        if activity in profile.interest_in_activities:
+        if act.name in profile.interest_in_activities:
             continue
-        profile.interest_in_activities.append(activity.strip())
+        profile.interest_in_activities.append(act.name)
     profile.is_business_profile = True
 
     profile = profile.save()

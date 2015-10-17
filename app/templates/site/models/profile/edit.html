@@ -159,189 +159,29 @@
                 </div>
 
 
-                <h4 class="blue oswald uppercase">Select your Speacialities<span class="red">*</span></h4>
+                <h4 class="blue oswald uppercase">Select your Speciality in activities<span class="red">*</span></h4>
 
-                <div class="row">
-
-                    <div class="col-md-4">
-                        <ul class="specialities-list">
-                            <li>
+                <div class="row-fluid">
+                        {% for k in ['Land Activities', 'Water Activities', 'Air Activities'] %}
+                        <div class="row-fluid">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><strong><u>{{k}}</u></strong></div>
+                            {% for activity in activities.get(k, []) %}
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
                                 <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Trekking & Hiking" {%  if 'Trekking & Hiking' in model.interest_in_activities %}checked{% endif %}> Trekking & Hiking
-                                    </label>
+                                    <p><input type="checkbox" data-name="activities" data-value="{{activity.id}}" {% if activity.name in model.interest_in_activities %}checked{% endif %}> {{activity.name}}</p>
                                 </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Rock Climbing" {%  if 'Rock Climbing' in model.interest_in_activities %}checked{% endif %}> Rock Climbimg
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Rapelling & Valley Crossing" {%  if 'Rapelling & Valley Crossing' in model.interest_in_activities %}checked{% endif %}> Rapelling & Valley Crossing
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Camping" {%  if 'Camping' in model.interest_in_activities %}checked{% endif %}> Camping
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Mountaineering" {%  if 'Mountaineering' in model.interest_in_activities %}checked{% endif %}> Mountaineering
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Canyoning" {%  if 'Canyoning' in model.interest_in_activities %}checked{% endif %}> Canyoning
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Marathons" {%  if 'Marathons' in model.interest_in_activities %}checked{% endif %}> Marathons
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Cycling & Biking" {%  if 'Cycling & Biking' in model.interest_in_activities %}checked{% endif %}> Cycling & Biking
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Offbeat Activities" {%  if 'Offbeat Activities' in model.interest_in_activities %}checked{% endif %}> Offbeat Activities
-                                    </label>
-                                </div>
-                            </li>
-
-                        </ul>
-                    </div>
-
-                    <div class="col-md-4">
-                        <ul class="specialities-list">
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Paragliding" {%  if 'Paragliding' in model.interest_in_activities %}checked{% endif %}> Paragliding
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Parasailing" {%  if 'Parasailing' in model.interest_in_activities %}checked{% endif %}> Parasailing
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Paramotoring" {%  if 'Paramotoring' in model.interest_in_activities %}checked{% endif %}> Paramotoring
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Skydiving" {%  if 'Skydiving' in model.interest_in_activities %}checked{% endif %}> Skydiving
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Bungee Jumping" {%  if 'Bungee Jumping' in model.interest_in_activities %}checked{% endif %}> Bungee Jumping
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Handgliding" {%  if 'Handgliding' in model.interest_in_activities %}checked{% endif %}> Handgliding
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Hot Air Ballooning" {%  if 'Hot Air Ballooning' in model.interest_in_activities %}checked{% endif %}> Hot Air Ballooning
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Zipline" {%  if 'Zipline' in model.interest_in_activities %}checked{% endif %}> Zipline
-                                    </label>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-4">
-                        <ul class="specialities-list">
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Water Rafting" {%  if 'Water Rafting' in model.interest_in_activities %}checked{% endif %}> Water Rafting
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Kayaking" {%  if 'Kayaking' in model.interest_in_activities %}checked{% endif %}> Kayaking
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Snorkelling" {%  if 'Snorkelling' in model.interest_in_activities %}checked{% endif %}> Snorkelling
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Scuba Diving" {%  if 'Scuba Diving' in model.interest_in_activities %}checked{% endif %}> Scuba Diving
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Surfing" {%  if 'Surfing' in model.interest_in_activities %}checked{% endif %}> Surfing
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Kite Surfing" {%  if 'Kite Surfing' in model.interest_in_activities %}checked{% endif %}> Kite Surfing
-                                    </label>
-                                </div>
-                            </li>
-                        </ul>
-
-                        <ul class="specialities-list">
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Skiing" {%  if 'Skiing' in model.interest_in_activities %}checked{% endif %}> Skiing
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" data-name="activities" value="Snowboarding" {%  if 'Snowboarding' in model.interest_in_activities %}checked{% endif %}> Snowboarding
-                                    </label>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!--a class="btn btn-primary pull-right btn-sm">Other Activities apart from above <i
-                            class="fa fa-plus-circle"></i></a-->
-
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
                 </div>
+
 
                 {% if not model %}
                 <div class="form-group">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" data-name="terms"> I accept the terms and conditions as per the agreement.
+                            <input type="checkbox" data-name="terms"> I accept the terms and conditions as per the agreement.<span class="red">*</span>
                         </label>
                     </div>
                 </div>
@@ -349,7 +189,7 @@
                 <div class="form-group">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" data-name="authority"> I am the administrator / manager / representative
+                            <input type="checkbox" data-name="authority"> I am the administrator / manager / representative <span class="red">*</span>
                         </label>
                     </div>
                 </div>
@@ -561,10 +401,16 @@
                     return;
                 }
             }
+
+            if (type == undefined || type.length == 0) {
+                BootstrapDialog.alert('Please enter the business type as it is a mandatory field.');
+                return;
+            }
+
+
             var activities = [];
             $('[data-name="activities"]:checked').each(function(i, elem) {
-                console.log(i + " " + elem);
-                activities.push($(elem).val());
+                activities.push($(elem).data('value'));
             });
 
 

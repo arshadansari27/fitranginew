@@ -131,7 +131,7 @@
 
                             {% if not user or user.is_admin or (not user.is_business_profile and user.managed_profiles|length == 0) %}
 	                        <li>
-                                <a class="btn btn-link underline" href="#" {% if user %}data-user="{{user.id}}"{% endif %} title="Business" data-action="create-business-profile">Register an Organization</a>
+                                <a class="btn btn-link underline" href="#" {% if user %}data-user="{{user.id}}"{% endif %} title="Business" data-action="create-business-profile">Register As Organization</a>
                             </li>
                             {% endif %}
 
