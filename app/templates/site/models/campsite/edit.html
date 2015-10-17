@@ -2,7 +2,7 @@
 
     <!-- col-lg-9 col-md-9 col-sm-12 col-xs-12 -->
     <div class="">
-        <h2 class="title">Enter Site Information </h2>
+        <h2 class="title">Enter Site Information <small> (Fields marked with <span class="red">*</span> are compulsory)</small></h2>
 
         <form class="fitrangi-form">
             <div class="form-group">
@@ -87,7 +87,7 @@
                         <div class="container">
                             <br/>
                             <span><u>Others, please specify</u></span>
-                            <input class="form-control" type="text" data-name="other-activities" placeholder="Enter other activities as comma seperated list"/>
+                            <input class="form-control" type="text" data-name="other-activities" placeholder="Enter activities separated by comma "/>
                         </div>
                     </div>
                     <br/>
@@ -101,28 +101,28 @@
                 <div class="form-group">
                     <label for="heading">About<span class="red">*</span>&nbsp;&nbsp;<small>(Overview of the site)</small></label>
                     <textarea class="form-control summernote" rows="4" data-name="overview"
-                              placeholder="Write Brief About The Campsite...">{% if model and model.about %}{{model.about}}{% endif %}</textarea>
+                              placeholder="Enter Brief About The Campsite...">{% if model and model.about %}{{model.about}}{% endif %}</textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="heading">Activities&nbsp;&nbsp;<small>(Write in detail)</small></label>
                     <textarea class="form-control summernote" rows="4" data-name="activities-details"
-                              placeholder="Write Brief More Details About Activities...">{% if model and model.activities_details %}{{model.activities_details}}{% endif %}</textarea>
+                              placeholder="Enter Brief More Details About Activities...">{% if model and model.activities_details %}{{model.activities_details}}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="heading">Accommodations</label>
                     <textarea class="form-control summernote" rows="4" data-name="accommodations"
-                              placeholder="Write Brief About Accommodations...">{% if model and model.accommodations %}{{model.accommodations }}{% endif %}</textarea>
+                              placeholder="Enter Brief About Accommodations...">{% if model and model.accommodations %}{{model.accommodations }}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="heading">Tariff (Cost, Packages & Offers)&nbsp;&nbsp;<small>(Cost, Packages & Offers)</small></label>
                     <textarea class="form-control summernote" rows="4" data-name="tariff"
-                              placeholder="Write Brief About Tariff and Costs...">{% if model and model.tariff %}{{model.tariff }}{% endif %}</textarea>
+                              placeholder="Enter Brief About Tariff and Costs...">{% if model and model.tariff %}{{model.tariff }}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="heading">How to Reach<small>(Routes, Fares, etc)</small></label>
                     <textarea class="form-control summernote" rows="4" data-name="how-to-reach"
-                              placeholder="Write Brief About How To Reach...">{% if model and model.how_to_reach %}{{model.how_to_reach}}{% endif %}</textarea>
+                              placeholder="Enter Brief About How To Reach...">{% if model and model.how_to_reach %}{{model.how_to_reach}}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="cover-image">Upload Cover Image <span class="red">*</span></label>

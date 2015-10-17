@@ -27,7 +27,15 @@
 
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-left">
-                    <h4>{% if model.location %}<i class="fa fa-map-marker"></i>&nbsp;{{ model.location }}{% endif %}</h4>
+                    <h4>
+                        {% if model.location %}
+                        <i class="fa fa-map-marker"></i>&nbsp;
+                        {{ model.location }}
+                        {% elif model.optional_location_name %}
+                        <i class="fa fa-map-marker"></i>&nbsp;
+                        {{model.optional_location_name}}
+                        {% endif %}
+                    </h4>
                 </div>
 
 
