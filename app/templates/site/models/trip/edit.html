@@ -2,7 +2,7 @@
 
     <!-- col-lg-9 col-md-9 col-sm-12 col-xs-12 -->
     <div class="">
-        <h2 class="title">Enter Trip Information</h2>
+        <h2 class="title">Enter Trip Information<small> (Fields marked with <span class="red">*</span> are compulsory)</small></h2>
 
         <form class="fitrangi-form">
             <div class="form-group">
@@ -60,7 +60,7 @@
                             <label for="heading">Location
                                 <span class="red">*</span>
                                 <p class="text-muted" style="font-size: 9pt;">
-                                    (If you don't find your trip location in the list Or have more than one location? <a href="#" id="toggle-destination-link">Click Here</a>)
+                                    (If you don't find your trip location in the list Or have more than one location <a href="#" id="toggle-destination-link">Click Here</a>)
                                 </p>
                             </label>
                             <input type="text" class="form-control geo-complete" value="{%if model and model.location %}{{model.location}}{% endif %}"/>
@@ -99,11 +99,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                         OR Price on request&nbsp;
                         <input type="checkbox" class="" placeholder="Select for quote" data-name="price-on-request" {% if model and model.price_on_request == True %}checked{% endif %}>
                     </div>
                 </div>
+                <br/>
+                <hr/>
 
                 <!--div class="form-group">
                     <label for="heading">Detail Address</label>
@@ -131,32 +133,32 @@
                     <div class="row-fluid">
                         <br/>
                         <span><u>Others, please specify</u></span>
-                        <input class="form-control" type="text" data-name="other-activities" placeholder="Enter other activities as comma seperated list"/>
+                        <input class="form-control" type="text" data-name="other-activities" placeholder="Enter activities separated by comma"/>
                     </div>
                 </div>
                 <br/>
                 <hr/>
                 <br/>
                 <div class="form-group">
-                    <label for="heading">Overview <small>(About the destination)</small><span class="red">*</span></label>
+                    <label for="heading">Overview <small>(About the destination)</small></label>
                     <textarea class="form-control summernote" name="itinerary" rows="4" data-name="overview"
-                              placeholder="Write Brief About The Trip...">{% if model and model.about %}{{model.about}}{% endif %}</textarea>
+                              placeholder="Enter Brief About The Trip...">{% if model and model.about %}{{model.about}}{% endif %}</textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="heading">Itinerary <small>(Schedule, Things to carry, etc)</small><span class="red">*</span></label>
+                    <label for="heading">Itinerary <small>(Schedule, Things to carry, etc)</small></label>
                     <textarea class="form-control summernote" name="itinerary" rows="4" data-name="itinerary"
-                              placeholder="Write Brief About Itinerary...">{% if model and model.itinerary %}{{model.itinerary}}{% endif %}</textarea>
+                              placeholder="Enter Brief About Itinerary...">{% if model and model.itinerary %}{{model.itinerary}}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
-                    <label for="heading">Inclusive / Exclusive <span class="red">*</span></label>
+                    <label for="heading">Inclusive / Exclusive</label>
                     <textarea class="form-control summernote" name="inclusive_exclusive" rows="4" data-name="inclusive_exclusive"
-                              placeholder="Write Brief About Inclusive and Exclusive...">{% if model and model.inclusive_exclusive%}{{model.inclusive_exclusive}}{% endif %}</textarea>
+                              placeholder="Enter Brief About Inclusive and Exclusive...">{% if model and model.inclusive_exclusive%}{{model.inclusive_exclusive}}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="heading">Other details <small>(Notes, Highlights, Cancellation, etc)</small></label>
                     <textarea class="form-control summernote" name="other_details" rows="4" data-name="other_details"
-                              placeholder="Write Brief About Other Details...">{% if model and model.other_details %}{{model.other_details }}{% endif %}</textarea>
+                              placeholder="Enter Brief About Other Details...">{% if model and model.other_details %}{{model.other_details }}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="cover-image">Upload Cover Image <span class="red">*</span></label>
@@ -308,12 +310,6 @@
             var optional_location_name = $('[data-name="optional_location_name"]').val();
             var price = $('[data-name="price"]').val();
             var price_on_request = ($('[data-name="price-on-request"]:checked').val() == undefined)? false: true;
-            if (!price_on_request && (price == undefined || price.length == 0)) {
-                BootstrapDialog.alert('Price is mandatory if "Price on request" is not checked');
-                return;
-            } else if (price_on_request == true) {
-                price = '';
-            }
             var $activities = $('[data-name="activities"]:checked');
             var activities = [];
             for (var i = 0; i < $activities.length; i++){
@@ -348,9 +344,11 @@
                 BootstrapDialog.alert('Please enter location of the trip. This is mandatory.');
                 return;
             }
-            if (price == undefined || price.length == 0) {
+            if (!price_on_request && (price == undefined || price.length == 0)) {
                 BootstrapDialog.alert('Please enter amount for the trip or select on request. This is mandatory.');
                 return;
+            } else if (price_on_request == true) {
+                price = '';
             }
 
 
