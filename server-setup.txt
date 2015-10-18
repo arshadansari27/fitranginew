@@ -20,8 +20,8 @@ sudo pip install gunicorn supervisor
 sudo pip install -r requirements.new.txt
 
 cd /etc/nginx/conf.d
-sudo ln -s /home/ubuntu/buildenv/blacklist.conf blacklist.conf
+sudo ln -s /home/ubuntu/buildenv/fitrangi/blacklist.conf blacklist.conf
 
 cd /etc/nginx/sites-enabled
-sudo ln -s /home/ubuntu/buildenv/fitrangi.nginx.conf fitrangi.nginx.conf
+sudo ln -s /home/ubuntu/buildenv/fitrangi/fitrangi.nginx.conf fitrangi.nginx.conf
 
