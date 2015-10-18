@@ -1,0 +1,20 @@
+As root
+=======
+useradd ubuntu -s /bin/bash -g sudo -m
+passwd ubuntu
+
+LOCAL
+=====
+
+
+As ubuntu
+=========
+sudo apt-get update
+sudo apt-get install python-setuptools mongodb libjpeg-dev libtiff-dev libpng-dev zlib1g-dev libffi-dev htop python-dev git
+mkdir buildenv
+cd buildenv
+git clone git@github.com:arshadansari27/fitranginew.git fitrangi
+cd fitrangi
+sudo easy_install pip
+sudo pip install gunicorn supervisor
+sudo pip install -r requirements.new.txt
