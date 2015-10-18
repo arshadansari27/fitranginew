@@ -48,8 +48,8 @@
                     <input id="condition-filter" data-model="gear" data-filter="condition" list="condition-list" placeholder="FILTER BY CONDITION">
                     <datalist id="condition-list">
                         <option value="">
-                        <option value="BUYING">
-                        <option value="RENTING">
+                        <option value="Brand New">
+                        <option value="Used Prouct">
                     </datalist>
                 </div>
             </div>
@@ -84,7 +84,7 @@
         </div>
         <div class="container">
             <div id="myTabContent" class="tab-content">
-                <div role="tabpanel" class="tab-pane fade" id="used" aria-labelledby="used">
+                <div role="tabpanel" class="tab-pane fade in" id="used" aria-labelledby="used">
                     <div class="container fitrangi-trips">
                         <input id="used-gear-filter" data-category="used" data-model="gear" data-filter="available_for" type="hidden" value="RENTING" data-filter-status="fixed">
                         {{ used_gear_list|safe }}
