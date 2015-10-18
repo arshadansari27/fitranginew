@@ -796,31 +796,28 @@ class EditPage(Page):
 
     def __init__(self, model_name):
         super(EditPage, self).__init__(model_name)
-        activities = Activity.objects.all()
-        self.categories_activities = defaultdict(list)
-        for activity in activities:
-            self.categories_activities[activity.category].append(activity)
 
     def get_context(self, context):
+        from app.models.activity import CATEGORIES_ACTIVITIES
         if self.model_name == TRIP:
             if context.get('model'):
                 assert str(context.get('model').manager.id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
-            return dict(activities=self.categories_activities)
+            return dict(activities=CATEGORIES_ACTIVITIES)
         elif self.model_name == PROFILE:
             if context.get('parent'):
                 assert str(context.get('parent').id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
-            return dict(activities=self.categories_activities)
+            return dict(activities=CATEGORIES_ACTIVITIES)
         elif self.model_name in [DISCUSSION, ARTICLE, POST]:
             if context.get('model'):
                 assert str(context.get('model').author.id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
-            return dict(activities=self.categories_activities)
+            return dict(activities=CATEGORIES_ACTIVITIES)
         elif self.model_name == CAMPSITE:
             if context.get('model'):
                 assert str(context.get('model').manager.id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
-            return dict(activities=self.categories_activities)
+            return dict(activities=CATEGORIES_ACTIVITIES)
         elif self.model_name == GEAR:
             from app.models.gear import CATEGORIES
-            return dict(categories=CATEGORIES, activities=self.categories_activities)
+            return dict(categories=CATEGORIES, activities=CATEGORIES_ACTIVITIES)
         else:
             return {}
 

@@ -1,4 +1,5 @@
 __author__ = 'arshad'
+from collections import defaultdict
 
 from app.models import update_content, db, Entity
 from app.models.relationships import RelationShips
@@ -98,3 +99,9 @@ class Activity(Entity, db.Document):
         path = ICONS.get(icon_path)
         return path
 
+ALL_ACTIVITIES = Activity.objects.all()
+CATEGORIES_ACTIVITIES = defaultdict(list)
+for activity in ALL_ACTIVITIES:
+    CATEGORIES_ACTIVITIES[activity.category].append(activity)
+
+print 'CATEGORIZED_ACTIVITIES: ', CATEGORIES_ACTIVITIES
