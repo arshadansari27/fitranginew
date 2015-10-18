@@ -25,3 +25,9 @@ sudo ln -s /home/ubuntu/buildenv/fitrangi/blacklist.conf blacklist.conf
 cd /etc/nginx/sites-enabled
 sudo ln -s /home/ubuntu/buildenv/fitrangi/fitrangi.nginx.conf fitrangi.nginx.conf
 
+sudo service nginx restart
+
+ufw allow 22
+ufw allow 80
+ufw allow 8080
+ufw enable
