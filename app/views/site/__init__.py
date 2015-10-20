@@ -668,6 +668,7 @@ def manage_profile():
     return render_template('site/pages/commons/view.html', **context)
 
 @app.route('/add-edit/<model_name>')
+@login_required
 def add_edit(model_name):
     if not hasattr(g, 'user') and not g.user:
         return 'Forbidden', 403

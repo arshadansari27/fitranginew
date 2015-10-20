@@ -139,6 +139,7 @@ class Profile(Entity, db.Document, Location):
             return False
         return 'Admin' in self.roles
 
+
     @property
     def is_organizer(self):
         vals = [u.name.lower() for u in self.type]
@@ -330,6 +331,14 @@ class Profile(Entity, db.Document, Location):
     @property
     def owned_profiles(self):
         return Profile.objects(owned_by=self.id).all()
+
+    @property
+    def is_admin_or_business_profile(self):
+        types = self.type
+        for t in types:
+            if (t.id != PROFILE_TYPE_ENTHUSIAST.id and t.id != PROFILE_TYPE_SUBSCRIPTION_ONLY or self.is_admin):
+                return True
+        return False
 
 
 PROFILE_TYPE_ENTHUSIAST = ProfileType.objects(name='Enthusiast').first()
