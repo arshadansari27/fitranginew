@@ -64,7 +64,7 @@ def download_csv(contest_id=None):
         profiles = _profile_emails.values()
 
         for p, score in profiles:
-            if not p.email:
+            if not p or not p.email:
                 print 'Email not found for ', p.id
                 continue
             csv.append(",".join([p.name.encode('utf-8') if p.name else '', p.email.encode('utf-8'), p.type[0].name if p.type and len(p.type) > 0 and p.type[0] is not None else '', str(score)]))

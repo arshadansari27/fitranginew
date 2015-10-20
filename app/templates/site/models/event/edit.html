@@ -64,7 +64,7 @@
                 <div class="form-group">
                     <label for="cover-image">Upload Cover Image <span class="red">*</span></label>
                     <div class="thumbnail">
-                        <a href="#" data-action="cover-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://placehold.it/1366x500{% endif %}" width="70%"/></a>
+                        <a href="#" data-action="cover-image-upload" title="Click to change"><img data-name="cover-image-display" src="{% if model.cover_image %}{{model.cover_image_path}}{% else %}http://lorempixel.com/1366/500{% endif %}" width="70%"/></a>
                         <div class="caption text-center">Click on the image to change(Optional)</div>
                     </div>
                     <input type="hidden" data-name="cover-image" value="{% if model.cover_image %}{{ model.cover_image_path }}{% endif %}"/>
@@ -176,7 +176,7 @@
                 return;
             }
 
-            var cover_image = $('[data-name="cover-image"]').<small> (Fields marked with <span class="red">*</span> are compulsory)</small>val();
+            var cover_image = $('[data-name="cover-image"]').val();
             if (cover_image.length == 0) {
                 BootstrapDialog.alert('Please select a cover image for the event. This is mandatory.');
                 return;
@@ -224,7 +224,9 @@
 
 
         $('body').on('click', '[data-action="cover-image-upload"]', function(e){
-            e.stopPropagation();e.preventDefault();
+            e.stopPropagation();
+            e.preventDefault();
+            console.log('tseting');
             var callback = function(url){
                 $('[data-name="cover-image-display"]').attr('src', url);
                 $('[data-name="cover-image"]').val(url);
