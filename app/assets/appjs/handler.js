@@ -1722,7 +1722,6 @@ jQuery(document).ready(function ($) {
 
 
     var load_more = function(load_more_button) {
-        $(load_more_button).html('loading....');
         var btn_load_more = $(load_more_button);
         var model       = btn_load_more.attr('data-model');
         var category    = btn_load_more.attr('data-category');
@@ -1754,7 +1753,6 @@ jQuery(document).ready(function ($) {
 
         load_model(options,function(data){
             container.append(data.html);
-            $(load_more_button).html('Load More');
             if (data.last_page <= page)  {
                 btn_load_more.hide();
             }
@@ -1787,11 +1785,13 @@ jQuery(document).ready(function ($) {
             card_type: card_type
         };
         var load_more = $('button[data-action="load-more"][data-model="' +  model + '"][data-card-type="' + card_type + '"][data-category="'+ category + '"]');
+        $(load_more).html('loading....');
         load_model(options,function(data){
             if (data.has_data == 1 || data.has_data == '1') {
                 $('[data-model="'+ model +'"][data-category="'+category+'"].help-info').hide();
             }
             $(elem).html(data.html);
+            $(load_more).html('Load More');
             if (data.last_page <= 1 && load_more != undefined)  {
                 $(load_more).hide();
             }
