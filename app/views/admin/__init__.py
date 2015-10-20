@@ -41,7 +41,15 @@ def process_context_admin():
         data = {}
         for _type in types:
             data[_type.name] = Profile.objects(type__in=[_type]).count()
-        return dict(user=g.user, is_admin='Admin' in g.user.roles, data=data, All=Profile.objects.count())
+
+        data2 = {}
+        data2['Article'] = Article.objects.count()
+        data2['Discussion'] = Discussion.objects.count()
+        data2['Event'] = Event.objects.count()
+        data2['Trip'] = Trip.objects.count()
+        data2['Campsite'] = Campsite.objects.count()
+        data2['Gear'] = Gear.objects.count()
+        return dict(user=g.user, is_admin='Admin' in g.user.roles, data=data, data2=data2, All=Profile.objects.count())
     else:
         return {}
 

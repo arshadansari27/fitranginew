@@ -23,6 +23,19 @@
                 </tr>
                 {% endfor %}
             </table>
+            <h3>Other Stuff</h3>
+            <table class="table table-stripped">
+                {% for k, v in data2.iteritems() %}
+                <tr>
+                    <td>
+                        {{ k }}
+                    </td>
+                    <td>
+                        {{ v }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
 
         <hr/>
         {% endif %}
