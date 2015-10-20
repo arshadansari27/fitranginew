@@ -4,7 +4,9 @@
         <div class="container">
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 heading">
-                {if user %}<a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: window.location.href='/add-edit/gear'">Add a Product / Gear</a>{% endif %}
+                {%if user %}
+                    <a data-user-id="{{user.id}}" href="#" class="btn btn-primary btn-lg m-5 pull-right" onclick="javascript: window.location.href='/add-edit/gear'">Add a Product / Gear</a>
+                {% endif %}
                 <h2>Buy, Sell & Rent Adventure Gears & Equipments</h2>
                 <a class="btn btn-default pull-right" role="button" data-toggle="collapse" href="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"><i class="fa fa-search"></i>&nbsp;Show Filters</a>
                 <input id="name-filter" data-filter="name__icontains" data-model="gear" type="hidden">
