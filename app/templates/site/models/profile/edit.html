@@ -158,10 +158,8 @@
 
                 </div>
 
-
-                <h4 class="blue oswald uppercase">Select your Speciality in activities<span class="red">*</span></h4>
-
-                <div class="row-fluid">
+                <div class="container-fluid">
+                    <h4 class="blue oswald uppercase">Select your Speciality in activities<span class="red">*</span></h4>
                         {% for k in ['Land Activities', 'Water Activities', 'Air Activities'] %}
                         <div class="row-fluid">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><strong><u>{{k}}</u></strong></div>
@@ -176,6 +174,8 @@
                         {% endfor %}
                 </div>
 
+                <hr class="clearfix"/>
+                <br/>
 
                 {% if not model %}
                 <div class="form-group">
