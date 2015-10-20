@@ -4,7 +4,7 @@
         <a href="{{model.slug}}"><img src="{{model.media_gallery_single_path_small}}" class="pull-left" style="height:140px;width:140px;"></a>
         <h4><a href="{{model.slug}}">&nbsp;&nbsp;{% if model and model.name and model.name|length > 35 %}{{model.name[0:35]}}...{% elif model %}{{model.name}}{% else %}No Product Title{% endif %}</a></h4>
         <p class="sub-title">
-            {% if not user or model.owner.id == user.id %}
+            {% if user and model.owner.id == user.id %}
             <a href="#" data-user-id="{{user.id}}" data-model-id="{{model.id}}" class="btn btn-default btn-xs mt-10 grey pull-right" type="button" onclick="javascript: window.location.href='/add-edit/gear?pk={{model.id}}'"><i class="fa fa-edit"></i> Edit </a>
             {% endif %}
             <h5>&nbsp;&nbsp;<i class="fa fa-map-marker"></i>&nbsp;{% if model.location %}{{model.location}}{% else %}Location for product not given{% endif %}</h5>
@@ -15,4 +15,4 @@
 
     </article>
     <hr/>
-</li>
+</li>                <input id="name-filter" data-filter="name__icontains" data-model="trip" type="hidden">
