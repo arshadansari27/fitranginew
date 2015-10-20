@@ -1722,6 +1722,7 @@ jQuery(document).ready(function ($) {
 
 
     var load_more = function(load_more_button) {
+        $(load_more_button).html('loading....');
         var btn_load_more = $(load_more_button);
         var model       = btn_load_more.attr('data-model');
         var category    = btn_load_more.attr('data-category');
@@ -1753,6 +1754,7 @@ jQuery(document).ready(function ($) {
 
         load_model(options,function(data){
             container.append(data.html);
+            $(load_more_button).html('Load More');
             if (data.last_page <= page)  {
                 btn_load_more.hide();
             }
