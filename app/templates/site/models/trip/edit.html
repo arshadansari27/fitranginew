@@ -100,7 +100,7 @@
                         </div>
                     </div>
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                        OR Price on request&nbsp;
+                        OR Select Price on request&nbsp;
                         <input type="checkbox" class="" placeholder="Select for quote" data-name="price-on-request" {% if model and model.price_on_request == True %}checked{% endif %}>
                     </div>
                 </div>
@@ -317,8 +317,8 @@
             }
             var cover_image = $('[data-name="cover-image"]').val();
 
-            if (activities.length == 0) {
-                BootstrapDialog.alert('Please select atleast on activity in the trip. This is mandatory.');
+            if (activities.length == 0 && (other_activities == undefined || other_activities.length==0)) {
+                BootstrapDialog.alert('Please select atleast one activity. This is mandatory.');
                 return;
             }
 
@@ -340,7 +340,7 @@
                 BootstrapDialog.alert('Please enter title for the trip. This is mandatory.');
                 return;
             }
-            if (location_name== undefined || location_name.length == 0) {
+            if ((location_name== undefined || location_name.length == 0) && (optional_location_name == undefined || optional_location_name.length == 0)) {
                 BootstrapDialog.alert('Please enter location of the trip. This is mandatory.');
                 return;
             }
