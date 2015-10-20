@@ -51,7 +51,7 @@ ICONS = {
 "rappellingandvalleycrossing" :"/images/adventure-icons/land-activities/rappelling-valley-crossing.png",
 "rockclimbing" :"/images/adventure-icons/land-activities/rock-climbing.png",
 "motorbiking" :"/images/adventure-icons/land-activities/Motor-Biking.png",
-"wildlife" :"/images/adventure-icons/land-activities/wildlife.png",
+"wildlife" :"/images/adventure-icons/land-activities/Wildlife.png",
 "skiing" :"/images/adventure-icons/land-activities/skiing.png",
 "snowboarding" :"/images/adventure-icons/land-activities/snowboarding.png",
 "trekkingandhiking" :"/images/adventure-icons/land-activities/trekking-hiking.png",
