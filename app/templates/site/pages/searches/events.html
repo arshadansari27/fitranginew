@@ -5,7 +5,7 @@
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 heading">
 
-                <h4 class="pull-right"><a href="/add-edit/event" class="btn btn-primary">Add An Event</a></h4>
+                {% if user and user.is_admin %}<h4 class="pull-right"><a href="/add-edit/event" class="btn btn-primary">Add An Event</a></h4>{% endif %}
                 <h2>Events</h2>
                 <h3>Adventure Fest, Meetups, Workshops, Seminars, Conferences & Much More</h3>
 
