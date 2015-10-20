@@ -1730,6 +1730,7 @@ jQuery(document).ready(function ($) {
         var page        = parseInt(btn_load_more.next('input[data-type="page"]').val() || 1);
         var size        = 24;
 
+        $(load_more_button).html('loading....');
         var query       = query_from_filters(model, category);
         var sort_query  = query_from_sorters(model, category);
 
@@ -1753,6 +1754,7 @@ jQuery(document).ready(function ($) {
 
         load_model(options,function(data){
             container.append(data.html);
+            $(load_more_button).html('Load More');
             if (data.last_page <= page)  {
                 btn_load_more.hide();
             }
