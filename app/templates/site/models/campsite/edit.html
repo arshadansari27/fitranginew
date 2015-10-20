@@ -30,7 +30,7 @@
                                 Location
                                 <span class="red">*</span>
                                 <p class="text-muted" style="font-size: 9pt;">
-                                    (If you don't find your trip location in the list <a href="#" id="toggle-destination-link">Click Here</a>)
+                                    (If you don't find your location in the list <a href="#" id="toggle-destination-link">Click Here</a>)
                                 </p>
                             </label>
                             <input type="text" class="form-control geo-complete" value="{%if model and model.location %}{{model.location}}{% endif %}"/>
@@ -268,8 +268,12 @@
             var tariff = $('[data-name="tariff"]').val();
             var how_to_reach = $('[data-name="how-to-reach"]').val();
 
-            if (location_name== undefined || location_name.length == 0) {
+            if ((location_name== undefined || location_name.length == 0) && (optional_location_name == undefined || optional_location_name.length == 0)) {
                 BootstrapDialog.alert('Please enter location of the campsite. This is mandatory.');
+                return;
+            }
+            if (activities.length == 0 && (other_activities == undefined || other_activities.length==0) && (activities_details == undefined || activities_details.length == 0)) {
+                BootstrapDialog.alert('Please select atleast one activity or put details for at least one activity. This is mandatory.');
                 return;
             }
             if (overview== undefined || overview.length == 0) {
