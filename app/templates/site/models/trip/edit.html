@@ -116,7 +116,7 @@
 
                     <div class="row-fluid">
                         {% for k in ['Land Activities', 'Water Activities', 'Air Activities'] %}
-                        <div class="row-fluid">
+                        <div class="container">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><strong><u>{{k}}</u></strong></div>
                             {% for activity in activities.get(k, []) %}
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
@@ -127,13 +127,15 @@
                             {% endfor %}
                         </div>
                         {% endfor %}
-                    </div>
-                    <br/>
-
-                    <div class="row-fluid">
-                        <br/>
-                        <span><u>Others, please specify</u></span>
-                        <input class="form-control" type="text" data-name="other-activities" placeholder="Enter activities separated by comma"/>
+                        <div class="container">
+                            <br/>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <span><u>Others, please specify</u></span>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input class="form-control" type="text" data-name="other-activities" placeholder="Enter activities separated by comma "/>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <br/>

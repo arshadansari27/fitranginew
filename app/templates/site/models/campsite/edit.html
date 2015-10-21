@@ -68,7 +68,7 @@
                     <textarea class="form-control" rows="7" data-name="highlights"
                               placeholder="Write Pointwise features of the campsite...">{% if model and model.highlights %}{{model.highlights }}{% endif %}</textarea>
                 </div>
-                <div class="form-group">
+                <div class="container">
                     <label for="heading">Available Activities At/Near The Site<span class="red">*</span> </label>
 
                     <div class="row-fluid">
@@ -86,8 +86,12 @@
                         {% endfor %}
                         <div class="container">
                             <br/>
-                            <span><u>Others, please specify</u></span>
-                            <input class="form-control" type="text" data-name="other-activities" placeholder="Enter activities separated by comma "/>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <span><u>Others, please specify</u></span>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input class="form-control" type="text" data-name="other-activities" placeholder="Enter activities separated by comma "/>
+                            </div>
                         </div>
                     </div>
                     <br/>

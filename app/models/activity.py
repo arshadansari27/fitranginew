@@ -32,7 +32,7 @@ ACTIVITY_CATEGORY = {
     'Zip Line': 'Air Activities',
     'Paramotoring': 'Air Activities',
     'Wildlife': 'Land Activities',
-    'Motor-Biking': 'Land Activities'
+    'Motor Biking': 'Land Activities'
 }
 
 
