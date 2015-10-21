@@ -269,6 +269,10 @@
                 answers.push([keys[k], answer_dict[keys[k]]]);
 
             }
+            if (answers.length != total_questions) {
+                BootstrapDialog.alert('Answer all the questions, before submitting!');
+                return;
+            }
             console.log(JSON.stringify(answers));
             App.content.answer_contest(user, contest, answers);
 
