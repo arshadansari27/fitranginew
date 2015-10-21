@@ -518,7 +518,7 @@ def paged_list():
     context['user'] = g.user if hasattr(g, 'user') and g.user is not None else None
     last_page=extractor.last_page(query, size, sort=sort)
     if model != 'post':
-        err_html = '<div class="jumbotron result-not-found"><h6>No content associated with category was found!</h6></div>' if request.referrer  and '/profile/' not in request.referrer else ''
+        err_html = '<!--div class="jumbotron result-not-found"><h6>No content associated with category was found!</h6></div-->' if request.referrer  and '/profile/' not in request.referrer else ''
     else:
         err_html = ''
     has_data = 1
