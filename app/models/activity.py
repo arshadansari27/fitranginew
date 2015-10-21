@@ -103,6 +103,7 @@ class Activity(Entity, db.Document):
 
 ALL_ACTIVITIES = Activity.objects.all()
 CATEGORIES_ACTIVITIES = defaultdict(list)
+print 'All Activities', len(ALL_ACTIVITIES)
 for activity in ALL_ACTIVITIES:
     CATEGORIES_ACTIVITIES[activity.category].append(activity)
 
