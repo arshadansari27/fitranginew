@@ -281,6 +281,7 @@ def social_login():
         return render_template('/generic/main/login.html')
     name = request.form['name']
     email = request.form['email']
+    target = request.form.get('target', None)
     profile = Profile.objects(email__iexact=email).first()
 
     if profile is None or profile.id is None:
@@ -305,7 +306,7 @@ def social_login():
         print '[ERROR]: Unable to download profile image for profile'
 
     if profile:
-        return jsonify(dict(location='/stream/me', status='success'))
+        return jsonify(dict(location='/stream/me' if not target else target, status='success'))
 
     return jsonify(dict(location=url_for('login'), status='error'))
 

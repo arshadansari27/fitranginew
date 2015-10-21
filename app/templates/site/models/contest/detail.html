@@ -184,22 +184,33 @@
                                                     ]
                                                 });
                                                 */
-                                                $('body').on('click', '[data-action="login-to-answer"]', function(e){
-                                                    var login_url = "/login?target={{model.slug}}?data={";
-                                                    e.stopPropagation();
-                                                    e.preventDefault();
+                                                var login_register_submit = function(url){
+                                                    var _url = url + "?target={{model.slug}}?data={";
 
                                                     $.each($('input[data-question][data-answer]:checked'), function (i, elem) {
-                                                        login_url += $(elem).attr('data-question') + ':' +$(elem).attr('data-answer') + ';';
+                                                        _url += $(elem).attr('data-question') + ':' +$(elem).attr('data-answer') + ';';
                                                     });
 
-                                                    login_url += '}'
-                                                    window.location.href=login_url;
+                                                    _url += '}'
+                                                    window.location.href=_url;
+                                                };
+                                                $('body').on('click', '[data-action="login-to-answer"]', function(e){
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                    login_register_submit('/login')
+                                                });
+                                                $('body').on('click', '[data-action="register-to-answer"]', function(e) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                    login_register_submit('/register')
                                                 });
                                             });
                                         </script>
                                         <a href="#" class="btn btn-primary" data-action="login-to-answer">
                                             Login to submit the answers
+                                        </a>
+                                        <a href="#" class="btn btn-primary" data-action="register-to-answer">
+                                            Register to submit the answers
                                         </a>
                                     </div>
                                     {% endif %}
