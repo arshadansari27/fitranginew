@@ -24,8 +24,8 @@
                         <span class="fa fa-home"></span> <strong>Upcoming Events</strong></a></li>
                     <li><a href="#past" role="tab" data-toggle="tab" aria-controls="past" aria-expanded="false">
                         <span class="fa fa-certificate"></span> <strong>Past Events</strong></a></li>
-                    <li><a href="#my-events" role="tab" data-toggle="tab" aria-controls="my-events" aria-expanded="false">
-                        <span class="fa fa-certificate"></span> <strong>My Events</strong></a></li>
+                    <!--li><a href="#my-events" role="tab" data-toggle="tab" aria-controls="my-events" aria-expanded="false">
+                        <span class="fa fa-certificate"></span> <strong>My Events</strong></a></li-->
                 </ul>
                 </ul>
             </div>
@@ -58,7 +58,7 @@
                 <div role="tabpanel" class="tab-pane fade" id="my-events" aria-labelledby="my-events">
                     <div class="container fitrangi-trips">
                         <input id="my-events-filter" data-category="my-events" data-model="event" data-filter="organizer__profile__id" type="hidden" value="{{user.id}}" data-filter-status="fixed">
-                        {{my_events_list|safe}}
+                        {#my_events_list|safe#}
                     </div>
                 </div>
                 {% endif %}
