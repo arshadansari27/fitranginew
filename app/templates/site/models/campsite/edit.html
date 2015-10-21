@@ -69,7 +69,7 @@
                               placeholder="Write Pointwise features of the campsite...">{% if model and model.highlights %}{{model.highlights }}{% endif %}</textarea>
                 </div>
                 <div class="form-group">
-                    <label for="heading">Available Activities At/Near The Site</label>
+                    <label for="heading">Available Activities At/Near The Site<span class="red">*</span> </label>
 
                     <div class="row-fluid">
                         {% for k in ['Land Activities', 'Water Activities', 'Air Activities'] %}
