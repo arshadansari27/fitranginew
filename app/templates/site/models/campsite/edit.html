@@ -109,7 +109,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="heading">Activities<span class="red">*</span>&nbsp;&nbsp;<small>(Write in detail)</small></label>
+                    <label for="heading">Activities&nbsp;&nbsp;<small>(Write in detail)</small></label>
                     <textarea class="form-control summernote" rows="4" data-name="activities-details"
                               placeholder="Enter Brief More Details About Activities...">{% if model and model.activities_details %}{{model.activities_details}}{% endif %}</textarea>
                 </div>
@@ -276,8 +276,8 @@
                 BootstrapDialog.alert('Please enter location of the site. This is mandatory.');
                 return;
             }
-            if (activities.length == 0 && (other_activities == undefined || other_activities.length==0) && (activities_details == undefined || activities_details.length == 0)) {
-                BootstrapDialog.alert('Please select atleast one activity or put details for at least one activity. This is mandatory.');
+            if (activities.length == 0 && (other_activities == undefined || other_activities.length==0)) {
+                BootstrapDialog.alert('Please select atleast one activity. This is mandatory.');
                 return;
             }
             if (overview== undefined || overview.length == 0) {
