@@ -184,10 +184,16 @@
                                                     ]
                                                 });
                                                 */
-                                                var login_url = "/login?target={{model.slug}}?data={A:1,B:2}";
                                                 $('body').on('click', '[data-action="login-to-answer"]', function(e){
+                                                    var login_url = "/login?target={{model.slug}}?data={";
                                                     e.stopPropagation();
                                                     e.preventDefault();
+
+                                                    $.each($('input[data-question][data-answer]:checked'), function (i, elem) {
+                                                        login_url += $(elem).attr('data-question') + ':' +$(elem).attr('data-answer') + ';';
+                                                    });
+
+                                                    login_url += '}'
                                                     window.location.href=login_url;
                                                 });
                                             });
@@ -221,7 +227,41 @@
         var contest = '{{model.id}}';
         var total_questions = parseInt('{{model.questions|length}}');
         var App = window.App;
+        var query_string = window.location.search;
+        var answer_dict = {};
+        if (query_string != undefined || query_string.length > 0) {
+            query_string = query_string.replace('?', '');
+            var qs = query_string.split('&');
+            for (var i = 0; i < qs.length; i++){
+                var param = qs[i].split('=');
+                if (param != undefined && param.length > 1){
+                    var key = param[0];
+                    var value = param[1];
+                    if (key != 'data') continue;
+                    value = value.replace('{', '');
+                    value = value.replace('}', '');
+                    var answers_cont = value.split(';');
+                    for (var j = 0; j < answers_cont.length; j++)  {
+                        if (answers_cont[j] == undefined || answers_cont[j].length == 0) {
+                            continue;
+                        }
+                        var au = answers_cont[j].split(':');
+                        answer_dict[au[0].trim()]  = au[1].trim();
+                    }
+                }
+            }
+        }
+        var keys = Object.keys(answer_dict);
+        if (keys != undefined && keys.length > 0) {
+            var answers = [];
+            for(var k = 0; k < keys.length; k++) {
+                answers.push([keys[k], answer_dict[keys[k]]]);
 
+            }
+            console.log(JSON.stringify(answers));
+            App.content.answer_contest(user, contest, answers);
+
+        }
         //App.filter('review-filter');
         $('body').on('click', '[data-action="submit-answers"]', function (e) {
             e.stopPropagation();
