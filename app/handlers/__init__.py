@@ -799,6 +799,9 @@ class EditPage(Page):
 
     def get_context(self, context):
         from app.models.activity import CATEGORIES_ACTIVITIES
+        print '[*] ACTIVITY CATEGORIES: '
+        for k, v in CATEGORIES_ACTIVITIES.iteritems():
+            print '\t', k, len(v)
         if self.model_name == TRIP:
             if context.get('model'):
                 assert str(context.get('model').manager.id) == context.get('user') or str(context.get('user')) in [str(u.id) for u in Profile.objects(roles__in=['Admin']).all()]
