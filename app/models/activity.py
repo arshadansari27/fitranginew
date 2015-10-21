@@ -29,7 +29,10 @@ ACTIVITY_CATEGORY = {
     'Bungee Jumping': 'Air Activities',
     'Hot Air Ballooning': 'Air Activities',
     'Sky Diving': 'Air Activities',
-    'Zip Line': 'Air Activities'
+    'Zip Line': 'Air Activities',
+    'Paramotoring': 'Air Activities',
+    'Wildlife': 'Land Activities',
+    'Motor-Biking': 'Land Activities'
 }
 
 
