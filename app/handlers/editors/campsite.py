@@ -82,7 +82,7 @@ def _edit(data, node=None):
     other_activities = data.get('other_activities', None)
 
     if other_activities or len(other_activities) is 0:
-        other_activities = [u.scampsite() for u in other_activities.split(',') if u and len(u.scampsite()) > 0]
+        other_activities = [u.strip() for u in other_activities.split(',') if u and len(u.strip()) > 0]
     else:
         other_activities = None
 
