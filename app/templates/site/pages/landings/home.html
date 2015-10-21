@@ -103,6 +103,7 @@
     <div class="row">
 
         <input id="profile-enthusiast-filter" data-model="profile" data-filter="type__profile_type__name" type="hidden" value="Enthusiast"/>
+        <input id="profile-cover-image-filter" data-model="profile" data-filter="cover_image__exists" type="hidden" value="bool|True"/>
 
 
         {{profile|safe}}
@@ -194,5 +195,6 @@
             App.filter('article-admin-published-filter');
             App.filter('article-published-filter');
             App.filter('profile-enthusiast-filter');
+            App.filter('profile-cover-image-filter');
         });
 </script>
