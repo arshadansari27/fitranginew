@@ -264,17 +264,12 @@
         }
         var keys = Object.keys(answer_dict);
         if (keys != undefined && keys.length > 0) {
-            var answers = [];
+            console.log(JSON.stringify(answer_dict));
             for(var k = 0; k < keys.length; k++) {
-                answers.push([keys[k], answer_dict[keys[k]]]);
-
+                //answers.push([keys[k], answer_dict[keys[k]]]);
+                $('input[data-question="' + keys[k] + '"][data-answer="'+answer_dict[keys[k]]+'"]').prop('checked',true)
             }
-            if (answers.length != total_questions) {
-                BootstrapDialog.alert('Answer all the questions, before submitting!');
-                return;
-            }
-            console.log(JSON.stringify(answers));
-            App.content.answer_contest(user, contest, answers);
+            //App.content.answer_contest(user, contest, answers);
 
         }
         //App.filter('review-filter');

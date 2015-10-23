@@ -1,4 +1,3 @@
-#!/usr/bin/bash
-source venv/bin/activate
+source ~/venv/fitrangi/bin/activate
 export ASSETS_DEBUG='TRUE'
 python manage.py runserver
