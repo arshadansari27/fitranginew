@@ -186,7 +186,20 @@
                                                 */
                                                 var login_register_submit = function(url){
                                                     var _url = url + "?target={{model.slug}}?data={";
+                                                    var answer_count = 0,
+                                                    total_count = 0;
 
+                                                    $.each($('input[data-question][data-answer]'), function (i, elem) {
+                                                        total_count++;
+                                                    });
+                                                    $.each($('input[data-question][data-answer]:checked'), function (i, elem) {
+                                                        answer_count++;
+                                                    });
+                                                    if (answer_count !=
+                                                            total_count) {
+                                                        BootstrapDialog.alert('Answer all the questions, before submitting!');
+                                                        return;
+                                                    }
                                                     $.each($('input[data-question][data-answer]:checked'), function (i, elem) {
                                                         _url += $(elem).attr('data-question') + ':' +$(elem).attr('data-answer') + ';';
                                                     });
