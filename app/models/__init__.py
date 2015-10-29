@@ -53,6 +53,8 @@ def update_content(sender, document):
 
     if (not hasattr(document, 'slug') or document.slug is None or len(document.slug) is 0) and use is not None:
         update_slug(sender, document, document.__class__.__name__.lower(), use)
+    elif document.slug and document.__class__.objects(slug__iexact=document.slug) > 1:
+        update_slug(sender, document, document.__class__.__name__.lower(), use)
     if document.path_cover_image and len(document.path_cover_image) > 0:
         path = base_path + document.path_cover_image
         if os.path.exists(path):
