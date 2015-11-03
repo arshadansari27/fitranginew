@@ -59,15 +59,22 @@ def download_csv(contest_id=None):
         contest = Contest.objects(pk=str(contest_id)).first()
         _profiles = (contest_answer.author for contest_answer in ContestAnswer.objects(contest=contest).all())
         _profile_emails = defaultdict(object)
+        count = 0
         for p in _profiles:
+            count += 1
+            if count % 100 is 0:
+                print int(count/10), p.id
             _profile_emails[str(p.id)] = (p, contest.get_user_score(p))
         profiles = _profile_emails.values()
 
         for p, score in profiles:
-            if not p or not p.email:
+            if not p or not hasattr(p, 'email') or not p.email:
                 print 'Email not found for ', p.id
                 continue
-            csv.append(",".join([p.name.encode('utf-8') if p.name else '', p.email.encode('utf-8'), p.type[0].name if p.type and len(p.type) > 0 and p.type[0] is not None else '', str(score)]))
+            name = p.name
+            email = p.email
+            ptype = p.type[0].name if p.type and len(p.type) > 0 and p.type[0] is not None else ''
+            csv.append(",".join([name if name else '', email if email else '', ptype, str(score)]))
     data = '\n'.join(csv)
     response = make_response(data)
     response.headers["Content-Disposition"] = "attachment; filename=users.csv"
