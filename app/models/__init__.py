@@ -71,6 +71,7 @@ def new_object(sender, document, created):
 
 
 def update_slug(sender, document, type, title):
+    print 'Updating slug', document.id
     if hasattr(document, 'id') and document.id:
         _doc = document.__class__.objects(pk=str(document.id)).first()
     else:
@@ -79,7 +80,8 @@ def update_slug(sender, document, type, title):
     for t in to_replace:
         title = title.replace(t, '-')
     original_slug = "/%s/%s" % (type, title.lower())
-    if not _doc:
+    c = document.__class__.objects(slug=original_slug).count()
+    if not _doc or (_doc is not None and c > 1):
         _slug = original_slug
         count = 1
         while document.__class__.objects(slug=_slug).first() is not None:
