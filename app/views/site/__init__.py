@@ -77,7 +77,7 @@ def download_csv(contest_id=None):
             csv.append(",".join([name if name else '', email if email else '', ptype, str(score)]))
     data = '\n'.join(csv)
     response = make_response(data)
-    response.headers["Content-Disposition"] = "attachment; filename=users.csv"
+    response.headers["Content-Type"] = "text/plain"
     return response
 
 @app.route('/dialog/upload_image', methods=['POST'])

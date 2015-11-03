@@ -618,7 +618,7 @@ class ContestAdminView(ModelView):
 
 
     def _participants_download(view, context, model, name):
-        return Markup('<a href="/user-csv-download/%s">Download User CSV</a>' % str(model.id))
+        return Markup('<a target="blank" href="/user-csv-download/%s">Download User CSV</a>' % str(model.id))
 
     column_formatters = {'is_closed': _is_closed, 'is_live': _is_live, 'participants': _participants, 'download_participants': _participants_download}
 
