@@ -57,23 +57,21 @@ def download_csv(contest_id=None):
             csv.append(",".join([p.name if p.name else '', p.email, p.type[0].name if p.type and len(p.type) > 0 and p.type[0] is not None else '']))
     else:
         contest = Contest.objects(pk=str(contest_id)).first()
-        _profiles = (contest_answer.author for contest_answer in ContestAnswer.objects(contest=contest).all())
-        _profile_emails = defaultdict(object)
-        count = 0
-        for p in _profiles:
-            count += 1
-            if count % 100 is 0:
-                print int(count/10), p.id
-            _profile_emails[str(p.id)] = (p, contest.get_user_score(p))
-        profiles = _profile_emails.values()
-
-        for p, score in profiles:
-            if not p or not hasattr(p, 'email') or not p.email:
-                print 'Email not found for ', p.id
+        answers = (contest_answer for contest_answer in ContestAnswer.objects(contest=contest).all())
+        profile_answers = defaultdict(int)
+        for answer in answers:
+            author = answer.author if answer and answer.author else None
+            if not author or not hasattr(author, 'email') or not author.email:
                 continue
-            name = p.name
-            email = p.email
-            ptype = p.type[0].name if p.type and len(p.type) > 0 and p.type[0] is not None else ''
+            name = author.name
+            email = author.email
+            ptype = author.type[0].name if author.type and len(author.type) > 0 and author.type[0] is not None else ''
+            profile_answers[tuple([name, email, ptype])] += 1 if answer.correct_answer else 0
+
+        for p, score in profile_answers.iteritems():
+            name = p[0]
+            email = p[1]
+            ptype = p[2]
             csv.append(",".join([name if name else '', email if email else '', ptype, str(score)]))
     data = '\n'.join(csv)
     response = make_response(data)
