@@ -1,7 +1,0 @@
-{% extends 'site/layout.html' %}
-{% block header_scripts %}
-{% endblock %}
-{% block body %}<div>{{ card|safe }}</div>{% endblock %}
-{% block footer_scripts %}
-    <script src="{{ url_for('static', filename='appjs/chat.js')}}"></script>
-{%  endblock %}

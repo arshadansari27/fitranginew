@@ -1,9 +1,0 @@
-<div class="{% block grid_size %}{% endblock %}">
-    <div class="thumbnail">
-        <a href="{% if model.link %}{{model.link}}{% else %}#{% endif%}" target="_blank"><img src="{{model.cover_image_path_small}}" alt="..."></a>
-        <!--div class="overlay-caption">{{model.description}}</div-->
-        <div class="caption">
-            <h4><a href="{% if model.link %}{{model.link}}{% else %}#{% endif%}" target="_blank">{{model.title}}</a></h4>
-        </div>
-    </div>
-</div>

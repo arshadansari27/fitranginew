@@ -1,5 +1,0 @@
-{% extends 'notifications/generic_admin_mail_template.html'%}
-{% block message %}
-A new profile has been claimed "<a href="http://www.fitrangi.com{{model.slug}}">{{model.name}}</a>" by a user ({{claimant.email}}). It requires your approval.<br/>
-<a href="http://www.fitrangi.com/admin">Go to admin panel</a>
-{% endblock %}
